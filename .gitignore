@@ -1,0 +1,27 @@
+# Large dataset files (7.7GB)
+dataset/
+
+# Terminal-Bench 2.0 task data
+terminal-bench-2/
+
+# vLLM virtual environment
+vllm-env/
+
+# Eval result JSON files
+eval/results/*.json
+results/
+
+# Eval logs
+eval/logs/
+
+# Claude Code session data
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# OS
+.DS_Store

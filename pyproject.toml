@@ -1,0 +1,29 @@
+[project]
+name = "terminal-agent"
+version = "0.1.0"
+description = "Terminal agent training & evaluation with Nemotron-Terminal-Corpus"
+requires-python = ">=3.12"
+dependencies = [
+    "torch>=2.5",
+    "transformers>=4.48",
+    "accelerate>=1.0",
+    "datasets>=3.0",
+    "pyarrow>=18.0",
+    "polars>=1.0",
+    "huggingface-hub>=0.28",
+    "peft>=0.14",
+    "trl>=0.15",
+    "bitsandbytes>=0.45",
+    "lm-eval>=0.4",
+    "vllm>=0.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel",
+    "matplotlib",
+    "pandas",
+]
+
+[tool.uv]
+no-binary = []
