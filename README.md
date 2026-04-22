@@ -135,6 +135,35 @@ harbor run -d terminal-bench@2.0 -a "agent" -m "model" -k 5
 
 - Phase 3 (LFM): 스크립트 준비 완료 (`eval/run_phase3.sh`), LFM2-24B-A2B, LFM2-8B-A1B, LFM2-2.6B, LFM2.5-1.2B-Instruct 평가 예정
 
+## llm-os-eval-core 연동
+
+Terminal 평가는 `llm-os-eval-core` 프레임워크를 통해 CLI로 실행할 수도 있다:
+
+```bash
+llm-os-eval run terminal \
+  --model Qwen/Qwen3-4B \
+  --samples eval/eval_dataset.jsonl \
+  --output eval/results/Qwen3-4B_v0.jsonl \
+  --base-url http://localhost:8001/v1
+```
+
+## 벤치마크 결과 (2026-04-23, Round 3)
+
+llm-os-eval-core 기반 8개 모델 병렬 평가 결과 (8x H200 GPU):
+
+| 모델 | Size | 계열 | 성공률 |
+|------|------|------|--------|
+| Qwen3-4B | 4B | Qwen3 | 8% |
+| gemma-4-E2B-it | MoE | Gemma | 8% |
+| Qwen3-8B | 8B | Qwen3 | 8% |
+| Qwen2.5-14B-Instruct | 14B | Qwen2.5 | 8% |
+| gemma-4-31B-it | 31B | Gemma | 8% |
+| Qwen3-0.6B | 0.6B | Qwen3 | 0% |
+| Llama-3.1-8B-Instruct | 8B | Meta | 0% |
+| Nemotron-Terminal-8B | 8B | NVIDIA | 0% |
+
+Nemotron-Terminal-8B가 터미널 특화 SFT 모델임에도 0% 성공률을 기록했다. 이는 llm-os-eval-core의 TerminalEvaluator가 TB2.0이 아닌 내부 평가 포맷을 사용하기 때문이다. TB2.0 평가는 `tb2_eval.py`로 별도 실행한다.
+
 ## 참고
 
 - 논문: Pi et al., "On Data Engineering for Scaling LLM Terminal Capabilities" (arXiv:2602.21193)
