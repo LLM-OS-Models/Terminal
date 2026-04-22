@@ -20,22 +20,29 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
     parser.add_argument("--gpu", type=int, required=True)
+    parser.add_argument("--tp", type=int, default=1)
+    parser.add_argument("--gdn-triton", action="store_true")
     parser.add_argument("--eval-path", default="eval_dataset.jsonl")
     parser.add_argument("--output-dir", default="results")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
-    os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu)
+    # Don't override CUDA_VISIBLE_DEVICES - it's set externally per process
+    gpu_label = os.environ.get("CUDA_VISIBLE_DEVICES", str(args.gpu))
 
     with open(args.eval_path) as f:
         samples = [json.loads(l) for l in f]
 
-    print(f"[GPU {args.gpu}] Loading {args.model} with vLLM...")
+    print(f"[GPU {gpu_label}] Loading {args.model} with vLLM...")
     t0 = time.time()
-    llm = LLM(model=args.model, trust_remote_code=True, dtype="bfloat16",
-              gpu_memory_utilization=0.9, max_model_len=8192)
+    kwargs = dict(trust_remote_code=True, dtype="bfloat16",
+                  gpu_memory_utilization=0.85, max_model_len=8192,
+                  tensor_parallel_size=args.tp)
+    if args.gdn_triton:
+        kwargs["additional_config"] = {"gdn_prefill_backend": "triton"}
+    llm = LLM(model=args.model, **kwargs)
     load_time = time.time() - t0
-    print(f"[GPU {args.gpu}] Loaded in {load_time:.0f}s")
+    print(f"[GPU {gpu_label}] Loaded in {load_time:.0f}s")
 
     sampling = SamplingParams(max_tokens=2048, temperature=0)
 
@@ -51,7 +58,7 @@ def main():
             p = f"User: {task}\nAssistant: "
         prompts.append(p)
 
-    print(f"[GPU {args.gpu}] Generating {len(prompts)} responses...")
+    print(f"[GPU {gpu_label}] Generating {len(prompts)} responses...")
     t1 = time.time()
     outputs = llm.generate(prompts, sampling)
     gen_time = time.time() - t1
@@ -99,7 +106,7 @@ def main():
     model_short = args.model.split("/")[-1]
     summary = {
         "model": args.model, "model_short": model_short,
-        "gpu": args.gpu, "samples": n,
+        "gpu": gpu_label, "samples": n,
         "load_time_sec": round(load_time), "gen_time_sec": round(gen_time, 1),
         "avg_sec_per_sample": round(gen_time / n, 2),
         "timestamp": datetime.now().isoformat(),
@@ -110,7 +117,7 @@ def main():
     with open(out_path, "w") as f:
         json.dump(summary, f, ensure_ascii=False, indent=2)
 
-    print(f"\n[GPU {args.gpu}] DONE {model_short}")
+    print(f"\n[GPU {gpu_label}] DONE {model_short}")
     print(f"  Load: {load_time:.0f}s | Gen: {gen_time:.1f}s | {gen_time/n:.2f}s/sample")
     print(f"  Has cmds: {agg['pct_has_cmds']}% | Overlap: {agg['avg_overlap']} | Thinking: {agg['pct_thinking']}%")
     print(f"  Saved: {out_path}")
