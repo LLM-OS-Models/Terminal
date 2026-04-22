@@ -104,6 +104,8 @@ harbor run -d terminal-bench@2.0 -a "agent" -m "model" -k 5
 | principled-intelligence/Qwen3.5-9B-text-only | 9.0B | 비전 헤드 제거 |
 | google/gemma-4-26B-A4B-it | 26B (4B active) | MoE |
 | google/gemma-4-31B-it | 31B | |
+| Jiunsong/supergemma4-26b-abliterated-multimodal | 26B | **평가 불가** (vLLM 미지원 아키텍처) |
+| Qwen3.6-27B | 27B | Qwen3.6, triton GDN backend |
 | Qwen/Qwen3.6-35B-A3B-FP8 | 35B (3B active) | 1차 실패 → vLLM으로 재시도 |
 | Jackrong/Qwen3.5-27B-Claude-Distilled | 27B | 1차 실패 → vLLM으로 재시도 |
 
@@ -130,6 +132,8 @@ harbor run -d terminal-bench@2.0 -a "agent" -m "model" -k 5
 > - `eval/vllm_eval.py` 확인/작성
 > - 페이즈 1 (소형 8개, GPU당 1개) → 페이즈 2 (대형 4개, 2-GPU TP) 순서로 실행
 > - 완료 후 `summarize.py` 로 결과 비교
+
+- Phase 3 (LFM): 스크립트 준비 완료 (`eval/run_phase3.sh`), LFM2-24B-A2B, LFM2-8B-A1B, LFM2-2.6B, LFM2.5-1.2B-Instruct 평가 예정
 
 ## 참고
 

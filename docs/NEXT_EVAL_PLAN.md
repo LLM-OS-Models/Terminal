@@ -31,6 +31,14 @@
 | 11 | Qwen/Qwen3.6-35B-A3B-FP8 | 35B (3B active) | MoE FP8, 이전 OOM → vLLM으로 재시도 |
 | 12 | Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled | 27B | 이전 로더 에러 → vLLM으로 재시도 |
 
+### 그룹 D: Abliterated 모델 (평가 불가)
+
+| # | 모델 | 파라미터 | 비고 |
+|---|------|---------|------|
+| 13 | Jiunsong/supergemma4-26b-abliterated-multimodal | 26B | **평가 불가** - vLLM weight key 불일치 |
+| 14 | Jiunsong/supergemma4-26b-uncensored-gguf-v2 | 26B | **평가 불가** - gemma4 아키텍처 GGUF 미지원 |
+| 15 | Jiunsong/SuperGemma4-31b-abliterated-GGUF | 31B | **평가 불가** - 동일 |
+
 ## 리소스 및 배치 전략
 
 ### H200 8-GPU (각 143.7GB, 총 ~1.15TB)
@@ -52,16 +60,16 @@
 
 → 8개 모델 동시에 띄우고, API로 병렬 호출하여 평가. 각각 수 분 내 완료 예상.
 
-#### 페이즈 2: 대형 모델 (1~2 GPU, 이전 페이즈 완료 후)
+#### 페이즈 2: 대형 모델 (1 GPU, 이전 페이즈 완료 후)
 
 | GPU | 모델 | 예상 VRAM | 포트 | 비고 |
 |-----|------|----------|------|------|
-| 0,1 | nvidia/Nemotron-Terminal-32B | ~64GB | 8100 | TP=2 |
-| 2,3 | google/gemma-4-31B-it | ~62GB | 8101 | TP=2 |
-| 4,5 | Qwen/Qwen3.6-35B-A3B-FP8 | ~36GB (FP8) | 8102 | TP=2 또는 TP=1 |
-| 6,7 | Jackrong/Qwen3.5-27B-Claude-Distilled | ~54GB | 8103 | TP=2 |
+| 0 | nvidia/Nemotron-Terminal-32B | ~64GB | 8100 | TP=1 (H200 143GB 충분) |
+| 1 | google/gemma-4-31B-it | ~62GB | 8101 | 완료 (overlap=0.04) |
+| 2 | Qwen/Qwen3.6-35B-A3B-FP8 | ~36GB | 8102 | flashinfer 이슈 |
+| 3 | Jackrong/Qwen3.5-27B-Claude-Distilled | ~54GB | 8103 | NCCL/flashinfer 이슈 |
 
-→ 4개 모델을 2-GPU TP로 동시 실행. 또는 순차 1-GPU 실행 (32B, 31B은 H200 1장에 가능할 수도).
+> Jiunsong abliterated 모델은 vLLM/transformers 미지원으로 평가 불가.
 
 ## 실행 스크립트
 
@@ -109,21 +117,23 @@ wait
 # 페이즈 1 서버 전부 종료
 pkill -f "vllm serve"
 
-# 페이즈 2: 대형 모델
+# 페이즈 2: 대형 모델 + Abliterated
 CUDA_VISIBLE_DEVICES=0,1 vllm serve nvidia/Nemotron-Terminal-32B --port 8100 --tensor-parallel-size 2 --trust-remote-code &
 CUDA_VISIBLE_DEVICES=2,3 vllm serve google/gemma-4-31B-it --port 8101 --tensor-parallel-size 2 --trust-remote-code &
-CUDA_VISIBLE_DEVICES=4,5 vllm serve Qwen/Qwen3.6-35B-A3B-FP8 --port 8102 --tensor-parallel-size 2 --trust-remote-code &
-CUDA_VISIBLE_DEVICES=6,7 vllm serve Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled --port 8103 --tensor-parallel-size 2 --trust-remote-code &
+CUDA_VISIBLE_DEVICES=4 vllm serve Qwen/Qwen3.6-35B-A3B-FP8 --port 8102 --trust-remote-code &
+CUDA_VISIBLE_DEVICES=5 vllm serve Jiunsong/supergemma4-26b-abliterated-multimodal --port 8103 --trust-remote-code &
+CUDA_VISIBLE_DEVICES=6,7 vllm serve Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled --port 8104 --tensor-parallel-size 2 --trust-remote-code &
 
 # ready 대기 후 동일하게 평가
-for port in 8100 8101 8102 8103; do
+for port in 8100 8101 8102 8103 8104; do
   until curl -s http://localhost:$port/v1/models > /dev/null 2>&1; do sleep 2; done
 done
 
 python3 eval/vllm_eval.py --model nvidia/Nemotron-Terminal-32B --port 8100 &
 python3 eval/vllm_eval.py --model google/gemma-4-31B-it --port 8101 &
 python3 eval/vllm_eval.py --model Qwen/Qwen3.6-35B-A3B-FP8 --port 8102 &
-python3 eval/vllm_eval.py --model Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled --port 8103 &
+python3 eval/vllm_eval.py --model Jiunsong/supergemma4-26b-abliterated-multimodal --port 8103 &
+python3 eval/vllm_eval.py --model Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled --port 8104 &
 wait
 ```
 
@@ -165,3 +175,28 @@ wait
 | **총 예상** | **12** | | **~1시간 20분** |
 
 이전 fast_eval.py로 6개에 40분 걸린 것과 비교하면, vLLM + 병렬로 12개를 비슷한 시간에 완료 가능.
+
+## Phase 3: LFM 모델 평가 (신규)
+
+Phase 1/2 완료 후 LFM (Liquid Foundation Models) 계열 평가를 위한 Phase 3 스크립트 추가.
+
+### 실행
+```bash
+bash eval/run_phase3.sh
+```
+
+### 평가 모델 (4-GPU 병렬)
+
+| GPU | 모델 | 파라미터 | 타입 |
+|-----|------|---------|------|
+| 0 | LiquidAI/LFM2-24B-A2B | 23.84B | MoE (2B active) |
+| 1 | LiquidAI/LFM2-8B-A1B | 8.34B | MoE (1B active) |
+| 2 | LiquidAI/LFM2-2.6B | 2.57B | Dense |
+| 3 | LiquidAI/LFM2.5-1.2B-Instruct | 1.17B | Dense (Instruct) |
+
+### 벤치마크 기대 성능
+
+LFM 계열은 속도에서는 우수하나(동일 규모 대비 2-4배 빠름), 품질 벤치마크에서는:
+- LFM2-2.6B: MMLU 61.71, 5태스크 평균 61.02 (LFM 최고 품질)
+- LFM2-24B-A2B: MMLU 69.24, HellaSwag 45.40 (MoE 비효율)
+- LFM2.5-1.2B-Instruct: Instruction-tuned, 프롬프트 따르기에 유리
