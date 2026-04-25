@@ -1,0 +1,519 @@
+{
+  "model": "LiquidAI/LFM2-8B-A1B",
+  "model_short": "LFM2-8B-A1B",
+  "gpu": "4",
+  "samples": 50,
+  "load_time_sec": 106,
+  "gen_time_sec": 12.6,
+  "avg_sec_per_sample": 0.25,
+  "timestamp": "2026-04-25T18:45:55.524469",
+  "aggregate": {
+    "avg_pred_len": 4055,
+    "pct_has_cmds": 40.0,
+    "avg_cmds": 2.6,
+    "avg_overlap": 0.0436,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The project directory contains a broken CMake configuration in /app/myproject/CMakeLists.txt, a dependencies.json file that defines library dependencies, and a working but outdated build script. The analysis reveals missing dependency resolution, no platform-specific flags, ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5985
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The build configuration file /app/build_config.yaml exists and contains a valid structure with targets defined under 'targets'. Each target has 'name', 'deps', and 'cmd' keys. No immediate syntax errors are visible in the provided output. However, the system must validate de",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6832
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is in the /app directory, with no prior commands executed. The legacy Makefile is located at /app/legacy_makefile.txt, which contains build logic for a C project with multiple source files, compiler flags, targets (library, executabl",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4026
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app, and the terminal shows no explicit output from prior commands, indicating the environment is ready. The task requires generating four key build configuration files: CMakeLists.txt, Makefile, build_script.py, and verification_report.json",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3187
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The CMakeLists.txt file at /app/CMakeLists.txt contains several critical configuration issues: missing `cmake_minimum_required()`, no `project()` declaration, and missing `add_subdirectory()` calls for all subdirectories. The dependency graph is incomplete, with no `target_l",
+      "has_cmds": true,
+      "n_cmds": 13,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5680
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The system is ready to process module definitions and project config to build a dependency graph and generate a detailed analysis report. The current terminal shows the working directory as /app, with input files located in /app/input/modules/ and /app/input/project_config.y",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7258
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The system is experiencing severe performance degradation in the log analyzer script, running 10x slower than expected (30+ seconds vs target <3 seconds). Profiling indicates threading is not effectively parallelizing work—likely due to GIL limitations and poor task partitio",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2218
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current system processes 1000+ JSON log lines with a significant performance bottleneck. Profiling reveals that the primary slowdown stems from repeated JSON parsing using `json.loads()` inside a loop without batching, and inefficient string concatenation in the output f",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2305
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current log processing script exhibits significant performance bottlenecks due to sequential file reading and aggregation without concurrency, resulting in slow processing of multiple log files. The script reads each log file one after another, causing long wait times un",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2342
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The runtime logs indicate intermittent data corruption in the form of duplicate output records and occasional missing input records, particularly under concurrent processing. Analysis of `/app/data_processor.py` reveals that the shared `output_records` list is accessed and m",
+      "has_cmds": true,
+      "n_cmds": 10,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5126
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment has loaded the raw A/B test data from /app/data/ab_test_raw.csv and the analysis configuration from /app/config/analysis_config.json. The data contains columns for user_id, variant, session_duration, conversion (0 or 1), and timestamp. Validation reve",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6311
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The current working directory is /app, and the required data files and output directory are present but empty. Campaign data and sales data files do not yet exist, so the first step is to load and validate the JSON and CSV inputs. Campaign metadata must be checked for required field",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6668
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows access to the required data files: /app/sales_data.csv and /app/campaign_dates.json. The data spans a defined control period and campaign window, with key variables including daily sales, holiday flags, and temperature. The analysis pipeline ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6120
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment is set up with the working directory at /app/. The input directory /app/input/ is present but no files have been listed yet, indicating either no files exist or they are not yet parsed. The task requires processing multiple CSV files from this directo",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7193
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The current working directory is /app/data/, where three input files are present: primary.jsonl, backup.csv, and calibration.json. The task requires reading and validating these files against strict schema rules, transforming timestamps, applying calibration offsets, interpolating m",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6491
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The current working directory is /app/. The input files are present: sensors.csv, readings.jsonl, and alerts.json. The terminal shows no active processes, indicating a clean state. However, no processing commands have been executed yet. The pipeline requires reading and analyzing al",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7188
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The system is set up to simulate repulsive charged particle dynamics in a 2D periodic box. The input JSON contains valid particle data and simulation parameters. The current terminal state shows the user is at the initial directory, indicating readiness to execute the simulation. Th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1744
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The system is currently running in a Linux environment with a Python script intended for an N-body gravitational simulation. The configuration file exists at /app/nbody_config.json with standard parameters including masses, initial positions, velocities, simulation timestep,",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2525
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The task requires implementing a 2D charged particle dynamics simulation using the Velocity Verlet integration method with gravitational and electrostatic forces, including softening to avoid singularities. The input is a JSON config with particle properties and simulation parameter",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6826
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The vulnerable code in /app/vulnerable_app.py likely uses `subprocess.run()` or similar to execute shell commands based on user-provided markdown input without proper sanitization. The primary vulnerability is the direct use of untrusted input as command arguments, enabling ",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1819
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app, with no visible files listed in the output. The terminal shows root@cpu1-0044:/app, indicating the current path. No files have been examined yet, so no vulnerabilities are identified yet. The next steps require analyzing `server.py`, `d",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2816
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app/, and the application code resides at /app/note_service.py and /app/templates/. The task requires a comprehensive security audit and remediation of a Flask-based note-taking service. The terminal shows no immediate output, indicating the",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1497
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app, and the system has access to the /app/archives/ directory containing .tar.gz log archives. No prior processing commands have been executed, so no files have been extracted or analyzed. The task requires extracting archives, parsing log ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3510
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal shows the user is at /app and ready to execute commands. The log file /app/server.log exists and contains structured log entries with optional key-value pairs in parentheses. The log format is consistent with the described pattern, though some lines are ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1510
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment is ready to process server logs in `/app/logs/`. The directory contains `.log` and `.log.gz` files. The task requires decompressing `.log.gz` files, extracting structured error data from log lines starting with a timestamp and `[ERROR]`, categorizing ",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6096
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app, and the web application file app.py exists. The systemd service file does not yet exist, and the monitoring script is missing. Security permissions on /app/webapp/static/, /app/webapp/logs/, and /app/webapp/config.ini are not set. The h",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6633
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The NGINX configuration file at /app/nginx.conf is currently in use and contains standard server blocks with reverse proxies, logging, and basic performance settings. Worker processes are set to 1 (default), worker connections limit is not explicitly defined, keepalive timeo",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4174
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app with three configuration files: services.conf, nginx-template.conf, and health-status.json (empty). The script must parse service definitions from services.conf, validate URLs, extract endpoints, monitor service health via HTTP requests ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7066
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is in the /app directory with no prior output. The task requires writing a SPARQL query to extract specific movie data from RDF data in movies.ttl, followed by a Python script to execute the query and export results to CSV. The query",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5208
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment contains the RDF dataset at /app/research_data.ttl with the specified namespaces. The task requires executing four SPARQL queries using rdflib to extract high-cited researchers, collaboration clusters, topic co-occurrences, and a multi-hop collaborati",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5407
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment is a minimal Linux shell session in /app with 500MB disk space. The virtual environment is not yet created, and no packages are installed. The task requires setting up a Python environment with specific libraries under strict disk and dependency const",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0.1818,
+      "thinking": false,
+      "pred_len": 2708
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The system is a minimal Ubuntu environment with only 500MB disk space and no development tools. The task requires installing `psycopg2` version 2.9+ without the binary variant, which necessitates building from source. The current terminal shows root access in a minimal shell",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1945
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The system is set up to train a PyTorch MLP with gradient accumulation (4 batches per update, 256 effective batch size), learning rate scheduling with 2 epochs of linear warm-up (0.001 → 0.01) followed by cosine decay, and full logging. The synthetic dataset (10k train, 2k v",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6785
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires implementing a full PyTorch training pipeline with gradient accumulation, dynamic learning rate scheduling, checkpointing, and evaluation. The current terminal shows the user is at /app/, indicating the working directory is set. The task is well-defined wit",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6882
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal shows the user is in the /app/pyanalyzer directory, with no visible output from prior commands. The task requires diagnosing a Python dependency conflict in `pyanalyzer` caused by incompatible versions of `numpy`, `pandas`, `scipy`, and `matplotlib`. The",
+      "has_cmds": true,
+      "n_cmds": 14,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2397
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment shows a production failure linked to JSON encoding errors after a dependency update. The error log (not shown but implied) references a breaking change in the `requests` library, likely version 2.25.0 or higher, where the `json` parameter in `requests",
+      "has_cmds": true,
+      "n_cmds": 15,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2357
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app. The event log file /app/input/events.jsonl exists and contains raw JSON lines. The task requires parsing and validating these logs, extracting temporal features, detecting anomalies based on rapid sequences, duration outliers, and statu",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6595
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The current working directory is /app, and the input JSONL file /app/input.jsonl is available for processing. The system has executed `ls -la` and `cd project`, indicating the current directory is /app/project. The task requires analyzing network logs to detect suspicious activity b",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1785
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The current working directory is /app, and the sensor data files are present: sensor readings CSV, sensor metadata JSON, and operating hours YAML. The task requires merging and transforming these datasets, performing temporal feature engineering, cross-sensor correlation analysis, a",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6545
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app, and the terminal output confirms no prior project scaffolding or validation has been performed. The project configuration file /app/project_config.json is expected to exist but has not been shown. The task requires parsing this config, ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3892
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The system is currently in the working directory `/app` with access to `/app/input.json` containing the N-body simulation configuration. The input includes 5 particles with initial positions and velocities, a total simulation time of 10.0 units, adaptive time stepping parame",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2490
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current working directory is /app, and the web service configuration file /app/webapp/config.yaml is available for inspection. The exploit.py script must exploit three vulnerabilities: directory traversal via a file download endpoint (e.g., /download?file=../etc/passwd),",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2365
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The problem requires minimizing the number of extension steps to achieve a total intersection of at least \\( k \\) across \\( n \\) segment pairs. Each segment starts equal to \\([l_1, r_1]\\) and \\([l_2, r_2]\\), and each extension increases one endpoint by 1. The total intersect",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1839
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The problem requires computing the minimum total votes after N checks of a ratio T_i:A_i, where votes never decrease and T_i and A_i are coprime. The minimal total votes correspond to the smallest coprime integers T and A such that T/A = T_i/A_i. This is achieved by setting ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1132
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The input provides a list of variable names and their target names. The task is to determine if a single 'massive refactoring' operation—replacing all first occurrences of a substring 's' in each variable name with 't'—can be applied consistently across all variables such th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3093
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal output shows a warning from `docker-compose rm` indicating that one-off containers created by `docker-compose run` are not being included by default. The warning explicitly states that the default behavior will change to include them via `--all` flag in ",
+      "has_cmds": true,
+      "n_cmds": 11,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 2188
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal output shows no response from the Synapse service when a Jaeger-traced request is made, confirming the absence of the `Synapse-Trace-Id` header in production. The issue requires modifying the `access-control-allow-headers` header in `synapse/http/server.",
+      "has_cmds": true,
+      "n_cmds": 10,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 1211
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The `SignalGroup` class exhibits three critical bugs: signal names are returned in reverse order, the `name` property is stored in lowercase (instead of original case), and `repetitions` is incremented by 1. The signal names list is reversed, names are case-normalized, and r",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2066
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"The terminal is in the root directory with no output from previous commands. The task requires solving a Cauchy problem involving the ODE \\( tx' - x - \\ln x' = 0 \\) with initial condition \\( x(1) = 1 \\). The output file `/app/solution.txt` must contain the final solution. No prior c",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1250
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"The system is currently in a shell environment with no prior output beyond the initial prompt. The user is in a clean working directory (/app) and has executed two initial commands: 'ls -la' (which lists directory contents) and 'cd project' (which attempts to change directory to 'pr",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1477
+    }
+  ]
+}

@@ -1,0 +1,519 @@
+{
+  "model": "LiquidAI/LFM2.5-1.2B-Instruct",
+  "model_short": "LFM2.5-1.2B-Instruct",
+  "gpu": "6",
+  "samples": 50,
+  "load_time_sec": 76,
+  "gen_time_sec": 3.6,
+  "avg_sec_per_sample": 0.07,
+  "timestamp": "2026-04-25T18:40:30.646786",
+  "aggregate": {
+    "avg_pred_len": 1581,
+    "pct_has_cmds": 10.0,
+    "avg_cmds": 0.3,
+    "avg_overlap": 0.0,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates that the project directory contains several source files and a CMake configuration file, but the CMakeLists.txt appears to be incomplete or malformed. Dependency information is missing from dependencies.json, and the build process is not properl",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1907
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows a root directory with a Makefile-like configuration. The root is valid, but the targets and their dependencies are incomplete or malformed. The 'compile_a' target references 'compile_b', which references 'compile_a', indicating a cycle. The 'link' ta",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1384
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates a transition from a legacy Makefile to a modern CMake configuration. The system is attempting to migrate build instructions into a CMake project structure. Key observations include the presence of source files, compiler flags, and build targets.",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1805
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows that the user has initiated a series of shell commands to navigate to a project directory and change directories. The output indicates that the user is attempting to list directory contents and change into a project folder. However, no further comman",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3116
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows a CMake configuration file with several potential issues. The build system appears to be missing critical declarations and linkage instructions. The dependency graph is incomplete, and there are likely missing components or circular dependencies that",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1716
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows a directory structure with module JSON files and a project configuration. The build system appears to be set up with dependency definitions and parallel build constraints. The output commands are ready to parse module definitions and validate the dep",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1285
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates the script is attempting to analyze log files but is experiencing significant delays (over 30 seconds for 100,000 lines). CPU usage is low, suggesting threading is not the bottleneck, while memory usage is unexpectedly high. The expected results show di",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1399
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates that the script is attempting to process JSON log files but is likely experiencing performance issues. The presence of 'ls -la' and 'cd project' suggests file system navigation and directory listing, which could be resource-intensive. The subseq",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1137
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the script is attempting to list directory contents but then changes directory without confirming the new state. This suggests a potential race condition when switching directories and reading logs. The expected output shows successful log processi",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1124
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates a data processing pipeline is running but exhibits intermittent corruption. Logs from `/app/runtime_logs.txt` show repeated duplicate entries and missing records. The system appears to be processing CSV files concurrently, but race conditions in shared ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1222
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the script has executed the initial setup commands. The current state shows the user is in the project directory and has changed to 'project'. No errors or warnings are displayed yet, suggesting the environment is ready for further processing. The ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1453
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows that the directory structure is being prepared. The system is ready to execute the planned analysis pipeline. The key observations from the terminal are that the data files are present and the environment is set up for reading JSON and CSV files. The",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2385
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output shows the current directory with a few commands executed. The user has run 'ls -la' and then changed directory to 'project'. This indicates the initial setup and navigation steps are complete. The next logical step is to analyze sales data for the campaign period",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2871
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the script has executed the initial setup commands. The current state shows the user has navigated to the project directory and changed into the project folder. However, no actual data processing or file operations have been performed yet. The outp",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2259
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the current state involves navigating to the project directory and listing files. The primary sensor data file is present as a JSON Lines file, the backup CSV file is available, and the calibration JSON is also present. The task requires reading, v",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2705
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the current state involves navigating to the project directory and listing files. The previous commands executed successfully, showing the presence of the expected files and a clean directory structure. However, no direct output of data processing ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1644
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output shows a directory listing followed by a 'cd' command. The current state indicates the user is in the directory and has executed the initial setup by changing directory. The simulation parameters are defined, but no actual particle simulation has been run yet. The",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1215
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows the user has executed the initial setup commands. The output from the previous command was a simple directory listing. The system appears ready for the N-body simulation task. The next logical step is to run the simulation using the provided configur",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 970
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows a directory listing with a single command executed. The output indicates that the 'ls -la' command was run, which lists directory contents. The subsequent 'cd project' command changes the working directory to 'project'. This suggests the task is to n",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1024
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates that the script attempted to change directories and list files, but the execution path appears incomplete or misconfigured. The 'ls -la' command was intended to list directory contents, yet the subsequent 'cd project' command suggests an attempt",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1281
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates the user has executed initial setup commands. The current state shows the user is in the root directory of the application directory. No syntax errors are visible, but the environment suggests a development or test setup rather than a production system.",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1195
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates the application is currently in a directory structure with two main files: /app/note_service.py and /app/templates/. The user has executed a series of commands to navigate to the project directory and change directories. However, no explicit errors or w",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1465
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the current state shows the user has navigated to the project directory and is ready to execute commands. The output from previous commands suggests that the user is attempting to list directory contents and change directories, which are preliminar",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1560
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows a directory change to 'project' and a listing of files. The log file appears to be present and accessible. The task involves parsing log entries, extracting timestamps, levels, messages, and key-value pairs, then summarizing the data.\",\n  \"plan\": \"Execute a l",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1193
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output shows the user has executed two commands: listing the contents of the project directory and changing directory into it. The logs are being processed, but no explicit error patterns or error entries have been extracted yet. The system appears to be initializing th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 939
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates that the web application is running but lacks proper security configurations and health monitoring. The systemd service is missing, and the health check endpoint is not present. File permissions are not enforced, and the monitoring script is not",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1411
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates the server is running NGINX with standard configurations. The worker processes count, connection limits, keepalive timeout, and upstream servers are not visible in the output. The log file paths and formats are present, but no immediate errors o",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2846
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output shows the script has executed the required commands: listing the directory and changing directory to 'project'. This indicates the initial setup step is complete. The next logical step is to parse the services.conf file, monitor their health, and generate",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2027
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output shows the directory structure and confirms the presence of a 'movies.ttl' file. The task requires extracting specific movie data based on complex SPARQL conditions and exporting results to a CSV file. The current state indicates that the directory is ready for pr",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2009
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows the user has executed a series of shell commands to navigate into a project directory and list files. The output indicates that the user is preparing to run SPARQL queries on a research dataset. The analysis confirms the intent to extract specific re",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1738
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows a virtual environment is being created at /app/venv. The user is attempting to install multiple Python packages with version constraints, particularly around numpy, and is aware of disk space limitations. The presence of a verification script suggest",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 1710
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates a failure to install `psycopg2` version 2.9 or higher. The environment is constrained with limited disk space (500MB), and the system lacks development tools. The expected outcome is to install the required source package, diagnose missing depen",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1337
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output shows the user has executed a series of shell commands to navigate to a project directory and change directories. The output confirms that the user is currently in the project folder and has moved up one level. No errors are displayed, indicating the commands exe",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1910
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows that the system is ready to execute the planned training pipeline. The output from previous commands (such as listing directory and changing directory) indicates that the environment is set up correctly. However, no actual data processing or model tr",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1586
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates a failure in the CI test suite for `pyanalyzer`. The error points to a missing or incompatible attribute in the numpy package, likely related to a deprecated C API change. The presence of pandas, scipy, and matplotlib suggests a data analysis focus, but",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1356
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates a JSON encoding error in the production service. The error log points to a compatibility issue with the `requests` library version. The stack trace suggests the problem occurred after an automated dependency update. I need to verify the current version ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1460
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output shows the user is currently in the directory '/app/'. The command sequence indicates a setup or initialization process. The user has accessed the directory and is likely preparing to process event logs. No errors are visible yet, but the environment appears ready",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3006
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows the user has executed two commands: listing directory contents and changing directory into a project folder. The output indicates the user is exploring the file system. Based on the task description, I need to analyze network logs for suspicious acti",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 969
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the current state involves loading sensor data, processing timestamps, and preparing a diagnostic report. The system has navigated to the project directory and executed initial commands to inspect the working directory. However, no direct output fr",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2938
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates that the script has successfully executed the initial steps: it listed the current directory, changed into the project directory, and prepared to create the project structure. The next logical actions are directory creation and template processing. Howe",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1731
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows the user has executed the initial setup commands. The output indicates that the user is ready to proceed with the simulation setup. The system is waiting for configuration input from /app/input.json before proceeding to the next steps.\",\n  \"plan\": \"I",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1037
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "{\n  \"analysis\": \"The terminal output indicates the current state of the web service configuration. The service is running on localhost:8080, and the directory structure suggests a Flask application with configuration files and a flag file. Security issues likely include hardcoded secrets, insecure d",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1720
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "{\n  \"analysis\": \"The task involves analyzing the current state of two segment lists and determining the minimum number of steps required to increase the intersection length I to at least k. Initially, all segments are identical, and we can extend either segment by 1 per step. The intersection is cal",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1496
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "{\n  \"analysis\": \"The task involves determining the minimum possible total votes after N reports, given that each candidate's vote count never decreases. The reports provide ratios T_i:A_i for each time point, and we need to find the minimal sum of votes at the N-th report. The constraints ensure tha",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1238
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows that the user wants to rename variables using a refactoring tool. The initial and target names are provided, and the goal is to check if a single operation can transform all variables. The output indicates whether it's possible and the exact replacements if y",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 598
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates that the user is trying to change directory into 'project' and then list the contents of the directory. The output suggests that the 'ls -la' command is being executed but the directory change is not yet confirmed. The next step should be to con",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 787
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output indicates that the user is trying to change directory and inspect files within a project. The command 'cd project' is being executed, but no output confirms whether the directory change succeeded or not. The subsequent 'ls -la' command is intended to list",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 892
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows a terminal output indicating a bug in the SignalGroup class within the cantools library. The issues are: 1) the name is returned in lowercase, causing case sensitivity problems; 2) repetitions are incremented by 1 instead of the provided value; 3) signal name",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1023
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows the user is logged in as 'root' and attempting to navigate to a project directory. The output suggests the user is ready to proceed with solving the Cauchy problem provided.\",\n  \"plan\": \"To solve the differential equation, I will first analyze the eq",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 921
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal output shows the user is logged in as 'root' and is in the directory '/app#'. The output suggests the user is executing a series of shell commands to explore the directory structure. The presence of 'cd' and 'ls' indicates navigation and listing operations are u",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1043
+    }
+  ]
+}

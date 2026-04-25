@@ -1,0 +1,16 @@
+Model                                             B Samples     Time   Cmds%  Overlap  Think%
+---------------------------------------------------------------------------------------------
+LFM2-8B-A1B                                     0.0      50     119s   40.0%  0.0436    0.0%
+Nemotron-Terminal-14B                           0.0      50     105s    8.0%  0.0400  100.0%
+Nemotron-Terminal-32B                           0.0      50     195s   10.0%  0.0400  100.0%
+Nemotron-Terminal-8B                            0.0      50      94s    8.0%  0.0400  100.0%
+Qwen3.6-35B-A3B-FP8                             0.0      50     269s   52.0%  0.0400    0.0%
+gemma-4-31B-it                                  0.0      50     231s   86.0%  0.0400    0.0%
+LFM2-2.6B                                       0.0      50      66s   58.0%  0.0385    0.0%
+Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled   0.0      50     222s   62.0%  0.0323    0.0%
+gemma-4-26B-A4B-it                              0.0      50     142s   78.0%  0.0323    0.0%
+LFM2-24B-A2B                                    0.0      50     180s   30.0%  0.0209    0.0%
+LFM2-8B-Terminal-SFT-Unsloth                    0.0      50     126s    2.0%  0.0000  100.0%
+LFM2.5-1.2B-Instruct                            0.0      50      43s   10.0%  0.0000    0.0%
+
+Saved: results/RESULTS_SUMMARY.md

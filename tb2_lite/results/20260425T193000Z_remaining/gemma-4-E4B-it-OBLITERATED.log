@@ -1,0 +1,74 @@
+[GPU 6] Loading OBLITERATUS/gemma-4-E4B-it-OBLITERATED
+INFO 04-25 19:30:13 [utils.py:233] non-default args: {'trust_remote_code': True, 'dtype': 'bfloat16', 'max_model_len': 8192, 'disable_log_stats': True, 'model': 'OBLITERATUS/gemma-4-E4B-it-OBLITERATED'}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO 04-25 19:30:15 [model.py:549] Resolved architecture: Gemma4ForConditionalGeneration
+WARNING 04-25 19:30:15 [model.py:2016] Casting torch.float16 to torch.bfloat16.
+INFO 04-25 19:30:15 [model.py:1678] Using max model len 8192
+INFO 04-25 19:30:15 [scheduler.py:238] Chunked prefill is enabled with max_num_batched_tokens=16384.
+INFO 04-25 19:30:15 [config.py:104] Gemma4 model has heterogeneous head dimensions (head_dim=256, global_head_dim=512). Forcing TRITON_ATTN backend to prevent mixed-backend numerical divergence.
+INFO 04-25 19:30:15 [vllm.py:790] Asynchronous scheduling is enabled.
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval.py", line 332, in <module>
+    main()
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval.py", line 264, in main
+    llm = LLM(model=args.model, **llm_kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 382, in __init__
+    self.llm_engine = LLMEngine.from_engine_args(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 177, in from_engine_args
+    return cls(
+           ^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/v1/engine/llm_engine.py", line 92, in __init__
+    self.renderer = renderer = renderer_from_config(self.vllm_config)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/renderers/registry.py", line 86, in renderer_from_config
+    return RENDERER_REGISTRY.load_renderer(renderer_mode, config, tokenizer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/renderers/registry.py", line 68, in load_renderer
+    return renderer_cls(config, tokenizer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/renderers/hf.py", line 612, in __init__
+    super().__init__(config, tokenizer)
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/renderers/base.py", line 118, in __init__
+    self.mm_processor = mm_registry.create_processor(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/multimodal/registry.py", line 214, in create_processor
+    return factories.build_processor(ctx, cache=cache)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/multimodal/registry.py", line 95, in build_processor
+    return self.processor(info, dummy_inputs_builder, cache=cache)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/multimodal/processing/processor.py", line 992, in __init__
+    self.data_parser = self.info.get_data_parser()
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/model_executor/models/gemma4_mm.py", line 236, in get_data_parser
+    processor = self.get_hf_processor()
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/model_executor/models/gemma4_mm.py", line 187, in get_hf_processor
+    return self.ctx.get_hf_processor(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/multimodal/processing/context.py", line 204, in get_hf_processor
+    return cached_processor_from_config(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/transformers_utils/processor.py", line 355, in cached_processor_from_config
+    return cached_get_processor_without_dynamic_kwargs(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/transformers_utils/processor.py", line 312, in cached_get_processor_without_dynamic_kwargs
+    processor = cached_get_processor(
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/vllm/transformers_utils/processor.py", line 198, in get_processor
+    processor = processor_cls.from_pretrained(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/transformers/processing_utils.py", line 1429, in from_pretrained
+    args = cls._get_arguments_from_pretrained(pretrained_model_name_or_path, processor_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/transformers/processing_utils.py", line 1558, in _get_arguments_from_pretrained
+    sub_processor = auto_processor_class.from_pretrained(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/transformers/models/auto/feature_extraction_auto.py", line 319, in from_pretrained
+    config_dict, _ = FeatureExtractionMixin.get_feature_extractor_dict(pretrained_model_name_or_path, **kwargs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.eval-env/lib/python3.12/site-packages/transformers/feature_extraction_utils.py", line 529, in get_feature_extractor_dict
+    raise OSError(
+OSError: Can't load feature extractor for 'OBLITERATUS/gemma-4-E4B-it-OBLITERATED'. If you were trying to load it from 'https://huggingface.co/models', make sure you don't have a local directory with the same name. Otherwise, make sure 'OBLITERATUS/gemma-4-E4B-it-OBLITERATED' is the correct path to a directory containing a preprocessor_config.json file

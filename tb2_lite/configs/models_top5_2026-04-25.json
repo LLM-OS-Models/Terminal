@@ -1,0 +1,18 @@
+{
+  "selected_on": "2026-04-25",
+  "purpose": "TB2-lite replay evaluation",
+  "models": [
+    "google/gemma-4-E2B-it",
+    "LiquidAI/LFM2-8B-A1B",
+    "nvidia/Nemotron-Terminal-8B",
+    "nvidia/Nemotron-Terminal-14B",
+    "google/gemma-4-31B-it"
+  ],
+  "selection_rationale": [
+    "historical best small model",
+    "best Liquid model candidate",
+    "small terminal-specialized baseline",
+    "mid terminal-specialized baseline",
+    "stronger large generalist baseline"
+  ]
+}

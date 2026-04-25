@@ -1,0 +1,519 @@
+{
+  "model": "LiquidAI/LFM2-24B-A2B",
+  "model_short": "LFM2-24B-A2B",
+  "gpu": "3",
+  "samples": 50,
+  "load_time_sec": 161,
+  "gen_time_sec": 18.9,
+  "avg_sec_per_sample": 0.38,
+  "timestamp": "2026-04-25T18:46:56.873689",
+  "aggregate": {
+    "avg_pred_len": 2537,
+    "pct_has_cmds": 30.0,
+    "avg_cmds": 1.6,
+    "avg_overlap": 0.0209,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current state of the terminal is the root directory of the system. We need to analyze the CMake project located at /app/myproject/. The next steps involve analyzing dependencies, fixing the CMakeLists.txt, generating a build script, and creating a validation report.\",\n  \"plan\": ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3783
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The task requires implementing a build system dependency validator that analyzes a YAML configuration file. The validator must check for structural correctness, detect cycles in dependencies, generate a topological order if no cycles exist, and report any missing dependencies. The c",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5014
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The task involves analyzing a legacy Makefile and converting it to a CMake configuration. The current state of the terminal shows that we are at the root directory of the project. We need to start by reading the Makefile to understand its structure and contents.\",\n  \"plan\": \"First, ",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 953
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The task involves generating build configuration files for a cross-platform C++ project. The current state shows that we are at the root directory of the project with no files created yet. We need to parse the project specification, generate CMakeLists.txt, Makefile, build_script.py",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3570
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current state of the terminal is empty. The task involves analyzing a CMakeLists.txt file for common build configuration issues and generating a structured report. The next steps are to read the CMakeLists.txt file, parse it for specific issues, construct a dependency graph, cat",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1526
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows a terminal with no previous commands executed. The task involves building a dependency graph analyzer for a modular build system. The next steps are to parse configuration files, validate the dependency graph, generate build order recommendations, and create ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1451
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The log_analyzer.py script is running slowly due to inefficient threading and a memory leak. CPU usage is low because threads are not being utilized effectively, and memory usage grows due to improper handling of shared data structures. The script's performance issues are likely cau",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1615
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The current terminal state shows that the user is running a recording command using asciinema, which is unrelated to the task of debugging the data processing pipeline. The task requires profiling and optimizing a Python script, which has not been started yet. The next steps involve",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1900
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The log processing system is likely experiencing a performance bottleneck due to inefficient I/O operations, such as reading and writing files sequentially or using blocking calls that prevent concurrent processing. The concurrency bug may be caused by shared mutable state being acc",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2169
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows the root directory with the necessary files for the data processing task. The runtime logs and input data are present, but the main code file `/app/data_processor.py` needs to be analyzed for concurrency issues. The task requires diagnosing the root cause of ",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1311
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The task involves loading and validating A/B test data, cleaning and transforming it, performing statistical analysis, and generating a comprehensive report. The current state shows the terminal is in the root directory of the application, ready to execute commands. The next steps i",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4025
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The task involves analyzing marketing campaign effectiveness by processing campaign metadata and sales data. The current state shows the terminal is in the /app directory, and the files for the analysis report, visualization data, and insights summary need to be created. The next st",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2167
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The task involves analyzing sales data to measure the impact of a marketing campaign. The data includes daily sales, holiday indicators, and temperature. The analysis requires data preparation, statistical modeling, sensitivity analysis, and report generation. The current state show",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4331
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves creating a Python script to process audio metadata from multiple CSV files and generate structured expedition reports. The current state shows the terminal is at the root directory of the application, with no files processed yet. The script needs to handle multiple",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1121
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves processing sensor data from multiple sources, validating and transforming the data, detecting anomalies, and generating output files. The current state shows that we are at the root directory of the `/app` directory, with no files processed yet. The next steps invo",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1245
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves processing sensor data from multiple sources, cleaning and interpolating the data, detecting anomalies, and generating reports. The current state shows that we are at the root directory of the `/app` directory where the input files are located. We need to start by ",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1300
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves creating a Python script to simulate charged particles in a 2D periodic box with repulsive forces. The script needs to parse input JSON, initialize simulation parameters, calculate forces, integrate velocities, and output results. The output must be saved in specif",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6237
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves implementing a gravitational N-body simulation in Python, which requires reading configuration files, calculating forces, integrating motion, tracking energy, and outputting results. The current state shows a Linux terminal ready for command execution, but no prior",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1291
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves implementing a 2D charged particle dynamics simulation with gravitational and electrostatic forces. The simulation requires parsing a configuration file, calculating forces between particles, integrating motion using the Velocity Verlet algorithm, and tracking ener",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2059
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"The task involves analyzing a command injection vulnerability in a Python application that converts markdown to HTML. The vulnerability is likely due to improper handling of user input in a subprocess call, which could allow an attacker to inject and execute arbitrary commands. The ",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 8964
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows the root directory of the project. The files server.py, database.py, utils.py, and the users.csv data file are present. The task requires analyzing the source code for vulnerabilities, fixing them, and generating a security report.\",\n  \"plan\": \"First, I will ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2132
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"The current state of the terminal shows that we are in the root directory of the application. We need to analyze the vulnerable application files to identify security vulnerabilities. The next step is to list the contents of the `/app/` directory to understand the structure and loca",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 748
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The task involves processing log archives, extracting log files, analyzing log entries, and generating reports. The current state shows that we are at the root directory of the server, with no direct access to the `/app/archives/` directory. We need to navigate to the `/app/archives",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1025
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The task involves parsing a log file, extracting structured data, and generating a summary report in JSON format. The log entries follow a specific pattern with optional key-value pairs. The output should be saved to a JSON file. The task requires handling valid and malformed lines,",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3239
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The task involves processing log files in a Linux environment to extract and categorize error information. The current state shows that we are at the root directory with no prior actions taken. The next steps will involve listing the log files in the specified directory to begin pro",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 970
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"The current state of the terminal is the root directory of the application. We need to configure the web application security, create a systemd service, implement a health monitoring script, and generate a health report. The next steps involve setting file permissions, creating a us",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5069
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"The current task involves analyzing an NGINX configuration file, optimizing it, creating a monitoring script, and generating a performance report. The next steps include reading the configuration file, extracting specific parameters, and preparing the environment for optimization.\",",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3410
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"The task involves creating a monitoring and configuration automation script for web services. The current state shows the root directory of the /app folder. We need to parse service configurations, monitor health, generate Nginx configurations, and create a health dashboard. The nex",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1138
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "{\n  \"analysis\": \"The task involves writing a SPARQL query to analyze a movie database stored in RDF format. The query needs to filter movies based on release year, director, actor, genre, and rating. The output should be saved to a file and processed by a Python script to generate a CSV file. The cu",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5152
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "{\n  \"analysis\": \"The task involves writing a Python script to perform SPARQL queries on an RDF/Turtle dataset. The dataset contains information about researchers, publications, and collaborations. The script needs to parse the dataset, execute four specific SPARQL queries, and save the results to de",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1570
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "{\n  \"analysis\": \"The task involves setting up a Python environment with specific constraints on disk space, package dependencies, and installation methods. The current state shows that we are at the root directory of the server with no packages installed. We need to create a virtual environment, res",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 1892
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "{\n  \"analysis\": \"The task involves installing a specific version of psycopg2, diagnosing installation failures, and cleaning up to conserve disk space. The current environment lacks necessary build tools and system dependencies for compiling psycopg2 from source. A verification script needs to be cr",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1666
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "{\n  \"analysis\": \"The task involves setting up a PyTorch training pipeline for a neural network with gradient accumulation and learning rate scheduling. The current state shows a clean terminal directory with no relevant files present. The next steps are to create the necessary Python script and data",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6327
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "{\n  \"analysis\": \"The task requires implementing a PyTorch training pipeline with data preparation, model architecture, gradient accumulation, dynamic learning rate scheduling, checkpointing, and evaluation. The current state shows a clean terminal directory with no relevant files present. The task i",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1465
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows that the test suite for the pyanalyzer package is failing due to a dependency conflict, specifically related to numpy's C API changes and pandas' breaking changes in DataFrame methods. The test file is located at /app/pyanalyzer/tests/test_analysis.py. The er",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2740
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "{\n  \"analysis\": \"The task involves debugging a JSON encoding error in a Python application after a dependency update. The error log needs to be analyzed to identify the error type, message, and library version. The codebase includes a main module, a test file for reproduction, and a test file for th",
+      "has_cmds": true,
+      "n_cmds": 11,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1551
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves processing a JSONL file of event logs, validating each record, extracting features, detecting anomalies based on specific rules, and generating structured output files. The current state shows that we are at the root directory of the application, ready to start pro",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1238
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves processing network logs to detect suspicious activity and generate summary statistics. The input is a JSONL file with network connection data. The output requires two files: one for suspicious connections and another for hourly traffic summaries. The current state ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1789
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "{\n  \"analysis\": \"The task involves loading and integrating data from multiple sources, performing temporal feature engineering, analyzing cross-sensor correlations, detecting temporal anomalies, and generating a diagnostic report. The current state shows that we are at the beginning of the task with",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4183
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"The current state of the terminal is the root directory of the application. The task requires creating a Python script to generate and validate a project scaffolding based on a configuration file. The script needs to parse the configuration, create directories, generate files with v",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3945
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"The task involves setting up a gravitational N-body simulation with adaptive time stepping and energy conservation monitoring. The input configuration is read from a JSON file, and the simulation must output trajectory data, summary statistics, and energy conservation data. The curr",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1880
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "{\n  \"analysis\": \"The current state shows that we are in the root directory of the server. We need to navigate to the web service configuration directory to begin the audit. The next steps involve examining the configuration files, writing an exploit script, creating a hardening script, and generatin",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2198
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "{\n  \"analysis\": \"The task requires calculating the minimum number of steps to make the total intersection \\( I \\) of \\( n \\) segment pairs at least \\( k \\). Initially, all segments in the first list are \\([l_1, r_1]\\) and all in the second list are \\([l_2, r_2]\\). Each step extends one segment by 1 ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1856
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "{\n  \"analysis\": \"The task requires calculating the minimum possible total number of votes for the two candidates after N reports, given the vote ratios at each check. The votes must be non-decreasing and the ratios must be maintained. The solution involves finding the smallest integers (T_i, A_i) th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1174
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "{\n  \"analysis\": \"The task requires determining if there exists a pair of strings (s, t) such that for each variable name, if it contains the substring s, then replacing the first occurrence of s with t yields the target name. The lengths of initial and target names are equal, so s and t must be of t",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5049
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The issue is related to the default behavior of the `rm` command in the context of `docker-compose`. The warning message indicates that the current behavior does not include one-off containers created by `docker-compose run`. The issue points to the `compose/cli/main.py` fil",
+      "has_cmds": true,
+      "n_cmds": 15,
+      "cmd_overlap": 0.6154,
+      "thinking": false,
+      "pred_len": 1818
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The issue is about adding a new response header 'Synapse-Trace-Id' to the CORS configuration in the Synapse HTTP server. The relevant file to modify is 'synapse/http/server.py'. We need to find the line where 'access-control-allow-headers' is defined and add 'Synapse-Trace-I",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0.4286,
+      "thinking": false,
+      "pred_len": 1759
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```diff\n### src/cantools/database/can/signal_group.py\n<<<<<<< SEARCH\nclass SignalGroup:\n    def __init__(self, name, repetitions, signal_names):\n        self._name = name\n        self._repetitions = repetitions\n        self._signal_names = signal_names\n\n    @property\n    def name(self):\n        retu",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1368
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"The task involves solving a Cauchy problem for a differential equation. The current terminal state shows a shell prompt with no previous output related to solving differential equations. The task requires setting up and solving a numerical or analytical solution, which is not direct",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1340
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"The task requires solving a system of nonlinear equations. The current terminal state shows a user at the root directory with no previous commands executed related to solving equations. The equations involve variables x, y, and z in a cyclic manner.\",\n  \"plan\": \"To solve the system ",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1137
+    }
+  ]
+}

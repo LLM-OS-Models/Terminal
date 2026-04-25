@@ -1,0 +1,114 @@
+{
+  "model": "nvidia/Nemotron-Terminal-8B",
+  "benchmark": "Terminal-Bench 2.0",
+  "framework": "vLLM 0.19.1 + custom evaluator (no Docker)",
+  "total_tasks": 89,
+  "valid_json_pct": 74.2,
+  "has_commands_pct": 74.2,
+  "has_analysis_pct": 74.2,
+  "has_plan_pct": 74.2,
+  "task_complete_field_pct": 74.2,
+  "avg_latency": 5.39,
+  "total_tokens": 87089,
+  "errors": 0,
+  "by_category": {
+    "scientific-computing": {
+      "total": 8,
+      "valid_json": 6,
+      "has_commands": 6
+    },
+    "security": {
+      "total": 8,
+      "valid_json": 4,
+      "has_commands": 4
+    },
+    "debugging": {
+      "total": 5,
+      "valid_json": 4,
+      "has_commands": 4
+    },
+    "software-engineering": {
+      "total": 26,
+      "valid_json": 22,
+      "has_commands": 22
+    },
+    "machine-learning": {
+      "total": 3,
+      "valid_json": 1,
+      "has_commands": 1
+    },
+    "games": {
+      "total": 1,
+      "valid_json": 1,
+      "has_commands": 1
+    },
+    "system-administration": {
+      "total": 9,
+      "valid_json": 4,
+      "has_commands": 4
+    },
+    "personal-assistant": {
+      "total": 1,
+      "valid_json": 0,
+      "has_commands": 0
+    },
+    "model-training": {
+      "total": 4,
+      "valid_json": 4,
+      "has_commands": 4
+    },
+    "file-operations": {
+      "total": 5,
+      "valid_json": 5,
+      "has_commands": 5
+    },
+    "mathematics": {
+      "total": 4,
+      "valid_json": 3,
+      "has_commands": 3
+    },
+    "data-processing": {
+      "total": 4,
+      "valid_json": 2,
+      "has_commands": 2
+    },
+    "data-science": {
+      "total": 8,
+      "valid_json": 7,
+      "has_commands": 7
+    },
+    "optimization": {
+      "total": 1,
+      "valid_json": 1,
+      "has_commands": 1
+    },
+    "data-querying": {
+      "total": 1,
+      "valid_json": 1,
+      "has_commands": 1
+    },
+    "video-processing": {
+      "total": 1,
+      "valid_json": 1,
+      "has_commands": 1
+    }
+  },
+  "by_difficulty": {
+    "medium": {
+      "total": 55,
+      "valid_json": 39,
+      "has_commands": 39
+    },
+    "hard": {
+      "total": 30,
+      "valid_json": 23,
+      "has_commands": 23
+    },
+    "easy": {
+      "total": 4,
+      "valid_json": 4,
+      "has_commands": 4
+    }
+  },
+  "note": "Without Docker, actual command execution cannot be verified. Metrics measure format compliance and output structure quality."
+}

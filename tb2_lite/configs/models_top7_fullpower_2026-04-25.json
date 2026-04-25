@@ -1,0 +1,36 @@
+{
+  "selected_on": "2026-04-25",
+  "purpose": "TB2-lite replay evaluation, 7-GPU full-power sweep",
+  "gpus": [1, 2, 3, 4, 5, 6, 7],
+  "models": [
+    {
+      "model": "google/gemma-4-E2B-it",
+      "reason": "historical top scorer and strongest stable small model"
+    },
+    {
+      "model": "LiquidAI/LFM2-8B-A1B",
+      "reason": "best Liquid baseline so far"
+    },
+    {
+      "model": "nvidia/Nemotron-Terminal-14B",
+      "reason": "terminal-specialized mid-size baseline"
+    },
+    {
+      "model": "Qwen/Qwen3.6-35B-A3B-FP8",
+      "reason": "strong large Qwen baseline with different architecture",
+      "extra_args": ["--gdn-triton"]
+    },
+    {
+      "model": "google/gemma-4-31B-it",
+      "reason": "large Gemma that looked strong but did not clearly beat E2B"
+    },
+    {
+      "model": "LiquidAI/LFM2-24B-A2B",
+      "reason": "larger Liquid model with unexpectedly weak prior proxy score"
+    },
+    {
+      "model": "gyung/LFM2-8B-Terminal-SFT-Unsloth",
+      "reason": "terminal-tuned model that underperformed in prior proxy eval"
+    }
+  ]
+}

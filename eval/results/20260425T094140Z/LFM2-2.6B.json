@@ -1,0 +1,519 @@
+{
+  "model": "LiquidAI/LFM2-2.6B",
+  "model_short": "LFM2-2.6B",
+  "gpu": "5",
+  "samples": 50,
+  "load_time_sec": 58,
+  "gen_time_sec": 7.8,
+  "avg_sec_per_sample": 0.16,
+  "timestamp": "2026-04-25T18:45:02.587605",
+  "aggregate": {
+    "avg_pred_len": 4780,
+    "pct_has_cmds": 58.0,
+    "avg_cmds": 2.2,
+    "avg_overlap": 0.0385,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory of the project. The project structure includes source files, libraries, and a CMake configuration file, but the build system is broken. The `dependencies.json` file exists but has not been analyzed. The `CMakeLists.txt` is presen",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6361
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is at the root directory with no active processes. The build system dependency validator script needs to be implemented in Python to parse the YAML configuration, validate its structure, detect cycles, and generate execution order. T",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3397
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project, and the first two commands have been executed. The first command `ls -la` lists the directory contents, revealing the presence of `legacy_makefile.txt` and a `project` directory containing subdirectories like `src",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3753
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The first two commands have been executed: `ls -la` and `cd project`. The `ls -la` command lists all files in the current directory, confirming the project structure is accessible. The `cd project` command has cha",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2836
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root of the project directory (`/app`). The CMakeLists.txt file is located at `/app/CMakeLists.txt`. The analysis will involve parsing this file to identify configuration issues, constructing a dependency graph based on `target_link_libraries()",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7665
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory with no prior commands executed. The task involves building a dependency graph analyzer for a modular build system. The project structure includes module definitions in JSON files and a project config in YAML. The goal is to pars",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2818
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment shows the original log analyzer script is running significantly slower than expected (over 30 seconds for 100,000 lines), despite using threading. The CPU usage remains low, indicating underutilization of threads, and memory usage is growing unexpecte",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 8386
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal shows an asciinema recording session, indicating the environment is ready for command execution. However, no active commands have been run yet. The task involves debugging a data processing pipeline for performance bottlenecks. The original script `proce",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5697
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The log processing system exhibits two primary issues: (1) A performance bottleneck caused by sequential I/O operations where the script reads and processes log files one at a time without parallelization, leading to slow throughput. (2) A concurrency bug arising from shared",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3080
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is at the root directory of the project. The task involves debugging a data processing pipeline with concurrency issues causing data corruption. The provided runtime logs indicate intermittent duplicate or missing records, suggesting",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2966
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The first two commands executed successfully: `ls -la` displayed the directory contents, and `cd project` changed the working directory to `/app/project`. However, the analysis has not yet progressed beyond direct",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4318
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project, with the working directory set to /app. The script has not yet executed any commands. The first step is to list the contents of the project directory to understand the file structure. Then, we will load and valida",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4978
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory with no prior commands executed. The task involves analyzing sales data to measure the impact of a marketing campaign. The data files `/app/sales_data.csv` and `/app/campaign_dates.json` are expected to be present but not yet loa",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4479
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The task involves building an ETL pipeline for audio metadata from CSV files. The directory `/app/input/` likely contains multiple CSV files (3-5) named like `expedition_YYYY_MM.csv`. The script must process these",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2704
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory with no prior commands executed. The task involves building a sensor data pipeline with four main phases: data loading and validation, transformation and consolidation, anomaly detection, and output generation. The files `/app/da",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6818
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project, having navigated to the `/app/` directory. The pipeline setup is in progress, with the first two input files (`sensors.csv` and `readings.jsonl`) loaded and validated. The system is ready to process sensor data, c",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4471
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is in the root directory with no prior commands executed. The task involves simulating charged particles in a 2D periodic box using the Velocity Verlet integration method. The input JSON file is present at /app/input/particles.json, ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6403
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the system. The user has not yet executed any commands related to the N-body simulation. The configuration file `/app/nbody_config.json` is present but not yet loaded. The task requires parsing this config, setting up the simu",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2583
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory with no prior commands executed. The task is to implement a 2D charged particle dynamics simulation with gravitational and electrostatic forces, numerical integration via Velocity Verlet, energy tracking, and output generation. T",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6238
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The application contains a command injection vulnerability in the markdown processing function. The vulnerable code uses `subprocess` with user-controlled input directly passed as a command string, allowing attackers to execute arbitrary shell commands. This occurs when the ",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5168
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project, with no prior commands executed. The project structure includes `server.py`, `database.py`, `utils.py`, and a sample `users.csv` file. The task requires a comprehensive security audit and remediation of a Python w",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4583
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is in the root directory of the project, with the working directory set to /app. The task involves auditing a Flask-based note-taking application for multiple security vulnerabilities, fixing them, and generating documentation and te",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5425
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current directory is at /app/. The task involves processing log archives in /app/archives/, extracting them, analyzing log files, and generating a consolidated report. The terminal is empty, indicating no prior output. The first step is to list all `.tar.gz` files to ide",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4892
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory with no prior commands executed. The log file `/app/server.log` is present but not yet processed. The task requires parsing the log file, extracting structured key-value data, and generating a comprehensive JSON summary. The log ",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6439
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory with no prior commands executed. The task involves processing log files in /app/logs/ with extensions .log and .log.gz, extracting error data, categorizing errors, and generating two output files. The logs follow a structured for",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4466
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The web application is present but unconfigured for security and monitoring. File permissions are not set, the health endpoint is missing, and no monitoring script exists. The systemd service file and health check",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6227
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The system has a running NGINX server, but its configuration is not optimized for high performance. Key observations include: worker_processes and worker_connections are likely suboptimal for the server's load, ke",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6011
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment contains the necessary files: /app/services.conf, /app/nginx-template.conf, and /app/health-status.json (empty). The terminal is at the root of the /app directory. The task requires parsing service configs, monitoring health, generating Nginx config, ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2250
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is empty, indicating no prior commands have been executed. The task involves writing a SPARQL query to extract specific movie data from an RDF database and running it via a Python script, then saving the results to a CSV file. The analysis confirms the n",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5995
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory of the project, with no prior commands executed. The dataset `/app/research_data.ttl` is present, containing RDF/Turtle data with researchers, publications, and collaboration relationships. The task requires executing four SPARQL",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6745
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment is a bare Linux system with limited disk space (500MB available). The task involves setting up a Python environment with specific libraries for data analysis, resolving a numpy version conflict, installing pyarrow from source due to missing system dep",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 4239
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment is a minimal Ubuntu system with only 500MB disk space, lacking development tools and system dependencies required to build `psycopg2` from source. The initial attempt to install `psycopg2` will fail due to missing build dependencies. The plan involves",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3188
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory with no prior commands executed. The task involves building a complete PyTorch training pipeline with gradient accumulation, learning rate scheduling, and proper logging. The next steps require generating synthetic data, defining",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6455
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory. The first two commands executed successfully: `ls -la` listed directory contents, and `cd project` changed the working directory to `/app/project`. However, no progress has been made toward the training pipeline implementation. ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6280
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal state shows the user is in the root directory of the project, having navigated to the project directory (`cd project`). The task involves diagnosing a PyPi dependency conflict causing CI test failures. The error likely stems from version incompatibilitie",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5633
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory of the project. The task involves debugging a JSON encoding error in a data fetching utility after a dependency update. The error log (not shown) likely points to a breaking change in the `requests` library, particularly around h",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7576
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The working directory is /app/. The first command executed was 'ls -la', which lists the current directory contents. The second command 'cd project' has not yet been executed in the provided history, but based on ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5313
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The input JSONL file `/app/input.jsonl` exists but has not been processed. The task requires analyzing network logs to detect suspicious activity and generate two output files. The logs contain connection details ",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3239
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The working directory is /app, and the current task is at the start of loading and integrating multi-format sensor data. The system has not yet executed any data loading or processing commands. The next steps invo",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4363
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is at the root directory of the project. The task involves scaffolding a new project by creating a directory structure, generating template files with variable substitution, and validating the output. The project configuration is expected to be in `/app/",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6327
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project. The task requires implementing a gravitational N-body simulation with adaptive time stepping, force partitioning, and energy tracking. The input configuration file `/app/input.json` is expected to contain particle",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6774
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory of the project, with no files yet created. The web service is running on localhost:8080, and the configuration file `/app/webapp/config.yaml` and the flag file `/app/webapp/flag.txt` are expected to exist but are not yet present.",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7252
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```python\nimport sys\n\ndef compute_min_steps(n, k, l1, r1, l2, r2):\n    # Calculate initial intersection\n    overlap_start = max(l1, l2)\n    overlap_end = min(r1, r2)\n    initial_overlap = max(0, overlap_end - overlap_start + 1)\n    if initial_overlap >= k:\n        return 0\n    \n    # Calculate max p",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1275
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The problem requires finding the minimum total number of votes for two candidates after N election result reports, where each report gives the ratio of votes T_i:A_i. The key insight is that each ratio T_i:A_i must be represented as a fraction with coprime integers, and the ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1420
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```python\n# /app/solution.py\n\ndef can_refactor(n, initial_names, target_names):\n    # Check if all target names are valid replacements for initial names\n    for i in range(n):\n        if initial_names[i] != target_names[i]:\n            return False\n    return True\n\ndef find_replacement_pairs(initial",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1975
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```diff\n### /app/cli/main.py\n<<<<<<< SEARCH\n# No direct code related to rm behavior modification found yet.\n# The issue is about warning handling in docker-compose rm command.\n# The fix involves modifying the docker-compose CLI to include one-off containers by default.\n=======\n# Add logic to include",
+      "has_cmds": true,
+      "n_cmds": 16,
+      "cmd_overlap": 0.9231,
+      "thinking": false,
+      "pred_len": 8249
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current environment is a Linux shell session where we are tasked with modifying the Synapse server configuration to whitelist the `Synapse-Trace-Id` header for CORS. The issue involves locating the relevant configuration file (`synapse/http/server.py`) and editing it to ",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 1541
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```diff\n### src/cantools/database/can/signal_group.py\n<<<<<<< SEARCH\nclass SignalGroup:\n    def __init__(self, name, repetitions, signal_names):\n        self.name = name.lower()\n        self.repetitions = repetitions + 1\n        self.signal_names = signal_names[::-1]\n        self._signal_names = sig",
+      "has_cmds": true,
+      "n_cmds": 16,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5829
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the project directory, and the user has not yet started solving the Cauchy problem. The file system shows no existing solution file at /app/solution.txt. The next steps involve solving the differential equation numerically, likely using a numerical",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1673
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current terminal is in the root directory at /app\\$. The user has not yet loaded any external tools or libraries needed to solve the system of equations. The task requires solving a cyclic system of rational equations and writing the solution to /app/solution.txt. No pri",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2258
+    }
+  ]
+}

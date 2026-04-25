@@ -1,0 +1,520 @@
+{
+  "model": "Qwen/Qwen3.5-2B",
+  "model_short": "Qwen3.5-2B",
+  "params_B": 1.9,
+  "gpu": 0,
+  "samples": 50,
+  "load_time_sec": 10,
+  "gen_time_sec": 1733.4,
+  "avg_sec_per_sample": 34.67,
+  "timestamp": "2026-04-21T22:02:20.489578",
+  "aggregate": {
+    "avg_pred_len": 3322,
+    "pct_has_cmds": 70.0,
+    "avg_cmds": 3.5,
+    "avg_overlap": 0.0323,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze a CMake project with dependency issues and cross-platform compilation problems. The task requires me to: 1) Analyze",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3315
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a Python script that validates a build configuration file, detects cycles in dependencies, and generates a topologic",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3947
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze a legacy Makefile and convert it to a modern CMakeLists.txt. First, I should examine the directory structure and re",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3066
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a cross-platform build configuration generator for a C++ project. First, I should examine the project specification ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4027
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a build system configuration analyzer that parses a CMakeLists.txt file, identifies configuration issues, builds a d",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3375
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to implement a build system dependency graph analyzer that parses module configurations, validates the dependency graph, gener",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3313
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to debug and optimize a log processing system that's experiencing severe performance issues. The task mentions the script runs",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3415
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory. I need to debug a performance bottleneck in a data processing pipeline. The task involves profiling, diagnosing, f",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3392
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to debug a Python log processing system that has performance issues under concurrent load. The task mentions two main issues: ",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3387
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to debug a concurrent data corruption issue in a data processing pipeline. The task requires me to analyze the bug, fix it, ad",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3255
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze an A/B test dataset, perform statistical analysis, and generate comprehensive reports. First, I should explore the ",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3274
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to build a marketing campaign effectiveness analyzer that processes campaign metadata and sales data, calculates performance m",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3352
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze sales data to measure a marketing campaign's effectiveness. The task requires loading CSV and JSON data files, perf",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3354
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create an ETL pipeline for audio recording metadata. First, I should explore the directory structure to understand what inp",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3003
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to build a data processing pipeline for environmental sensor data. The task involves loading three data files (JSONL, CSV, and",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3355
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to build a data processing pipeline for IoT sensor data that includes data cleaning, interpolation, anomaly detection, and gen",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3416
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to implement a simulation of charged particles with repulsive forces in a 2D periodic box. The task requires parsing JSON inpu",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3093
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to implement a gravitational N-body simulation in Python. First, I should check what files exist in the current directory, par",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3532
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to implement a 2D charged particle dynamics simulation that combines gravitational and electrostatic forces. The task requires",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3626
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm at the /app directory in a Linux environment. I need to analyze a Python web application that has a command injection vulnerability in its markdown processing functionalit",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2630
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze a vulnerable web application, fix security issues, and generate a security report. First, I should explore the dire",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3557
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze a vulnerable web application, identify security vulnerabilities, fix them, create a security report, and generate t",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3584
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to process log archives from /app/archives/, analyze the log files, and generate a JSON report and markdown summary. First, I ",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3233
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze a server log file and generate a structured JSON summary. First, I should examine the log file to understand its st",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3325
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze server logs, extract error patterns, and generate two output files: a JSON summary and a CSV with detailed error in",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3071
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory as root. I need to configure a web application with security fixes, create a systemd service, implement a health mo",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3394
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze the current NGINX configuration, optimize it, create a monitoring script, and generate performance metrics. Let me ",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3371
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a web service health monitor and auto-configurator script. First, I should examine the provided files to understand ",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3964
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to solve a SPARQL query challenge that involves analyzing a movie database stored in RDF format. First, I should examine the e",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3609
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a Python script that performs SPARQL queries on an RDF/Turtle dataset about researchers, publications, and collabora",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3258
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory. I need to set up a Python environment for data analysis with specific constraints: limited disk space, no GPU, num",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 3279
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a minimal Ubuntu environment at /app. I need to install psycopg2 version 2.9+ without using the binary package, diagnose installation failures, and creat",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3182
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a neural network training system with gradient accumulation and learning rate scheduling. The task requires implemen",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3826
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to implement a complete training pipeline for gradient accumulation with dynamic learning rate scheduling. This involves readi",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3527
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to investigate a Python package 'pyanalyzer' that has dependency conflicts causing CI tests to fail. The task mentions numpy's",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3277
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to debug a library version compatibility bug in a Python project. The task involves examining error logs, understanding the co",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3341
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to build an anomaly detection system for application event logs. The task requires parsing JSONL event streams, extracting fea",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3495
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to build a network activity log analysis system that processes JSONL files containing network connection logs, detects suspici",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3461
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to analyze IoT sensor data for temporal anomaly detection. The task involves loading multi-format data, creating temporal feat",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3371
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to create a Python script that generates a project scaffolding structure based on a JSON configuration file. First, I should e",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3424
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to implement a gravitational N-body simulation with adaptive time stepping. First, I should check the input file to understand",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3147
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to audit a vulnerable web service configuration, exploit identified vulnerabilities, create a security hardening script, and g",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3184
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to solve a problem about finding the minimum number of steps to make the total intersection of two sets of segments at least k. The segments are initially all equal to ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3169
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory. I need to solve a problem about finding the minimum possible total number of votes for two candidates (Takahashi a",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3176
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory. I need to create a Python solution that solves the massive refactoring problem. The task is to find two strings s ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4016
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm in the /app directory and need to solve an issue related to the `docker-compose rm` command. The task mentions updating the default behavior of `rm` to include one-off con",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0.6154,
+      "thinking": false,
+      "pred_len": 3763
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to understand the issue about adding Synapse-Trace-Id to access-control-allow-headers header. The task mentions that Synapse-T",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 3470
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in the /app directory. I need to understand the issue with the SignalGroup class in cantools library. The task describes three bugs: 1) name property return",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1187
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory. I need to solve a Cauchy problem for a first-order ordinary differential equation: tx' - x - ln x' = 0, with initial condi",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2868
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I'm starting fresh in a Linux environment at /app directory. I need to solve a system of three equations involving x, y, and z. The equations are:\\n2x/(x^2+1) = y\\n2y/(y^2+1) ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2466
+    }
+  ]
+}

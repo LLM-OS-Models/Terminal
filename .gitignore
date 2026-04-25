@@ -7,18 +7,11 @@ terminal-bench-2/
 # vLLM virtual environment
 vllm-env/
 
-# Eval result JSON files
-eval/results/*.json
-results/
-
 # Eval logs
 eval/logs/
 
 # Local eval environment
 eval/env.sh
-
-# Terminal-Bench 2 Lite data
-tb2_lite/
 
 # Dependency lock (not a library project)
 uv.lock

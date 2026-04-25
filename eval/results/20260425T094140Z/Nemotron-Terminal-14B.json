@@ -1,0 +1,519 @@
+{
+  "model": "nvidia/Nemotron-Terminal-14B",
+  "model_short": "Nemotron-Terminal-14B",
+  "gpu": "6",
+  "samples": 50,
+  "load_time_sec": 83,
+  "gen_time_sec": 21.8,
+  "avg_sec_per_sample": 0.44,
+  "timestamp": "2026-04-25T18:43:41.227176",
+  "aggregate": {
+    "avg_pred_len": 2081,
+    "pct_has_cmds": 8.0,
+    "avg_cmds": 0.6,
+    "avg_overlap": 0.04,
+    "pct_thinking": 100.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "<think>\nWe are at the root directory /app. We need to first explore the project structure and understand the dependencies.\n Let's start by listing the contents of /app/myproject and examining the files.\n</think>\n\n{\n  \"analysis\": \"We are at the root directory /app. Need to first explore the project s",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1297
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to implement validate_build_config.py.\n First, let's examine the current directory and the build_config.yaml file.\n Then we can start writing the script.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to implement validate_build_config.py.",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 840
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to first examine the provided legacy Makefile.\n Let's start by looking at the file and then analyzing it.\n We'll also need to create the output directory if it doesn't exist.\n Steps:\n 1. Check the contents of /app/legacy_makefile.txt.\n 2. Analyze th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1461
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "<think>\nWe are at the root directory /app. We need to first examine the project specification and then create the build directory and generate the required files.\n\nLet's start by exploring the directory structure and reading the spec.\n\nWe'll run a series of commands to understand the project layout.",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1175
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to first examine the project structure and the CMakeLists.txt file.\n Let's start by exploring the directory and looking at the CMakeLists.txt file.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine the project structure and the CMa",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1272
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to implement the Python script at /app/build_analyzer.py.\n First, let's examine the input directory structure to understand what we have.\n We'll also check if there are any existing files.\n</think>\n\n{\n  \"analysis\": \"We are at the root directory /app",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1697
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "<think>\nWe are in the /app directory. Let's first examine the provided files.\n We'll start by listing the files and then look at the original script.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to first examine the existing files to understand the current state. The task is to debu",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1250
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "<think>\nWe are in a terminal with a root prompt. The task is to debug a performance bottleneck in a data processing pipeline.\n We need to first explore the environment and see what files are present.\n Let's start by listing the files in /app.\n</think>\n\n{\n  \"analysis\": \"We are in a terminal with root",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1736
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to first examine the provided script and understand the issues.\n Let's start by looking at the script and the logs directory.\n We'll also run the original script to see its behavior and timing.\n Then we'll analyze and fix the issues.\n Finally, we'll writ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1544
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "<think>\nWe are in the /app directory. Let's first explore the files to understand the code and logs.\n\nWe'll start by listing the files and then examine the buggy code and logs.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to first examine the provided files to understand the bug. Le",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 985
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to start by exploring the files and then write a Python script to perform the analysis.\n First, let's check what's in the current directory and the data and config files.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to first examine",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1026
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to first explore the files and then write a Python script to perform the analysis.\n Let's start by checking what files are present and their structure.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine the data files to unders",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1051
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to first explore the files and then write a Python script to perform the analysis.\n Let's start by checking what files are present and their structure.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine the data files to unders",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1083
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to create a Python script that processes CSV files from /app/input and writes output to /app/output.\n First, let's check the current directory and see what's available.\n We'll also need to create the script and then run it to produce the outputs.\n H",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1530
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to first explore the data directory and see what files are present.\n Then we need to write a Python script to accomplish the task. We'll create a script in /app, maybe called process.py.\n We'll need to handle the data loading, validation, transforma",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1507
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to examine the input files first to understand their structure and then write a script to process them.\n Let's start by listing the files and looking at their contents.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine the input fi",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1324
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to create a Python script that implements the simulation.\n First, let's examine the directory structure and see what's available.\n We'll also check the input file to understand the format.\n</think>\n\n{\n  \"analysis\": \"We are in the root directory /app",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1273
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to implement the Python program as described.\n First, let's examine the current directory and the provided configuration file.\n Then we'll plan the implementation steps.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to implement the ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 999
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to implement the simulation in Python.\n First, let's check the current directory and see what files are present.\n Then, we can examine the config.json to understand the structure.\n We'll need to write a Python script that reads the config, runs the ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1191
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to first examine the vulnerable code, then fix it, then write a security report, and finally test.\n\nLet's start by looking at the vulnerable_app.py file.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine the vulnerable code first t",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 794
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to first examine the existing files to understand the code and identify vulnerabilities.\n Let's start by listing the files and then examining each one.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine the existing Python files to ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1078
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to first examine the existing code to understand the vulnerabilities.\n Let's start by looking at the files in /app.\n We'll list the files and then examine the note_service.py and the templates.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Nee",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 986
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "<think>\nWe are at the root of the app directory. We need to first explore the archives directory and see what we have.\n Let's start by listing the contents of /app/archives/ and then proceed with the plan.\n We'll create a temporary directory for extraction, process each archive, and then generate th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1297
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to read the log file at /app/server.log, process it, and write summary.json.\n First, let's examine the file to understand its structure and size.\n We'll write a Python script to parse the logs and generate the summary.\n Since we are in a Linux environmen",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1810
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to first explore the logs directory and see what files are present.\n Then we need to write a script to process the logs. We can use Python for this task because it's good for text processing and has built-in support for gzip.\n We'll create a Python ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1968
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to first examine the existing webapp structure and then proceed with the tasks.\n\nLet's start by exploring the directory structure to understand what we have.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to first examine the existing",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1143
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to start by examining the existing nginx.conf file.\n Let's first list the files to see what we have.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to first examine the existing nginx.conf file to extract required information. Then we'll c",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1089
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to create a Python script that performs the tasks.\n First, let's examine the provided files to understand their structure.\n We'll start by listing the files and then look at their content.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1034
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to first examine the data to understand its structure, then write the SPARQL query, then write the Python script.\n\nLet's start by looking at the movies.ttl file to see the actual triples and understand the data.\n\nWe'll also check if there are any existin",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1189
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to write a Python script that uses rdflib to perform the SPARQL queries and output the required files.\n First, let's check the current directory and see what's available.\n We'll also need to install rdflib if not already installed. But the environme",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1337
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "<think>\nWe are at the root directory /app. We need to set up a virtual environment, install packages, resolve conflicts, build pyarrow from source, and create verification script.\n\nFirst, let's check the current directory and see what's available.\n\nWe'll start by creating a virtual environment at /a",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": true,
+      "pred_len": 3214
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "<think>\nWe are in a fresh terminal. The task is to install psycopg2 (not binary) in a constrained environment.\n Steps:\n 1. First, try to install psycopg2 with pip to see the error.\n 2. Then, diagnose the missing system packages.\n 3. Install the required system packages via apt, then clean caches.\n 4",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1490
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "<think>\nWe are in a fresh terminal. We need to implement the training pipeline as described.\n First, let's check the current directory and see what's available.\n Then, we'll create the necessary Python script and run it.\n We'll also create the output directory.\n\n Steps:\n 1. Check current directory a",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1406
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to implement the training pipeline in PyTorch.\n First, let's check the current directory and see what's available.\n We'll need to write a Python script that does the task.\n Let's start by exploring the environment and then create the necessary files",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1444
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "<think>\nWe are at the root directory /app. We need to start by exploring the project structure and running the failing test.\n\nFirst, let's see what's in /app:\n</think>\n\n{\n  \"analysis\": \"We are at the root directory /app. Need to first explore the project structure to understand the layout. Likely th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1015
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "<think>\nWe are in the /app directory. Let's start by examining the error log and the code.\n\nFirst, list the files to see what's present.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to first examine the error.log to understand the error. Then look at main.py and requirements.txt. Af",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 993
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to examine the input file and then write a script to process the events.\n First, let's check the input file and see its structure.\n Then, we'll write a Python script to do the processing because Python has good JSON and CSV support.\n We'll need to i",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1809
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "<think>\nWe are in the /app directory. We need to process the input.jsonl file and generate two output files in /app/output.\n First, let's check the current directory and see what files are present.\n Then, we can start writing a Python script to process the data.\n Since the task is to process large f",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 9226
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to start by exploring the available files and then write a Python script to accomplish the task.\n Let's first check the structure of the project and see what files are present.\n</think>\n\n{\n  \"analysis\": \"We are in the /app directory. Need to examine",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1464
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to create a Python script that performs the tasks described.\n First, let's examine the current directory to see what's available.\n We'll then create the script step by step.\n</think>\n\n{\n  \"analysis\": \"We are at /app directory. Need to create a Pytho",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1164
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "<think>\nWe are in the root directory /app. We need to implement the simulation in a programming language. Let's first check what's available.\n We'll look at the directory structure and see if there are any existing files.\n Then we'll decide on a language (likely Python, C++, or Rust). Since the task",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 2132
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "<think>\nWe are at the root directory /app. We need to first explore the environment and understand the structure.\n Let's start by listing the contents of /app and then examine the webapp directory.\n</think>\n\n{\n  \"analysis\": \"We are at the root directory /app. Need to explore the environment to under",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 1153
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "<think>\nWe are in a fresh terminal. Need to write solution code. First, let's see what's in the directory.\n\nWe'll start by exploring the environment and then write the solution.\n\nWe need to produce a Python solution that reads input, processes t test cases, and outputs answers.\n\nWe need to understan",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 8521
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "<think>\nWe are in a fresh terminal. Need to write solution code. First, let's see what's in the directory.\n\nWe'll start with ls to see what's there. Then create solution.py.\n\nWe need to implement the solution. The problem: Given N ratios T_i:A_i (coprime), we need to find minimal total votes after N",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 4747
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "<think>\nWe are in a fresh terminal. Need to write solution in /app/solution.py. First, let's see what's in the directory.\n\nWe'll start with a quick ls to see if there's any existing code. Then we'll write the solution.\n\nWe need to implement algorithm: given n pairs (w_i, w'_i) of equal length string",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 7258
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "<think>\nWe are given an issue: \"Update default behaviour of `rm`\". The warning message says that currently `docker-compose rm` does not include one-off containers created by `docker-compose run` unless `--all` is used, and that this will be the default behavior in the next version of Compose.\n\nWe ne",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 1.0,
+      "thinking": true,
+      "pred_len": 2846
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "<think>\nWe are given the issue: Add `Synapse-Trace-Id` to `access-control-allow-headers` header.\n The issue says that the `Synapse-Trace-Id` response header added in a previous issue needs to be whitelisted so web clients using CORS can read it.\n\n We are provided with the file `synapse/http/server.p",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 1.0,
+      "thinking": true,
+      "pred_len": 3949
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "<think>\nWe are given the issue and the file content. We need to examine the file and locate the bugs.\n\nThe issue mentions three problems:\n1. The `name` property returns the name in lowercase.\n2. The `repetitions` property is incorrectly incremented by 1 from the provided value.\n3. The `signal_names`",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 2588
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "<think>\nWe are in a fresh terminal. The task is to solve the Cauchy problem: t x' - x - ln x' = 0, with x(1)=1. We need to write the solution to /app/solution.txt.\n\nFirst, we need to analyze the differential equation. It's a first-order ODE: t * x' - x - ln(x') = 0. Let p = x'. Then we have t p - x ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 5937
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "<think>\nWe are in a fresh terminal. The task is to solve a system of equations. We need to find all real (or possibly complex) solutions? The problem statement doesn't specify domain. Usually such symmetric systems are solved over reals. We need to find all triples (x,y,z) satisfying the three equat",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": true,
+      "pred_len": 3732
+    }
+  ]
+}

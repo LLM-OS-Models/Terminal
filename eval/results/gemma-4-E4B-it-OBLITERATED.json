@@ -1,0 +1,520 @@
+{
+  "model": "OBLITERATUS/gemma-4-E4B-it-OBLITERATED",
+  "model_short": "gemma-4-E4B-it-OBLITERATED",
+  "params_B": 7.9,
+  "gpu": 5,
+  "samples": 50,
+  "load_time_sec": 13,
+  "gen_time_sec": 993.0,
+  "avg_sec_per_sample": 19.86,
+  "timestamp": "2026-04-21T21:50:03.516502",
+  "aggregate": {
+    "avg_pred_len": 873,
+    "pct_has_cmds": 2.0,
+    "avg_cmds": 0.1,
+    "avg_overlap": 0.0,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{% if ansible_facts.cache is defined %}\n  {% else() %}\n    - name: get_hosts\n      hosts: all\n      gather_facts: yes\n\n    - name: copy_files\n      copy:\n        src: /tmp/hosts\n        dest: /etc/hos",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 396
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"A new project has been cloned, and there is a build configuration file 'build_config.yaml' and a script 'validate_build_config.py' that need to be set up and run. The project ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 858
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"The project is here, and it's a C/C++ application with a legacy Makefile that needs to be converted to CMake. No files or info have been checked yet.\",\n  \"plan\": \"First, I need to loo",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 423
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I have a copy of the project and need to read the spec file, check if all source files exist, and then generate four other files: CMakeLists.txt, Makefile, build_script.py, an",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 769
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "{\n  \"analysis\": \"A new project structure is available, and a CMakeLists.txt file needs to be checked for issues. No files have been created or read yet. The goal is to find all problems, generate a de",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 641
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "\"{\n  \\\"analysis\\\": \\\"Welcomed to the build system analyzer project. The goal is to read module JSONs and a project YAML file, then check for cycles/missing libs, determine a build order, and generate ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1236
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"This is a new task, and the log analyzer is not yet set up or known to be broken. The project has a 10x slowdown, high memory usage, and is not using CPU cores well. The goal is to de",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 617
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \" The project is here, and there are some files like process_logs.py, input.jsonl, and requirements.txt. No other files are there. The system is ready, and the first step is to check w",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 841
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The project has been cloned, and there are log files and a script to process them. The current directory is /app/. The goal is to run, validate, and debug the log processing s",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 697
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "{\n  \"analysis\": \"I have a list of files: data_processor.py, input_data.csv, runtime_logs.txt, requirements.txt. The application has a concurrency bug that leads to data corruption, and there are logs ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 802
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The project has been set up, and there are no files or folders listed yet. The goal is to perform an A/B test on a checkout page, including data validation, cleaning, two type",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 705
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"Se mình đang ở thư mục /app/ và chưa có file nào được tạo ra. Cần cài đặt môi trường và thư viện cần thiết, sau đó chạy script phân tích.\",\n  \"plan\": \"Bước 1: Cài đặt các dependencies",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 506
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json-2.0\n  \"analysis\": \"Intel has two files: sales_data.csv and campaign_dates.json. They both contain relevant information about sales and campaign periods. The other files are not needed yet. The",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 805
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"A new project has been cloned, and there are some files here. The first file is 'README.md', and another is a hidden '.env' file. There are also 'requirements.txt' and 'utils.",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 611
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "\"{\n  \\\"analysis\\\": \\\"Meed have a list of three sensor data files (primary.jsonl, backup.csv, calibration.json) and need to consolidate them, apply offsets, handle missing values, detect anomalies, and",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 875
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"Meed know what files and directories are available in /app/ and what they contain, so I can start to get a feel for the project structure and data files.\",\n  \"plan\": \"List all files i",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 335
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json-900kb\n  \"analysis\": \"A new project has been downloaded, and its contents are not known. It has a 'particles.json' file and a 'main.py' file, which are the only things we need to work with. The",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 892
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \" The project is a gravitational N-body simulation that needs to be run using a provided config file. The input file is already there, and the code is expected to be 'simulator",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 613
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "\"{\n  \\\"analysis\\\": \\\"Welcomed to the environment. The project is here, and there are no files or folders yet. It's a fresh start, so I need to get the code, dependencies, and config file here to start",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 580
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"Se mình đang ở thư mục /app/ và chưa có file nào được xem hay thay đổi. Mình cần đọc file ứng dụng để biết nó hoạt động thế nào và có lỗ hổng không.\",\n  \"plan\": \"Bước 1: Đọc f",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 452
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "{\n  \"analysis\": \"I have a copy of the web application and need to scan it, fix vulnerabilities, and generate a report. The files are server.py, database.py, utils.py, and users.csv, and the output sho",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 770
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"A simple, vulnerable Flask application has been set up at /app/note_service.py and /app/templates/. It is a note-taking service with known security issues like XSS, injection,",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 827
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "json\n{\n  \"analysis\": \"The project is here, and there are some archives to process. The log files are in /app/archives/, and the output should go to /app/output/. No other files or directories are know",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 588
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"None of the files are there yet, and the server.log file needs to be read and processed to generate a summary.json file with metrics like total lines, valid lines, hourly breakdowns, ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 529
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"Meed have a list of server log files with two extensions: *.log and *.log.gz, all are in /app/logs/. They have a specific format, and some might be compressed. I need to find all of t",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1082
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"Se mình đang ở thư mục /app/ và có quyền root. Ứng dụng web có sẵn ở /app/webapp/app.py. Cần tạo user 'webapp', cấu hình và chạy web app, sau đó là hệ thống giám sát.\",\n  \"pla",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 734
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"Se nenhuma file or directory has been created yet, and the nginx.conf file needs to be read and analyzed first. The server has 2 CPU cores, 128MB of memory, and 5000 open files.\", \"pl",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 512
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"Meed know what files and templates are available in /app/ and what the system looks like. The task is to monitor services, get their health status, and use that info to create a dashb",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 677
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"None of the files or templates have been created yet. The application is here, and the data is there. I need to write a Python script and a SPARQL query to get the data, and t",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 629
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "{\n  \"analysis\": \"The project is a SPARQL network query builder, and the goal is to run a Python script that loads a Turtle file, executes four different SPARQL queries to find highly cited researchers",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 932
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "{\n  \"analysis\": \"Se mình đang ở thư mục /app/ và có quyền root. Không có file hay thư mục nào được biết là cần thiết, chỉ có hướng dẫn công việc.\",\n  \"plan\": \"Kế hoạch của tôi là: 1. Tạo và kích hoạt ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 1090
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "{\n  \"analysis\": \"Se mình đang ở trên máy chủ Ubuntu có 500MB dung lượng đĩa trống. Cần cài đặt psycopg2 phiên bản 2.9+ từ source, sau đó dùng apt install các gói phụ thuộc, dọn dẹp cache, tạo script k",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 731
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \" The user wants to run a complete 10-epoch classification task using a custom-built MLP on MNIST-like data. The requirements include gradient accumulation (batch size 64, accu",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 843
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The project has a set of requirements: a PyTorch model with dropout, a custom scheduler, gradient accumulation, and a validation loop. The data is there, and the necessary fil",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3093
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I have a clean slate and need to run a specific test file, /app/pyanalyzer/tests/test_analysis.py, to see what the problem is. Then, I need to check the package structure and ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 740
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I have been given a set of files and a project structure, and a list of requirements. The main issue is a JSON encoding error after a dependency update, and the project uses '",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 734
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The project is here, and there are no files or folders listed yet. It seems like a fresh start, and the input file is expected at /app/input/events.jsonl. The output needs to go to /a",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 481
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "{\n  \"analysis\": \"The project is here, and input data is available at /app/input.jsonl. The output needs to be stored at /app/output/suspicious_connections.json and /app/output/hourly_summary.csv. No f",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 518
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The project has been cloned, and there are no files or folders here yet. It seems like a fresh start, and the data is there, but no metadata or config files have been checked ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 681
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"A new project scaffolding and validation tool needs to be created. This tool should read a config file, create a directory structure, replace variables in a template, and then",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 716
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \" The project is a gravitational N-body simulation with features like adaptive time stepping, work partitioning, and energy monitoring. The input is expected at /app/input.json",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 633
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "{\n  \"analysis\": \"I have a list of tasks to perform: check config, exploit it with 3 types of bugs, make it more secure, and then report everything. The application is a Flask app on localhost:8080. Th",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 721
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user has provided a problem description and a few test cases. The goal is to find the minimum number of steps to achieve a total intersection length of at least 'k' by ext",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2749
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json-2.0\n{\n  \"analysis\": \"Netflix is down, so no binge watching tonight. I need to check the available packages and then install one of them to get back on track.\",\n  \"plan\": \"First, I will check t",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 646
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "One way to solve this is to find all possible two-length substrings that are different between the initial and target names. Then, for each pair of substrings, check if it can be \"stretched\" to cover ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2934
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "{\n  \"analysis\": \"508525225252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525252525",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 1034
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "{\n  \"analysis\": \" Приложение Synapse версии 1.76.0rc1 не позволяет читать заголовок Synapse-Trace-Id, который есть у него в ответе, с помощью веб-клиентов, использующих CORS. Это может быть связано с ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 735
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "3.  `signal_names` property returns the list in reverse order`\n\n```json\n{\n  \"analysis\": \"The project has a list of files, and the issue is a bug in `cantools/database/can/signal_group.py` where signal",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 674
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json-2.0\n{\n  \"analysis\": \"The goal is to solve the Cauchy problem: tx' - x - ln x' = 0, with x(1) = 1, and save the result to /app/solution.txt. The file structure is there, but no files have been ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 859
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "[\"/app/solution.txt\"] = 0.0; python3 -m sympy --version\n\n# to see if sympy is installed and to get a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2082
+    }
+  ]
+}

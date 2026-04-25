@@ -1,0 +1,519 @@
+{
+  "model": "google/gemma-4-E2B-it",
+  "model_short": "gemma-4-E2B-it",
+  "gpu": "1",
+  "samples": 50,
+  "load_time_sec": 128,
+  "gen_time_sec": 10.6,
+  "avg_sec_per_sample": 0.21,
+  "timestamp": "2026-04-22T00:14:26.415511",
+  "aggregate": {
+    "avg_pred_len": 3605,
+    "pct_has_cmds": 94.0,
+    "avg_cmds": 9.5,
+    "avg_overlap": 0.0436,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory as root and is ready to start the task. The task involves a multi-step process: 1) Analyze dependencies from `dependencies.json` and write to `/app/output/analysis.txt`. 2) Fix `/app/myproject/CMakeLists.txt`. 3) Ge",
+      "has_cmds": true,
+      "n_cmds": 15,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1387
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires implementing and running a Python script (`validate_build_config.py`) to validate a YAML build configuration file (`/app/build_config.yaml`). Since the script implementation is not provided, the immediate next step is to write and execute this script. I nee",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7431
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires parsing a legacy `Makefile` located at `/app/legacy_makefile.txt` and generating a modern `CMakeLists.txt` at `/app/output/CMakeLists.txt`, along with a validation report at `/app/output/validation_report.json`. Since the content of `/app/legacy_makefile.tx",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2809
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires parsing a JSON specification file (`/app/project_spec.json`), generating three different build configuration files (`CMakeLists.txt`, `Makefile`, `build_script.py`), and creating a verification report (`verification_report.json`). The source files must be v",
+      "has_cmds": true,
+      "n_cmds": 14,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5288
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows a Linux environment where the user is in the `/app` directory. The task requires writing and executing a Python script to analyze a `CMakeLists.txt` file located at `/app/CMakeLists.txt`, perform complex static analysis (parsing CMake structure, depen",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5538
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows a clean Linux environment, starting in the `/app` directory. The task requires implementing a complex Python script (`/app/build_analyzer.py`) to parse module JSON files and a YAML configuration, perform dependency graph analysis (cycle detection, top",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6898
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is tasked with debugging and optimizing a Python script (`/app/log_analyzer.py`) that is performing poorly (30s vs expected <3s) and exhibiting memory issues when processing 100,000 log lines concurrently. The core problems identified are: slow processing, memory le",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1667
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is tasked with debugging and optimizing a Python script (`process_logs.py`) that processes large JSON log files (`/app/input.jsonl`). The goal is to profile the script, find the bottleneck, fix it, and validate the performance improvement. \\n\\nThe current terminal s",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1887
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory on a Linux machine. The task requires debugging a Python script (`/app/process_logs.py`) that suffers from a concurrency bottleneck (slow performance) and a concurrency bug (incorrect statistics). The hint suggests ",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1272
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "This is a complex, multi-step software engineering task requiring file manipulation, code debugging, logging implementation, and test harness creation. Since I do not have the actual content of the files (`/app/data_processor.py`, `/app/input_data.csv`, `/app/runtime_logs.txt`, `/app/requirements.tx",
+      "has_cmds": true,
+      "n_cmds": 15,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1891
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires a complex data science workflow involving data loading, cleaning, statistical analysis (conversion rates, chi-square, pairwise comparisons, ANOVA/Kruskal-Wallis), and final report generation (JSON and CSV). The environment is a Linux terminal, and the curre",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1385
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory on a Linux system. The task requires a complex data analysis pipeline involving reading JSON and CSV files, performing statistical calculations (t-tests, lift, ROAS), generating structured JSON and CSV reports, and ",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7168
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is tasked with performing a complex data analysis pipeline involving CSV and JSON file processing, time-series manipulation, linear regression, lift calculation, sensitivity analysis, and final report/visualization generation. The current state shows the user is in ",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7384
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows a root user in the `/app` directory. The task requires creating and running a Python script to perform an ETL pipeline on CSV files located in `/app/input/` and generate JSON and CSV reports in `/app/output/`. Since no files exist yet, the first step ",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7596
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is starting a complex data processing pipeline task. The current state shows the user is logged in as 'root' in the `/app` directory. No files are present, and no processing has started. The task requires reading three different file types (JSONL, CSV, JSON), perfor",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2316
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is starting a complex data processing pipeline task. The current state shows the user is in the `/app` directory on a Linux machine. All necessary input files (`sensors.csv`, `readings.jsonl`, `alerts.json`) are assumed to be present in `/app/`. The task requires si",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2130
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires writing and executing a complex Python script to simulate 2D repulsive particle dynamics using the Velocity Verlet integration method, incorporating minimum image convention for periodic boundary conditions, and calculating energy/temperature statistics. Th",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6325
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires implementing and running a complex Python simulation for an N-body problem. The input configuration file `/app/nbody_config.json` is specified, and the execution environment is a Linux terminal. Since the task is to *implement* and *run* the simulation, the",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1150
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user has presented a complex scientific computing task: implementing a 2D charged particle dynamics simulation using Python, involving gravitational and electrostatic forces, numerical integration (Velocity Verlet), and energy conservation tracking. The task requires rea",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1828
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires analyzing a Python script (`/app/vulnerable_app.py`) for a command injection vulnerability, fixing it, creating a security report, and then running a test script (`/app/test_vulnerability.py`).\\n\\nCurrently, I am in the `/app` directory as root. The first s",
+      "has_cmds": true,
+      "n_cmds": 14,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1429
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory as the root user. The task requires analyzing, fixing, and reporting on security vulnerabilities in a set of Python files (`server.py`, `database.py`, `utils.py`) and generating a report. Since the file contents are",
+      "has_cmds": true,
+      "n_cmds": 15,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1267
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory on a Linux system. The task requires a comprehensive security audit, fixing, reporting, and testing process for a Python web application located at `/app/note_service.py` and its templates. Since I do not have the c",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1167
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "This task requires a multi-step process involving file manipulation (extraction), text processing (log analysis), data aggregation, and final report generation (JSON and Markdown). Since this is a complex, multi-stage data processing task, it will require a sequence of shell commands, likely involvi",
+      "has_cmds": true,
+      "n_cmds": 25,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4221
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires reading a log file (`/app/server.log`), parsing structured log lines, extracting key-value pairs, calculating various statistics (overall counts, hourly breakdowns, key analysis), and finally writing the result to `/app/summary.json` in a specific JSON form",
+      "has_cmds": true,
+      "n_cmds": 13,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4835
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires a complex log analysis pipeline involving file processing (including gzipped files), pattern matching, data extraction, categorization, and generating two structured output files (JSON summary and CSV details). Since I am starting from a clean prompt and th",
+      "has_cmds": true,
+      "n_cmds": 18,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4070
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is logged in as `root` in the `/app` directory. The task requires several complex steps: fixing file permissions, creating a systemd service file, writing a complex Python monitoring script, and ensuring the web application is running and con",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7250
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "This is a complex, multi-step system administration task that requires file reading, configuration manipulation, script writing, process management, load testing, and report generation. Since I am an AI assistant operating in a simulated environment, I must execute these steps sequentially using app",
+      "has_cmds": true,
+      "n_cmds": 34,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4384
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "This task requires writing and executing a complex Python script to perform service monitoring, configuration generation, and dashboard creation based on provided file structures. Since I am an AI assistant operating in a simulated environment, I must first create the necessary input files (`service",
+      "has_cmds": true,
+      "n_cmds": 15,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7473
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory on a Linux system. The task requires writing a SPARQL query, creating a Python script to run it, and saving these files to specific locations (`/app/query.sparql`, `/app/run_query.py`, and `/app/results.csv`). The n",
+      "has_cmds": true,
+      "n_cmds": 13,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5714
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows a clean Linux environment, logged in as 'root' in the `/app` directory. The task requires writing and executing a Python script to perform complex SPARQL queries on an RDF dataset located at `/app/research_data.ttl` and save the results to `/app/outpu",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1294
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state is a clean directory `/app` on a Linux system. The goal is to set up a Python environment for data analysis under strict resource constraints (500MB disk space, CPU-only, no cache). The plan involves: 1. Creating and activating a virtual environment. 2. Sel",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0.1818,
+      "thinking": false,
+      "pred_len": 4128
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current directory is `/app` on a minimal Ubuntu system. The goal is to install `psycopg2` (version >= 2.9) from source, which will require system dependencies, and then verify the installation. The initial step is to attempt the installation, which is expected to fail du",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1028
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows a clean Linux environment (`root@cpu1-0044:/app#`). The task requires implementing a complete PyTorch training pipeline involving a custom MLP, gradient accumulation, learning rate scheduling (warm-up + cosine decay), synthetic data generation, and de",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1165
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user has presented a very complex, multi-stage machine learning task requiring the implementation of a complete PyTorch training pipeline involving data loading, a specific neural network architecture, gradient accumulation, a custom learning rate scheduler, and comprehe",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1531
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires a multi-step debugging process for a Python package dependency conflict. The initial state shows the user is in the `/app` directory as root. No files or environment information is visible yet. The first step is to investigate the failing test suite located",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1448
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires debugging a library version compatibility issue related to JSON encoding in a Python application using the `requests` library. I need to perform several steps: analyze an error log, examine existing code (`main.py`, `requirements.txt`), reproduce the error,",
+      "has_cmds": true,
+      "n_cmds": 13,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1397
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows a Linux terminal prompt: `root@cpu1-0020:/app#`. The task requires processing a JSONL file (`/app/input/events.jsonl`) to perform complex data parsing, temporal feature extraction, anomaly detection, and generating structured output files (`/app/outpu",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7034
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory on the host `cpu1-0023`. The task requires processing a large JSONL file (`/app/input.jsonl`) to generate two output files: `/app/output/suspicious_connections.json` and `/app/output/hourly_summary.csv`. This task r",
+      "has_cmds": true,
+      "n_cmds": 16,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 8034
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is starting a complex data science task involving loading, transforming, analyzing, and reporting on multi-sensor IoT data. The current state shows the user is logged in as 'root' on a machine named 'cpu1-0025' in the `/app` directory. No data files or configuration",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1793
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires creating and executing a complex Python script to scaffold a project based on a configuration file (`/app/project_config.json`) and validate the result, finally generating a report (`/app/validation_report.json`). Since the current state is a clean director",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 7409
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user is presented with a complex task: implementing a gravitational N-body simulation with adaptive time stepping, work partitioning, and conservation tracking, based on a configuration file `/app/input.json`. The current terminal state shows the user is in the `/app` di",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1484
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The current state shows the user is in the `/app` directory on the `root` user. The task requires navigating configuration files, writing an exploit script, writing a hardening script, and generating a report. Since no files are present yet, the first step is to examine the ",
+      "has_cmds": true,
+      "n_cmds": 10,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1079
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user has presented a competitive programming problem that requires finding the minimum number of steps to achieve a total intersection $I \\ge k$. \\n\\nInitial state: $n$ pairs of segments. All $[al_i, ar_i]$ are $[l_1, r_1]$, and all $[bl_i, br_i]$ are $[l_2, r_2]$.\\n\\nTh",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5744
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user has presented a competitive programming problem that requires finding the minimum possible total number of votes for two candidates, Takahashi (T) and Aoki (A), given $N$ ratio reports $T_i:A_i$. We are told that the number of votes for each candidate never decrease",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5034
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user wants to find a single pair of strings ($$s$$$ and $$t$$$) such that for every variable name $w_i$, if $w_i$ contains $s$, replacing the first occurrence of $s$ with $t$ results in $w'_i$. If $w_i$ does not contain $s$, $w_i$ remains unchanged (i.e., $w_i = w'_i$). ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 5600
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to fix a bug in `compose/cli/main.py` related to the `docker-compose rm` command warning. The warning suggests that to include one-off containers created by `docker-compose run`, the user should use `docker-compose rm --all`, and this should become the default be",
+      "has_cmds": true,
+      "n_cmds": 11,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 1328
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to fix an issue in `synapse/http/server.py` to allow the `Synapse-Trace-Id` header to be whitelisted in `access-control-allow-headers` for CORS purposes. The issue description points to a specific line in `server.py` related to header handling. I need to examine ",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 893
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires fixing three issues in `src/cantools/database/can/signal_group.py` related to the `SignalGroup` class: 1) `name` property returns lowercase, 2) `repetitions` property is incremented by 1, and 3) `signal_names` property returns the list in reverse order. I n",
+      "has_cmds": true,
+      "n_cmds": 10,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1384
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to solve the Cauchy problem: $tx' - x - \\ln x' = 0$, with the initial condition $x(1) = 1$. This is a first-order ordinary differential equation. I need to solve this ODE analytically and then write the solution to `/app/solution.txt`. \\n\\nThe differential equati",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3814
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task requires solving a system of non-linear equations: \\n1. $\\\\frac{2x}{x^2+1}=y$\\n2. $\\\\frac{2y}{y^2+1}=z$\\n3. $\\\\frac{2z}{z^2+1}=x$\\n\\nThis is a system where $x, y, z$ are interdependent. A common approach for such symmetric systems is to test for simple solutions, li",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2450
+    }
+  ]
+}

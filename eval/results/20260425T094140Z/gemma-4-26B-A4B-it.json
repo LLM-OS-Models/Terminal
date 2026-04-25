@@ -1,0 +1,519 @@
+{
+  "model": "google/gemma-4-26B-A4B-it",
+  "model_short": "gemma-4-26B-A4B-it",
+  "gpu": "0",
+  "samples": 50,
+  "load_time_sec": 120,
+  "gen_time_sec": 22.3,
+  "avg_sec_per_sample": 0.45,
+  "timestamp": "2026-04-25T18:46:19.813973",
+  "aggregate": {
+    "avg_pred_len": 1280,
+    "pct_has_cmds": 78.0,
+    "avg_cmds": 3.2,
+    "avg_overlap": 0.0323,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to explore the project structure in /app/myproject/ to understand the current state of the files and the dependencies. I will start by listing the contents of the project directory and the output directory.\",\n  \"plan\": \"1. List the contents",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 833
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to implement a Python script `validate_build_config.py` that parses a YAML build configuration, detects cycles, validates dependencies, and generates a topological sort. I'll start by exploring the current directory and checking if the input file `/app/build_config.ya",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 681
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to migrate a legacy Makefile to a modern CMakeLists.txt. The first step is to examine the content of the legacy Makefile located at `/app/legacy_makefile.txt` to understand its structure, targets, flags, and dependencies.\",\n  \"plan\": \"I will read the content of `/app/",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 461
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to start by examining the project specification in `/app/project_spec.json` to understand the requirements for the build configuration. I also need to verify the existence of the source files in `/app/src/` as mentioned in the task description.\",\n  \"plan\": \"1. Read `/",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 677
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to create a Python script that analyzes the CMakeLists.txt file located at /app/CMakeLists.txt. The script must identify configuration issues, build a dependency graph, and generate two output files: /app/build_analysis_report.json and /app",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 932
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to implement a build system dependency graph analyzer in Python. The task involves parsing JSON module definitions and a YAML project configuration, validating the dependency graph (cycles, missing dependencies, leaf consistency), generating a topological sort for seq",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 963
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I see the task description requires me to debug `log_analyzer.py`. I need to explore the files provided to understand the current implementation and the issues described (slow performance, low CPU usage, memory leak, and incorrect counts).\",\n  \"pl",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 687
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I see the task requires profiling, diagnosing, fixing, and validating a Python script `process_logs.py`. First, I need to explore the environment and the files provided to understand the current state.\",\n  \"plan\": \"1. List the files in /app to con",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 668
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to investigate the provided files to understand the current implementation of the log processing system. I will start by listing the files in the directory and then examine the content of the script and the logs.\",\n  \"plan\": \"1. List files ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 746
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to investigate the provided files to understand the bug. The task involves diagnosing a concurrency issue in `data_processor.py`, fixing it, adding structured logging to `debug_log.json`, and creating a test harness `test_verification.py`. ",
+      "has_cmds": true,
+      "n_cmds": 10,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1042
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to perform a data science task involving data cleaning, statistical analysis, and report generation. First, I need to explore the available files to understand the data structure and the configuration.\",\n  \"plan\": \"1. List the files in /app",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 810
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to examine the available data files (/app/campaigns.json and /app/sales.csv) and check the directory structure to ensure I can create the required output files in /app/analysis/.\",\n  \"plan\": \"First, I will list the files in the current dire",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 729
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "{\n  \"analysis\": \"I am in the `/app` directory. I need to analyze the sales data and campaign dates to estimate the campaign's impact. First, I should explore the available files to confirm their existence and content.\",\n  \"plan\": \"1. List the files in the current directory to confirm `/app/sales_dat",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 680
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to create a Python script that implements an ETL pipeline for audio recording metadata. The script must read CSV files from `/app/input/`, clean and validate the data, group it by location, and generate two output files: a JSON summary and a CSV quality report. I'll s",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 720
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to start by exploring the environment and the input data files to understand their structure and content. I will list the files in `/app/data/` and `/app/output/` to confirm their existence and then inspect the contents of the input files.\",\n  \"plan\": \"1. List files i",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 891
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to process sensor data from sensors.csv, readings.jsonl, and alerts.json. The task involves data cleaning (interpolation), anomaly detection (thresholds and spikes), and generating three specific output files: anomalies.json, interpolated_r",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1072
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to implement a 2D particle simulation with repulsive forces, periodic boundary conditions, and Velocity Verlet integration. The input is provided in `/app/input/particles.json` and the output should be in `/app/output/summary.json` and `/app/output/history.csv`. I wil",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 684
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to implement a gravitational N-body simulation in Python. The task requires reading a JSON configuration, implementing the Velocity Verlet integration algorithm with vectorized force calculations, tracking energy (kinetic and potential), and outputting results in spec",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 796
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "{\n  \"analysis\": \"I need to implement a 2D charged particle dynamics simulation in Python. The simulation involves gravitational and electrostatic forces, using the Velocity Verlet integration method. I need to read configuration from `/app/config.json` and output results to `/app/trajectory.json` an",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 916
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to analyze the vulnerable code in `/app/vulnerable_app.py`, fix the command injection vulnerability, create a security report, and verify the fix with the provided test suite. First, I will examine the contents of `/app/vulnerable_app.py` t",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 863
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the `/app` directory. I need to audit the application files: `server.py`, `database.py`, and `utils.py`. I'll start by listing the files to confirm their existence and then examine their contents to identify vulnerabilities.\",\n  \"plan\": \"1. List the files in the curr",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 840
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to audit the existing application to identify vulnerabilities. The application consists of `/app/note_service.py` and templates in `/app/templates/`. I will start by listing the files in the directory to confirm the structure and then exami",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 777
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the `/app` directory. I need to process log archives located in `/app/archives/`, extract them, analyze the log files, generate a JSON report at `/app/output/log_analysis.json`, and a markdown summary at `/app/output/summary.md`. First, I need to explore the environm",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 866
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "{\n  \"analysis\": \"I need to process a log file at `/app/server.log` and generate a summary report in `/app/summary.json`. The log format is specific, and I need to handle valid lines, malformed lines, and key-value pairs (including a special case for `response_time`). I will start by examining the co",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 727
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to analyze the log files in `/app/logs/` and generate two output files: `/app/output/error_summary.json` and `/app/output/detailed_errors.csv`. The logs can be in `.log` or `.log.gz` format. I need to extract specific fields (timestamp, service, message, error code, u",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1108
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to configure a web application, set up a systemd service, and create a health monitoring script. First, I need to explore the existing web application code and directory structure to understand what needs to be modified.\",\n  \"plan\": \"1. Lis",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 752
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am starting the task of optimizing the NGINX web server. The first step is to analyze the current configuration at `/app/nginx.conf` to extract key parameters like worker processes, worker connections, keepalive timeout, log paths, and upstream servers. I will then save th",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 663
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "{\n  \"analysis\": \"I am in the `/app` directory. I need to implement a Python script that parses `/app/services.conf`, monitors the health of services, generates an Nginx configuration based on a template, creates a health dashboard JSON, and logs alerts. First, I need to examine the existing files to",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 872
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I see the task requires creating a SPARQL query, a Python script to execute it, and producing a CSV file. First, I need to examine the content of `/app/movies.ttl` to understand the data structure and ensure my SPARQL query is accurate.\",\n  \"plan\"",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 634
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to solve a task involving SPARQL queries on an RDF dataset. The dataset is located at `/app/research_data.ttl`. I need to write a Python script using `rdflib` to perform four specific queries and save the results to `/app/output/` in various formats (CSV, JSON, TXT). ",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1011
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am starting in the /app directory. I need to set up a Python virtual environment, install specific packages (numerical computing, data visualization, data manipulation) while respecting disk space and dependency constraints, resolve a numpy version conflict, and build pyar",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 824
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory of a minimal Ubuntu system. The task is to install `psycopg2` (>= 2.9) from source, which will likely fail due to missing dependencies. I need to manage disk space carefully (500MB limit). First, I will attempt to install `psycopg2` using pip to se",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 863
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to implement a PyTorch training pipeline with specific requirements: an MLP model, gradient accumulation (batch size 64, accumulation steps 4, effective batch size 256), learning rate scheduling (linear warm-up for 2 epochs, then cosine annealing), and logging. I also",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6495
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to implement a PyTorch training pipeline with specific requirements: data preparation, a specific neural network architecture, gradient accumulation, a custom learning rate scheduler, and checkpointing/evaluation. I should first explore the environment to see if the d",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 721
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. The task is to debug a dependency conflict in the `pyanalyzer` package. The first step is to investigate the test failure by running the test suite located at `/app/pyanalyzer/tests/test_analysis.py`.\",\n  \"plan\": \"I will run the tests using `pytes",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 504
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to start by analyzing the error log to understand the nature of the failure, then examine the codebase to understand how the current implementation uses the 'requests' library.\",\n  \"plan\": \"1. Read /app/error.log to identify the error type ",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 738
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to start by exploring the environment to see the input files and the directory structure. I'll check the contents of `/app/input/` to confirm the existence of `events.jsonl` and `/app/output/` to see if it exists.\",\n  \"plan\": \"1. List the contents of `/app/input` and ",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 627
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I need to process a JSONL file containing network logs to detect suspicious activities and generate an hourly traffic summary. The tasks involve identifying port scanning, data exfiltration, and protocol anomalies, as well as aggregating traffic statistics by hour. I'll star",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 759
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to perform a data science task involving loading multiple data formats (CSV, JSON, YAML), feature engineering, correlation analysis, anomaly detection, and generating several output files. First, I need to explore the available data files t",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1060
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to create a Python script that implements the project scaffolding and validation tool as described. First, I need to examine the existing files to understand the configuration and templates provided.\",\n  \"plan\": \"1. List the files in /app t",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 782
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the /app directory. I need to implement a gravitational N-body simulation in Python (or another suitable language, but Python is common for such tasks) that follows the specific requirements: adaptive time stepping, work partitioning, and energy conservation monitori",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 844
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "```json\n{\n  \"analysis\": \"I am in the `/app` directory. The task requires me to audit a web service, exploit three specific vulnerabilities (directory traversal, command injection, and information disclosure), write an exploit script, a hardening script, and a report. First, I need to explore the env",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 861
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to solve a competitive programming problem involving minimizing the number of steps to reach a target total intersection length $k$ for $n$ pairs of segments. I need to write a Python solution that handles multiple test cases efficiently. The problem can be solve",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3376
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to solve a competitive programming problem. I need to write a Python script that reads the input, calculates the minimum possible total number of votes based on the given ratios, and prints the result. The constraints are N up to 1000 and T_i, A_i up to 1000, wit",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3728
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to find two strings $s$ and $t$ such that replacing the first occurrence of $s$ with $t$ in each initial variable name $w_i$ results in the target name $w'_i$. I need to write a Python script to solve this problem and save it to `/app/solution.py`.\",\n  \"plan\": \"I",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 6332
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to update the default behavior of `docker-compose rm` to include one-off containers created by `docker-compose run`, as indicated by the warning message. I need to find the relevant code in `compose/cli/main.py` (or other files if necessary) that handles the `rm`",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0.6154,
+      "thinking": false,
+      "pred_len": 642
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The issue is to add `Synapse-Trace-Id` to the `access-control-allow-headers` in `synapse/http/server.py`. I need to locate where this header is defined and add the missing header to the whitelist.\",\n  \"plan\": \"First, I will list the files in the repository to confirm the str",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 566
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The user wants me to fix a bug in the `SignalGroup` class in `src/cantools/database/can/signal_group.py`. \\n\\nThe reported issues are:\\n1. `name` property returns lowercase name.\\n2. `repetitions` property is incremented by 1.\\n3. `signal_names` property returns the list in ",
+      "has_cmds": true,
+      "n_cmds": 8,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 827
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to solve the Cauchy problem: $tx' - x - \\ln(x') = 0$ with $x(1) = 1$. This is a first-order ordinary differential equation. I need to solve it analytically and then write the result to `/app/solution.txt`.\",\n  \"plan\": \"1. Let $v = x'$. Then the equation becomes $",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4721
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "```json\n{\n  \"analysis\": \"The task is to solve a system of equations: \\n1) 2x / (x^2 + 1) = y\\n2) 2y / (y^2 + 1) = z\\n3) 2z / (z^2 + 1) = x\\n\\nLet's analyze the function f(t) = 2t / (t^2 + 1). \\nNote that |f(t)| <= 1 for all real t. \\nIf x, y, z are real, then x, y, z must be in [-1, 1].\\nAlso, f(t) ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4609
+    }
+  ]
+}

@@ -1,0 +1,520 @@
+{
+  "model": "Qwen/Qwen3.5-9B",
+  "model_short": "Qwen3.5-9B",
+  "params_B": 9.0,
+  "gpu": 2,
+  "samples": 50,
+  "load_time_sec": 14,
+  "gen_time_sec": 2368.4,
+  "avg_sec_per_sample": 47.37,
+  "timestamp": "2026-04-21T22:12:59.616990",
+  "aggregate": {
+    "avg_pred_len": 3493,
+    "pct_has_cmds": 80.0,
+    "avg_cmds": 3.6,
+    "avg_overlap": 0.0308,
+    "pct_thinking": 0.0
+  },
+  "per_sample": [
+    {
+      "idx": 0,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "Let me analyze the task. I need to:\n\n1. Analyze dependencies from `/app/myproject/dependencies.json`\n2. Fix the broken `CMakeLists.txt` in `/app/myproject/`\n3. Create a cross-platform build script `/a",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3525
+    },
+    {
+      "idx": 1,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to implement a Python script `validate_build_config.py` that:\n   - Parses a YAML configuration from `/app/build_config.yaml`\n   - Validates the structure\n   - Detec",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3996
+    },
+    {
+      "idx": 2,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "Let me analyze the task. I need to:\n1. Read and analyze the legacy Makefile at `/app/legacy_makefile.txt`\n2. Create a CMakeLists.txt at `/app/output/CMakeLists.txt`\n3. Create a validation report at `/",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3427
+    },
+    {
+      "idx": 3,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "Let me analyze the task and current state:\n\n1. I'm in the `/app` directory\n2. I need to create a build configuration generator for a C++ project\n3. I need to read `/app/project_spec.json` to understan",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3557
+    },
+    {
+      "idx": 4,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to create a Python script that analyzes a CMakeLists.txt file at `/app/CMakeLists.txt`\n2. The script should identify common build configuration issues\n3. Generate a",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2380
+    },
+    {
+      "idx": 5,
+      "source": "synthetic_tasks/skill_based/medium/software_engineering",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to create a Python script at `/app/build_analyzer.py` that:\n   - Parses module definitions from `/app/input/modules/*.json`\n   - Reads project config from `/app/inp",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2252
+    },
+    {
+      "idx": 6,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "Let me analyze the task. I need to debug and optimize a log processing system that has performance issues. Let me start by exploring the files and understanding the current state.\n\nFirst, I'll:\n1. Loo",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3966
+    },
+    {
+      "idx": 7,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "Let me analyze the current state and plan my approach to solve this performance debugging task.\n\nCurrent state:\n- I'm in a terminal at `/app` directory\n- I need to debug a performance issue in a data ",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3907
+    },
+    {
+      "idx": 8,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "Let me analyze the task. I need to:\n1. Debug a Python log processing system with performance issues\n2. Identify a concurrency bug causing incorrect statistics\n3. Fix both issues\n4. Output analysis to ",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 1357
+    },
+    {
+      "idx": 9,
+      "source": "synthetic_tasks/skill_based/medium/debugging",
+      "pred_preview": "Let me analyze the task. I need to:\n\n1. Debug a concurrent data corruption issue in a processing pipeline\n2. Fix the concurrency bug in `/app/data_processor.py`\n3. Add comprehensive logging to `/app/d",
+      "has_cmds": true,
+      "n_cmds": 12,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4222
+    },
+    {
+      "idx": 10,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "Let me analyze the task and create a plan to solve it.\n\nThe task is to:\n1. Load and validate A/B test data from `/app/data/ab_test_raw.csv`\n2. Load analysis configuration from `/app/config/analysis_co",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3702
+    },
+    {
+      "idx": 11,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "Let me analyze the task and create a plan to solve it.\n\nThe task is to build a marketing campaign effectiveness analyzer that:\n1. Loads and validates data from `/app/campaigns.json` and `/app/sales.cs",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3745
+    },
+    {
+      "idx": 12,
+      "source": "synthetic_tasks/skill_based/medium/data_science",
+      "pred_preview": "Let me analyze the task and create a plan to solve it.\n\nThe task is to:\n1. Load and validate sales data and campaign dates\n2. Perform statistical modeling using linear regression\n3. Calculate lift ana",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3866
+    },
+    {
+      "idx": 13,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "Let me analyze the task and create a plan to solve it.\n\nThe task is to create a Python script that:\n1. Processes multiple CSV files from `/app/input/` directory\n2. Cleans and validates data\n3. Groups ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3803
+    },
+    {
+      "idx": 14,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "Let me analyze the task and create a plan to solve it.\n\nThe task is to build a data processing pipeline for environmental sensor data. I need to:\n\n1. Load and validate three input files:\n   - `/app/da",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3622
+    },
+    {
+      "idx": 15,
+      "source": "synthetic_tasks/skill_based/medium/data_processing",
+      "pred_preview": "Let me analyze the task and current state:\n\n1. I'm in the `/app/` directory\n2. I need to process sensor data from three sources:\n   - `/app/sensors.csv` - sensor metadata\n   - `/app/readings.jsonl` - ",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3962
+    },
+    {
+      "idx": 16,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to create a Python script that simulates charged particles in a 2D periodic box\n2. The script needs to:\n   - Parse input JSON from `/app/input/particles.json`\n   - ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3828
+    },
+    {
+      "idx": 17,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "Let me analyze the task and create a plan to implement the N-body gravitational simulation.\n\nThe task requires:\n1. Read simulation parameters from a JSON config file\n2. Implement force calculation usi",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4014
+    },
+    {
+      "idx": 18,
+      "source": "synthetic_tasks/skill_based/medium/scientific_computing",
+      "pred_preview": "Let me analyze the task. I need to implement a 2D charged particle dynamics simulation that combines gravitational and electrostatic forces. The task involves:\n\n1. Reading configuration from `/app/con",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2991
+    },
+    {
+      "idx": 19,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "Let me analyze the task. I need to:\n1. Analyze the vulnerable code at `/app/vulnerable_app.py`\n2. Identify the command injection vulnerability\n3. Fix the vulnerability\n4. Create a security report at `",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4137
+    },
+    {
+      "idx": 20,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "Let me analyze the current state and plan my approach to this security audit task.\n\nCurrent state:\n- I'm in the /app directory as root\n- I need to examine the Python files for security vulnerabilities",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3995
+    },
+    {
+      "idx": 21,
+      "source": "synthetic_tasks/skill_based/medium/security",
+      "pred_preview": "Let me analyze the task. I need to:\n\n1. Analyze a vulnerable web application at `/app/note_service.py` and `/app/templates/`\n2. Identify security vulnerabilities\n3. Create a fixed version at `/app/fix",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3661
+    },
+    {
+      "idx": 22,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "Let me analyze the task and create a plan to solve it.\n\nThe task is to:\n1. Process log archives in `/app/archives/`\n2. Extract all `.tar.gz` files\n3. Analyze log files with format `[TIMESTAMP] [LEVEL]",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3663
+    },
+    {
+      "idx": 23,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to read `/app/server.log`\n2. Parse log lines with format: `[YYYY-MM-DD HH:MM:SS] LEVEL: message (key1=value1, key2=value2, ...)`\n3. Extract data and generate a summ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3413
+    },
+    {
+      "idx": 24,
+      "source": "synthetic_tasks/skill_based/medium/file_operations",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to process log files in `/app/logs/` that match `*.log` or `*.log.gz`\n2. Extract ERROR level entries with specific fields\n3. Categorize errors into 5 groups\n4. Gene",
+      "has_cmds": true,
+      "n_cmds": 6,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3496
+    },
+    {
+      "idx": 25,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "Let me analyze the task and create a plan to complete it.\n\nThe task involves:\n1. Fixing web application security at `/app/webapp/app.py`\n2. Setting up proper file permissions\n3. Creating a systemd ser",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3464
+    },
+    {
+      "idx": 26,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "Let me analyze the task and create a plan to complete it.\n\nThe task is to:\n1. Analyze the current NGINX configuration at `/app/nginx.conf`\n2. Create an optimized configuration at `/app/nginx_optimized",
+      "has_cmds": true,
+      "n_cmds": 9,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3325
+    },
+    {
+      "idx": 27,
+      "source": "synthetic_tasks/skill_based/medium/system_administration",
+      "pred_preview": "Let me analyze the task and current state:\n\n1. I'm in the `/app/` directory as root\n2. I need to create a Python script that:\n   - Parses service configuration from `/app/services.conf`\n   - Monitors ",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4374
+    },
+    {
+      "idx": 28,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to write a SPARQL query to analyze a movie database in RDF format\n2. The query should find movies released between 1995-2005 that meet certain criteria\n3. I need to",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3571
+    },
+    {
+      "idx": 29,
+      "source": "synthetic_tasks/skill_based/medium/data_querying",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to work with an RDF/Turtle dataset at `/app/research_data.ttl`\n2. I need to write a Python script that performs 4 SPARQL queries\n3. The output files should be saved",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3684
+    },
+    {
+      "idx": 30,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "Let me analyze the task and create a plan to set up the Python environment with the given constraints.\n\nThe task requires:\n1. Create a virtual environment at `/app/venv`\n2. Install numerical computing",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0.0,
+      "thinking": false,
+      "pred_len": 3819
+    },
+    {
+      "idx": 31,
+      "source": "synthetic_tasks/skill_based/medium/dependency_management",
+      "pred_preview": "Let me analyze the current state and plan my approach.\n\nCurrent state:\n- I'm in a minimal Ubuntu environment at /app\n- I need to install psycopg2 version 2.9+ without using psycopg2-binary\n- The serve",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2267
+    },
+    {
+      "idx": 32,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "Let me analyze the task and create a solution for the neural network training with gradient accumulation and learning rate scheduling.\n\nThe task requires:\n1. Create an MLP model with 784 input, 512→25",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3987
+    },
+    {
+      "idx": 33,
+      "source": "synthetic_tasks/skill_based/medium/model_training",
+      "pred_preview": "Let me analyze the task and create a plan to implement a complete training pipeline for a binary classification model with gradient accumulation and dynamic learning rate scheduler.\n\nThe task requires",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4148
+    },
+    {
+      "idx": 34,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "Let me analyze the task and start investigating the PyPi dependency conflict issue.\n\nThe task is about debugging a Python package `pyanalyzer` that has failing tests due to dependency conflicts. The k",
+      "has_cmds": true,
+      "n_cmds": 2,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3750
+    },
+    {
+      "idx": 35,
+      "source": "synthetic_tasks/skill_based/mixed/debugging",
+      "pred_preview": "Let me analyze the task. I need to debug a library version compatibility bug related to the `requests` library. The task involves:\n\n1. Analyzing the error log at `/app/error.log`\n2. Understanding the ",
+      "has_cmds": true,
+      "n_cmds": 22,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4072
+    },
+    {
+      "idx": 36,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "Let me analyze the task and create a solution for the Event Log Anomaly Detector.\n\nThe task requires:\n1. Parse and validate JSONL event stream from `/app/input/events.jsonl`\n2. Extract temporal featur",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3842
+    },
+    {
+      "idx": 37,
+      "source": "synthetic_tasks/skill_based/mixed/data_processing",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to process `/app/input.jsonl` which contains network connection logs in JSONL format\n2. I need to generate two output files:\n   - `/app/output/suspicious_connection",
+      "has_cmds": true,
+      "n_cmds": 3,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3598
+    },
+    {
+      "idx": 38,
+      "source": "synthetic_tasks/skill_based/mixed/data_science",
+      "pred_preview": "Let me analyze the task and the current state:\n\n1. I'm in a Linux environment at `/app` directory\n2. I need to analyze IoT sensor data from multiple sources\n3. The task involves:\n   - Loading data fro",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4078
+    },
+    {
+      "idx": 39,
+      "source": "synthetic_tasks/skill_based/mixed/file_operations",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to create a Python script that:\n   - Reads `/app/project_config.json` for project configuration\n   - Creates directory structure at `/app/generated_projects/{projec",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3833
+    },
+    {
+      "idx": 40,
+      "source": "synthetic_tasks/skill_based/mixed/scientific_computing",
+      "pred_preview": "Let me analyze the task:\n\n1. I need to implement a gravitational N-body simulation with adaptive time stepping\n2. Read input from `/app/input.json`\n3. Implement leapfrog integration with adaptive step",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3217
+    },
+    {
+      "idx": 41,
+      "source": "synthetic_tasks/skill_based/mixed/security",
+      "pred_preview": "Let me analyze the task and start working on it step by step.\n\nThe task is to:\n1. Examine the web service configuration at `/app/webapp/config.yaml`\n2. Identify security misconfigurations\n3. Write an ",
+      "has_cmds": true,
+      "n_cmds": 5,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3655
+    },
+    {
+      "idx": 42,
+      "source": "dataset_adapters/code",
+      "pred_preview": "Let me analyze this problem step by step.\n\nWe have two lists of segments, each with n segments. Initially:\n- All segments in the first list are [l1, r1]\n- All segments in the second list are [l2, r2]\n",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 4198
+    },
+    {
+      "idx": 43,
+      "source": "dataset_adapters/code",
+      "pred_preview": "Let me analyze this problem:\n\n1. We have N reports, each showing a ratio T_i : A_i of votes for Takahashi and Aoki\n2. The number of votes for each candidate never decreases\n3. We need to find the mini",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3495
+    },
+    {
+      "idx": 44,
+      "source": "dataset_adapters/code",
+      "pred_preview": "Let me analyze this problem:\n\n1. We have n variables, each with an initial name and a target name\n2. We need to find a single replacement (s, t) such that for each variable:\n   - If the variable's nam",
+      "has_cmds": true,
+      "n_cmds": 1,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 3929
+    },
+    {
+      "idx": 45,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "The user wants me to solve a task related to updating the default behavior of `docker-compose rm`. The task mentions that there's a warning message about not including one-off containers created by `d",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0.5385,
+      "thinking": false,
+      "pred_len": 2297
+    },
+    {
+      "idx": 46,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "The user wants me to add `Synapse-Trace-Id` to the `access-control-allow-headers` header in the Synapse codebase. Let me first explore the repository structure and find the relevant file mentioned in ",
+      "has_cmds": true,
+      "n_cmds": 7,
+      "cmd_overlap": 1.0,
+      "thinking": false,
+      "pred_len": 1973
+    },
+    {
+      "idx": 47,
+      "source": "dataset_adapters/swe",
+      "pred_preview": "Let me analyze the task. I need to fix a bug in the `SignalGroup` class in the cantools library. The issues are:\n\n1. The `name` property returns the name in lowercase\n2. The `repetitions` property is ",
+      "has_cmds": true,
+      "n_cmds": 4,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2291
+    },
+    {
+      "idx": 48,
+      "source": "dataset_adapters/math",
+      "pred_preview": "Let me analyze this Cauchy problem:\n\nThe differential equation is: $tx' - x - \\ln x' = 0$ with initial condition $x(1) = 1$.\n\nLet me denote $p = x'$ (the derivative of x with respect to t).\n\nSo the eq",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2854
+    },
+    {
+      "idx": 49,
+      "source": "dataset_adapters/math",
+      "pred_preview": "Let me analyze this system of equations:\n\n\\[\n\\frac{2x}{x^2+1}=y, \\quad \\frac{2y}{y^2+1}=z, \\quad \\frac{2z}{z^2+1}=x.\n\\]\n\nThis is a cyclic system of equations. Let me think about the solutions.\n\nFirst,",
+      "has_cmds": false,
+      "n_cmds": 0,
+      "cmd_overlap": 0,
+      "thinking": false,
+      "pred_len": 2440
+    }
+  ]
+}
