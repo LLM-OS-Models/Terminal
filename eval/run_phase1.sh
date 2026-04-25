@@ -1,9 +1,14 @@
 #!/bin/bash
-set -e
-cd "$(dirname "$0")"
-mkdir -p logs results
+set -euo pipefail
 
-source /home/work/.projects/Terminal/.eval-env/bin/activate
+EVAL_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$EVAL_DIR"
+
+source "$EVAL_DIR/env.sh"
+
+LOG_DIR="${LOG_DIR:-logs}"
+RESULTS_DIR="${RESULTS_DIR:-results}"
+mkdir -p "$LOG_DIR" "$RESULTS_DIR"
 
 echo "=== Phase 1: $(date) ==="
 
@@ -13,24 +18,24 @@ LABELS=()
 run_model() {
     local gpu=$1
     local model=$2
-    local logfile="logs/phase2_$(echo "$model" | tr '/' '_' | tr '[:upper:]' '[:lower:]').log"
+    local logfile="$LOG_DIR/phase1_$(echo "$model" | tr '/' '_' | tr '[:upper:]' '[:lower:]').log"
     echo "[GPU $gpu] $model"
     CUDA_VISIBLE_DEVICES=$gpu python3 vllm_eval.py \
-        --model "$model" --gpu 0 --output-dir results \
+        --model "$model" --gpu 0 --output-dir "$RESULTS_DIR" \
         > "$logfile" 2>&1
 }
 
-# Phase 1: text-only -> original models (vLLM config compat), Nemotron, gemma-26B
-run_model 0 "Qwen/Qwen3.5-2B" &
-PIDS+=($!); LABELS+=("GPU0 Qwen3.5-2B")
-run_model 1 "google/gemma-4-E2B-it" &
-PIDS+=($!); LABELS+=("GPU1 gemma-E2B")
-run_model 2 "Qwen/Qwen3.5-4B" &
-PIDS+=($!); LABELS+=("GPU2 Qwen3.5-4B")
-run_model 3 "google/gemma-4-E4B-it" &
-PIDS+=($!); LABELS+=("GPU3 gemma-E4B")
-run_model 4 "Qwen/Qwen3.5-9B" &
-PIDS+=($!); LABELS+=("GPU4 Qwen3.5-9B")
+# Phase 1: docs/NEXT_EVAL_PLAN.md text-only models + Nemotron + gemma-26B
+run_model 0 "principled-intelligence/Qwen3.5-2B-text-only" &
+PIDS+=($!); LABELS+=("GPU0 Qwen3.5-2B-text-only")
+run_model 1 "principled-intelligence/gemma-4-E2B-it-text-only" &
+PIDS+=($!); LABELS+=("GPU1 gemma-E2B-text-only")
+run_model 2 "principled-intelligence/Qwen3.5-4B-text-only" &
+PIDS+=($!); LABELS+=("GPU2 Qwen3.5-4B-text-only")
+run_model 3 "principled-intelligence/gemma-4-E4B-it-text-only" &
+PIDS+=($!); LABELS+=("GPU3 gemma-E4B-text-only")
+run_model 4 "principled-intelligence/Qwen3.5-9B-text-only" &
+PIDS+=($!); LABELS+=("GPU4 Qwen3.5-9B-text-only")
 run_model 5 "nvidia/Nemotron-Terminal-8B" &
 PIDS+=($!); LABELS+=("GPU5 Nemotron-8B")
 run_model 6 "nvidia/Nemotron-Terminal-14B" &

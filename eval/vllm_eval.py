@@ -16,6 +16,16 @@ def extract_ref(conversations):
             return m["content"]
     return ""
 
+
+def build_prompt(tokenizer, model_name, task):
+    msgs = [{"role": "user", "content": task}]
+    try:
+        return tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+    except Exception:
+        if "lfm" in model_name.lower():
+            return f"<|user|>\n{task}<|end_of_text|>\n<|assistant|>\n"
+        return f"User: {task}\nAssistant: "
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
@@ -24,6 +34,9 @@ def main():
     parser.add_argument("--gdn-triton", action="store_true")
     parser.add_argument("--eval-path", default="eval_dataset.jsonl")
     parser.add_argument("--output-dir", default="results")
+    parser.add_argument("--gpu-memory-utilization", type=float, default=0.85)
+    parser.add_argument("--max-model-len", type=int, default=8192)
+    parser.add_argument("--max-tokens", type=int, default=2048)
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -35,28 +48,28 @@ def main():
 
     print(f"[GPU {gpu_label}] Loading {args.model} with vLLM...")
     t0 = time.time()
-    kwargs = dict(trust_remote_code=True, dtype="bfloat16",
-                  gpu_memory_utilization=0.85, max_model_len=8192,
-                  tensor_parallel_size=args.tp)
+    kwargs = dict(
+        trust_remote_code=True,
+        dtype="bfloat16",
+        gpu_memory_utilization=args.gpu_memory_utilization,
+        max_model_len=args.max_model_len,
+        tensor_parallel_size=args.tp,
+        disable_log_stats=True,
+    )
     if args.gdn_triton:
         kwargs["additional_config"] = {"gdn_prefill_backend": "triton"}
     llm = LLM(model=args.model, **kwargs)
     load_time = time.time() - t0
     print(f"[GPU {gpu_label}] Loaded in {load_time:.0f}s")
 
-    sampling = SamplingParams(max_tokens=2048, temperature=0)
+    sampling = SamplingParams(max_tokens=args.max_tokens, temperature=0)
 
     # Build prompts
     tokenizer = llm.get_tokenizer()
     prompts = []
     for s in samples:
         task = extract_task(s["conversations"])
-        msgs = [{"role": "user", "content": task}]
-        try:
-            p = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
-        except Exception:
-            p = f"User: {task}\nAssistant: "
-        prompts.append(p)
+        prompts.append(build_prompt(tokenizer, args.model, task))
 
     print(f"[GPU {gpu_label}] Generating {len(prompts)} responses...")
     t1 = time.time()

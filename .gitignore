@@ -14,6 +14,15 @@ results/
 # Eval logs
 eval/logs/
 
+# Local eval environment
+eval/env.sh
+
+# Terminal-Bench 2 Lite data
+tb2_lite/
+
+# Dependency lock (not a library project)
+uv.lock
+
 # Claude Code session data
 .claude/
 

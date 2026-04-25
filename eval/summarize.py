@@ -22,19 +22,25 @@ def summarize(results_dir="results"):
         with open(path) as f:
             data = json.load(f)
 
-        agg = data.get("aggregate_metrics", {})
+        agg = data.get("aggregate_metrics") or data.get("aggregate") or {}
+        load_sec = data.get("load_time_sec", 0) or 0
+        gen_sec = data.get("gen_time_sec", 0) or 0
+        total_sec = data.get("total_time_sec")
+        if total_sec is None:
+            total_sec = load_sec + gen_sec
+
         rows.append({
             "model": data.get("model_short", fname.replace(".json", "")),
             "model_id": data.get("model", ""),
             "params_B": data.get("params_B", 0),
-            "samples": data.get("num_samples", 0),
-            "total_sec": data.get("total_time_sec", 0),
-            "avg_sec": data.get("avg_time_per_sample", 0),
-            "has_cmds%": agg.get("pct_has_commands", 0),
-            "avg_cmds": agg.get("avg_command_count", 0),
-            "cmd_overlap": agg.get("avg_cmd_overlap", 0),
-            "thinking%": agg.get("pct_has_thinking", 0),
-            "avg_len": agg.get("avg_response_length", 0),
+            "samples": data.get("num_samples", data.get("samples", 0)),
+            "total_sec": total_sec,
+            "avg_sec": data.get("avg_time_per_sample", data.get("avg_sec_per_sample", 0)),
+            "has_cmds%": agg.get("pct_has_commands", agg.get("pct_has_cmds", 0)),
+            "avg_cmds": agg.get("avg_command_count", agg.get("avg_cmds", 0)),
+            "cmd_overlap": agg.get("avg_cmd_overlap", agg.get("avg_overlap", 0)),
+            "thinking%": agg.get("pct_has_thinking", agg.get("pct_thinking", 0)),
+            "avg_len": agg.get("avg_response_length", agg.get("avg_pred_len", 0)),
         })
 
     # Sort by command overlap (higher = better match with reference)
@@ -45,9 +51,10 @@ def summarize(results_dir="results"):
     print(hdr)
     print("-" * len(hdr))
     for r in rows:
+        total_sec = r["total_sec"] or 0
         print(
             f"{r['model']:<45} {r['params_B']:>5.1f} {r['samples']:>7} "
-            f"{r['total_sec']:>7.0f}s {r['has_cmds%']:>6.1f}% {r['cmd_overlap']:>7.4f} "
+            f"{total_sec:>7.0f}s {r['has_cmds%']:>6.1f}% {r['cmd_overlap']:>7.4f} "
             f"{r['thinking%']:>6.1f}%"
         )
 
@@ -63,7 +70,7 @@ def summarize(results_dir="results"):
         for i, r in enumerate(rows, 1):
             f.write(
                 f"| {i} | `{r['model']}` | {r['params_B']:.1f}B | "
-                f"{r['total_sec']:.0f}s | {r['has_cmds%']:.1f}% | "
+                f"{(r['total_sec'] or 0):.0f}s | {r['has_cmds%']:.1f}% | "
                 f"{r['cmd_overlap']:.4f} | {r['thinking%']:.1f}% |\n"
             )
     print(f"\nSaved: {md_path}")

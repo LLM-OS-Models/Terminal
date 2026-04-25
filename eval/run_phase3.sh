@@ -1,9 +1,14 @@
 #!/bin/bash
-set -e
-cd "$(dirname "$0")"
-mkdir -p logs results
+set -euo pipefail
 
-source /home/work/.projects/Terminal/.eval-env/bin/activate
+EVAL_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$EVAL_DIR"
+
+source "$EVAL_DIR/env.sh"
+
+LOG_DIR="${LOG_DIR:-logs}"
+RESULTS_DIR="${RESULTS_DIR:-results}"
+mkdir -p "$LOG_DIR" "$RESULTS_DIR"
 
 echo "=== Phase 3 (LFM): $(date) ==="
 
@@ -14,10 +19,10 @@ run_model() {
     local gpus=$1
     local model=$2
     local tp=${3:-1}
-    local logfile="logs/phase3_$(echo "$model" | tr '/' '_' | tr '[:upper:]' '[:lower:]').log"
+    local logfile="$LOG_DIR/phase3_$(echo "$model" | tr '/' '_' | tr '[:upper:]' '[:lower:]').log"
     echo "[GPU $gpus] $model (TP=$tp)"
     CUDA_VISIBLE_DEVICES=$gpus python3 vllm_eval.py \
-        --model "$model" --gpu 0 --tp $tp --output-dir results \
+        --model "$model" --gpu 0 --tp "$tp" --output-dir "$RESULTS_DIR" \
         > "$logfile" 2>&1
 }
 
