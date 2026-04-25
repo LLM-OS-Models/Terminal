@@ -24,6 +24,10 @@ __pycache__/
 *.pyc
 *.pyo
 .venv/
+.env
+
+# Third-party source
+unsloth-src/
 
 # OS
 .DS_Store
