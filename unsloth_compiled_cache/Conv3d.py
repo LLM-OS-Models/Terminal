@@ -85,8 +85,4 @@ def forward(self, input: Tensor) -> Tensor:
     input = input.to(self.weight.dtype)
     original_dtype = input.dtype
     input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    return self._conv_forward(input, self.weight, self.bias).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)
+    return self._conv_forward(input, self.weight, self.bias).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)

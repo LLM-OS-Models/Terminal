@@ -85,10 +85,6 @@ def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor
     input = input.to(self.weight.dtype)
     original_dtype = input.dtype
     input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
     if self.padding_mode != "zeros":
         raise ValueError(
             "Only `zeros` padding mode is supported for ConvTranspose3d"
@@ -117,4 +113,4 @@ def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor
         output_padding,
         self.groups,
         self.dilation,
-    ).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)
+    ).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)

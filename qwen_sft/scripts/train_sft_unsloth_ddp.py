@@ -41,6 +41,7 @@ def prepare_processed_dataset(
     processed_data_path: str,
     model_path: str,
     num_proc: int,
+    conversation_mode: str,
 ) -> None:
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_path,
@@ -49,40 +50,46 @@ def prepare_processed_dataset(
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    dataset = load_from_disk(raw_data_path)
-    dataset = standardize_data_formats(dataset)
-    turn_examples: list[dict[str, list[dict[str, str]]]] = []
+    raw_dataset = load_from_disk(raw_data_path)
+    dataset = standardize_data_formats(raw_dataset)
+    raw_rows = len(raw_dataset)
 
-    for row in dataset:
-        conversations = row["conversations"]
-        for idx in range(1, len(conversations)):
-            prev_msg = conversations[idx - 1]
-            cur_msg = conversations[idx]
-            if prev_msg.get("role") != "user" or cur_msg.get("role") != "assistant":
-                continue
+    if conversation_mode == "turn_pairs":
+        turn_examples: list[dict[str, list[dict[str, str]]]] = []
 
-            assistant_text = cur_msg.get("content", "")
-            has_commands = '"keystrokes"' in assistant_text or '"commands"' in assistant_text
-            empty_commands = '"commands": []' in assistant_text or '"commands":[]' in assistant_text
-            if not has_commands or empty_commands:
-                continue
+        for row in dataset:
+            conversations = row["conversations"]
+            for idx in range(1, len(conversations)):
+                prev_msg = conversations[idx - 1]
+                cur_msg = conversations[idx]
+                if prev_msg.get("role") != "user" or cur_msg.get("role") != "assistant":
+                    continue
 
-            turn_examples.append(
-                {
-                    "conversations": [
-                        {
-                            "role": "user",
-                            "content": prev_msg.get("content", ""),
-                        },
-                        {
-                            "role": "assistant",
-                            "content": assistant_text,
-                        },
-                    ]
-                }
-            )
+                assistant_text = cur_msg.get("content", "")
+                has_commands = '"keystrokes"' in assistant_text or '"commands"' in assistant_text
+                empty_commands = '"commands": []' in assistant_text or '"commands":[]' in assistant_text
+                if not has_commands or empty_commands:
+                    continue
 
-    dataset = Dataset.from_list(turn_examples)
+                turn_examples.append(
+                    {
+                        "conversations": [
+                            {
+                                "role": "user",
+                                "content": prev_msg.get("content", ""),
+                            },
+                            {
+                                "role": "assistant",
+                                "content": assistant_text,
+                            },
+                        ]
+                    }
+                )
+
+        dataset = Dataset.from_list(turn_examples)
+    elif conversation_mode != "full_conversations":
+        raise ValueError(f"Unsupported conversation mode: {conversation_mode}")
+
     source_columns = list(dataset.column_names)
     bos = tokenizer.bos_token or ""
 
@@ -106,8 +113,9 @@ def prepare_processed_dataset(
     print(
         json.dumps(
             {
-                "raw_rows": len(load_from_disk(raw_data_path)),
-                "turn_examples": len(dataset),
+                "conversation_mode": conversation_mode,
+                "raw_rows": raw_rows,
+                "train_rows": len(dataset),
                 "processed_rows": len(processed),
             },
             ensure_ascii=False,
@@ -131,6 +139,11 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         default="/home/work/.data/qwen_sft/models/Qwen__Qwen3.5-2B__terminal_sft_2epoch_unsloth",
+    )
+    parser.add_argument(
+        "--conversation-mode",
+        choices=["turn_pairs", "full_conversations"],
+        default="turn_pairs",
     )
     parser.add_argument("--train-mode", choices=["full", "lora"], default="full")
     parser.add_argument("--max-seq-length", type=int, default=8192)
@@ -174,6 +187,7 @@ def main() -> None:
             processed_data_path=args.processed_data_path,
             model_path=args.model_path,
             num_proc=min(16, os.cpu_count() or 1),
+            conversation_mode=args.conversation_mode,
         )
 
     if local_rank != 0:
@@ -244,6 +258,7 @@ def main() -> None:
                     "data_path": args.data_path,
                     "processed_data_path": args.processed_data_path,
                     "output_dir": args.output_dir,
+                    "conversation_mode": args.conversation_mode,
                     "train_mode": args.train_mode,
                     "world_size": world_size,
                     "max_seq_length": args.max_seq_length,

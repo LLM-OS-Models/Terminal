@@ -82,6 +82,7 @@ torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" qwen_sft/scripts/train_
   --data-path "$DATA_PATH" \
   --processed-data-path "$PROCESSED_DATA_PATH" \
   --output-dir "$OUTPUT_DIR" \
+  --conversation-mode "${CONVERSATION_MODE:-turn_pairs}" \
   --max-seq-length "$MAX_SEQ_LENGTH" \
   --per-device-train-batch-size "$PER_DEVICE_TRAIN_BATCH_SIZE" \
   --gradient-accumulation-steps "$GRADIENT_ACCUMULATION_STEPS" \
@@ -130,6 +131,7 @@ torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" \
   --data-path "$DATA_PATH" \
   --processed-data-path "$PROCESSED_DATA_PATH" \
   --output-dir "$OUTPUT_DIR" \
+  --conversation-mode "${CONVERSATION_MODE:-turn_pairs}" \
   --train-mode "${TRAIN_MODE:-full}" \
   --max-seq-length "$MAX_SEQ_LENGTH" \
   --per-device-train-batch-size "$PER_DEVICE_TRAIN_BATCH_SIZE" \

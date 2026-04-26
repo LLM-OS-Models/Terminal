@@ -118,4 +118,4 @@ def forward(self, input: Tensor) -> Tensor:
         bn_training,
         exponential_average_factor,
         self.eps,
-    ).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype)
+    ).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype)
