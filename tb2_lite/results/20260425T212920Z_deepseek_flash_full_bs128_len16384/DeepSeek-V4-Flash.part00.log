@@ -1,0 +1,10 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:66: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:66: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Loading unsloth/DeepSeek-V4-Flash
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:66: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:66: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Generating 193 replay steps (shard 1/2) with batch_size=128

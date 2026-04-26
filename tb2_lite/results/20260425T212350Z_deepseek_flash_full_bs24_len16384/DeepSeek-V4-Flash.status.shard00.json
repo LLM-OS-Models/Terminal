@@ -1,0 +1,16 @@
+{
+  "model": "unsloth/DeepSeek-V4-Flash",
+  "model_short": "DeepSeek-V4-Flash",
+  "shard_index": 0,
+  "shard_count": 2,
+  "completed_steps": 0,
+  "total_steps": 193,
+  "progress_pct": 0.0,
+  "elapsed_gen_sec": 0.0,
+  "eta_sec": null,
+  "steps_per_sec": null,
+  "batch_size": 24,
+  "max_model_len": 16384,
+  "updated_at": "2026-04-25T21:20:15.165972",
+  "phase": "loaded"
+}

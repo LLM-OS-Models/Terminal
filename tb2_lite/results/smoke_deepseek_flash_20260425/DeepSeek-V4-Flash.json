@@ -1,0 +1,92 @@
+{
+  "model": "unsloth/DeepSeek-V4-Flash",
+  "model_path": "/home/work/deepseek_models/DeepSeek-V4-Flash-mp4",
+  "model_short": "DeepSeek-V4-Flash",
+  "gpu": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "eval_path": "/tmp/tb2_lite_deepseek_smoke1.jsonl",
+  "rows_total": 1,
+  "rows_in_shard": 1,
+  "shard_count": 1,
+  "shard_index": 0,
+  "timestamp": "2026-04-25T20:24:00.281996",
+  "load_time_sec": 13.1,
+  "gen_time_sec": 255.3,
+  "avg_sec_per_step": 255.251,
+  "sampling": {
+    "temperature": 1.0,
+    "max_new_tokens": 1024,
+    "thinking_mode": "thinking",
+    "tp": 4,
+    "batch_size": 1,
+    "max_model_len": 4096
+  },
+  "aggregate": {
+    "steps": 1,
+    "tasks": 1,
+    "avg_ref_cmds": 6.0,
+    "avg_pred_cmds": 5.0,
+    "valid_json_pct": 100.0,
+    "has_analysis_pct": 100.0,
+    "has_plan_pct": 100.0,
+    "first_cmd_exact_pct": 0.0,
+    "avg_command_precision": 0.4689,
+    "avg_command_recall": 0.3148,
+    "avg_command_f1": 0.3767,
+    "complete_true_recall_pct": 0.0,
+    "premature_complete_rate_pct": 0.0,
+    "by_bucket": {
+      "early": {
+        "steps": 1,
+        "avg_command_f1": 0.3767
+      }
+    },
+    "by_source_group": {
+      "software_engineering": {
+        "steps": 1,
+        "avg_command_f1": 0.3767,
+        "first_cmd_exact_pct": 0.0
+      }
+    },
+    "next_action_score": 26.37
+  },
+  "per_step": [
+    {
+      "task_id": "task-000",
+      "sample_idx": 0,
+      "step_idx": 0,
+      "bucket": "early",
+      "source_group": "software_engineering",
+      "valid_json": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "ref_task_complete": false,
+      "pred_task_complete": false,
+      "pred_task_complete_true": false,
+      "ref_command_units": [
+        "ls -la",
+        "cd myproject",
+        "ls -la",
+        "cat dependencies.json",
+        "cat CMakeLists.txt",
+        "find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | head -20"
+      ],
+      "pred_command_units": [
+        "ls -laR /app/myproject/",
+        "ls -la /app/output/ 2>/dev/null || echo \"Output directory does not exist\"",
+        "cat /app/myproject/dependencies.json",
+        "cat /app/myproject/CMakeLists.txt",
+        "cat /app/myproject/src/main.cpp"
+      ],
+      "first_cmd_exact": 0.0,
+      "command_precision": 0.4689,
+      "command_recall": 0.3148,
+      "command_f1": 0.3767,
+      "pred_preview": "We need to start by exploring the project structure and reading the key files (dependencies.json, CMakeLists.txt, source files) to understand the current state. Then we can proceed with the tasks.\n\nFirst commands: list files, read dependencies.json, read CMakeLists.txt, and explore src and lib directories.\n\nLet's start.</think>\n\n{\n  \"analysis\": \"I'm in the /app directory. I need to explore the project structure, read the key files, and understand the dependencies and build issues. The output dir"
+    }
+  ]
+}

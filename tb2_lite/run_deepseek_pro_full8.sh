@@ -3,7 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
-source eval/env.sh
+DEEPSEEK_ENV="${DEEPSEEK_ENV:-.deepseek-env/bin/activate}"
+source "$DEEPSEEK_ENV"
 
 RUN_ID="${RUN_ID:-$(date -u +%Y%m%dT%H%M%SZ)_deepseek_pro}"
 RESULTS_DIR="tb2_lite/results/${RUN_ID}"

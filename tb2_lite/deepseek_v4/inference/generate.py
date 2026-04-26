@@ -30,7 +30,8 @@ def generate(
     prompt_tokens: List[List[int]],
     max_new_tokens: int,
     eos_id: int,
-    temperature: float = 1.0
+    temperature: float = 1.0,
+    progress_callback=None,
 ) -> List[List[int]]:
     """Batch generation with left-padded prompts.
 
@@ -57,6 +58,13 @@ def generate(
         tokens[:, cur_pos] = next_token
         finished |= torch.logical_and(~prompt_mask[:, cur_pos], next_token == eos_id)
         prev_pos = cur_pos
+        if progress_callback is not None:
+            progress_callback(
+                cur_pos - min(prompt_lens) + 1,
+                max(total_len - min(prompt_lens), 1),
+                int(finished.sum().item()),
+                len(prompt_tokens),
+            )
         if finished.all():
             break
     completion_tokens = []

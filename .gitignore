@@ -31,3 +31,6 @@ unsloth-src/
 
 # OS
 .DS_Store
+
+# Other
+Liquid-CLI

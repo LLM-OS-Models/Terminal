@@ -13,8 +13,6 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-from vllm import LLM, SamplingParams
-
 
 def build_prompt(tokenizer, model_name: str, prompt: str, thinking_mode: str = "auto") -> str:
     messages = [{"role": "user", "content": prompt}]
@@ -252,6 +250,13 @@ def main() -> None:
     parser.add_argument("--thinking-mode", choices=["auto", "chat", "thinking"], default="auto")
     parser.add_argument("--model-impl", choices=["auto", "transformers"], default="auto")
     parser.add_argument("--gdn-triton", action="store_true")
+    parser.add_argument("--lora-path", default=None)
+    parser.add_argument("--lora-name", default="default")
+    parser.add_argument("--lora-id", type=int, default=1)
+    parser.add_argument("--max-lora-rank", type=int, default=64)
+    parser.add_argument("--backend", choices=["vllm", "hf"], default="vllm")
+    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--device", default=None)
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
@@ -264,39 +269,107 @@ def main() -> None:
     model_label = args.model_name or args.model
     print(f"[GPU {gpu_label}] Loading {model_label} from {args.model}")
     load_started = time.time()
-    llm_kwargs = dict(
-        tokenizer=args.tokenizer,
-        trust_remote_code=True,
-        dtype=args.dtype,
-        gpu_memory_utilization=args.gpu_memory_utilization,
-        cpu_offload_gb=args.cpu_offload_gb,
-        max_model_len=args.max_model_len,
-        tensor_parallel_size=args.tp,
-        disable_log_stats=True,
-    )
-    if args.model_impl != "auto":
-        llm_kwargs["model_impl"] = args.model_impl
-    if args.gdn_triton:
-        llm_kwargs["additional_config"] = {"gdn_prefill_backend": "triton"}
-    llm = LLM(model=args.model, **llm_kwargs)
-    load_time = time.time() - load_started
+    if args.backend == "vllm":
+        from vllm import LLM, SamplingParams
+        from vllm.lora.request import LoRARequest
 
-    tokenizer = llm.get_tokenizer()
-    prompts = [build_prompt(tokenizer, model_label, row["prompt"], args.thinking_mode) for row in rows]
+        llm_kwargs = dict(
+            tokenizer=args.tokenizer,
+            trust_remote_code=True,
+            dtype=args.dtype,
+            gpu_memory_utilization=args.gpu_memory_utilization,
+            cpu_offload_gb=args.cpu_offload_gb,
+            max_model_len=args.max_model_len,
+            tensor_parallel_size=args.tp,
+            disable_log_stats=True,
+        )
+        if args.lora_path:
+            llm_kwargs["enable_lora"] = True
+            llm_kwargs["max_lora_rank"] = args.max_lora_rank
+        if args.model_impl != "auto":
+            llm_kwargs["model_impl"] = args.model_impl
+        if args.gdn_triton:
+            llm_kwargs["additional_config"] = {"gdn_prefill_backend": "triton"}
+        llm = LLM(model=args.model, **llm_kwargs)
+        load_time = time.time() - load_started
 
-    sampling = SamplingParams(
-        max_tokens=args.max_tokens,
-        temperature=args.temperature,
-        top_p=args.top_p,
-    )
-    print(f"[GPU {gpu_label}] Generating {len(prompts)} replay steps")
-    gen_started = time.time()
-    outputs = llm.generate(prompts, sampling)
-    gen_time = time.time() - gen_started
+        tokenizer = llm.get_tokenizer()
+        prompts = [build_prompt(tokenizer, model_label, row["prompt"], args.thinking_mode) for row in rows]
+
+        sampling = SamplingParams(
+            max_tokens=args.max_tokens,
+            temperature=args.temperature,
+            top_p=args.top_p,
+        )
+        print(f"[GPU {gpu_label}] Generating {len(prompts)} replay steps")
+        gen_started = time.time()
+        generate_kwargs = {}
+        if args.lora_path:
+            generate_kwargs["lora_request"] = LoRARequest(args.lora_name, args.lora_id, args.lora_path)
+        outputs = llm.generate(prompts, sampling, **generate_kwargs)
+        predictions = [output.outputs[0].text for output in outputs]
+        gen_time = time.time() - gen_started
+    else:
+        import torch
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+
+        device = args.device or "cuda:0"
+        dtype_map = {
+            "bfloat16": torch.bfloat16,
+            "float16": torch.float16,
+            "float32": torch.float32,
+        }
+        torch_dtype = dtype_map.get(args.dtype, torch.bfloat16)
+        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer or args.model, trust_remote_code=True)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.padding_side = "left"
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model,
+            trust_remote_code=True,
+            torch_dtype=torch_dtype,
+            low_cpu_mem_usage=True,
+        )
+        model.to(device)
+        model.eval()
+        load_time = time.time() - load_started
+        prompts = [build_prompt(tokenizer, model_label, row["prompt"], args.thinking_mode) for row in rows]
+
+        print(f"[GPU {gpu_label}] Generating {len(prompts)} replay steps with HF backend")
+        predictions: list[str] = []
+        gen_started = time.time()
+        do_sample = args.temperature > 0
+        for start in range(0, len(prompts), args.batch_size):
+            batch_prompts = prompts[start:start + args.batch_size]
+            encoded = tokenizer(
+                batch_prompts,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=args.max_model_len,
+            )
+            encoded = {key: value.to(device) for key, value in encoded.items()}
+            generate_kwargs = dict(
+                max_new_tokens=args.max_tokens,
+                do_sample=do_sample,
+                pad_token_id=tokenizer.pad_token_id,
+                eos_token_id=tokenizer.eos_token_id,
+                use_cache=True,
+            )
+            if do_sample:
+                generate_kwargs["temperature"] = args.temperature
+                generate_kwargs["top_p"] = args.top_p
+            with torch.inference_mode():
+                generated = model.generate(**encoded, **generate_kwargs)
+            prompt_lengths = encoded["attention_mask"].sum(dim=1).tolist()
+            for idx, prompt_len in enumerate(prompt_lengths):
+                new_tokens = generated[idx, int(prompt_len):]
+                predictions.append(tokenizer.decode(new_tokens, skip_special_tokens=True))
+            print(f"[GPU {gpu_label}] HF batch {min(start + len(batch_prompts), len(prompts))}/{len(prompts)}", flush=True)
+        gen_time = time.time() - gen_started
 
     per_step: list[dict] = []
-    for row, output in zip(rows, outputs):
-        prediction = output.outputs[0].text
+    for row, prediction in zip(rows, predictions):
         parsed = parse_prediction(prediction)
         first_exact, precision, recall, f1 = score_commands(parsed["command_units"], row["ref_command_units"])
         per_step.append({
@@ -325,6 +398,7 @@ def main() -> None:
     result = {
         "model": model_label,
         "model_path": args.model,
+        "lora_path": args.lora_path,
         "model_short": model_short,
         "gpu": gpu_label,
         "eval_path": args.eval_path,
@@ -338,6 +412,7 @@ def main() -> None:
             "max_tokens": args.max_tokens,
             "thinking_mode": args.thinking_mode,
             "dtype": args.dtype,
+            "backend": args.backend,
             "model_impl": args.model_impl,
             "tp": args.tp,
             "cpu_offload_gb": args.cpu_offload_gb,

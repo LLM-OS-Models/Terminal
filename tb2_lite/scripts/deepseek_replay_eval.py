@@ -53,6 +53,8 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=1024)
     parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--thinking-mode", choices=["chat", "thinking"], default="thinking")
+    parser.add_argument("--progress-every", type=int, default=8)
+    parser.add_argument("--token-progress-every", type=int, default=32)
     args = parser.parse_args()
 
     world_size = int(os.getenv("WORLD_SIZE", "1"))
@@ -86,6 +88,43 @@ def main() -> None:
     with open(args.eval_path) as handle:
         all_rows = [json.loads(line) for line in handle]
     rows = [row for idx, row in enumerate(all_rows) if idx % args.shard_count == args.shard_index]
+    prepared_rows = []
+    for row in rows:
+        prompt = encode_messages([{"role": "user", "content": row["prompt"]}], thinking_mode=args.thinking_mode)
+        prompt_tokens = tokenizer.encode(prompt)
+        row = dict(row)
+        row["_prompt"] = prompt
+        row["_prompt_tokens"] = prompt_tokens
+        row["_prompt_len"] = len(prompt_tokens)
+        prepared_rows.append(row)
+    rows = sorted(prepared_rows, key=lambda row: row["_prompt_len"])
+    model_short = args.model_name.split("/")[-1]
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    status_path = output_dir / f"{model_short}.status.shard{args.shard_index:02d}.json"
+    if rank == 0:
+        status_path.write_text(
+            json.dumps(
+                {
+                    "model": args.model_name,
+                    "model_short": model_short,
+                    "shard_index": args.shard_index,
+                    "shard_count": args.shard_count,
+                    "completed_steps": 0,
+                    "total_steps": len(rows),
+                    "progress_pct": 0.0,
+                    "elapsed_gen_sec": 0.0,
+                    "eta_sec": None,
+                    "steps_per_sec": None,
+                    "batch_size": args.batch_size,
+                    "max_model_len": args.max_model_len,
+                    "updated_at": datetime.now().isoformat(),
+                    "phase": "loaded",
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
 
     if rank == 0:
         print(
@@ -95,18 +134,55 @@ def main() -> None:
         )
     gen_started = time.time()
     per_step: list[dict] = []
-    for batch_rows in batched(rows, args.batch_size):
-        prompts = [
-            encode_messages([{"role": "user", "content": row["prompt"]}], thinking_mode=args.thinking_mode)
-            for row in batch_rows
-        ]
-        prompt_tokens = [tokenizer.encode(prompt) for prompt in prompts]
+    completed_steps = 0
+    total_batches = (len(rows) + args.batch_size - 1) // args.batch_size
+    for batch_index, batch_rows in enumerate(batched(rows, args.batch_size), start=1):
+        prompt_tokens = [row["_prompt_tokens"] for row in batch_rows]
+
+        def update_inflight_status(tokens_done: int, tokens_total: int, finished_count: int, batch_size_now: int) -> None:
+            if rank != 0:
+                return
+            if tokens_done != 1 and tokens_done % args.token_progress_every != 0 and tokens_done < tokens_total:
+                return
+            batch_frac = tokens_done / max(tokens_total, 1)
+            approx_completed = completed_steps + batch_frac * len(batch_rows)
+            elapsed_gen = max(time.time() - gen_started, 1e-6)
+            steps_per_sec = approx_completed / elapsed_gen if approx_completed > 0 else 0.0
+            remaining = max(len(rows) - approx_completed, 0.0)
+            eta_sec = remaining / steps_per_sec if steps_per_sec > 0 else None
+            status = {
+                "model": args.model_name,
+                "model_short": model_short,
+                "shard_index": args.shard_index,
+                "shard_count": args.shard_count,
+                "completed_steps": completed_steps,
+                "approx_completed_steps": round(approx_completed, 2),
+                "total_steps": len(rows),
+                "progress_pct": round(completed_steps / max(len(rows), 1) * 100, 1),
+                "approx_progress_pct": round(approx_completed / max(len(rows), 1) * 100, 1),
+                "elapsed_gen_sec": round(elapsed_gen, 1),
+                "eta_sec": round(eta_sec, 1) if eta_sec is not None else None,
+                "steps_per_sec": round(steps_per_sec, 4) if steps_per_sec > 0 else None,
+                "batch_size": args.batch_size,
+                "max_model_len": args.max_model_len,
+                "current_batch_index": batch_index,
+                "total_batches": total_batches,
+                "current_batch_size": len(batch_rows),
+                "current_batch_tokens_done": tokens_done,
+                "current_batch_tokens_total": tokens_total,
+                "current_batch_finished": finished_count,
+                "updated_at": datetime.now().isoformat(),
+                "phase": "generating_batch",
+            }
+            status_path.write_text(json.dumps(status, ensure_ascii=False, indent=2))
+
         completion_tokens = generate(
             model,
             prompt_tokens,
             args.max_new_tokens,
             tokenizer.eos_token_id,
             args.temperature,
+            progress_callback=update_inflight_status,
         )
         if rank != 0:
             continue
@@ -134,6 +210,37 @@ def main() -> None:
                 "command_f1": round(f1, 4),
                 "pred_preview": prediction[:500],
             })
+        completed_steps += len(batch_rows)
+        if completed_steps == len(rows) or completed_steps == 1 or completed_steps % args.progress_every == 0:
+            elapsed_gen = max(time.time() - gen_started, 1e-6)
+            steps_per_sec = completed_steps / elapsed_gen
+            remaining = max(len(rows) - completed_steps, 0)
+            eta_sec = remaining / steps_per_sec if steps_per_sec > 0 else None
+            status = {
+                "model": args.model_name,
+                "model_short": model_short,
+                "shard_index": args.shard_index,
+                "shard_count": args.shard_count,
+                "completed_steps": completed_steps,
+                "total_steps": len(rows),
+                "progress_pct": round(completed_steps / max(len(rows), 1) * 100, 1),
+                "elapsed_gen_sec": round(elapsed_gen, 1),
+                "eta_sec": round(eta_sec, 1) if eta_sec is not None else None,
+                "steps_per_sec": round(steps_per_sec, 4),
+                "batch_size": args.batch_size,
+                "max_model_len": args.max_model_len,
+                "updated_at": datetime.now().isoformat(),
+                "phase": "generating",
+            }
+            status_path.write_text(json.dumps(status, ensure_ascii=False, indent=2))
+            print(
+                f"[DeepSeek][Shard {args.shard_index + 1}/{args.shard_count}] "
+                f"{status['completed_steps']}/{status['total_steps']} "
+                f"({status['progress_pct']}%) | "
+                f"elapsed {status['elapsed_gen_sec']}s | "
+                f"eta {status['eta_sec']}s",
+                flush=True,
+            )
     torch.cuda.synchronize()
     gen_time = time.time() - gen_started
 
@@ -144,10 +251,7 @@ def main() -> None:
     if rank != 0:
         return
 
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
     aggregate = aggregate_scores(per_step)
-    model_short = args.model_name.split("/")[-1]
     result = {
         "model": args.model_name,
         "model_path": args.ckpt_path,
@@ -178,6 +282,27 @@ def main() -> None:
     else:
         out_path = output_dir / f"{model_short}.json"
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    status_path.write_text(
+        json.dumps(
+            {
+                "model": args.model_name,
+                "model_short": model_short,
+                "shard_index": args.shard_index,
+                "shard_count": args.shard_count,
+                "completed_steps": len(rows),
+                "total_steps": len(rows),
+                "progress_pct": 100.0,
+                "elapsed_gen_sec": round(gen_time, 1),
+                "eta_sec": 0.0,
+                "steps_per_sec": round(len(rows) / max(gen_time, 1e-6), 4),
+                "updated_at": datetime.now().isoformat(),
+                "done": True,
+                "result_path": str(out_path),
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
 
     print(f"[DeepSeek] DONE {model_short}")
     print(f"  Load: {load_time:.1f}s | Gen: {gen_time:.1f}s | {gen_time/max(len(rows),1):.3f}s/step")

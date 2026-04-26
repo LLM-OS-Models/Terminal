@@ -59,13 +59,24 @@
 4. 그 후 `Pro`를 공식 권장 `MP=8`로 convert
 5. `Pro`를 **8 GPU 전체 사용** replay 평가
 
-## 현재 상태
+## 최종 상태
 
-- `Flash` convert 진행 중
-- source snapshot:
-  - `/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Flash/snapshots/bc486f653513c9179e20a970587dcbe928bf7b96`
-- convert output:
-  - `/home/work/deepseek_models/DeepSeek-V4-Flash-mp4`
-- `Pro`는 `Flash` 이후 진행 예정
+이번 DeepSeek V4 평가는 **변환까지는 성공**, 하지만 **full replay 평가는 중단**했습니다.
 
-결과 수치와 속도는 런이 끝난 뒤 이 문서 또는 별도 결과 문서에 추가합니다.
+- `Flash` convert 완료
+  - source snapshot:
+    - `/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Flash/snapshots/bc486f653513c9179e20a970587dcbe928bf7b96`
+  - convert output:
+    - `/home/work/deepseek_models/DeepSeek-V4-Flash-mp4`
+- `Pro` convert 완료
+  - source snapshot:
+    - `/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Pro/snapshots/baeea9247452e63fcbcea672a588b6db36edd378`
+  - convert output:
+    - `/home/work/deepseek_models/DeepSeek-V4-Pro-mp8`
+- `Flash` smoke run은 성공
+- `Flash` full replay run은 여러 설정으로 시도했지만, 속도가 비실용적이라 중단
+- `Pro` full replay run은 시작하지 않음
+
+중단 사유와 상세 수치는 아래 문서에 정리했습니다.
+
+- [DEEPSEEK_FULL_EVAL_ABORT_2026-04-25.md](/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/docs/DEEPSEEK_FULL_EVAL_ABORT_2026-04-25.md)
