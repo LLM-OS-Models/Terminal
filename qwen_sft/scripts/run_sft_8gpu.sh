@@ -41,6 +41,18 @@ export OMP_NUM_THREADS=8
 export NCCL_DEBUG=WARN
 export TORCH_NCCL_ASYNC_ERROR_HANDLING=1
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True,max_split_size_mb:64
+if [[ -n "${UNSLOTH_RETURN_LOGITS:-}" ]]; then
+  export UNSLOTH_RETURN_LOGITS
+fi
+if [[ -n "${UNSLOTH_FUSED_CE_COMPILE_DISABLE:-}" ]]; then
+  export UNSLOTH_FUSED_CE_COMPILE_DISABLE
+fi
+if [[ -n "${UNSLOTH_DISABLE_FUSED_CE:-}" ]]; then
+  export UNSLOTH_DISABLE_FUSED_CE
+fi
+if [[ -n "${UNSLOTH_COMPILE_LOCATION:-}" ]]; then
+  export UNSLOTH_COMPILE_LOCATION
+fi
 
 NPROC_PER_NODE="${NPROC_PER_NODE:-8}"
 RUN_NAME="${RUN_NAME:-$(basename "$CONFIG_PATH" .env)}"
@@ -53,6 +65,15 @@ if [[ "${GRADIENT_CHECKPOINTING:-0}" == "1" ]]; then
 fi
 if [[ "${LOAD_IN_4BIT:-0}" == "1" ]]; then
   EXTRA_ARGS+=(--load-in-4bit)
+fi
+if [[ -n "${FSDP:-}" ]]; then
+  EXTRA_ARGS+=(--fsdp "$FSDP")
+fi
+if [[ -n "${FSDP_CONFIG:-}" ]]; then
+  EXTRA_ARGS+=(--fsdp-config "$FSDP_CONFIG")
+fi
+if [[ "${UNSLOTH_RETURN_LOGITS:-0}" == "1" ]]; then
+  EXTRA_ARGS+=(--return-logits)
 fi
 if [[ "${PUSH_TO_HUB:-0}" == "1" ]]; then
   if [[ -z "${HF_TOKEN:-}" ]]; then

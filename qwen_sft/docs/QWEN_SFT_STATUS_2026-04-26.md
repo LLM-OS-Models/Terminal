@@ -6,12 +6,19 @@
 - `Qwen3.5-2B` 2 epoch full FT same-count 학습: 완료
 - `Qwen3.5-4B` 2 epoch full FT 2BData 학습: 완료
 - `Qwen3.5-9B` 2 epoch full FT 2BData 학습: 완료
+- `Qwen3.5-27B` 8 GPU `HF + FSDP` fallback 학습: 진행 중
 - `checkpoint-55`, `checkpoint-110`, `final` 저장: 완료
 - `Qwen3.5-4B`의 `checkpoint-960`, `checkpoint-1920`, `final` 저장: 완료
 - `Qwen3.5-9B`의 `checkpoint-2193`, `checkpoint-4386`, `final` 저장: 완료
 - single-GPU `tb2_lite + vLLM` 평가: `2B`, `4B`, `9B` 완료
 - 허깅페이스 업로드: `2B`, `4B` 완료
 - `Qwen3.5-4B`, `Qwen3.5-9B`, `Qwen3.5-27B` config 준비: 완료
+- 현재 `27B` 런 config:
+  `qwen_sft/configs/sft_qwen35_27b_hf_fsdp.env`
+- 현재 `27B` 런 script:
+  `qwen_sft/scripts/train_qwen_hf_fsdp.py`
+- 현재 `27B` 로그:
+  `/home/work/.data/qwen_sft/logs/qwen35_27b_hf_fsdp_8gpu_20260426T095333Z.log`
 
 ## LoRA 런 요약
 

@@ -85,6 +85,8 @@ def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor
     input = input.to(self.weight.dtype)
     original_dtype = input.dtype
     input = input.to(self.weight.dtype)
+    original_dtype = input.dtype
+    input = input.to(self.weight.dtype)
     """
     Performs the forward pass.
 
@@ -121,4 +123,4 @@ def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor
         output_padding,
         self.groups,
         self.dilation,
-    ).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)
+    ).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)

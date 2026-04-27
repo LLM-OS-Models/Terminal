@@ -74,4 +74,4 @@ def forward(self, x: torch.Tensor) -> torch.Tensor:
     """
     Runs the forward pass.
     """
-    return F.rms_norm(x, self.normalized_shape, self.weight, self.eps).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype)
+    return F.rms_norm(x, self.normalized_shape, self.weight, self.eps).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype).to(x.dtype)

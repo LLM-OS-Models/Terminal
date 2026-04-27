@@ -163,6 +163,9 @@ def main() -> None:
     parser.add_argument("--lora-r", type=int, default=16)
     parser.add_argument("--lora-alpha", type=int, default=16)
     parser.add_argument("--load-in-4bit", action="store_true")
+    parser.add_argument("--fsdp", default=None)
+    parser.add_argument("--fsdp-config", default=None)
+    parser.add_argument("--return-logits", action="store_true")
     parser.add_argument("--push-to-hub", action="store_true")
     parser.add_argument(
         "--hub-model-id",
@@ -175,6 +178,9 @@ def main() -> None:
     world_size = int(os.environ.get("WORLD_SIZE", "1"))
     torch.cuda.set_device(local_rank)
     distributed = torch.distributed.is_available() and torch.distributed.is_initialized()
+
+    if args.return_logits:
+        os.environ["UNSLOTH_RETURN_LOGITS"] = "1"
 
     processed_path = Path(args.processed_data_path)
     if local_rank == 0 and processed_path.exists() and not processed_dataset_ready(processed_path):
@@ -267,6 +273,9 @@ def main() -> None:
                     "num_train_epochs": args.num_train_epochs,
                     "save_strategy": args.save_strategy,
                     "save_steps": args.save_steps if args.save_strategy == "steps" else None,
+                    "fsdp": args.fsdp,
+                    "fsdp_config": args.fsdp_config,
+                    "return_logits": args.return_logits,
                     "push_to_hub": args.push_to_hub,
                 },
                 ensure_ascii=False,
@@ -297,6 +306,8 @@ def main() -> None:
         # Qwen3.5 conditional-generation models can keep multimodal branches inactive
         # on text-only batches, so DDP must tolerate unused parameters in full FT.
         ddp_find_unused_parameters=(True if (world_size > 1 and args.train_mode == "full") else (False if world_size > 1 else None)),
+        fsdp=args.fsdp,
+        fsdp_config=args.fsdp_config,
         dataloader_num_workers=min(8, os.cpu_count() or 1),
         push_to_hub=args.push_to_hub,
         hub_model_id=args.hub_model_id if args.push_to_hub else None,

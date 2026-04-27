@@ -9,7 +9,12 @@
 - `Qwen3.5`는 `Unsloth` 문서 기준으로 최신 `transformers v5` 계열이 필요합니다.
 - `LFM`과 채팅 템플릿이 달라서 `response-only` 마스킹 구간도 따로 잡아야 합니다.
 - `Qwen3.5-2B` 실험 결과가 좋아서 이후 `4B`, `9B`까지 같은 형식으로 확장하려고 폴더를 분리했습니다.
-- 지금은 `Qwen3.5-9B` full FT 결과까지 확보했고, 다음 순서는 `27B`입니다.
+- 지금은 `Qwen3.5-9B` full FT 결과까지 확보했습니다.
+- `Qwen3.5-27B`는 `Unsloth` full FT/FSDP 경로에서 fused CE 문제가 계속 나와서, 현재는 plain `HF + FSDP` fallback으로 `8 GPU`, `seq1024`, `per-device batch 1` 학습을 진행 중입니다.
+- 현재 `27B` 런 config:
+  `qwen_sft/configs/sft_qwen35_27b_hf_fsdp.env`
+- 현재 `27B` 런 script:
+  `qwen_sft/scripts/train_qwen_hf_fsdp.py`
 
 참고 문서:
 
