@@ -23,10 +23,10 @@ source "$CONFIG_PATH"
 export PYTHONNOUSERSITE=1
 unset PYTHONPATH
 unset PYTHONHOME
-export HF_HOME=/home/work/.data/liquid_cli_sft/cache/hf_home
-export HF_HUB_CACHE=/home/work/.data/liquid_cli_sft/cache/hub
-export TRANSFORMERS_CACHE=/home/work/.data/liquid_cli_sft/cache/transformers
-export HF_DATASETS_CACHE=/home/work/.data/liquid_cli_sft/cache/datasets
+export HF_HOME="${HF_HOME:-/home/work/.data/huggingface}"
+export HF_HUB_CACHE="${HF_HUB_CACHE:-/home/work/.data/huggingface/hub}"
+export TRANSFORMERS_CACHE="${TRANSFORMERS_CACHE:-/home/work/.data/huggingface/transformers}"
+export HF_DATASETS_CACHE="${HF_DATASETS_CACHE:-/home/work/.data/huggingface/datasets}"
 export HF_HUB_ENABLE_HF_TRANSFER=1
 export TOKENIZERS_PARALLELISM=false
 export OMP_NUM_THREADS=8
@@ -36,12 +36,15 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True,max_split_size_mb:64
 
 NPROC_PER_NODE="${NPROC_PER_NODE:-8}"
 RUN_NAME="${RUN_NAME:-$(basename "$CONFIG_PATH" .env)}"
-LOG_PATH="/home/work/.data/qwen_sft/logs/${RUN_NAME}_$(date -u +%Y%m%dT%H%M%SZ).log"
+LOG_ROOT="${LOG_ROOT:-/home/work/.data/qwen_sft/logs}"
+LOG_PATH="${LOG_ROOT}/${RUN_NAME}_$(date -u +%Y%m%dT%H%M%SZ).log"
 
 mkdir -p \
-  /home/work/.data/qwen_sft/datasets \
-  /home/work/.data/qwen_sft/models \
-  /home/work/.data/qwen_sft/logs
+  "$HF_HOME" \
+  "$HF_HUB_CACHE" \
+  "$TRANSFORMERS_CACHE" \
+  "$HF_DATASETS_CACHE" \
+  "$LOG_ROOT"
 
 echo "config_path=$CONFIG_PATH"
 echo "run_name=$RUN_NAME"
@@ -67,5 +70,8 @@ torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" \
   --warmup-ratio "$WARMUP_RATIO" \
   --fsdp "$FSDP" \
   --fsdp-config "$FSDP_CONFIG" \
+  ${SAVE_ONLY_MODEL:+--save-only-model} \
+  ${SAVE_TOTAL_LIMIT:+--save-total-limit "$SAVE_TOTAL_LIMIT"} \
+  ${SKIP_FINAL_SAVE:+--skip-final-save} \
   ${GRADIENT_CHECKPOINTING:+--gradient-checkpointing} \
   2>&1 | tee "$LOG_PATH"

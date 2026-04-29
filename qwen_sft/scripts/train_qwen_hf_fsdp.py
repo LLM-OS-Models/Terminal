@@ -26,6 +26,17 @@ def processed_dataset_ready(processed_path: Path) -> bool:
     )
 
 
+def fsdp_uses_sharded_state_dict(fsdp_config_path: str | None) -> bool:
+    if not fsdp_config_path:
+        return False
+    try:
+        with open(fsdp_config_path) as f:
+            config = json.load(f)
+    except Exception:
+        return False
+    return str(config.get("fsdp_state_dict_type", "")).upper() == "SHARDED_STATE_DICT"
+
+
 def wait_for_processed_dataset(processed_path: Path, *, timeout_seconds: int = 3600) -> None:
     start = time.time()
     while time.time() - start < timeout_seconds:
@@ -227,6 +238,9 @@ def main() -> None:
     parser.add_argument("--fsdp", default=None)
     parser.add_argument("--fsdp-config", default=None)
     parser.add_argument("--resume-from-checkpoint", default=None)
+    parser.add_argument("--save-only-model", action="store_true")
+    parser.add_argument("--save-total-limit", type=int, default=None)
+    parser.add_argument("--skip-final-save", action="store_true")
     args = parser.parse_args()
 
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
@@ -273,6 +287,9 @@ def main() -> None:
                     "fsdp": args.fsdp,
                     "fsdp_config": args.fsdp_config,
                     "gradient_checkpointing": args.gradient_checkpointing,
+                    "save_only_model": args.save_only_model,
+                    "save_total_limit": args.save_total_limit,
+                    "skip_final_save": args.skip_final_save,
                 },
                 ensure_ascii=False,
                 indent=2,
@@ -309,6 +326,8 @@ def main() -> None:
         dataloader_num_workers=min(8, os.cpu_count() or 1),
         fsdp=args.fsdp,
         fsdp_config=args.fsdp_config,
+        save_only_model=args.save_only_model,
+        save_total_limit=args.save_total_limit,
     )
 
     trainer = Trainer(
@@ -325,8 +344,21 @@ def main() -> None:
 
     final_dir = Path(args.output_dir) / "final"
     if local_rank == 0:
-        trainer.save_model(str(final_dir))
-        tokenizer.save_pretrained(str(final_dir))
+        if args.skip_final_save or fsdp_uses_sharded_state_dict(args.fsdp_config):
+            checkpoints = sorted(
+                [path for path in Path(args.output_dir).glob("checkpoint-*") if path.is_dir()],
+                key=lambda path: int(path.name.split("-")[-1]),
+            )
+            if final_dir.exists() or final_dir.is_symlink():
+                if final_dir.is_symlink() or final_dir.is_file():
+                    final_dir.unlink()
+                else:
+                    shutil.rmtree(final_dir)
+            if checkpoints:
+                final_dir.symlink_to(checkpoints[-1].name)
+        else:
+            trainer.save_model(str(final_dir))
+            tokenizer.save_pretrained(str(final_dir))
 
     if distributed:
         torch.distributed.barrier()
