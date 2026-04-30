@@ -6,10 +6,12 @@ import json
 import os
 import shutil
 import time
+from collections import defaultdict
 from pathlib import Path
 
 import torch
 from datasets import Dataset, load_from_disk
+from safetensors import safe_open
 from transformers import (
     AutoConfig,
     AutoModelForCausalLM,
@@ -225,6 +227,41 @@ class CausalLMCollator:
         return batch
 
 
+def load_gemma4_text_only_model(model_path: str) -> tuple[Gemma4ForCausalLM, str]:
+    config = AutoConfig.from_pretrained(model_path, trust_remote_code=False)
+    text_cfg = getattr(config, "text_config", None)
+    if text_cfg is None:
+        raise RuntimeError("Gemma 4 checkpoint is missing text_config")
+
+    model = Gemma4ForCausalLM(text_cfg)
+
+    index_path = Path(model_path) / "model.safetensors.index.json"
+    if not index_path.exists():
+        raise FileNotFoundError(f"Missing sharded index: {index_path}")
+
+    weight_map = json.loads(index_path.read_text())["weight_map"]
+    shard_to_keys: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for old_key, shard_name in weight_map.items():
+        if not old_key.startswith("model.language_model."):
+            continue
+        new_key = "model." + old_key[len("model.language_model.") :]
+        shard_to_keys[shard_name].append((old_key, new_key))
+
+    loaded_tensors = 0
+    model_root = Path(model_path)
+    for shard_name, key_pairs in sorted(shard_to_keys.items()):
+        shard_state = {}
+        with safe_open(str(model_root / shard_name), framework="pt", device="cpu") as handle:
+            for old_key, new_key in key_pairs:
+                shard_state[new_key] = handle.get_tensor(old_key)
+                loaded_tensors += 1
+        model.load_state_dict(shard_state, strict=False)
+        del shard_state
+
+    model.tie_weights()
+    return model, str(getattr(text_cfg, "model_type", "gemma4_text"))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-path", required=True)
@@ -311,18 +348,9 @@ def main() -> None:
     config = AutoConfig.from_pretrained(args.model_path, trust_remote_code=False)
     model_type = str(getattr(config, "model_type", "")).lower()
     if model_type.startswith("gemma4"):
-        if not hasattr(config, "pad_token_id"):
-            text_cfg = getattr(config, "text_config", None)
-            config.pad_token_id = getattr(text_cfg, "pad_token_id", 0)
-        if not hasattr(config, "vocab_size"):
-            text_cfg = getattr(config, "text_config", None)
-            config.vocab_size = getattr(text_cfg, "vocab_size", None)
-        model = Gemma4ForCausalLM.from_pretrained(
-            args.model_path,
-            trust_remote_code=False,
-            torch_dtype=torch.bfloat16,
-            config=config,
-        )
+        model, loaded_model_type = load_gemma4_text_only_model(args.model_path)
+        model = model.to(dtype=torch.bfloat16)
+        model_type = str(loaded_model_type).lower()
     else:
         model = AutoModelForCausalLM.from_pretrained(
             args.model_path,
