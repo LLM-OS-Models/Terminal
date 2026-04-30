@@ -8,7 +8,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 2. `tb2_lite/` 기반 멀티턴 replay 평가
 3. `Liquid-CLI + Unsloth` / `Qwen3.5 + Unsloth` / `Qwen3.5~3.6 + HF+FSDP` 기반 SFT 및 학습
 
-기준 날짜: `2026-04-30`
+기준 날짜: `2026-05-01`
 
 ## 오늘 기준 핵심 상태
 
@@ -28,6 +28,81 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
   [TB2_LITE_UNTESTED_2026-04-25.md](./tb2_lite/docs/TB2_LITE_UNTESTED_2026-04-25.md)
 - `vLLM` 이슈:
   [TB2_LITE_VLLM_ISSUES_2026-04-26.md](./tb2_lite/docs/TB2_LITE_VLLM_ISSUES_2026-04-26.md)
+
+#### TB2-lite 평가 방식
+
+현재 빠른 모델 비교는 `tb2_lite` replay 평가를 기준으로 합니다. 이 평가는 full Terminal-Bench 2.0 전체 실행이 아니라, 멀티턴 터미널 trajectory에서 **현재 step의 다음 행동을 얼마나 정확하게 고르는지**를 빠르게 보는 프록시입니다.
+
+순서는 아래와 같습니다.
+
+1. `tb2_lite/data/replay_full.jsonl`을 읽습니다.
+   - 각 row는 하나의 replay step입니다.
+   - 현재 기준 `386 step / 50 task`입니다.
+   - row에는 그 시점까지의 누적 prompt와 정답 행동 `ref_raw`가 같이 들어 있습니다.
+2. `tb2_lite/scripts/replay_eval.py`가 모델에게 각 prompt당 응답 1개를 생성하게 합니다.
+   - 기본 엔진은 `vLLM`입니다.
+   - multimodal config가 섞인 모델은 `language-model-only`로 text-only 추론을 강제합니다.
+3. `tb2_lite/scripts/replay_metrics.py`가 응답을 파싱합니다.
+   - 먼저 JSON을 파싱합니다.
+   - JSON 내부 `commands[].keystrokes`를 우선적으로 명령어로 해석합니다.
+   - JSON 파싱이 실패하면 fallback regex로 `"keystrokes"` 패턴만 제한적으로 회수합니다.
+4. 각 step마다 정답 명령과 예측 명령을 shell token 단위로 비교합니다.
+   - `first_cmd_exact`
+   - `command_precision`
+   - `command_recall`
+   - `command_f1`
+   를 계산합니다.
+5. 전체 평균을 집계합니다.
+   - `valid_json_pct`
+   - `first_cmd_exact_pct`
+   - `avg_command_f1`
+   - `by_bucket` (`early/mid/late`)
+   - `by_source_group`
+6. 최종 점수는 `next_action_score` 하나로 요약합니다.
+   - 공식:
+   - `next_action_score = 100 * (0.7 * avg_command_f1 + 0.3 * first_cmd_exact_pct / 100)`
+
+이 평가는 잘 보는 것과 못 보는 것이 분명합니다.
+
+- 잘 보는 것:
+  - 짧고 정확한 첫 명령 선택
+  - 현재 step에서 바로 필요한 탐색/수정 행동
+  - JSON 포맷 순응도
+- 잘 못 보는 것:
+  - 실제 command execution 성공 여부
+  - 파일 결과 correctness
+  - 장기 계획과 에러 복구를 포함한 진짜 closed-loop agent 능력
+
+즉 `tb2_lite`는 **빠른 비교용 프록시**입니다. 특히 큰 모델이 장황한 분석, transcript continuation, 결과 서술로 흐르면 실제 잠재력보다 훨씬 낮게 나올 수 있습니다.
+
+#### 용어 설명
+
+- `trajectory`
+  - 하나의 태스크를 해결하는 전체 멀티턴 터미널 기록입니다.
+  - 예를 들어 `ls -> cat -> edit -> run -> verify`처럼 여러 step이 이어진 전체 흐름을 뜻합니다.
+- `replay step`
+  - trajectory 전체 중 한 시점을 잘라서, 그 문맥 다음에 어떤 행동을 해야 하는지 묻는 평가 단위입니다.
+- `prompt`
+  - 현재 step까지 모델에게 보여주는 누적 문맥입니다.
+  - 이전 사용자 요청, assistant 응답, 터미널 출력이 함께 들어갑니다.
+- `ref_raw`
+  - 그 step에서 데이터셋이 정답으로 가지고 있는 assistant 원문입니다.
+  - evaluator는 여기서 reference command를 추출합니다.
+- `commands[].keystrokes`
+  - evaluator가 가장 우선적으로 읽는 명령 필드입니다.
+  - 실제 shell command나 엔터 단위 입력이 여기에 들어갑니다.
+- `valid_json_pct`
+  - 모델 응답 중 evaluator가 JSON으로 정상 파싱한 비율입니다.
+  - 이 수치가 낮으면 command를 거의 못 읽었을 가능성이 큽니다.
+- `first_cmd_exact_pct`
+  - 모델이 낸 첫 명령이 정답 첫 명령과 완전히 같았던 비율입니다.
+  - 현재 점수는 이 수치에 꽤 민감합니다.
+- `avg_command_f1`
+  - 예측 명령과 정답 명령을 token 단위로 비교했을 때의 평균 F1입니다.
+  - 명령 일부만 맞아도 부분 점수가 반영됩니다.
+- `next_action_score`
+  - 현재 저장소에서 쓰는 대표 요약 점수입니다.
+  - `avg_command_f1`과 `first_cmd_exact_pct`를 합쳐 한 숫자로 만든 값입니다.
 
 오늘 핵심 결과:
 
@@ -115,14 +190,48 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
   - `0.028 sec/step`
   - `Load 89.9s`
   - 전체 `37개 중 35위`
+- `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU`
+  - `Score 6.79`
+  - `Cmd F1 0.0691`
+  - `First Cmd Exact 6.5%`
+  - `Valid JSON 1.0%`
+  - `0.039 sec/step`
+  - `Load 165.2s`
+  - 전체 `43개 중 40위`
+- `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU`
+  - `Score 6.65`
+  - `Cmd F1 0.0672`
+  - `First Cmd Exact 6.5%`
+  - `Valid JSON 0.8%`
+  - `0.039 sec/step`
+  - `Load 165.0s`
+  - 전체 `43개 중 41위`
+- `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU`
+  - `Score 6.49`
+  - `Cmd F1 0.0648`
+  - `First Cmd Exact 6.5%`
+  - `Valid JSON 2.8%`
+  - `0.075 sec/step`
+  - `Load 163.6s`
+  - 전체 `43개 중 공동 42위`
+- `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU`
+  - `Score 6.49`
+  - `Cmd F1 0.0648`
+  - `First Cmd Exact 6.5%`
+  - `Valid JSON 2.8%`
+  - `0.075 sec/step`
+  - `Load 163.3s`
+  - 전체 `43개 중 공동 42위`
 
-현재 `tb2_lite` 점수 확정 모델은 `37개`입니다.
+현재 `tb2_lite` 점수 확정 모델은 `43개`입니다.
 
 - 이 표에는 `점수가 실제로 나온 모델만` 넣었습니다.
 - `Qwen3.5-27B` `1 epoch`와 `2 epoch final`도 이제 포함했습니다.
 - `Qwen3.5-35B-A3B` `1 epoch` / `2 epoch` 평가도 이제 포함했습니다.
 - `Qwen3.6-27B` `1 epoch` / `2 epoch final`도 이제 포함했습니다.
 - `Qwen3.6-35B-A3B` `1 epoch` / `2 epoch final`도 이제 포함했습니다.
+- `Gemma 4 E2B` `1 epoch` / `2 epoch final`도 이제 포함했습니다.
+- `Gemma 4 E4B` `1 epoch` / `2 epoch final`도 이제 포함했습니다.
 
 현재 `tb2_lite` 전체 비교 순위:
 
@@ -167,6 +276,10 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 | 37 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-Unsloth` | 22.84 | 0.2586 | 15.8% | 0.028 | 89.9 |
 | 38 | `LiquidAI/LFM2-24B-A2B` | 22.80 | 0.2323 | 21.8% | 0.050 | 81.6 |
 | 39 | `LLM-OS-Models/Qwen3.5-35B-A3B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 22.40 | 0.2433 | 17.9% | 0.060 | 302.8 |
+| 40 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
+| 41 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
+| 42 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
+| 43 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
 
 핵심 해석:
 
@@ -177,6 +290,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `Qwen3.5-35B-A3B`도 학습/평가는 성공했지만, `2 epoch 26.20`, `1 epoch 22.40`으로 기대보다 낮았습니다.
 - `Qwen3.6-27B`는 `2 epoch 28.84`로 크게 회복됐고, 현재 전체 `7위`입니다. 다만 `1 epoch 25.74`는 아직 낮아서, 이 모델도 `2 epoch`까지 가야 성능이 붙었습니다.
 - `Qwen3.6-35B-A3B`는 `1 epoch 25.58`, `2 epoch 25.74`로 아주 조금만 좋아졌고, 현재 전체 `26위` 수준입니다. 즉 `3.6`으로 올려도 `35B-A3B` 계열은 여전히 큰 개선이 없었습니다.
+- `Gemma 4 E2B/E4B`는 이번 설정에서 사실상 실패했습니다. 점수가 낮은 핵심 이유는 모델이 JSON `commands`를 거의 내지 않고, 대신 transcript continuation, 로그 복사, 결과 서술로 많이 흘렀기 때문입니다. 수치로 보면 `E2B 2 epoch valid_json 1.0%`, `E4B 2 epoch valid_json 2.8%`라서 evaluator가 실제 명령을 거의 못 잡았습니다.
 
 큰 모델이 오히려 떨어진 이유:
 
@@ -302,7 +416,38 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `/home/work/.data/tb2_lite_results/20260430T_tb2lite_qwen36_35b_a3b_ckpt2934_vllmfix_tp1_lmonly`
 - `/home/work/.data/tb2_lite_results/20260430T_tb2lite_qwen36_35b_a3b_ckpt5868_vllmfix_tp1_lmonly`
 
-### 6. Liquid SFT
+### 6. Gemma 4
+
+학습:
+
+- `google/gemma-4-E2B-it`
+  - `DDP 4 GPU`, `2 epoch`
+  - 총 학습 시간: `약 2시간 35분`
+  - 최종 train loss: `9.346`
+- `google/gemma-4-E4B-it`
+  - `DDP 4 GPU`, `2 epoch`
+  - 총 학습 시간: `약 2시간 15분`
+  - 최종 train loss: `5.922`
+
+평가:
+
+- `E2B 1 epoch`: `Score 6.65`, `Cmd F1 0.0672`, `First Cmd Exact 6.5%`, `Valid JSON 0.8%`
+- `E2B 2 epoch`: `Score 6.79`, `Cmd F1 0.0691`, `First Cmd Exact 6.5%`, `Valid JSON 1.0%`
+- `E4B 1 epoch`: `Score 6.49`, `Cmd F1 0.0648`, `First Cmd Exact 6.5%`, `Valid JSON 2.8%`
+- `E4B 2 epoch`: `Score 6.49`, `Cmd F1 0.0648`, `First Cmd Exact 6.5%`, `Valid JSON 2.8%`
+
+왜 이렇게 낮게 나왔는가:
+
+- 현재 Gemma 4 소형 실험은 **모델 실력 비교 이전에 출력 포맷 적합성에서 무너진 케이스**입니다.
+- 샘플 출력을 보면 JSON `commands` 대신 shell transcript, 이미 실행된 로그, 분석문, 빈 출력이 많이 나왔습니다.
+- 그래서 이 결과는 “Gemma 4는 터미널을 절대 못 한다”보다, **현재 SFT 포맷 + chat template + inference prompt 조합이 TB2-lite evaluator와 거의 안 맞는다**고 해석하는 것이 더 정확합니다.
+
+허깅페이스:
+
+- `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` 업로드 진행 중
+- `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` 업로드 진행 중
+
+### 7. Liquid SFT
 
 원본/준비 코드 경로:
 
@@ -318,7 +463,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth`
 
-### 7. Qwen SFT
+### 8. Qwen SFT
 
 별도 경로:
 
@@ -335,7 +480,9 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `Qwen3.5-27B` HF+FSDP: 학습/평가 완료
 - `Qwen3.5-35B-A3B` HF+FSDP: 학습 완료, 평가 완료
 - `Qwen3.6-27B` HF+FSDP: 학습/평가 완료, HF 업로드 완료
-- `Qwen3.6-35B-A3B` HF+FSDP: 학습/평가 완료, HF 업로드 진행 중
+- `Qwen3.6-35B-A3B` HF+FSDP: 학습/평가 완료, HF 업로드 완료
+- `Gemma 4 E2B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
+- `Gemma 4 E4B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
 
 ## 저장 경로
 
@@ -346,6 +493,8 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `/home/work/.data/qwen_sft/models/Qwen__Qwen3.5-4B__terminal_sft_2epoch_fullft_2bdata`
 - `/home/work/.data/qwen_sft/models/Qwen__Qwen3.5-9B__terminal_sft_2epoch_fullft_2bdata`
 - `/home/work/.data/qwen_sft/models/Qwen__Qwen3.5-27B__terminal_sft_2epoch_hf_fsdp`
+- `/home/work/.data/qwen_sft/models/google__gemma-4-E2B-it__terminal_sft_2epoch_ddp_4gpu`
+- `/home/work/.data/qwen_sft/models/google__gemma-4-E4B-it__terminal_sft_2epoch_ddp_4gpu`
 - `/tmp/qwen_sft/models/Qwen__Qwen3.5-35B-A3B__terminal_sft_2epoch_hf_fsdp_modelonly`
 - `/home/work/.data/liquid_cli_sft/models/LiquidAI__LFM2.5-1.2B-Base__terminal_sft_h200_4gpu`
 - `/home/work/.data/liquid_cli_sft/models/LiquidAI__LFM2-2.6B__terminal_sft_h200_4gpu`
@@ -363,6 +512,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `/tmp/tb2_lite_results/20260427T_tb2lite_qwen35_27b_hf_fsdp_ckpt1917_vllmfix_tp1_lmonly`
 - `/tmp/tb2_lite_results/20260428T_tb2lite_qwen35_35b_a3b_ckpt3834_vllmfix_tp1_lmonly`
 - `/tmp/tb2_lite_results/20260428T_tb2lite_qwen35_35b_a3b_ckpt1917_vllmfix_tp1_lmonly`
+- `/home/work/.data/tb2_lite_results/20260501T_tb2lite_gemma4_parallel`
 
 허깅페이스:
 
@@ -371,6 +521,10 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-2Epoch-FullFT-2BData`
 - `LLM-OS-Models/Qwen3.5-27B-Terminal-SFT-2Epoch-HF-FSDP-2BData`
 - `LLM-OS-Models/Qwen3.5-35B-A3B-Terminal-SFT-2Epoch-HF-FSDP-2BData`
+- `LLM-OS-Models/Qwen3.6-27B-Terminal-SFT-2Epoch-HF-FSDP-2BData`
+- `LLM-OS-Models/Qwen3.6-35B-A3B-Terminal-SFT-2Epoch-HF-FSDP-2BData`
+- `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` (`업로드 진행 중`)
+- `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` (`업로드 진행 중`)
 - `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth`

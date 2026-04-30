@@ -11,11 +11,13 @@ from pathlib import Path
 import torch
 from datasets import Dataset, load_from_disk
 from transformers import (
+    AutoConfig,
     AutoModelForCausalLM,
     AutoTokenizer,
     Trainer,
     TrainingArguments,
 )
+from transformers.models.gemma4 import Gemma4ForCausalLM
 
 
 def processed_dataset_ready(processed_path: Path) -> bool:
@@ -201,8 +203,9 @@ def prepare_processed_dataset(
 
 
 class CausalLMCollator:
-    def __init__(self, tokenizer):
+    def __init__(self, tokenizer, needs_mm_token_type_ids: bool = False):
         self.tokenizer = tokenizer
+        self.needs_mm_token_type_ids = needs_mm_token_type_ids
 
     def __call__(self, features):
         batch = self.tokenizer.pad(
@@ -216,6 +219,9 @@ class CausalLMCollator:
             pad_len = max_len - len(f["labels"])
             labels.append(f["labels"] + ([-100] * pad_len))
         batch["labels"] = torch.tensor(labels, dtype=torch.long)
+        if self.needs_mm_token_type_ids:
+            # Text-only Gemma 4 training still requires mm_token_type_ids.
+            batch["mm_token_type_ids"] = torch.zeros_like(batch["input_ids"], dtype=torch.long)
         return batch
 
 
@@ -302,11 +308,28 @@ def main() -> None:
             flush=True,
         )
 
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model_path,
-        trust_remote_code=False,
-        torch_dtype=torch.bfloat16,
-    )
+    config = AutoConfig.from_pretrained(args.model_path, trust_remote_code=False)
+    model_type = str(getattr(config, "model_type", "")).lower()
+    if model_type.startswith("gemma4"):
+        if not hasattr(config, "pad_token_id"):
+            text_cfg = getattr(config, "text_config", None)
+            config.pad_token_id = getattr(text_cfg, "pad_token_id", 0)
+        if not hasattr(config, "vocab_size"):
+            text_cfg = getattr(config, "text_config", None)
+            config.vocab_size = getattr(text_cfg, "vocab_size", None)
+        model = Gemma4ForCausalLM.from_pretrained(
+            args.model_path,
+            trust_remote_code=False,
+            torch_dtype=torch.bfloat16,
+            config=config,
+        )
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model_path,
+            trust_remote_code=False,
+            torch_dtype=torch.bfloat16,
+            config=config,
+        )
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
@@ -316,7 +339,6 @@ def main() -> None:
     elif args.ddp_find_unused_parameters == "false":
         ddp_find_unused_parameters = False
     else:
-        model_type = str(getattr(getattr(model, "config", None), "model_type", "")).lower()
         # Gemma 4 instruct checkpoints include multimodal towers that are unused in
         # text-only SFT, so DDP must tolerate unused parameters.
         ddp_find_unused_parameters = world_size > 1 and model_type.startswith("gemma4")
@@ -349,7 +371,7 @@ def main() -> None:
         model=model,
         args=train_args,
         train_dataset=dataset,
-        data_collator=CausalLMCollator(tokenizer),
+        data_collator=CausalLMCollator(tokenizer, needs_mm_token_type_ids=False),
     )
 
     trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)
