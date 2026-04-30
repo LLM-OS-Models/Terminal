@@ -241,6 +241,11 @@ def main() -> None:
     parser.add_argument("--save-only-model", action="store_true")
     parser.add_argument("--save-total-limit", type=int, default=None)
     parser.add_argument("--skip-final-save", action="store_true")
+    parser.add_argument(
+        "--ddp-find-unused-parameters",
+        choices=["auto", "true", "false"],
+        default="auto",
+    )
     args = parser.parse_args()
 
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
@@ -306,6 +311,16 @@ def main() -> None:
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
 
+    if args.ddp_find_unused_parameters == "true":
+        ddp_find_unused_parameters = True
+    elif args.ddp_find_unused_parameters == "false":
+        ddp_find_unused_parameters = False
+    else:
+        model_type = str(getattr(getattr(model, "config", None), "model_type", "")).lower()
+        # Gemma 4 instruct checkpoints include multimodal towers that are unused in
+        # text-only SFT, so DDP must tolerate unused parameters.
+        ddp_find_unused_parameters = world_size > 1 and model_type.startswith("gemma4")
+
     train_args = TrainingArguments(
         output_dir=args.output_dir,
         per_device_train_batch_size=args.per_device_train_batch_size,
@@ -322,7 +337,7 @@ def main() -> None:
         optim="adamw_torch",
         report_to="none",
         gradient_checkpointing=args.gradient_checkpointing,
-        ddp_find_unused_parameters=False if world_size > 1 else None,
+        ddp_find_unused_parameters=ddp_find_unused_parameters if world_size > 1 else None,
         dataloader_num_workers=min(8, os.cpu_count() or 1),
         fsdp=args.fsdp,
         fsdp_config=args.fsdp_config,

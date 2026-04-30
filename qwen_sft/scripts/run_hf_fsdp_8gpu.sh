@@ -54,24 +54,41 @@ echo "processed_data_path=$PROCESSED_DATA_PATH"
 echo "output_dir=$OUTPUT_DIR"
 echo "log_path=$LOG_PATH"
 
+args=(
+  --model-path "$MODEL_PATH"
+  --data-path "$DATA_PATH"
+  --processed-data-path "$PROCESSED_DATA_PATH"
+  --output-dir "$OUTPUT_DIR"
+  --max-seq-length "$MAX_SEQ_LENGTH"
+  --per-device-train-batch-size "$PER_DEVICE_TRAIN_BATCH_SIZE"
+  --gradient-accumulation-steps "$GRADIENT_ACCUMULATION_STEPS"
+  --learning-rate "$LEARNING_RATE"
+  --num-train-epochs "$NUM_TRAIN_EPOCHS"
+  --save-strategy "$SAVE_STRATEGY"
+  --logging-steps "$LOGGING_STEPS"
+  --warmup-ratio "$WARMUP_RATIO"
+)
+
+if [[ -n "${FSDP:-}" ]]; then
+  args+=(--fsdp "$FSDP")
+fi
+if [[ -n "${FSDP_CONFIG:-}" ]]; then
+  args+=(--fsdp-config "$FSDP_CONFIG")
+fi
+if [[ -n "${SAVE_ONLY_MODEL:-}" ]]; then
+  args+=(--save-only-model)
+fi
+if [[ -n "${SAVE_TOTAL_LIMIT:-}" ]]; then
+  args+=(--save-total-limit "$SAVE_TOTAL_LIMIT")
+fi
+if [[ -n "${SKIP_FINAL_SAVE:-}" ]]; then
+  args+=(--skip-final-save)
+fi
+if [[ -n "${GRADIENT_CHECKPOINTING:-}" ]]; then
+  args+=(--gradient-checkpointing)
+fi
+
 torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" \
   qwen_sft/scripts/train_qwen_hf_fsdp.py \
-  --model-path "$MODEL_PATH" \
-  --data-path "$DATA_PATH" \
-  --processed-data-path "$PROCESSED_DATA_PATH" \
-  --output-dir "$OUTPUT_DIR" \
-  --max-seq-length "$MAX_SEQ_LENGTH" \
-  --per-device-train-batch-size "$PER_DEVICE_TRAIN_BATCH_SIZE" \
-  --gradient-accumulation-steps "$GRADIENT_ACCUMULATION_STEPS" \
-  --learning-rate "$LEARNING_RATE" \
-  --num-train-epochs "$NUM_TRAIN_EPOCHS" \
-  --save-strategy "$SAVE_STRATEGY" \
-  --logging-steps "$LOGGING_STEPS" \
-  --warmup-ratio "$WARMUP_RATIO" \
-  --fsdp "$FSDP" \
-  --fsdp-config "$FSDP_CONFIG" \
-  ${SAVE_ONLY_MODEL:+--save-only-model} \
-  ${SAVE_TOTAL_LIMIT:+--save-total-limit "$SAVE_TOTAL_LIMIT"} \
-  ${SKIP_FINAL_SAVE:+--skip-final-save} \
-  ${GRADIENT_CHECKPOINTING:+--gradient-checkpointing} \
+  "${args[@]}" \
   2>&1 | tee "$LOG_PATH"
