@@ -110,8 +110,9 @@ def prepare_processed_dataset(
     processed_data_path: str,
     model_path: str,
     max_seq_length: int,
+    trust_remote_code: bool = False,
 ) -> None:
-    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=False)
+    tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=trust_remote_code)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
@@ -235,28 +236,37 @@ def load_gemma4_text_only_model(model_path: str) -> tuple[Gemma4ForCausalLM, str
 
     model = Gemma4ForCausalLM(text_cfg)
 
-    index_path = Path(model_path) / "model.safetensors.index.json"
-    if not index_path.exists():
-        raise FileNotFoundError(f"Missing sharded index: {index_path}")
-
-    weight_map = json.loads(index_path.read_text())["weight_map"]
-    shard_to_keys: dict[str, list[tuple[str, str]]] = defaultdict(list)
-    for old_key, shard_name in weight_map.items():
-        if not old_key.startswith("model.language_model."):
-            continue
-        new_key = "model." + old_key[len("model.language_model.") :]
-        shard_to_keys[shard_name].append((old_key, new_key))
-
-    loaded_tensors = 0
     model_root = Path(model_path)
-    for shard_name, key_pairs in sorted(shard_to_keys.items()):
+    index_path = model_root / "model.safetensors.index.json"
+    single_path = model_root / "model.safetensors"
+
+    if index_path.exists():
+        weight_map = json.loads(index_path.read_text())["weight_map"]
+        shard_to_keys: dict[str, list[tuple[str, str]]] = defaultdict(list)
+        for old_key, shard_name in weight_map.items():
+            if not old_key.startswith("model.language_model."):
+                continue
+            new_key = "model." + old_key[len("model.language_model.") :]
+            shard_to_keys[shard_name].append((old_key, new_key))
+        for shard_name, key_pairs in sorted(shard_to_keys.items()):
+            shard_state = {}
+            with safe_open(str(model_root / shard_name), framework="pt", device="cpu") as handle:
+                for old_key, new_key in key_pairs:
+                    shard_state[new_key] = handle.get_tensor(old_key)
+            model.load_state_dict(shard_state, strict=False)
+            del shard_state
+    elif single_path.exists():
         shard_state = {}
-        with safe_open(str(model_root / shard_name), framework="pt", device="cpu") as handle:
-            for old_key, new_key in key_pairs:
+        with safe_open(str(single_path), framework="pt", device="cpu") as handle:
+            for old_key in handle.keys():
+                if not old_key.startswith("model.language_model."):
+                    continue
+                new_key = "model." + old_key[len("model.language_model.") :]
                 shard_state[new_key] = handle.get_tensor(old_key)
-                loaded_tensors += 1
         model.load_state_dict(shard_state, strict=False)
         del shard_state
+    else:
+        raise FileNotFoundError(f"No model weights found in {model_path}")
 
     model.tie_weights()
     return model, str(getattr(text_cfg, "model_type", "gemma4_text"))
@@ -289,6 +299,7 @@ def main() -> None:
         choices=["auto", "true", "false"],
         default="auto",
     )
+    parser.add_argument("--trust-remote-code", action="store_true")
     args = parser.parse_args()
 
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
@@ -306,6 +317,7 @@ def main() -> None:
             processed_data_path=args.processed_data_path,
             model_path=args.model_path,
             max_seq_length=args.max_seq_length,
+            trust_remote_code=args.trust_remote_code,
         )
 
     if local_rank != 0:
@@ -314,7 +326,7 @@ def main() -> None:
     if distributed:
         torch.distributed.barrier()
 
-    tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=False)
+    tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=args.trust_remote_code)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
@@ -345,19 +357,24 @@ def main() -> None:
             flush=True,
         )
 
-    config = AutoConfig.from_pretrained(args.model_path, trust_remote_code=False)
+    config = AutoConfig.from_pretrained(args.model_path, trust_remote_code=args.trust_remote_code)
     model_type = str(getattr(config, "model_type", "")).lower()
     if model_type.startswith("gemma4"):
         model, loaded_model_type = load_gemma4_text_only_model(args.model_path)
         model = model.to(dtype=torch.bfloat16)
         model_type = str(loaded_model_type).lower()
+        # FSDP cannot handle tied weights — give lm_head its own copy
+        model.lm_head.weight = torch.nn.Parameter(model.lm_head.weight.clone())
     else:
         model = AutoModelForCausalLM.from_pretrained(
             args.model_path,
-            trust_remote_code=False,
+            trust_remote_code=args.trust_remote_code,
             torch_dtype=torch.bfloat16,
             config=config,
         )
+        # FSDP cannot handle tied weights — break the tie if present
+        if getattr(config, "tie_word_embeddings", False) and hasattr(model, "lm_head"):
+            model.lm_head.weight = torch.nn.Parameter(model.lm_head.weight.clone())
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
         model.config.use_cache = False
@@ -399,7 +416,7 @@ def main() -> None:
         model=model,
         args=train_args,
         train_dataset=dataset,
-        data_collator=CausalLMCollator(tokenizer, needs_mm_token_type_ids=False),
+        data_collator=CausalLMCollator(tokenizer, needs_mm_token_type_ids=model_type.startswith("gemma4")),
     )
 
     trainer.train(resume_from_checkpoint=args.resume_from_checkpoint)

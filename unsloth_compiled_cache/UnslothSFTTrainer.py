@@ -1,7 +1,7 @@
 """
-2026.4.9
-2026.4.8
-5.5.0
+2026.3.6
+2026.4.6
+5.5.4
 0.24.0
 __UNSLOTH_VERSIONING__
 """
@@ -136,7 +136,7 @@ def chunked_hidden_states_selective_log_softmax(
         if logit_scale_divide != 0.0:
             chunk_logits = chunk_logits / logit_scale_divide
         if logit_softcapping != 0.0:
-            chunk_logits = logit_softcapping * torch.tanh(chunk_logits / logit_softcapping)
+            chunk_logits = chunk_logits * torch.tanh(chunk_logits / logit_softcapping)
 
         chunk_logits = chunk_logits.to(torch.float32)
 
@@ -795,7 +795,7 @@ class _UnslothSFTTrainer(BaseTrainer):
         else:
             raise TypeError("The `processing_class` must be either a `PreTrainedTokenizerBase` or a `ProcessorMixin`")
 
-        if args.eos_token is not None:
+        if args.eos_token is not None and args.eos_token != "<EOS_TOKEN>":
             eos_token = args.eos_token
             eos_token_id = tokenizer.convert_tokens_to_ids(eos_token)
             if eos_token_id is None:
@@ -919,6 +919,8 @@ class _UnslothSFTTrainer(BaseTrainer):
             # if the processing class does not have a pad token.
             pad_token = args.pad_token or tokenizer.pad_token or tokenizer.eos_token
             pad_token_id = tokenizer.convert_tokens_to_ids(pad_token)
+            if pad_token_id is None:
+                pad_token_id = tokenizer.eos_token_id
             if pad_token_id is None:
                 raise ValueError(
                     f"The specified `pad_token` ('{pad_token}') is not found in the vocabulary of the given "

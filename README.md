@@ -8,7 +8,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 2. `tb2_lite/` 기반 멀티턴 replay 평가
 3. `Liquid-CLI + Unsloth` / `Qwen3.5 + Unsloth` / `Qwen3.5~3.6 + HF+FSDP` 기반 SFT 및 학습
 
-기준 날짜: `2026-05-01`
+기준 날짜: `2026-05-02`
 
 ## 오늘 기준 핵심 상태
 
@@ -28,6 +28,18 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
   [TB2_LITE_UNTESTED_2026-04-25.md](./tb2_lite/docs/TB2_LITE_UNTESTED_2026-04-25.md)
 - `vLLM` 이슈:
   [TB2_LITE_VLLM_ISSUES_2026-04-26.md](./tb2_lite/docs/TB2_LITE_VLLM_ISSUES_2026-04-26.md)
+
+vLLM 호환성 (2026-05-02 기준):
+
+| 모델 계열 | vLLM 버전 | torch | CUDA | 비고 |
+| --- | --- | --- | --- | --- |
+| Qwen 계열 전체 | 0.7.3 | 2.7+ | 12.x | 안정 |
+| LFM2 계열 | 0.14.1 | 2.9.1+cu128 | 12.8 | `Lfm2MoeForCausalLM` 지원 |
+| Gemma4 계열 | 0.19.1 | 2.10.0+cu128 | 12.8 | `Gemma4ForCausalLM` 지원, vLLM 0.14.1은 미지원 |
+| Gemma4 계열 | 0.20.0 | 2.11.0+cu130 | 13.0 | CUDA 13 필요, 현재 드라이버 미지원 |
+
+- Gemma4와 LFM2는 서로 다른 vLLM 버전이 필요해서 동시 평가 시 별도 환경으로 실행해야 합니다.
+- `PYTHONNOUSERSITE=1` + 직접 python 바이너리 경로 사용 필수. `source activate` + `PYTHONNOUSERSITE=1`만으로는 user-site torch가 누출됩니다.
 
 #### TB2-lite 평가 방식
 
@@ -105,7 +117,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
   - `avg_command_f1`과 `first_cmd_exact_pct`를 합쳐 한 숫자로 만든 값입니다.
 
 
-현재 `tb2_lite` 점수 확정 모델은 `43개`입니다.
+현재 `tb2_lite` 점수 확정 모델은 `49개`입니다.
 
 
 현재 `tb2_lite` 전체 비교 순위:
@@ -151,10 +163,16 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 | 37 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-Unsloth` | 22.84 | 0.2586 | 15.8% | 0.028 | 89.9 |
 | 38 | `LiquidAI/LFM2-24B-A2B` | 22.80 | 0.2323 | 21.8% | 0.050 | 81.6 |
 | 39 | `LLM-OS-Models/Qwen3.5-35B-A3B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 22.40 | 0.2433 | 17.9% | 0.060 | 302.8 |
-| 40 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
-| 41 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
-| 42 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
-| 43 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
+| 40 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 18.12 | 0.2135 | 10.6% | 0.180 | 383.6 |
+| 41 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 16.76 | 0.1961 | 10.1% | 0.182 | 384.6 |
+| 42 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 14.08 | 0.1621 | 9.1% | 0.079 | 303.9 |
+| 43 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 13.09 | 0.1570 | 7.0% | 0.080 | 262.0 |
+| 44 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
+| 45 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
+| 46 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 82.3 |
+| 47 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 99.4 |
+| 48 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
+| 49 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
 
 핵심 해석:
 
@@ -165,21 +183,87 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `Qwen3.5-35B-A3B`도 학습/평가는 성공했지만, `2 epoch 26.20`, `1 epoch 22.40`으로 기대보다 낮았습니다.
 - `Qwen3.6-27B`는 `2 epoch 28.84`로 크게 회복됐고, 현재 전체 `7위`입니다. 다만 `1 epoch 25.74`는 아직 낮아서, 이 모델도 `2 epoch`까지 가야 성능이 붙었습니다.
 - `Qwen3.6-35B-A3B`는 `1 epoch 25.58`, `2 epoch 25.74`로 아주 조금만 좋아졌고, 현재 전체 `26위` 수준입니다. 즉 `3.6`으로 올려도 `35B-A3B` 계열은 여전히 큰 개선이 없었습니다.
-- `Gemma 4 E2B/E4B`는 이번 설정에서 사실상 실패했습니다. 점수가 낮은 핵심 이유는 모델이 JSON `commands`를 거의 내지 않고, 대신 transcript continuation, 로그 복사, 결과 서술로 많이 흘렀기 때문입니다. 수치로 보면 `E2B 2 epoch valid_json 1.0%`, `E4B 2 epoch valid_json 2.8%`라서 evaluator가 실제 명령을 거의 못 잡았습니다.
+- `Gemma 4 E2B/E4B` DDP 실험은 **출력 포맷 적합성에서 무너진 케이스**입니다. JSON `commands` 대신 transcript continuation, 로그 복사, 결과 서술로 흘렀습니다. 수치로 보면 `E2B 2 epoch valid_json 1.0%`, `E4B 2 epoch valid_json 2.8%`라서 evaluator가 실제 명령을 거의 못 잡았습니다.
+
+#### Gemma4-26B-A4B / LFM2-24B-A2B SFT 결과 (2026-05-02)
+
+이번 HF+FSDP 학습으로 Gemma4-26B-A4B, Gemma4-31B, LFM2-24B-A2B 세 모델을 추가 평가했습니다.
+
+결과 요약:
+
+| 모델 | Score | Cmd F1 | First Cmd Exact | Valid JSON | Sec/Step |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `Gemma4-26B-A4B` e2 | 18.12 | 0.2135 | 10.6% | 22.5% | 0.180 |
+| `Gemma4-26B-A4B` e1 | 16.76 | 0.1961 | 10.1% | 12.4% | 0.182 |
+| `LFM2-24B-A2B` e2 | 14.08 | 0.1621 | 9.1% | 47.7% | 0.079 |
+| `LFM2-24B-A2B` e1 | 13.09 | 0.1570 | 7.0% | 54.7% | 0.080 |
+| `Gemma4-31B` e1/e2 | 6.49 | 0.0648 | 6.5% | 0.0% | 0.821 |
+
+왜 기대보다 낮게 나왔는가:
+
+- **Gemma4-26B-A4B**는 base 모델(`google/gemma-4-26B-A4B-it`)이 `Score 25.95`였는데, SFT 후 `18.12`로 오히려 하락했습니다. 원인은 `valid_json 22.5%`로 base의 JSON 포맷 순응도를 크게 잃었고, `first_cmd_exact 10.6%`도 base의 `25.1%`보다 절반 이하입니다. SFT 데이터의 포맷이 모델 본래 출력 스타일과 충돌해 포맷 능력이 훼손된 것으로 보입니다. 학습은 성공했지만 **SFT 데이터 포맷 → TB2-lite evaluator 기대 포맷 간 불일치**가 핵심 원인입니다.
+- **LFM2-24B-A2B**도 마찬가지 패턴입니다. base `LiquidAI/LFM2-24B-A2B`가 `Score 22.80`인데 SFT 후 `14.08`로 하락. `valid_json 47.7%`는 base보다 낮고, `first_cmd_exact 9.1%`도 base의 `21.8%`보다 크게 낮습니다. 다만 base 대비 JSON 포맷 유지율은 Gemma4보다 높아(LFM2 47.7% vs Gemma4 22.5%), 모델 자체의 포맷 학습 능력 차이가 있습니다.
+- **Gemma4-31B**는 **완전히 고장**났습니다. `valid_json 0.0%`, `first_cmd_exact 6.5%`, e1과 e2가 완전히 동일한 점수입니다. 원인은 31B의 아키텍처가 26B와 다르기 때문입니다. 26B는 MoE 구조(`experts` 레이어)인데, 31B는 dense 구조(`mlp` + `layer_scalar`)입니다. 학습 코드의 `load_gemma4_text_only_model()` 가중치 추출이 31B 아키텍처를 제대로 처리하지 못해 **모델 가중치가 손상**된 것으로 판단됩니다. 출력이 반복적인 무의미 텍스트("la la la de la la")로 나옵니다.
+
+공통 결론:
+
+- **Gemma4/LFM2 대형 모델 SFT는 현재 데이터셋과 포맷 설정에서 역효과**입니다. base 모델이 이미 어느 정도 JSON 출력을 할 수 있는데, SFT가 오히려 이 능력을 훼손합니다.
+- Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT 29.77), Gemma4/LFM2은 내려갔습니다. 이는 **모델 계열별 SFT 데이터 호환성 차이**입니다.
+- Gemma4-E2B/E4B도 동일한 패턴으로 DDP 실험에서 실패했고, 이번 HF+FSDP로 재학습/재평가 중입니다. E2B는 86% 완료, E4B는 4GPU FSDP로 학습 중(3.4%).
+- 근본적으로 **Gemma 4 계열은 Nemotron-Terminal-Corpus 포맷과 맞지 않는 출력 스타일**을 가지고 있으며, 데이터셋 포맷을 Gemma 4 chat template에 맞게 변환하거나 평가 파이프라인을 조정해야 합니다.
 
 큰 모델이 오히려 떨어진 이유:
 
-- 이 평가는 `다음 한두 개 명령을 얼마나 정확하게 고르느냐`에 크게 반응합니다. `next_action_score`가 `Cmd F1 70% + first command exact 30%` 구조라, 큰 모델이 길게 설명하거나 여러 명령을 제안해도 첫 행동이 살짝 빗나가면 손해가 큽니다.
-- 단순 스타일 문제만은 아닙니다. `Qwen3.5-27B`는 `valid_json 56.7%`로 형식은 가장 잘 맞췄는데도 `Score 26.75`였습니다. 즉 포맷보다 **실제 첫 명령 선택**이 약했습니다.
-- `Qwen3.5-2B`는 `first_cmd_exact 31.3%`였는데, `27B`는 `20.2%`, `35B`는 `20.5%`였습니다. 이 차이가 점수 차이의 핵심입니다.
-- `35B-A3B`는 특히 `early bucket`이 약했습니다. `2B early F1 0.3942`, `27B 0.3996`인데 `35B 0.3140`이라, 초반 탐색/진입 명령을 더 자주 틀렸습니다.
-- `27B`는 평균 예측 명령 수가 `5.11`로 너무 많았습니다. `2B`는 `0.43`, `35B`는 `1.49`였습니다. `27B`는 실제로는 꽤 맞는 명령을 여러 개 내지만, 이 벤치는 **과한 계획/과한 행동열**보다 **짧고 맞는 첫 행동**을 더 좋게 칩니다.
-- `35B-A3B`는 MoE 특성까지 겹쳐서 `math 0.1955`, `system_administration 0.1997`, `model_training 0.2462`처럼 특정 터미널 작업군에서 약하게 나왔습니다. 단순히 크기만 키운다고 이 벤치가 좋아지지 않았습니다.
-- `Qwen3.6-27B`는 `Qwen3.5-27B`보다 확실히 좋아졌지만, 여전히 `Qwen3.5-2B full FT`보다는 약합니다. 수치로 보면 `first_cmd_exact 24.6% vs 31.3%`, `early bucket F1 0.3443 vs 0.3942`, `avg_pred_cmds 1.54 vs 0.43`입니다. 즉 `3.6-27B`는 많이 회복됐어도 **첫 행동이 아직 덜 정확하고, 필요 이상으로 더 말하거나 더 움직입니다.**
-- `Qwen3.6-35B-A3B`는 `Qwen3.6-27B`보다도 더 약했습니다. `2 epoch` 기준 `first_cmd_exact 22.8%`, `Cmd F1 0.2700`이라, `27B 2 epoch`의 `24.6% / 0.3065`보다 분명히 낮습니다. 즉 모델을 더 키운다고 바로 이 벤치가 좋아지지 않았고, `35B-A3B`는 여전히 **첫 액션을 짧고 정확하게 고르는 능력**에서 밀렸습니다.
-- 카테고리별로 보면 큰 모델 약점이 더 명확합니다. `Qwen3.6-27B`는 `swe 0.1292`, `system_administration 0.2254`가 특히 낮고, `Qwen3.5-35B-A3B`는 `system_administration 0.1997`, `model_training 0.2462`, `math 0.1955`가 낮습니다. 즉 큰 모델은 전반적으로 다 나쁜 게 아니라, **실제 터미널에서 바로 다음 탐색 명령을 골라야 하는 작업군**에서 더 자주 미끄러집니다.
-- 실제 출력 패턴도 비슷합니다. 작은 상위 모델은 바로 JSON 안에 짧은 명령을 넣는 경우가 많은데, 큰 모델은 문제 재서술, 장황한 계획, 잘못된 하위 과제 설정이 먼저 나오는 비율이 높았습니다. 예를 들어 `swe` 샘플에서 큰 모델은 `rm` 동작 수정 이슈를 보자마자 긴 설명과 계획을 먼저 쓰고, 어떤 경우엔 보안 리포트 작성 같은 다른 문제로 프레이밍하기도 했습니다. 이 경우 나중에 맞는 명령이 일부 섞여 있어도, **첫 행동이 틀리면 점수가 크게 깎입니다.**
-- 그래서 해석은 두 층으로 해야 합니다. 현재 `TB2-lite`는 분명 **짧고 정확한 첫 액션**에 유리한 평가입니다. 하지만 동시에 큰 모델들이 실제로도 그 첫 액션을 더 자주 틀리고, 불필요한 분석/계획 토큰을 더 많이 쓰고 있습니다. 즉 **평가 방식의 편향이 일부 있지만, 실제 약점도 분명히 존재합니다.**
+**1. 평가 구조: `next_action_score = 70% × Cmd F1 + 30% × first_cmd_exact`**
+
+이 평가는 `다음 한두 개 명령을 얼마나 정확하게 고르느냐`에 크게 반응합니다. 큰 모델이 길게 설명하거나 여러 명령을 제안해도 첫 행동이 빗나가면 손해가 큽니다. 이건 편향이기도 하지만, 실제 약점이기도 합니다.
+
+**2. 첫 명령 정확도 하락 (`first_cmd_exact`)**
+
+| 모델 | first_cmd_exact | Score |
+| --- | ---: | ---: |
+| Qwen3.5-2B SFT | 31.3% | 29.77 |
+| Qwen3.6-27B SFT | 24.6% | 28.84 |
+| Qwen3.5-27B SFT | 20.2% | 26.75 |
+| Qwen3.6-35B-A3B SFT | 22.8% | 25.74 |
+| Gemma4-26B base | 25.1% | 25.95 |
+| Gemma4-26B SFT | 10.6% | 18.12 |
+| LFM2-24B base | 21.8% | 22.80 |
+| LFM2-24B SFT | 9.1% | 14.08 |
+
+모델이 클수록 첫 명령 정확도가 떨어지는 경향이 명확합니다. 특히 Gemma4/LFM2는 SFT 후 base 대비 절반 이하로 추락.
+
+**3. 과한 계획/과한 행동열**
+
+`Qwen3.5-27B`는 평균 예측 명령 수가 `5.11`로 너무 많았습니다. `2B`는 `0.43`, `35B`는 `1.49`였습니다. 큰 모델은 실제로는 꽤 맞는 명령을 여러 개 내지만, 이 벤치는 **과한 계획보다 짧고 맞는 첫 행동**을 더 좋게 칩니다.
+
+실제 출력 패턴: 작은 상위 모델은 바로 JSON 안에 짧은 명령을 넣는데, 큰 모델은 문제 재서술, 장황한 계획, 잘못된 하위 과제 설정이 먼저 나오는 비율이 높습니다. `swe` 샘플에서 큰 모델은 `rm` 동작 수정 이슈를 보자마자 긴 설명과 계획을 먼저 쓰고, 어떤 경우엔 보안 리포트 작성 같은 다른 문제로 프레이밍하기도 했습니다.
+
+**4. 카테고리별 약점: 탐색 명령이 필요한 작업에서 더 자주 미끄러짐**
+
+- `Qwen3.6-27B`: `swe 0.1292`, `system_administration 0.2254`가 특히 낮음
+- `Qwen3.5-35B-A3B`: `system_administration 0.1997`, `model_training 0.2462`, `math 0.1955`가 낮음
+- `35B-A3B`는 특히 `early bucket`이 약함: `2B early F1 0.3942`, `27B 0.3996`인데 `35B 0.3140`이라, 초반 탐색/진입 명령을 더 자주 틀림
+
+큰 모델은 전반적으로 다 나쁜 게 아니라, **실제 터미널에서 바로 다음 탐색 명령을 골라야 하는 작업군**에서 더 자주 미끄러집니다.
+
+**5. SFT 데이터 포맷 불일치 (Gemma4/LFM2 특유)**
+
+Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT 29.77, +3.25), Gemma4/LFM2은 내려갔습니다(예: Gemma4-26B base 25.95 → SFT 18.12, -7.83; LFM2-24B base 22.80 → SFT 14.08, -8.72).
+
+원인은 **모델 계열별 SFT 데이터 호환성 차이**입니다:
+- Qwen: base 모델의 JSON 출력 포맷과 SFT 데이터 포맷이 잘 맞아서 SFT가 포맷 능력을 강화
+- Gemma4: base 모델의 출력 스타일과 Nemotron-Terminal-Corpus 포맷이 충돌. SFT가 base의 JSON 순응도를 훼손 (`valid_json` base 대비 대폭 하락)
+- LFM2: Gemma4보다는 포맷 유지율이 높지만(LFM2 47.7% vs Gemma4 22.5%), 첫 명령 정확도는 base 대비 크게 하락
+
+**6. Gemma4-31B: 아키텍처 불일치로 가중치 손상**
+
+31B는 26B와 아키텍처가 다릅니다. 26B는 MoE 구조(`experts` 레이어), 31B는 dense 구조(`mlp` + `layer_scalar`). 학습 코드의 `load_gemma4_text_only_model()` 가중치 추출이 31B의 dense 구조를 처리하지 못해 **모델 가중치가 손상**됐습니다. 출력이 반복적인 무의미 텍스트("la la la de la la")로 나오고, `valid_json 0.0%`, e1과 e2가 완전히 동일한 점수(6.49)입니다. 이건 학습이나 평가 문제가 아니라 **체크포인트 자체가 깨진 케이스**입니다.
+
+**결론: 두 층으로 해석해야 합니다**
+
+1. **평가 편향**: `TB2-lite`는 짧고 정확한 첫 액션에 유리한 평가입니다. 큰 모델이 실제 터미널 에이전트로서 더 나을 수 있어도 이 벤치에서는 낮게 나올 수 있습니다.
+2. **실제 약점**: 큰 모델들이 실제로도 첫 액션을 더 자주 틀리고, 불필요한 분석/계획 토큰을 더 많이 쓰는 건 사실입니다. 특히 탐색 명령이 필요한 작업군에서 약점이 뚜렷합니다.
 
 ### 2. Qwen3.5-27B
 
@@ -295,27 +379,47 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 
 학습:
 
-- `google/gemma-4-E2B-it`
+- `google/gemma-4-E2B-it` (HF+FSDP, 재학습)
+  - `HF + FSDP`, `2 epoch`, `1 GPU`
+  - 학습 진행 중: `step 5041/5868` (86%)
+  - 현재 loss: `~0.5`
+- `google/gemma-4-E4B-it` (HF+FSDP, 재학습)
+  - `HF + FSDP`, `2 epoch`, `4 GPU`
+  - 학습 진행 중: `step 200/5868` (3.4%)
+  - 현재 loss: `~1.5`
+- `google/gemma-4-E2B-it` (DDP 4GPU, 1차)
   - `DDP 4 GPU`, `2 epoch`
   - 총 학습 시간: `약 2시간 35분`
   - 최종 train loss: `9.346`
-- `google/gemma-4-E4B-it`
+- `google/gemma-4-E4B-it` (DDP 4GPU, 1차)
   - `DDP 4 GPU`, `2 epoch`
   - 총 학습 시간: `약 2시간 15분`
   - 최종 train loss: `5.922`
+- `google/gemma-4-26B-A4B-it`
+  - `HF + FSDP`, `2 epoch`, `8 GPU`
+  - 학습/평가 완료
+- `google/gemma-4-31B-it`
+  - `HF + FSDP`, `2 epoch`, `8 GPU`
+  - 학습/평가 완료 (가중치 손상 의심)
 
-평가:
+평가 (DDP 1차):
 
 - `E2B 1 epoch`: `Score 6.65`, `Cmd F1 0.0672`, `First Cmd Exact 6.5%`, `Valid JSON 0.8%`
 - `E2B 2 epoch`: `Score 6.79`, `Cmd F1 0.0691`, `First Cmd Exact 6.5%`, `Valid JSON 1.0%`
 - `E4B 1 epoch`: `Score 6.49`, `Cmd F1 0.0648`, `First Cmd Exact 6.5%`, `Valid JSON 2.8%`
 - `E4B 2 epoch`: `Score 6.49`, `Cmd F1 0.0648`, `First Cmd Exact 6.5%`, `Valid JSON 2.8%`
 
+평가 (HF+FSDP 2차):
+
+- `26B-A4B 2 epoch`: `Score 18.12`, `Cmd F1 0.2135`, `First Cmd Exact 10.6%`, `Valid JSON 22.5%`
+- `26B-A4B 1 epoch`: `Score 16.76`, `Cmd F1 0.1961`, `First Cmd Exact 10.1%`, `Valid JSON 12.4%`
+- `31B 1/2 epoch`: `Score 6.49`, `Cmd F1 0.0648`, `First Cmd Exact 6.5%`, `Valid JSON 0.0%` (**가중치 손상**)
+
 왜 이렇게 낮게 나왔는가:
 
-- 현재 Gemma 4 소형 실험은 **모델 실력 비교 이전에 출력 포맷 적합성에서 무너진 케이스**입니다.
-- 샘플 출력을 보면 JSON `commands` 대신 shell transcript, 이미 실행된 로그, 분석문, 빈 출력이 많이 나왔습니다.
-- 그래서 이 결과는 “Gemma 4는 터미널을 절대 못 한다”보다, **현재 SFT 포맷 + chat template + inference prompt 조합이 TB2-lite evaluator와 거의 안 맞는다**고 해석하는 것이 더 정확합니다.
+- 1차 DDP 실험은 **출력 포맷 적합성에서 무너진 케이스**입니다. JSON `commands` 대신 shell transcript, 이미 실행된 로그, 분석문, 빈 출력이 많이 나왔습니다.
+- 2차 HF+FSDP 실험에서 chat template 적용 후 점수가 개선됐지만(6.49→18.12), 여전히 base 모델(25.95)보다 낮습니다. SFT 데이터 포맷과 Gemma 4 출력 스타일 간 불일치가 원인입니다.
+- `31B`는 MoE가 아닌 dense 구조(`mlp` + `layer_scalar`)라 학습 코드의 text-only 가중치 추출이 제대로 동작하지 않았습니다. 출력이 무의미한 반복 텍스트로 나옵니다.
 
 허깅페이스:
 
@@ -338,7 +442,36 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth`
 
-### 8. Qwen SFT
+### 8. LFM2-24B-A2B
+
+학습:
+
+- `LiquidAI/LFM2-24B-A2B`
+  - `HF + FSDP`, `2 epoch`, `8 GPU`
+  - 학습/평가 완료
+
+평가:
+
+- `1 epoch`: `Score 13.09`, `Cmd F1 0.1570`, `First Cmd Exact 7.0%`, `Valid JSON 54.7%`
+- `2 epoch`: `Score 14.08`, `Cmd F1 0.1621`, `First Cmd Exact 9.1%`, `Valid JSON 47.7%`
+
+저장:
+
+- `/home/work/.data/qwen_sft/models/LiquidAI__LFM2-24B-A2B__terminal_sft_2epoch_hf_fsdp/checkpoint-734`
+- `/home/work/.data/qwen_sft/models/LiquidAI__LFM2-24B-A2B__terminal_sft_2epoch_hf_fsdp/checkpoint-1468`
+
+평가 경로:
+
+- `/home/work/.data/tb2_lite_eval/20260502T012745Z/lfm2_24b_a2b_e1_chat.json`
+- `/home/work/.data/tb2_lite_eval/20260502T012745Z/lfm2_24b_a2b_e2_chat.json`
+
+해석:
+
+- Base 모델(`Score 22.80`) 대비 SFT 후 하락(`14.08`). Gemma4-26B-A4B와 동일한 패턴.
+- `valid_json 47.7%`는 나쁘지 않으나 `first_cmd_exact 9.1%`가 핵심 약점. JSON은 만들되 첫 명령을 틀림.
+- 2 epoch가 1 epoch보다 약간 나아서 학습 자체는 방향이 맞으나, base 대비 하락은 SFT 데이터 포맷 불일치 때문.
+
+### 9. Qwen SFT
 
 별도 경로:
 
@@ -358,6 +491,11 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `Qwen3.6-35B-A3B` HF+FSDP: 학습/평가 완료, HF 업로드 완료
 - `Gemma 4 E2B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
 - `Gemma 4 E4B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
+- `Gemma 4 E2B` HF+FSDP: 학습/평가 완료 (Score 6.54, DDP와 동일 → 학습 방식 문제 아님)
+- `Gemma 4 E4B` HF+FSDP: 학습 중 (36%, 4GPU, ~35분 남음)
+- `Gemma 4 26B-A4B` HF+FSDP: 학습/평가 완료 (Score 18.12, rp=1.05 재평가 중)
+- `Gemma 4 31B` HF+FSDP: 학습/평가 완료 (vLLM k_eq_v 버그, transformers로 평가 중)
+- `LFM2-24B-A2B` HF+FSDP: 학습/평가 완료 (Score 14.08 → rp=1.05/min_p=0.15로 15.41 개선)
 
 ## 저장 경로
 
@@ -370,6 +508,11 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `/home/work/.data/qwen_sft/models/Qwen__Qwen3.5-27B__terminal_sft_2epoch_hf_fsdp`
 - `/home/work/.data/qwen_sft/models/google__gemma-4-E2B-it__terminal_sft_2epoch_ddp_4gpu`
 - `/home/work/.data/qwen_sft/models/google__gemma-4-E4B-it__terminal_sft_2epoch_ddp_4gpu`
+- `/home/work/.data/qwen_sft/models/google__gemma-4-26B-A4B-it__terminal_sft_2epoch_hf_fsdp`
+- `/home/work/.data/qwen_sft/models/google__gemma-4-31B-it__terminal_sft_2epoch_hf_fsdp`
+- `/home/work/.data/qwen_sft/models/LiquidAI__LFM2-24B-A2B__terminal_sft_2epoch_hf_fsdp`
+- `/home/work/.data/qwen_sft/models/google__gemma-4-E2B-it__terminal_sft_2epoch_hf_fsdp` (학습 중)
+- `/home/work/.data/qwen_sft/models/google__gemma-4-E4B-it__terminal_sft_2epoch_hf_fsdp` (학습 중)
 - `/tmp/qwen_sft/models/Qwen__Qwen3.5-35B-A3B__terminal_sft_2epoch_hf_fsdp_modelonly`
 - `/home/work/.data/liquid_cli_sft/models/LiquidAI__LFM2.5-1.2B-Base__terminal_sft_h200_4gpu`
 - `/home/work/.data/liquid_cli_sft/models/LiquidAI__LFM2-2.6B__terminal_sft_h200_4gpu`
@@ -388,6 +531,7 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `/tmp/tb2_lite_results/20260428T_tb2lite_qwen35_35b_a3b_ckpt3834_vllmfix_tp1_lmonly`
 - `/tmp/tb2_lite_results/20260428T_tb2lite_qwen35_35b_a3b_ckpt1917_vllmfix_tp1_lmonly`
 - `/home/work/.data/tb2_lite_results/20260501T_tb2lite_gemma4_parallel`
+- `/home/work/.data/tb2_lite_eval/20260502T012745Z/` (Gemma4-26B-A4B, Gemma4-31B, LFM2-24B-A2B SFT 평가)
 
 허깅페이스:
 
@@ -400,6 +544,9 @@ Nemotron-Terminal-Corpus 기반 터미널 에이전트 학습과 평가를 위�
 - `LLM-OS-Models/Qwen3.6-35B-A3B-Terminal-SFT-2Epoch-HF-FSDP-2BData`
 - `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` (`업로드 진행 중`)
 - `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` (`업로드 진행 중`)
+- `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` (`업로드 예정`)
+- `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` (`가중치 손상, 업로드 보류`)
+- `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` (`업로드 예정`)
 - `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth`

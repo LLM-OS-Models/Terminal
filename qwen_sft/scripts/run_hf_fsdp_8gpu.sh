@@ -87,6 +87,9 @@ fi
 if [[ -n "${GRADIENT_CHECKPOINTING:-}" ]]; then
   args+=(--gradient-checkpointing)
 fi
+if [[ -n "${TRUST_REMOTE_CODE:-}" ]]; then
+  args+=(--trust-remote-code)
+fi
 
 torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" \
   qwen_sft/scripts/train_qwen_hf_fsdp.py \

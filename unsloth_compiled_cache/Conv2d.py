@@ -1,7 +1,7 @@
 """
-2026.4.9
-2026.4.8
-5.5.0
+2026.3.6
+2026.4.6
+5.5.4
 0.24.0
 __UNSLOTH_VERSIONING__
 """
@@ -75,16 +75,4 @@ def forward(self, input: Tensor) -> Tensor:
     input = input.to(self.weight.dtype)
     original_dtype = input.dtype
     input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    return self._conv_forward(input, self.weight, self.bias).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)
+    return self._conv_forward(input, self.weight, self.bias).to(original_dtype).to(original_dtype)

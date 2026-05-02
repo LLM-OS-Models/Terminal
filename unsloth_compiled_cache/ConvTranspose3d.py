@@ -1,7 +1,7 @@
 """
-2026.4.9
-2026.4.8
-5.5.0
+2026.3.6
+2026.4.6
+5.5.4
 0.24.0
 __UNSLOTH_VERSIONING__
 """
@@ -68,21 +68,9 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from typing import Any, List, Optional, Tuple, Union, Dict, Set, Callable
-from transformers.models.qwen3_5.modeling_qwen3_5 import (F, nn)
+from transformers.models.gemma4.modeling_gemma4 import (F, nn)
 
 def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor:
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
-    original_dtype = input.dtype
-    input = input.to(self.weight.dtype)
     original_dtype = input.dtype
     input = input.to(self.weight.dtype)
     original_dtype = input.dtype
@@ -92,7 +80,8 @@ def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor
             "Only `zeros` padding mode is supported for ConvTranspose3d"
         )
 
-    assert isinstance(self.padding, tuple)
+    if not isinstance(self.padding, tuple):
+        raise AssertionError("self.padding must be a tuple")
     # One cannot replace List by Tuple or Sequence in "_output_padding" because
     # TorchScript does not support `Sequence[T]` or `Tuple[T, ...]`.
     num_spatial_dims = 3
@@ -115,4 +104,4 @@ def forward(self, input: Tensor, output_size: list[int] | None = None) -> Tensor
         output_padding,
         self.groups,
         self.dilation,
-    ).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype).to(original_dtype)
+    ).to(original_dtype).to(original_dtype)

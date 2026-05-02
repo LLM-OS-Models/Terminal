@@ -1,7 +1,7 @@
 """
-2026.4.9
-2026.4.8
-5.5.0
+2026.3.6
+2026.4.6
+5.5.4
 0.24.0
 __UNSLOTH_VERSIONING__
 """
@@ -68,7 +68,7 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from typing import Any, List, Optional, Tuple, Union, Dict, Set, Callable
-from transformers.models.qwen3_5.modeling_qwen3_5 import (F, nn)
+from transformers.models.gemma4.modeling_gemma4 import (F, nn)
 
 def forward(self, input: Tensor) -> Tensor:
     self._check_input_dim(input)
@@ -118,4 +118,4 @@ def forward(self, input: Tensor) -> Tensor:
         bn_training,
         exponential_average_factor,
         self.eps,
-    ).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype)
+    ).to(input.dtype).to(input.dtype)

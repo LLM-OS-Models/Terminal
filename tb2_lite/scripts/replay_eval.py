@@ -74,6 +74,8 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=1.0)
     parser.add_argument("--max-tokens", type=int, default=1024)
+    parser.add_argument("--repetition-penalty", type=float, default=1.0)
+    parser.add_argument("--min-p", type=float, default=0.0)
     parser.add_argument("--thinking-mode", default="auto")
     parser.add_argument("--backend", default="vllm")
     parser.add_argument("--model-impl", default="auto")
@@ -85,17 +87,32 @@ def main() -> None:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     rows = load_rows(eval_path)
-    prompts = [row["prompt"] for row in rows]
+    raw_prompts = [row["prompt"] for row in rows]
+
+    from transformers import AutoTokenizer as _AT
+    tokenizer = _AT.from_pretrained(args.model, trust_remote_code=True)
+    prompts = []
+    for p in raw_prompts:
+        msgs = [{"role": "user", "content": p}]
+        try:
+            formatted = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        except Exception:
+            formatted = p
+        prompts.append(formatted)
 
     load_start = time.time()
     llm, llm_kwargs = build_llm(args)
     load_time = round(time.time() - load_start, 1)
 
-    sampling = SamplingParams(
-        temperature=args.temperature,
-        top_p=args.top_p,
-        max_tokens=args.max_tokens,
-    )
+    sampling_kwargs = {
+        "temperature": args.temperature,
+        "top_p": args.top_p,
+        "max_tokens": args.max_tokens,
+        "repetition_penalty": args.repetition_penalty,
+    }
+    if args.min_p > 0:
+        sampling_kwargs["min_p"] = args.min_p
+    sampling = SamplingParams(**sampling_kwargs)
 
     gen_start = time.time()
     outputs = llm.generate(prompts, sampling_params=sampling, use_tqdm=True)

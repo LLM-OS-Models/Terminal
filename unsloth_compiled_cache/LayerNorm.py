@@ -1,7 +1,7 @@
 """
-2026.4.9
-2026.4.8
-5.5.0
+2026.3.6
+2026.4.6
+5.5.4
 0.24.0
 __UNSLOTH_VERSIONING__
 """
@@ -68,9 +68,9 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 from typing import Any, List, Optional, Tuple, Union, Dict, Set, Callable
-from transformers.models.qwen3_5.modeling_qwen3_5 import (F)
+from transformers.models.gemma4.modeling_gemma4 import (F)
 
 def forward(self, input: Tensor) -> Tensor:
     return F.layer_norm(
         input, self.normalized_shape, self.weight, self.bias, self.eps
-    ).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype).to(input.dtype)
+    ).to(input.dtype).to(input.dtype)
