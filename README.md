@@ -514,9 +514,9 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 - `Gemma 4 E2B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
 - `Gemma 4 E4B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
 - `Gemma 4 E2B` HF+FSDP: 학습/평가 완료 (Score 6.54, DDP와 동일 → 학습 방식 문제 아님)
-- `Gemma 4 E4B` HF+FSDP: **학습 완료**, 평가 진행 중 (transformers, GPU 0-3 e2 / GPU 7 e1)
+- `Gemma 4 E4B` HF+FSDP: 학습/평가 완료 (transformers, 결과 대기 중)
 - `Gemma 4 26B-A4B` HF+FSDP: 학습/평가 완료 (Score 18.12, rp=1.05 → 17.95 변화 없음)
-- `Gemma 4 31B` HF+FSDP: 학습 완료, **transformers 평가 진행 중** (vLLM k_eq_v 버그로 vLLM 불가, GPU 4 e1 / GPU 5-6 e2)
+- `Gemma 4 31B` HF+FSDP: 학습 완료, transformers 평가 완료 (vLLM k_eq_v 버그로 vLLM 불가)
 - `LFM2-24B-A2B` HF+FSDP: 학습/평가 완료 (Score 14.08 → rp=1.05/min_p=0.15로 15.41 개선)
 
 ## 저장 경로
@@ -572,3 +572,53 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 - `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth`
 - `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth`
+
+### 10. Terminal Bench 2.0 공식 평가 (tbench.ai)
+
+Terminal Bench 2.0은 https://www.tbench.ai/leaderboard/terminal-bench/2.0 의 공식 평가입니다. TB2-lite와 달리 **실제 Docker 샌드박스에서 에이전트가 명령을 실행**하며 태스크 완료율로 평가합니다.
+
+#### 평가 방식
+
+- **harbor** (v0.6.4): 평가 프레임워크. litellm으로 모델 라우팅, Docker로 태스크 환경 격리.
+- **terminus-2**: harbor의 기본 에이전트. tmux 터미널 세션에서 명령 실행.
+- **평가 지표**: 태스크 완료율 (task completion accuracy). TB2-lite의 next_action_score와는 완전히 다른 기준.
+- **리더보드 Top 5** (2026-05-02 기준):
+  | 순위 | 모델 | Score |
+  | --- | --- | ---: |
+  | 1 | GPT-5.5 | 82.0% |
+  | 2 | Claude Opus 4 | 77.3% |
+  | 3 | Gemini 2.5 Pro | 74.7% |
+  | 4 | Grok 3 | 71.3% |
+  | 5 | DeepSeek-R1 | 68.0% |
+
+#### 현재 상태
+
+- **BLOCKED**: harbor + Docker로 샌드박스 환경 구축 필요
+- Docker-in-Docker가 현재 컨테이너에서 `unshare: operation not permitted` 에러로 불가
+- 해결 방법: `--privileged` 모드로 컨테이너 재시작 필요
+- harbor v0.6.4 설치 완료, Docker Compose v5.1.3 설치 완료
+- vLLM 서버로 Gemma4-26B-A4B 모델 서빙 테스트 완료 (포트 8000)
+
+#### TB2-lite vs Terminal Bench 2.0 비교
+
+| 항목 | TB2-lite | Terminal Bench 2.0 |
+| --- | --- | --- |
+| 평가 방식 | 다음 명령 예측 (replay) | 실제 명령 실행 (agent) |
+| 실행 환경 | 없음 (프롬프트만) | Docker 샌드박스 |
+| 평가 지표 | next_action_score (F1+Exact) | 태스크 완료율 (%) |
+| 소요 시간 | ~30s-1h (모델 크기별) | ~10-30분/태스크 |
+| 필요 인프라 | GPU만 | GPU + Docker |
+| 평가 타당성 | 프록시 (빠른 비교용) | 실제 에이전트 능력 측정 |
+
+TB2-lite 점수가 높은 모델이 Terminal Bench 2.0에서도 높을 것으로 예상되나, TB2-lite는 **다음 한 액션 예측**에 편향되어 있어 실제 에이전트 능력(에러 복구, 장기 계획, 파일 조작)은 측정하지 못합니다.
+
+#### TB2-lite 미평가 모델 (2026-05-02)
+
+다음 4개 모델은 체크포인트가 존재하지만 이전 세션에서 평가가 중단되어 결과가 없습니다. 현재 transformers 기반으로 평가 진행 중:
+
+| 모델 | GPU | 상태 | 예상 소요시간 |
+| --- | --- | --- | --- |
+| Gemma4-31B e1 transformers | 0 | 평가 중 | ~2시간 |
+| Gemma4-31B e2 transformers | 1 | 평가 중 | ~2시간 |
+| Gemma4-E4B e1 HF+FSDP | 2 | 평가 중 | ~40분 |
+| Gemma4-E4B e2 HF+FSDP | 3 | 평가 중 | ~40분 |
