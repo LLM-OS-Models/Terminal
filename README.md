@@ -117,7 +117,7 @@ vLLM 호환성 (2026-05-02 기준):
   - `avg_command_f1`과 `first_cmd_exact_pct`를 합쳐 한 숫자로 만든 값입니다.
 
 
-현재 `tb2_lite` 점수 확정 모델은 `49개`입니다.
+현재 `tb2_lite` 점수 확정 모델은 `53개`입니다.
 
 
 현재 `tb2_lite` 전체 비교 순위:
@@ -166,13 +166,19 @@ vLLM 호환성 (2026-05-02 기준):
 | 40 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 18.12 | 0.2135 | 10.6% | 0.180 | 383.6 |
 | 41 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 16.76 | 0.1961 | 10.1% | 0.182 | 384.6 |
 | 42 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 14.08 | 0.1621 | 9.1% | 0.079 | 303.9 |
-| 43 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 13.09 | 0.1570 | 7.0% | 0.080 | 262.0 |
-| 44 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
-| 45 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
-| 46 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 82.3 |
-| 47 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 99.4 |
-| 48 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
-| 49 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
+| 43 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData (rp=1.05, min_p=0.15)` | 15.41 | 0.1734 | 10.9% | 0.094 | 303.9 |
+| 44 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData (rp=1.05, min_p=0.15)` | 13.24 | 0.1592 | 7.0% | 0.101 | 262.0 |
+| 45 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 13.09 | 0.1570 | 7.0% | 0.080 | 262.0 |
+| 44 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData (rp=1.05)` | 17.95 | 0.2132 | 10.1% | 0.187 | 383.6 |
+| 45 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData (rp=1.05)` | 16.01 | 0.1975 | 7.3% | 0.190 | 384.6 |
+| 46 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
+| 47 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.54 | 0.0656 | 6.5% | 0.119 | 326.0 |
+| 48 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.51 | 0.0652 | 6.5% | 0.123 | 326.0 |
+| 49 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
+| 50 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 82.3 |
+| 51 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 99.4 |
+| 52 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
+| 53 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
 
 핵심 해석:
 
@@ -379,14 +385,15 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 
 학습:
 
-- `google/gemma-4-E2B-it` (HF+FSDP, 재학습)
+- `google/gemma-4-E2B-it` (HF+FSDP)
   - `HF + FSDP`, `2 epoch`, `1 GPU`
-  - 학습 진행 중: `step 5041/5868` (86%)
-  - 현재 loss: `~0.5`
-- `google/gemma-4-E4B-it` (HF+FSDP, 재학습)
+  - 총 학습 시간: `약 3시간 4분`
+  - 최종 train loss: `~0.9`
+- `google/gemma-4-E4B-it` (HF+FSDP)
   - `HF + FSDP`, `2 epoch`, `4 GPU`
-  - 학습 진행 중: `step 200/5868` (3.4%)
-  - 현재 loss: `~1.5`
+  - **학습 완료** (2026-05-02 14:00)
+  - 최종 train loss: 확인 필요
+  - 평가 진행 중: e1 (GPU 7), e2 (GPU 0-3) transformers 기반
 - `google/gemma-4-E2B-it` (DDP 4GPU, 1차)
   - `DDP 4 GPU`, `2 epoch`
   - 총 학습 시간: `약 2시간 35분`
@@ -400,7 +407,7 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
   - 학습/평가 완료
 - `google/gemma-4-31B-it`
   - `HF + FSDP`, `2 epoch`, `8 GPU`
-  - 학습/평가 완료 (가중치 손상 의심)
+  - 학습/평가 완료 (vLLM k_eq_v 버그, transformers로 평가)
 
 평가 (DDP 1차):
 
@@ -412,14 +419,27 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 평가 (HF+FSDP 2차):
 
 - `26B-A4B 2 epoch`: `Score 18.12`, `Cmd F1 0.2135`, `First Cmd Exact 10.6%`, `Valid JSON 22.5%`
+- `26B-A4B 2 epoch rp=1.05`: `Score 17.95`, `Cmd F1 0.2132`, `First Cmd Exact 10.1%`, `Valid JSON 22.8%`
 - `26B-A4B 1 epoch`: `Score 16.76`, `Cmd F1 0.1961`, `First Cmd Exact 10.1%`, `Valid JSON 12.4%`
-- `31B 1/2 epoch`: `Score 6.49`, `Cmd F1 0.0648`, `First Cmd Exact 6.5%`, `Valid JSON 0.0%` (**가중치 손상**)
+- `26B-A4B 1 epoch rp=1.05`: `Score 16.01`, `Cmd F1 0.1975`, `First Cmd Exact 7.3%`, `Valid JSON 15.3%`
+- `31B e1/e2 vLLM 0.19.1`: `Score 6.49`, `Valid JSON 0.0%` (**vLLM k_eq_v 버그로 garbage 출력**)
+- `31B e2 vLLM 0.20.1 cu129 nightly`: `Score 6.49`, `Valid JSON 0.0%` (**반복 붕괴 "de la la", 모델 레벨 버그**)
+- `31B e2 transformers`: **평가 진행 중** (GPU 5-6, ~50분+ 소요)
+- `31B e1 transformers`: **평가 진행 중** (GPU 4)
+- `E2B 1 epoch HF+FSDP`: `Score 6.51`, `Cmd F1 0.0652`, `First Cmd Exact 6.5%`, `Valid JSON 4.1%`
+- `E2B 2 epoch HF+FSDP`: `Score 6.54`, `Cmd F1 0.0656`, `First Cmd Exact 6.5%`, `Valid JSON 8.5%`
+- `E2B 1 epoch rp=1.05`: `Score 6.51` (변화 없음)
+- `E2B 2 epoch rp=1.05`: `Score 6.54` (변화 없음)
+- `E4B e1 HF+FSDP`: **평가 진행 중** (transformers, GPU 7)
+- `E4B e2 HF+FSDP`: **평가 진행 중** (transformers, GPU 0-3)
 
 왜 이렇게 낮게 나왔는가:
 
 - 1차 DDP 실험은 **출력 포맷 적합성에서 무너진 케이스**입니다. JSON `commands` 대신 shell transcript, 이미 실행된 로그, 분석문, 빈 출력이 많이 나왔습니다.
-- 2차 HF+FSDP 실험에서 chat template 적용 후 점수가 개선됐지만(6.49→18.12), 여전히 base 모델(25.95)보다 낮습니다. SFT 데이터 포맷과 Gemma 4 출력 스타일 간 불일치가 원인입니다.
-- `31B`는 MoE가 아닌 dense 구조(`mlp` + `layer_scalar`)라 학습 코드의 text-only 가중치 추출이 제대로 동작하지 않았습니다. 출력이 무의미한 반복 텍스트로 나옵니다.
+- 2차 HF+FSDP에서 E2B를 재학습했지만 **DDP와 동일한 점수**(6.51/6.54 vs 6.65/6.79). 학습 방식이 문제가 아니라 **Gemma4 E2B 자체가 이 평가 포맷과 안 맞음**이 확인되었습니다.
+- `26B-A4B`는 base(25.95) → SFT(18.12)로 하락. `repetition_penalty=1.05` 적용해도 17.95로 변화 없음.
+- `31B`는 vLLM 0.19.1의 `k_eq_v` 어텐션 버그(vLLM PR #41253)로 garbage 출력. transformers에서는 정상 동작 확인. vLLM nightly 0.20.0 cu128 설치는 엔진 초기화 실패. 공식 문서에 따라 cu129 재설치 중.
+- **Gemma4 계열 전반**: SFT 데이터(Nemotron-Terminal-Corpus) 포맷이 Gemma4의 자연스러운 출력 스타일과 충돌. Qwen은 SFT 후 점수가 오르는데 Gemma4는 오히려 내려감.
 
 허깅페이스:
 
@@ -454,6 +474,8 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 
 - `1 epoch`: `Score 13.09`, `Cmd F1 0.1570`, `First Cmd Exact 7.0%`, `Valid JSON 54.7%`
 - `2 epoch`: `Score 14.08`, `Cmd F1 0.1621`, `First Cmd Exact 9.1%`, `Valid JSON 47.7%`
+- `1 epoch rp=1.05 min_p=0.15`: `Score 13.24`, `Cmd F1 0.1592`, `First Cmd Exact 7.0%` (Liquid 공식 권장 샘플링)
+- `2 epoch rp=1.05 min_p=0.15`: `Score 15.41`, `Cmd F1 0.1734`, `First Cmd Exact 10.9%` (**+1.33 개선**)
 
 저장:
 
@@ -492,9 +514,9 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 - `Gemma 4 E2B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
 - `Gemma 4 E4B` DDP 4GPU: 학습/평가 완료, HF 업로드 진행 중
 - `Gemma 4 E2B` HF+FSDP: 학습/평가 완료 (Score 6.54, DDP와 동일 → 학습 방식 문제 아님)
-- `Gemma 4 E4B` HF+FSDP: 학습 중 (36%, 4GPU, ~35분 남음)
-- `Gemma 4 26B-A4B` HF+FSDP: 학습/평가 완료 (Score 18.12, rp=1.05 재평가 중)
-- `Gemma 4 31B` HF+FSDP: 학습/평가 완료 (vLLM k_eq_v 버그, transformers로 평가 중)
+- `Gemma 4 E4B` HF+FSDP: **학습 완료**, 평가 진행 중 (transformers, GPU 0-3 e2 / GPU 7 e1)
+- `Gemma 4 26B-A4B` HF+FSDP: 학습/평가 완료 (Score 18.12, rp=1.05 → 17.95 변화 없음)
+- `Gemma 4 31B` HF+FSDP: 학습 완료, **transformers 평가 진행 중** (vLLM k_eq_v 버그로 vLLM 불가, GPU 4 e1 / GPU 5-6 e2)
 - `LFM2-24B-A2B` HF+FSDP: 학습/평가 완료 (Score 14.08 → rp=1.05/min_p=0.15로 15.41 개선)
 
 ## 저장 경로
@@ -511,8 +533,8 @@ Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT
 - `/home/work/.data/qwen_sft/models/google__gemma-4-26B-A4B-it__terminal_sft_2epoch_hf_fsdp`
 - `/home/work/.data/qwen_sft/models/google__gemma-4-31B-it__terminal_sft_2epoch_hf_fsdp`
 - `/home/work/.data/qwen_sft/models/LiquidAI__LFM2-24B-A2B__terminal_sft_2epoch_hf_fsdp`
-- `/home/work/.data/qwen_sft/models/google__gemma-4-E2B-it__terminal_sft_2epoch_hf_fsdp` (학습 중)
-- `/home/work/.data/qwen_sft/models/google__gemma-4-E4B-it__terminal_sft_2epoch_hf_fsdp` (학습 중)
+- `/home/work/.data/qwen_sft/models/google__gemma-4-E2B-it__terminal_sft_2epoch_hf_fsdp` (학습 완료)
+- `/home/work/.data/qwen_sft/models/google__gemma-4-E4B-it__terminal_sft_2epoch_hf_fsdp` (학습 완료)
 - `/tmp/qwen_sft/models/Qwen__Qwen3.5-35B-A3B__terminal_sft_2epoch_hf_fsdp_modelonly`
 - `/home/work/.data/liquid_cli_sft/models/LiquidAI__LFM2.5-1.2B-Base__terminal_sft_h200_4gpu`
 - `/home/work/.data/liquid_cli_sft/models/LiquidAI__LFM2-2.6B__terminal_sft_h200_4gpu`
