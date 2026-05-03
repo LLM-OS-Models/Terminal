@@ -117,7 +117,7 @@ vLLM 호환성 (2026-05-02 기준):
   - `avg_command_f1`과 `first_cmd_exact_pct`를 합쳐 한 숫자로 만든 값입니다.
 
 
-현재 `tb2_lite` 점수 확정 모델은 `53개`입니다.
+현재 `tb2_lite` 점수 확정 모델은 `57개`입니다.
 
 
 현재 `tb2_lite` 전체 비교 순위:
@@ -171,14 +171,18 @@ vLLM 호환성 (2026-05-02 기준):
 | 45 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 13.09 | 0.1570 | 7.0% | 0.080 | 262.0 |
 | 44 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData (rp=1.05)` | 17.95 | 0.2132 | 10.1% | 0.187 | 383.6 |
 | 45 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData (rp=1.05)` | 16.01 | 0.1975 | 7.3% | 0.190 | 384.6 |
-| 46 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
-| 47 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.54 | 0.0656 | 6.5% | 0.119 | 326.0 |
-| 48 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.51 | 0.0652 | 6.5% | 0.123 | 326.0 |
-| 49 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
-| 50 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 82.3 |
-| 51 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 99.4 |
-| 52 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
-| 53 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
+| 46 | `ByteDance/Ouro-1.4B` | 9.08 | 0.0954 | 8.0% | 0.212 | 105.5 |
+| 47 | `ByteDance/Ouro-2.6B-Thinking` | 7.22 | 0.0731 | 7.0% | 0.910 | 143.5 |
+| 48 | `ByteDance/Ouro-2.6B` | 6.68 | 0.0676 | 6.5% | 0.659 | 116.4 |
+| 49 | `ByteDance/Ouro-1.4B-Thinking` | 6.56 | 0.0658 | 6.5% | 0.411 | 120.6 |
+| 50 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
+| 50 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.54 | 0.0656 | 6.5% | 0.119 | 326.0 |
+| 51 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.51 | 0.0652 | 6.5% | 0.123 | 326.0 |
+| 52 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.65 | 0.0672 | 6.5% | 0.039 | 165.0 |
+| 53 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 82.3 |
+| 54 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 99.4 |
+| 55 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
+| 56 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
 
 핵심 해석:
 
@@ -204,6 +208,11 @@ vLLM 호환성 (2026-05-02 기준):
 | `LFM2-24B-A2B` e2 | 14.08 | 0.1621 | 9.1% | 47.7% | 0.079 |
 | `LFM2-24B-A2B` e1 | 13.09 | 0.1570 | 7.0% | 54.7% | 0.080 |
 | `Gemma4-31B` e1/e2 | 6.49 | 0.0648 | 6.5% | 0.0% | 0.821 |
+| `Gemma4-E4B` e2 (HF+FSDP) | 14.75 | 0.1708 | 9.3% | 13.5% | 67.9 |
+| `Gemma4-E4B` e1 (HF+FSDP) | 10.50 | 0.1234 | 6.2% | 7.3% | 69.6 |
+| `Qwen3.5-27B` e1 (transformers) | 16.42 | 0.1935 | 9.6% | 53.9% | 71.7 |
+| `Gemma4-31B` e1 (transformers) | 8.06 | 0.0941 | 4.9% | 9.1% | 85.5 |
+| `Gemma4-31B` e2 (transformers) | 7.46 | 0.0864 | 4.7% | 16.3% | 93.0 |
 
 왜 기대보다 낮게 나왔는가:
 
@@ -215,8 +224,33 @@ vLLM 호환성 (2026-05-02 기준):
 
 - **Gemma4/LFM2 대형 모델 SFT는 현재 데이터셋과 포맷 설정에서 역효과**입니다. base 모델이 이미 어느 정도 JSON 출력을 할 수 있는데, SFT가 오히려 이 능력을 훼손합니다.
 - Qwen 계열은 SFT 후 점수가 올랐는데(예: Qwen3.5-2B base 26.52 → SFT 29.77), Gemma4/LFM2은 내려갔습니다. 이는 **모델 계열별 SFT 데이터 호환성 차이**입니다.
-- Gemma4-E2B/E4B도 동일한 패턴으로 DDP 실험에서 실패했고, 이번 HF+FSDP로 재학습/재평가 중입니다. E2B는 86% 완료, E4B는 4GPU FSDP로 학습 중(3.4%).
+- Gemma4-E4B HF+FSDP 재학습 평가 완료. DDP 대비 개선 (6.49→14.75 e2, 6.49→10.50 e1), 하지만 base(23.43) 대비 여전히 하락. `valid_json 13.5%`로 DDP(2.8%)보다 개선됐으나 여전히 낮음. E2B HF+FSDP 학습도 완료됨.
+- Qwen3.5-27B e1 transformers 평가 = 16.42 (기존 vLLM 평가는 24.41). transformers 백엔드에서 점수 하락.
 - 근본적으로 **Gemma 4 계열은 Nemotron-Terminal-Corpus 포맷과 맞지 않는 출력 스타일**을 가지고 있으며, 데이터셋 포맷을 Gemma 4 chat template에 맞게 변환하거나 평가 파이프라인을 조정해야 합니다.
+
+#### ByteDance Ouro 모델 평가 결과 (2026-05-03)
+
+Ouro는 ByteDance의 루프드(Looped) 언어 모델로, 동일 24层 스택을 4회 반복(total_ut_steps=4)하는 recurrent depth 아키텍처입니다. Thinking 변형은 수학/과학 추론 데이터로 SFT된 버전입니다.
+
+| 모델 | Score | Cmd F1 | First Cmd Exact | Valid JSON | Sec/Step |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `Ouro-1.4B` | 9.08 | 0.0954 | 8.0% | 9.6% | 0.212 |
+| `Ouro-2.6B` | 6.68 | 0.0676 | 6.5% | 6.5% | 0.659 |
+| `Ouro-2.6B-Thinking` | 7.22 | 0.0731 | 7.0% | 9.1% | 0.910 |
+| `Ouro-1.4B-Thinking` | 6.56 | 0.0658 | 6.5% | 10.4% | 0.411 |
+
+**왜 이렇게 낮은가:**
+
+1. **JSON 출력 불가**: `valid_json 6.5-10.4%`로 평가 결과의 90%가 JSON 파싱에 실패합니다. Ouro 모델은 수학/과학 추론에 특화되어 훈련되었고, JSON 구조화 출력 포맷을 학습한 적이 없습니다.
+2. **터미널 도메인 지식 부재**: 학습 데이터가 수학(3.5M), 코드(3.2M), 과학(808K) 중심이며, 터미널 명령이나 시스템 관리 도메인 경험이 전무합니다.
+3. **루프드 아키텍처의 부작용**: 4회 recurrent step이 짧은 명령 생성에는 과도한 연산입니다. 간단한 명령을 복잡하게 "과대사고"하는 경향이 있습니다.
+4. **Thinking 모델이 더 나쁨**: 1.4B-Thinking(6.56) < 1.4B(9.08). 추론 특화 SFT가 터미널 태스크에는 오히려 방해가 됩니다. 더 긴 응답(sec/step 0.411 vs 0.212)을 생성하지만 JSON 포맷은 개선되지 않습니다.
+
+**SFT로 개선 가능성:**
+- 가장 큰 문제가 `valid_json < 11%`이므로, SFT로 JSON 포맷만 학습시켜도 점수가 크게 오를 가능성이 있습니다.
+- Qwen3.5-2B 사례에서 base 26.52 → SFT 29.77로 +3.25 상승했으므로, 포맷 학습 효과가 입증됨.
+- 다만 Gemma4/LFM2처럼 SFT 후 오히려 하락할 위험도 있습니다.
+- Ouro-1.4B SFT 실험을 GPU 4-7에서 진행 중.
 
 큰 모델이 오히려 떨어진 이유:
 
