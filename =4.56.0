@@ -1,0 +1,7 @@
+Requirement already satisfied: transformers in /tmp/vllm_eval_env/lib/python3.12/site-packages (4.54.1)
+Collecting xgrammar
+  Downloading xgrammar-0.2.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.2 kB)
+Downloading xgrammar-0.2.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (44.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.6/44.6 MB 57.7 MB/s eta 0:00:00
+Installing collected packages: xgrammar
+Successfully installed xgrammar-0.2.0
