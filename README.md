@@ -171,10 +171,13 @@ vLLM 호환성 (2026-05-02 기준):
 | 45 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 13.09 | 0.1570 | 7.0% | 0.080 | 262.0 |
 | 44 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData (rp=1.05)` | 17.95 | 0.2132 | 10.1% | 0.187 | 383.6 |
 | 45 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData (rp=1.05)` | 16.01 | 0.1975 | 7.3% | 0.190 | 384.6 |
-| 46 | `ByteDance/Ouro-1.4B` | 9.08 | 0.0954 | 8.0% | 0.212 | 105.5 |
-| 47 | `ByteDance/Ouro-2.6B-Thinking` | 7.22 | 0.0731 | 7.0% | 0.910 | 143.5 |
-| 48 | `ByteDance/Ouro-2.6B` | 6.68 | 0.0676 | 6.5% | 0.659 | 116.4 |
-| 49 | `ByteDance/Ouro-1.4B-Thinking` | 6.56 | 0.0658 | 6.5% | 0.411 | 120.6 |
+| 46 | `LLM-OS-Models/Ouro-2.6B-Terminal-SFT` (transformers) | 13.39 | 0.1368 | 12.7% | 195.079 | 1.9 |
+| 47 | `LLM-OS-Models/Ouro-1.4B-Terminal-SFT` (transformers) | 11.45 | 0.1134 | 11.7% | 98.671 | 1.4 |
+| 48 | `ByteDance/Ouro-1.4B` | 9.08 | 0.0954 | 8.0% | 0.212 | 105.5 |
+| 49 | `ByteDance/Ouro-2.6B-Thinking` | 7.22 | 0.0731 | 7.0% | 0.910 | 143.5 |
+| 50 | `ByteDance/Ouro-2.6B` | 6.68 | 0.0676 | 6.5% | 0.659 | 116.4 |
+| 51 | `ByteDance/Ouro-1.4B-Thinking` | 6.56 | 0.0658 | 6.5% | 0.411 | 120.6 |
+| 52 | `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` (transformers) | 6.49 | 0.0649 | 6.5% | 23.482 | 2.3 |
 | 50 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
 | 50 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.54 | 0.0656 | 6.5% | 0.119 | 326.0 |
 | 51 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.51 | 0.0652 | 6.5% | 0.123 | 326.0 |
@@ -308,7 +311,7 @@ Ouro의 사전학습 데이터 구성:
 - `data_science`, `data_querying` 등: 여전히 F1 = 0.0
 - 반면 `swe`, `math`, `code`는 SFT 전후 동일 → 이 카테고리들은 원래 학습 데이터와 겹쳐서 이미 고정됨
 
-**2.6B-Thinking SFT**: 평가 진행 중 (transformers 백엔드, ~20시간 소요 예상)
+**2.6B-Thinking SFT**: 평가 진행 중 (transformers 백엔드, 300/386 = 78%, ~1.5시간 남음)
 
 **6. 카테고리별 패턴: 추론 도메인 vs 실행 도메인**
 
@@ -317,6 +320,114 @@ Ouro가 상대적으로 나은 카테고리: `swe` (0.24), `math` (0.22), `model
 완전히 실패하는 카테고리: `system_administration` (0.00), `data_querying` (0.00), `data_science` (0.00), `file_operations` (0.01) → 터미널 "실행 중심" 태스크. 실제 셸 명령을 정확히 생성해야 하는데, 이 경험이 전무함.
 
 **결론**: Ouro의 루프드 아키텍처는 터미널 에이전트 태스크에 근본적으로 부적합합니다. JSON 구조화 출력 학습이 안 되고, 사전학습 데이터가 터미널 도메인을 전혀 커버하지 않으며, SFT로도 이 두 가지 근본적 한계를 극복하기 어렵습니다. Qwen3.5-2B 대비 1/3 수준의 성능은 아키텍처적 한계로 판단됩니다.
+
+---
+
+**Ouro 논문 기반 심층 분석** (arXiv:2510.25741)
+
+Ouro는 ByteDance에서 개발한 Looped Language Model (LoopLM)로, 24층 transformer를 4회 반복(recurrent depth=4)하는 아키텍처입니다. 7.7T 토큰으로 사전학습되었으며, 1.4B/2.6B 파라미터로 4B~12B급 표준 transformer와 동등한 성능을 달성하는 것이 목표입니다.
+
+**논문이 증명한 핵심: LoopLM의 강점은 "지식 조작"이지 "지식 저장"이 아님**
+
+논문 Section 6에서 통제 실험으로 증명한 내용:
+- 루핑을 해도 **파라미터당 ~2비트**의 지식 용량은 변하지 않음 (looped/non-looped 동일)
+- 강점은 이미 아는 지식을 "조합/추론"하는 능력 (multi-hop QA, modular arithmetic)
+- 터미널 명령은 **사전학습에 없던 새로운 지식**이 필요 → 루핑으로 해결 안 됨
+- 즉, Ouro의 아키텍처적 우위는 "모르는 것을 잘하는" 게 아니라 "아는 것을 잘 조합하는" 것에 국한
+
+**LoopLM이 강한 태스크 (논문 Table 7-9)**
+
+| 벤치마크 | Ouro-2.6B | 비교 모델 | 비고 |
+|----------|-----------|---------|------|
+| MATH500 | **90.85** | Qwen3-8B: 62.30 | 수학 추론 1.46배 |
+| BBH | **80.46** | Qwen3-8B: 77.65 | 논리 추론 |
+| GSM8K | 78.92 | Qwen3-8B: 85.19 | 수학 응용 |
+| AIME25 pass@1 | 50.3 | Qwen3-4B: 51.3 | 수학 경시 |
+| OlympiadBench | **76.44** | Qwen3-8B: 75.25 | 올림피아드 |
+
+수학/논리/과학 추론에서 8B급 모델과 동등하거나 우세. 이는 "깊은 사고"가 필요한 태스크에서 루핑이 유효함을 보여줌.
+
+**LoopLM이 약한 태스크 — 터미널 에이전트가 여기에 해당**
+
+터미널 명령 생성은 논문이 강점으로 주장하는 능력과 정반대되는 특성을 가집니다:
+
+| LoopLM 강점 | 터미널 태스크 특성 | 불일치 |
+|-------------|-----------------|--------|
+| 복잡한 다단계 추론 | 단순한 다음 명령 1개 | 과도한 연산 |
+| 지식 조합/재구성 | 정확한 명령어 회상 | 지식 저장 필요 |
+| "깊은 사고"에 유리 | 빠르고 정확한 반응 | 속도 저하 |
+| 반복적 정제가 도움 | 한 번에 정확해야 함 | 오버피팅 |
+| Latent reasoning | 구조화된 JSON 출력 | 포맷 준수 불가 |
+
+**RL 불가 — 논문 자체에서도 실패 인정**
+
+논문 Section 4.5에서 DAPO/GRPO 시도 결과:
+> "These attempts did not yield significant performance gains over the final SFT checkpoint."
+
+원인: vLLM/SGLang이 LoopLM의 동적 early-exit을 지원하지 않아 RL rollout 불가. Fixed 4-round RL은 학습은 되지만 SFT 체크포인트를 넘지 못함. 인프라 호환성 + SFT 이후 한계치 도달이 복합 원인.
+
+**Mid-training (사전강화학습) 가능성**
+
+논문의 Stage 4 mid-training은 이미 존재 (300B 토큰, 고 품질 SFT 포맷 데이터). 하지만 터미널 데이터는 전무. 추가 mid-training으로 셸 명령/JSON 데이터를 수십억 토큰 주입하면:
+- 예상 효과: **현재 13.39 → 20~25점** 수준 (50~80% 향상)
+- 한계: 지식 용량이 ~2 bits/param으로 고정되어 Qwen3.5-2B 수준(29.77) 도달은 어려움
+- RL은 논문에서도 포기한 영역이라 현실적으로 불가
+
+**Ouro의 적합/부적합 도메인 요약**
+
+적합: 수학 경시, 논리 퍼즐, 과학 추론, 코드 생성(복잡한 알고리즘), 안전성 검증(루핑이 안전 향상)
+부적합: 터미널 에이전트, 구조화 출력(JSON), 실시간 반응, 간단한 명령 생성, 도메인 특화 지식 필요 태스크
+
+---
+
+**파이프라인 근본 문제점 (전 모델에 영향)**
+
+Ouro 분석 외에도 전체 파이프라인에 구조적 문제가 있어, 상위 모델들의 실제 잠재력보다 점수가 낮게 나올 가능성이 큽니다.
+
+**1. 학습/평가 카테고리 불일치 68.4%**
+
+`prepare_dataset.py`의 필터가 평가 데이터 386스텝의 **264스텝(68.4%)**을 제외합니다:
+
+| 분류 | 카테고리 | 스텝 | 비율 |
+|------|---------|------|------|
+| 학습 포함 | file_operations, data_processing, data_querying, dependency_management, security | 122 | 31.6% |
+| 명시적 제외 | debugging(51), software_engineering(43), data_science(24), scientific_computing(23) | 141 | 36.5% |
+| 암시적 드롭 | swe(30), system_administration(26), code(23), model_training(22), math(22) | 123 | 31.9% |
+
+평가의 2/3가 OOD(out-of-distribution)이므로 SFT 효과 측정이 본질적으로 부정확합니다.
+
+**2. HF FSDP 대형 모델 프롬프트 마스킹 누락**
+
+`train_qwen_hf_fsdp.py`의 "text" 모드에서 `labels = [ids.copy() for ids in input_ids]`로 전체 시퀀스에 loss 계산. user 프롬프트까지 학습하여 모델이 user 발화를 재생산하도록 훈련됨. 영향: Gemma4-26B, Gemma4-31B, LFM2-24B, Qwen 27B/35B 전부.
+
+**3. MAX_SEQ_LENGTH=1024 (HF FSDP)**
+
+터미널 trajectory 첫 user 메시지가 ~1,500-2,000 토큰. MAX_SEQ_LENGTH=1024는 거의 모든 실제 trajectory를 truncate. 대형 모델 SFT 실패의 큰 원인.
+
+**4. 공유 SFT 데이터의 Qwen 전용 토큰**
+
+Gemma4, LFM2 대형 모델이 모두 `qwen35_27b_processed_2bdata`로 학습. 이 데이터에 `<|im_start|>`/`<|im_end|>` Qwen 전용 토큰이 포함되어 있어 Gemma4/LFM2는 존재하지 않는 토큰으로 학습. README의 "Gemma4 valid_json 22.5%로 JSON 순응도 상실"과 일치.
+
+**5. 평가 백엔드 불일치**
+
+| 백엔드 | 챗 템플릿 | 영향 |
+|--------|----------|------|
+| replay_eval.py (vLLM) | `apply_chat_template` 적용 | 정상 |
+| replay_eval_transformers.py | **raw prompt 그대로** | 챗 템플릿 미적용 |
+
+Ouro, Gemma4-31B 등 transformers로 평가한 모델은 챗 템플릿 없이 평가되어 점수 과소평가 가능. 예: Qwen3.5-27B vLLM 24.41 → transformers 16.42 (-33%).
+
+**예상 최고 점수 (파이프라인 수정 시)**
+
+위 문제들을 모두 수정하면(필터 확장, 프롬프트 마스킹, 시퀀스 길이 확장, 데이터 포맷 정렬, 평가 백엔드 통일):
+
+| 모델 | 현재 Score | 예상 Score | 근거 |
+|------|-----------|-----------|------|
+| Gemma4-26B-A4B SFT | 18.12 | **25-28** | base=25.95, SFT 데이터 포맷만 맞추면 base 수준 회복 + α |
+| LFM2-24B SFT | 14.08 | **22-25** | base=22.80, 마스킹+길이 수정 시 base 이상 가능 |
+| Qwen3.5-27B SFT | 26.75 | **28-30** | vLLM=24.41에서 이미 회복, 마스킹+길이 수정 시 추가 상승 |
+| Qwen3.6-27B SFT | 28.84 | **29-31** | 이미 28.84, 여유 있음 |
+| Ouro-2.6B SFT | 13.39 | **20-25** | mid-training으로 터미널 지식 주입 시 (하지만 RL 불가, 한계 존재) |
 
 큰 모델이 오히려 떨어진 이유:
 
