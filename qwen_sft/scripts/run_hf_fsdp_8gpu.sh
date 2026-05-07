@@ -75,20 +75,29 @@ fi
 if [[ -n "${FSDP_CONFIG:-}" ]]; then
   args+=(--fsdp-config "$FSDP_CONFIG")
 fi
-if [[ -n "${SAVE_ONLY_MODEL:-}" ]]; then
+if [[ "${SAVE_ONLY_MODEL:-0}" == "1" ]]; then
   args+=(--save-only-model)
 fi
 if [[ -n "${SAVE_TOTAL_LIMIT:-}" ]]; then
   args+=(--save-total-limit "$SAVE_TOTAL_LIMIT")
 fi
-if [[ -n "${SKIP_FINAL_SAVE:-}" ]]; then
+if [[ "${SKIP_FINAL_SAVE:-0}" == "1" ]]; then
   args+=(--skip-final-save)
 fi
-if [[ -n "${GRADIENT_CHECKPOINTING:-}" ]]; then
+if [[ "${GRADIENT_CHECKPOINTING:-0}" == "1" ]]; then
   args+=(--gradient-checkpointing)
 fi
-if [[ -n "${TRUST_REMOTE_CODE:-}" ]]; then
+if [[ "${TRUST_REMOTE_CODE:-0}" == "1" ]]; then
   args+=(--trust-remote-code)
+fi
+if [[ -n "${HOLDOUT_PATH:-}" ]]; then
+  args+=(--holdout-path "$HOLDOUT_PATH")
+fi
+if [[ "${OVERWRITE_PROCESSED_DATA:-0}" == "1" ]]; then
+  args+=(--overwrite-processed-data)
+fi
+if [[ "${ALLOW_TEXT_CACHE:-0}" == "1" ]]; then
+  args+=(--allow-text-cache)
 fi
 
 torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" \

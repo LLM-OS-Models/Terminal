@@ -19,8 +19,15 @@ import os
 import re
 import time
 import torch
+import sys
 from pathlib import Path
 from datetime import datetime
+
+TB2_SCRIPT_DIR = Path(__file__).resolve().parents[1] / "tb2_lite" / "scripts"
+if str(TB2_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(TB2_SCRIPT_DIR))
+
+from prompt_builder import build_prompt
 
 
 def load_model(model_name, gpu_id):
@@ -122,24 +129,8 @@ def compute_metrics(prediction, reference, conversations):
 
 
 def generate_response(model, tokenizer, prompt, model_name, max_new_tokens=2048):
-    if "gemma" in model_name.lower():
-        messages = [{"role": "user", "content": prompt}]
-        try:
-            text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        except Exception:
-            text = f"<start_of_turn>user\n{prompt}<end_of_turn>\n<start_of_turn>model\n"
-    elif "qwen" in model_name.lower():
-        messages = [{"role": "user", "content": prompt}]
-        try:
-            text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        except Exception:
-            text = f"<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
-    else:
-        messages = [{"role": "user", "content": prompt}]
-        try:
-            text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        except Exception:
-            text = f"User: {prompt}\nAssistant: "
+    built = build_prompt(tokenizer, {"prompt": prompt})
+    text = built.prompt
 
     inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=8192).to(model.device)
 

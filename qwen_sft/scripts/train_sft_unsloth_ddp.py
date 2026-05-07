@@ -6,8 +6,13 @@ import gc
 import json
 import os
 import shutil
+import sys
 import time
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 import torch
 from unsloth import FastLanguageModel
@@ -16,6 +21,7 @@ import transformers
 from datasets import Dataset, load_from_disk
 from huggingface_hub import login
 from trl import SFTConfig, SFTTrainer
+from terminal_sft_utils import is_holdout_row, load_holdout_keys, stable_hash, tokenizer_metadata
 
 
 def processed_dataset_ready(processed_path: Path) -> bool:
@@ -35,6 +41,21 @@ def wait_for_processed_dataset(processed_path: Path, *, timeout_seconds: int = 3
     raise TimeoutError(f"Timed out waiting for processed dataset at {processed_path}")
 
 
+def prepare_meta_path(processed_path: Path) -> Path:
+    return processed_path / "prepare_meta.json"
+
+
+def processed_meta_matches(processed_path: Path, expected: dict) -> bool:
+    path = prepare_meta_path(processed_path)
+    if not path.exists():
+        return False
+    try:
+        current = json.loads(path.read_text())
+    except Exception:
+        return False
+    return all(current.get(key) == value for key, value in expected.items())
+
+
 def prepare_processed_dataset(
     *,
     raw_data_path: str,
@@ -42,6 +63,7 @@ def prepare_processed_dataset(
     model_path: str,
     num_proc: int,
     conversation_mode: str,
+    holdout_path: str | None,
 ) -> None:
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_path,
@@ -51,8 +73,15 @@ def prepare_processed_dataset(
         tokenizer.pad_token = tokenizer.eos_token
 
     raw_dataset = load_from_disk(raw_data_path)
-    dataset = standardize_data_formats(raw_dataset)
     raw_rows = len(raw_dataset)
+    holdout_keys = load_holdout_keys(holdout_path)
+    if holdout_keys:
+        raw_dataset = raw_dataset.filter(
+            lambda example: not is_holdout_row(example, holdout_keys),
+            num_proc=num_proc,
+            desc="exclude_eval_holdout",
+        )
+    dataset = standardize_data_formats(raw_dataset)
 
     if conversation_mode == "turn_pairs":
         turn_examples: list[dict[str, list[dict[str, str]]]] = []
@@ -123,6 +152,22 @@ def prepare_processed_dataset(
         flush=True,
     )
     processed.save_to_disk(processed_data_path)
+    meta = {
+        "source_mode": "raw_conversations_template_text",
+        "raw_data_path": raw_data_path,
+        "model_path": model_path,
+        "conversation_mode": conversation_mode,
+        "holdout_path": holdout_path,
+        "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+        "raw_rows": raw_rows,
+        "skipped_holdout_rows": raw_rows - len(raw_dataset),
+        "train_rows": len(dataset),
+        "processed_rows": len(processed),
+        **tokenizer_metadata(tokenizer, model_path),
+    }
+    prepare_meta_path(Path(processed_data_path)).write_text(
+        json.dumps(meta, ensure_ascii=False, indent=2)
+    )
 
 
 def main() -> None:
@@ -155,6 +200,8 @@ def main() -> None:
     parser.add_argument("--save-steps", type=int, default=100)
     parser.add_argument("--logging-steps", type=int, default=1)
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
+    parser.add_argument("--holdout-path", default="eval/eval_dataset.jsonl")
+    parser.add_argument("--overwrite-processed-data", action="store_true")
     parser.add_argument(
         "--gradient-checkpointing",
         action="store_true",
@@ -183,6 +230,20 @@ def main() -> None:
         os.environ["UNSLOTH_RETURN_LOGITS"] = "1"
 
     processed_path = Path(args.processed_data_path)
+    if local_rank == 0:
+        holdout_keys = load_holdout_keys(args.holdout_path)
+        expected_meta = {
+            "source_mode": "raw_conversations_template_text",
+            "raw_data_path": args.data_path,
+            "model_path": args.model_path,
+            "conversation_mode": args.conversation_mode,
+            "holdout_path": args.holdout_path,
+            "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+        }
+        if args.overwrite_processed_data and processed_path.exists():
+            shutil.rmtree(processed_path, ignore_errors=True)
+        if processed_dataset_ready(processed_path) and not processed_meta_matches(processed_path, expected_meta):
+            shutil.rmtree(processed_path, ignore_errors=True)
     if local_rank == 0 and processed_path.exists() and not processed_dataset_ready(processed_path):
         shutil.rmtree(processed_path, ignore_errors=True)
 
@@ -194,6 +255,7 @@ def main() -> None:
             model_path=args.model_path,
             num_proc=min(16, os.cpu_count() or 1),
             conversation_mode=args.conversation_mode,
+            holdout_path=args.holdout_path,
         )
 
     if local_rank != 0:
@@ -262,6 +324,7 @@ def main() -> None:
                 {
                     "model_path": args.model_path,
                     "data_path": args.data_path,
+                    "holdout_path": args.holdout_path,
                     "processed_data_path": args.processed_data_path,
                     "output_dir": args.output_dir,
                     "conversation_mode": args.conversation_mode,

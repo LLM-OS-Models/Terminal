@@ -7,8 +7,13 @@ import gc
 import json
 import os
 import shutil
+import sys
 import time
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 import torch
 from datasets import Dataset, load_from_disk
@@ -19,6 +24,14 @@ from transformers import (
     DataCollatorForSeq2Seq,
     Trainer,
     TrainingArguments,
+)
+from terminal_sft_utils import (
+    assert_assistant_label_audit,
+    build_turn_pair_examples,
+    encode_assistant_only,
+    load_holdout_keys,
+    stable_hash,
+    tokenizer_metadata,
 )
 
 # Patch ROPE_INIT_FUNCTIONS for Ouro compatibility with transformers >= 4.56
@@ -65,6 +78,21 @@ def wait_for_processed_dataset(processed_path: Path, *, timeout_seconds: int = 3
     raise TimeoutError(f"Timed out waiting for processed dataset at {processed_path}")
 
 
+def prepare_meta_path(processed_path: Path) -> Path:
+    return processed_path / "prepare_meta.json"
+
+
+def processed_meta_matches(processed_path: Path, expected: dict[str, object]) -> bool:
+    path = prepare_meta_path(processed_path)
+    if not path.exists():
+        return False
+    try:
+        current = json.loads(path.read_text())
+    except Exception:
+        return False
+    return all(current.get(key) == value for key, value in expected.items())
+
+
 def prepare_processed_dataset(
     *,
     raw_data_path: str,
@@ -72,6 +100,7 @@ def prepare_processed_dataset(
     model_path: str,
     num_proc: int,
     max_seq_length: int,
+    holdout_path: str | None = None,
 ) -> None:
     tokenizer = AutoTokenizer.from_pretrained(
         model_path,
@@ -82,67 +111,56 @@ def prepare_processed_dataset(
 
     raw_dataset = load_from_disk(raw_data_path)
     raw_rows = len(raw_dataset)
+    holdout_keys = load_holdout_keys(holdout_path)
+    turn_examples, skipped_holdout = build_turn_pair_examples(raw_dataset, holdout_keys)
 
-    turn_examples: list[dict] = []
-    for row in raw_dataset:
-        conversations = row["conversations"]
-        for idx in range(1, len(conversations)):
-            prev_msg = conversations[idx - 1]
-            cur_msg = conversations[idx]
-            if prev_msg.get("role") != "user" or cur_msg.get("role") != "assistant":
-                continue
-            assistant_text = cur_msg.get("content", "")
-            has_commands = '"keystrokes"' in assistant_text or '"commands"' in assistant_text
-            empty_commands = '"commands": []' in assistant_text or '"commands":[]' in assistant_text
-            if not has_commands or empty_commands:
-                continue
-            turn_examples.append(
-                {
-                    "conversations": [
-                        {"role": "user", "content": prev_msg.get("content", "")},
-                        {"role": "assistant", "content": assistant_text},
-                    ]
-                }
-            )
-
-    dataset = Dataset.from_list(turn_examples)
-
-    def tokenize_fn(examples):
-        texts = tokenizer.apply_chat_template(
-            examples["conversations"],
-            tokenize=False,
-            add_generation_prompt=False,
+    rows: list[dict] = []
+    skipped_empty_assistant = 0
+    for example in turn_examples:
+        encoded = encode_assistant_only(
+            tokenizer=tokenizer,
+            user=example["user"],
+            assistant=example["assistant"],
+            max_seq_length=max_seq_length,
         )
-        model_inputs = tokenizer(
-            texts,
-            max_length=max_seq_length,
-            truncation=True,
-            padding=False,
-        )
-        model_inputs["labels"] = [list(ids) for ids in model_inputs["input_ids"]]
-        return model_inputs
+        if encoded is None:
+            skipped_empty_assistant += 1
+            continue
+        rows.append(encoded)
 
-    source_columns = list(dataset.column_names)
-    processed = dataset.map(
-        tokenize_fn,
-        batched=True,
-        num_proc=num_proc,
-        remove_columns=source_columns,
-        desc="tokenize",
-    )
-
+    audit = assert_assistant_label_audit(rows)
+    train_rows = [
+        {
+            "input_ids": row["input_ids"],
+            "attention_mask": row["attention_mask"],
+            "labels": row["labels"],
+        }
+        for row in rows
+    ]
+    processed = Dataset.from_list(train_rows)
+    meta = {
+        "source_mode": "raw_conversations_template_masked",
+        "raw_data_path": raw_data_path,
+        "model_path": model_path,
+        "raw_rows": raw_rows,
+        "skipped_holdout_conversations": skipped_holdout,
+        "train_rows": len(turn_examples),
+        "skipped_empty_assistant_rows": skipped_empty_assistant,
+        "processed_rows": len(processed),
+        "holdout_path": holdout_path,
+        "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+        "max_seq_length": max_seq_length,
+        **audit,
+        **tokenizer_metadata(tokenizer, model_path),
+    }
     print(
-        json.dumps(
-            {
-                "raw_rows": raw_rows,
-                "train_rows": len(dataset),
-                "processed_rows": len(processed),
-            },
-            ensure_ascii=False,
-        ),
+        json.dumps(meta, ensure_ascii=False),
         flush=True,
     )
     processed.save_to_disk(processed_data_path)
+    prepare_meta_path(Path(processed_data_path)).write_text(
+        json.dumps(meta, ensure_ascii=False, indent=2)
+    )
 
 
 def main() -> None:
@@ -171,6 +189,8 @@ def main() -> None:
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
     parser.add_argument("--gradient-checkpointing", action="store_true")
     parser.add_argument("--resume-from-checkpoint", default=None)
+    parser.add_argument("--holdout-path", default="eval/eval_dataset.jsonl")
+    parser.add_argument("--overwrite-processed-data", action="store_true")
     args = parser.parse_args()
 
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
@@ -202,6 +222,20 @@ def main() -> None:
         )
 
     processed_path = Path(args.processed_data_path)
+    if local_rank == 0 and args.overwrite_processed_data and processed_path.exists():
+        shutil.rmtree(processed_path, ignore_errors=True)
+    if local_rank == 0 and processed_dataset_ready(processed_path):
+        holdout_keys = load_holdout_keys(args.holdout_path)
+        expected_meta = {
+            "source_mode": "raw_conversations_template_masked",
+            "raw_data_path": args.data_path,
+            "model_path": args.model_path,
+            "holdout_path": args.holdout_path,
+            "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+            "max_seq_length": args.max_seq_length,
+        }
+        if not processed_meta_matches(processed_path, expected_meta):
+            shutil.rmtree(processed_path, ignore_errors=True)
     if local_rank == 0 and processed_path.exists() and not processed_dataset_ready(processed_path):
         shutil.rmtree(processed_path, ignore_errors=True)
 
@@ -213,6 +247,7 @@ def main() -> None:
             model_path=args.model_path,
             num_proc=min(16, os.cpu_count() or 1),
             max_seq_length=args.max_seq_length,
+            holdout_path=args.holdout_path,
         )
 
     if local_rank != 0:

@@ -178,6 +178,7 @@ vLLM 호환성 (2026-05-02 기준):
 | 50 | `ByteDance/Ouro-2.6B` | 6.68 | 0.0676 | 6.5% | 0.659 | 116.4 |
 | 51 | `ByteDance/Ouro-1.4B-Thinking` | 6.56 | 0.0658 | 6.5% | 0.411 | 120.6 |
 | 52 | `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` (transformers) | 6.49 | 0.0649 | 6.5% | 23.482 | 2.3 |
+| 53 | `LLM-OS-Models/Ouro-2.6B-Thinking-Terminal-SFT` (transformers) | 6.64 | 0.0662 | 6.7% | 66.200 | 2.2 |
 | 50 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.79 | 0.0691 | 6.5% | 0.039 | 165.2 |
 | 50 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 6.54 | 0.0656 | 6.5% | 0.119 | 326.0 |
 | 51 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.51 | 0.0652 | 6.5% | 0.123 | 326.0 |
@@ -186,6 +187,54 @@ vLLM 호환성 (2026-05-02 기준):
 | 54 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 6.49 | 0.0648 | 6.5% | 0.821 | 99.4 |
 | 55 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-2Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.6 |
 | 56 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-1Epoch-DDP-4GPU` | 6.49 | 0.0648 | 6.5% | 0.075 | 163.3 |
+
+#### LFM corrected 재학습 vLLM 재평가 (2026-05-07)
+
+요청에 따라 기존 README 순위표와 최대한 같은 조건으로 다시 평가했습니다.
+
+평가 조건:
+
+- 데이터: git HEAD 기준 기존 `tb2_lite/data/replay_full.jsonl` (`386 step / 50 task`)
+- 평가 코드: git HEAD 기준 기존 `replay_eval.py` + `replay_metrics.py`
+- 백엔드: `vLLM`
+- 생성 설정: `temperature=0.0`, `max_tokens=1024`, `max_model_len=8192`
+- 컨텍스트 확인: LFM tokenizer 기준 최대 prompt 길이 `5245 tokens`, 따라서 `8192` 안에 들어가며 overflow 없음
+- 주의: README의 LFM2 권장 vLLM 0.14.1 환경은 현재 torch ABI 불일치로 `vllm._C` import에서 실패. 데이터/코드/metric/sampling은 기존 조건 그대로 두고, 실제 동작 가능한 vLLM 0.19.1로 평가함
+
+기존 386-step 조건 결과:
+
+| 모델 | checkpoint | Score | Cmd F1 | First Cmd Exact | Valid JSON | 기존표 기준 위치 |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| `LFM2-8B-A1B corrected` | `checkpoint-830` | **15.21** | 0.1475 | 16.3% | 19.9% | `15.41` 아래, `14.08` 위 |
+| `LFM2.5-1.2B corrected` | `checkpoint-545` | **14.99** | 0.1430 | 16.6% | 11.9% | `14.08` 위 |
+| `LFM2-8B-A1B corrected` | `checkpoint-1660` | **14.98** | 0.1463 | 15.8% | 18.7% | `14.08` 위 |
+| `LFM2.5-1.2B corrected` | `checkpoint-1090` | **14.63** | 0.1413 | 15.8% | 13.0% | `14.08` 위 |
+
+해석:
+
+- 기존표 기준으로는 네 모델 모두 `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData`의 `14.08`보다 높고, `LFM2-24B-A2B e2 (rp=1.05, min_p=0.15)`의 `15.41`보다 낮습니다.
+- 동일 386-step 조건에서 과거 Liquid-CLI 재학습 `sft_h200_7gpu_processed_checkpoint_831`도 `15.13`이었습니다. 따라서 이번 corrected 8B의 `15.21`은 같은 legacy evaluator에서는 소폭 개선이지만, 기존 README 1위 `gyung/LFM2-8B-Terminal-SFT-Unsloth`의 `30.14`를 재현하지는 못했습니다.
+- 가장 큰 하락 원인은 legacy evaluator에서 JSON 순응도가 낮게 잡힌 점입니다. 8B best checkpoint도 `valid_json 19.9%`, 1.2B는 `11.9-13.0%`라서 evaluator가 command를 안정적으로 회수하지 못합니다.
+- bucket 기준으로는 `early`는 비교적 높지만(`8B checkpoint-830 early F1 0.3194`), `mid`가 `0.029`로 거의 무너집니다. legacy 386 프롬프트 구조에서 중간 step의 문맥/다음 행동 정렬이 특히 약합니다.
+- 카테고리별로는 `swe`, `math`, `model_training`, `security`가 상대적으로 낫고, `data_querying`, `system_administration`, `scientific_computing`, `data_science`가 약합니다.
+- 8B는 epoch 1(`checkpoint-830`)이 epoch 2(`checkpoint-1660`)보다 좋습니다. 1.2B도 epoch 1(`checkpoint-545`)이 epoch 2(`checkpoint-1090`)보다 좋습니다. 이 조건에서는 2 epoch가 포맷/첫 명령 정확도를 더 개선하지 못하고 약간 과적합 또는 출력 스타일 drift가 생긴 것으로 봅니다.
+
+별도로, corrected 303-step cumulative replay에서는 같은 모델들이 전혀 다른 점수를 보였습니다.
+
+| 모델 | checkpoint | Score | Cmd F1 | First Cmd Exact | Valid JSON | 비교 가능성 |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| `LFM2-8B-A1B corrected` | `checkpoint-830` | **31.51** | 0.3241 | 29.4% | 56.8% | 기존 386-step 순위표와 직접 비교 금지 |
+| `LFM2-8B-A1B corrected` | `checkpoint-1660` | **30.41** | 0.3102 | 29.0% | 54.8% | 기존 386-step 순위표와 직접 비교 금지 |
+| `LFM2.5-1.2B corrected` | `checkpoint-1090` | **28.75** | 0.2864 | 29.0% | 50.5% | 기존 386-step 순위표와 직접 비교 금지 |
+| `LFM2.5-1.2B corrected` | `checkpoint-545` | **28.49** | 0.2810 | 29.4% | 50.5% | 기존 386-step 순위표와 직접 비교 금지 |
+
+이 303-step 결과는 invalid/empty reference 제거, cumulative conversation prompt, 통합 prompt builder 적용 후의 결과입니다. 모델 자체가 완전히 망가진 것이 아니라, legacy 386 evaluator의 prompt/reference 구조와 corrected template 학습 결과가 강하게 충돌한다는 신호로 봐야 합니다.
+
+현재 corrected run의 학습 상태:
+
+- 학습 완료: `LFM2-8B-A1B`, `LFM2.5-1.2B`
+- 아직 미완료: `LFM2-2.6B`, `LFM2-24B-A2B`
+- `24B`는 corrected pipeline에서 아직 학습 결과가 없습니다. README의 기존 `24B SFT 14.08`은 이전 HF+FSDP 실험 결과이며, Qwen-format text 재사용, assistant-only masking 누락, 짧은 `MAX_SEQ_LENGTH`, 평가 prompt mismatch가 섞인 낮은 점수입니다. corrected 24B의 성능 판단에는 쓰면 안 됩니다.
 
 핵심 해석:
 
@@ -254,7 +303,7 @@ Ouro는 ByteDance의 루프드(Looped) 언어 모델로, 동일 24층 스택을 
 | `Ouro-2.6B` SFT | **13.39** | **0.1368** | **12.7%** | **17.9%** | **+100%** |
 | `Ouro-1.4B-Thinking` base | 6.56 | 0.0658 | 6.5% | 10.4% | - |
 | `Ouro-1.4B-Thinking` SFT | 6.49 | 0.0649 | 6.5% | 6.5% | **-1%** |
-| `Ouro-2.6B-Thinking` SFT | 평가중 | - | - | - | 학습완료 |
+| `Ouro-2.6B-Thinking` SFT | 6.64 | 0.0662 | 6.7% | 8.0% | **-8%** |
 
 **HF 업로드**: `LLM-OS-Models/Ouro-1.4B-Terminal-SFT`, `LLM-OS-Models/Ouro-2.6B-Terminal-SFT`, `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT`, `LLM-OS-Models/Ouro-2.6B-Thinking-Terminal-SFT`
 
@@ -293,7 +342,7 @@ Ouro의 사전학습 데이터 구성:
 | Ouro-1.4B | 1.4B | **9.08** | 11.45 | +26% |
 | Ouro-2.6B | 2.6B | 6.68 | **13.39** | **+100%** |
 | Ouro-1.4B-Thinking | 1.4B | 6.56 | 6.49 | -1% |
-| Ouro-2.6B-Thinking | 2.6B | 7.22 | 평가 중 | - |
+| Ouro-2.6B-Thinking | 2.6B | 7.22 | 6.64 | **-8%** |
 
 더 큰 모델이 더 낮은 점수를 기록합니다. 이는 일반적인 모델 스케일링 법칙과 반대되는 현상으로:
 - 루프드 아키텍처에서 모델이 커질수록 과도한 연산량이 더 심화됨
@@ -311,7 +360,7 @@ Ouro의 사전학습 데이터 구성:
 - `data_science`, `data_querying` 등: 여전히 F1 = 0.0
 - 반면 `swe`, `math`, `code`는 SFT 전후 동일 → 이 카테고리들은 원래 학습 데이터와 겹쳐서 이미 고정됨
 
-**2.6B-Thinking SFT**: 평가 진행 중 (transformers 백엔드, 300/386 = 78%, ~1.5시간 남음)
+**2.6B-Thinking SFT (실패, -8%)**: base 7.22 → SFT 6.64. 1.4B-Thinking(-1%)와 동일한 패턴. Thinking 모델은 수학/과학 추론에 강하게 편향되어 있어 터미널 SFT로 도메인 전환 불가. 오히려 SFT가 기존 능력을 일부 훼손.
 
 **6. 카테고리별 패턴: 추론 도메인 vs 실행 도메인**
 
@@ -428,6 +477,50 @@ Ouro, Gemma4-31B 등 transformers로 평가한 모델은 챗 템플릿 없이 �
 | Qwen3.5-27B SFT | 26.75 | **28-30** | vLLM=24.41에서 이미 회복, 마스킹+길이 수정 시 추가 상승 |
 | Qwen3.6-27B SFT | 28.84 | **29-31** | 이미 28.84, 여유 있음 |
 | Ouro-2.6B SFT | 13.39 | **20-25** | mid-training으로 터미널 지식 주입 시 (하지만 RL 불가, 한계 존재) |
+
+---
+
+**다음 작업 계획 (우선순위순)**
+
+파이프라인 수정으로 가장 큰 성능 향상을 기대할 수 있는 작업부터 정리합니다.
+
+**Phase 1: 데이터/학습 수정 (예상 소요: 1-2일, 효과: 최대)**
+
+| # | 작업 | 대상 | 효과 | 난이도 |
+|---|------|------|------|--------|
+| 1 | **데이터 필터 재검토** — `EXCLUDED_PREFIXES`에서 `software_engineering`, `debugging` 제거. `NON_CODING_PREFIXES`에 `system_administration`, `model_training` 추가. `dataset_adapters` split도 로드에 포함 | `prepare_dataset.py` 3종 | 평가 커버리지 31.6% → 80%+ | 낮 |
+| 2 | **HF FSDP "text" 모드 프롬프트 마스킹** — `tokenize_text_dataset()`에서 `labels[:prompt_len] = [-100]` 처리. ChatML 포맷에서 `<\|im_start\|>assistant\n` 이전까지 마스킹 | `train_qwen_hf_fsdp.py` | 대형 모델 SFT 품질 대폭 개선 | 중 |
+| 3 | **MAX_SEQ_LENGTH=1024 → 4096** — HF FSDP 대형 config 전체. gradient checkpointing 켜면 메모리 증가 최소화 | `qwen_sft/configs/*hf_fsdp*.env` | trajectory truncation 해소 | 낮 |
+| 4 | **Gemma4 마스킹 토큰 수정** — `<\|turn\|>user\n` → `<start_of_turn>user\n`, `<\|turn\|>model\n` → `<start_of_turn>model\n` | `gemma4_sft/scripts/train_sft_unsloth_ddp.py` | Gemma4 E2B/E4B 마스킹 실패 해소 | 낮 |
+| 5 | **SFT 데이터 계열별 분리** — Gemma4/LFM2 전용 데이터를 각 모델의 chat template으로 재생성 (`<\|im_start\|>` → `<start_of_turn>` 등) | `qwen35_27b_processed_2bdata` 분기 | Gemma4/LFM2 SFT 근본 개선 | 중 |
+
+**Phase 2: 평가 파이프라인 수정 (예상 소요: 반나절)**
+
+| # | 작업 | 효과 |
+|---|------|------|
+| 6 | **transformers 평가에 챗 템플릿 적용** — `replay_eval_transformers.py`에서 `tokenizer.apply_chat_template([{"role":"user","content":prompt}])` 사용 | vLLM/transformers 점수 일치. 현재 transformers 평가가 과소평가 |
+| 7 | **step ≥ 1 평가에 시스템 instruction 재주입** — step 0의 시스템 instruction을 모든 step의 prompt 앞에 prepend | base 모델 valid_json 정상화 |
+| 8 | **replay_metrics `lower()` 제거** — `tokenize_command()`에서 `.lower()` 제거 또는 옵션화 | Linux case-sensitive 경로 정확도 |
+| 9 | **순위표에 백엔드 컬럼 추가** — vLLM/transformers/sampling 구분 표시 | 비교 가능성 |
+
+**Phase 3: 재학습 (Phase 1 완료 후, 예상 소요: 2-3일)**
+
+| 모델 | 수정사항 | 예상 결과 |
+|------|---------|----------|
+| **Gemma4-26B-A4B** | 필터 확장 + 마스킹 토큰 수정 + MAX_SEQ=4096 + Gemma4 포맷 데이터 | 18.12 → **25-28** |
+| **LFM2-24B-A2B** | 필터 확장 + 프롬프트 마스킹 + MAX_SEQ=4096 | 14.08 → **22-25** |
+| **Gemma4-E2B/E4B** | 마스킹 토큰 수정만으로도 큰 개선 | 6.49 → **15-20** (valid_json 회복) |
+| **Gemma4-31B** | 가중치 로딩 버그 수정 (`dense` 구조 처리) 후 재학습 | 6.49 → **20-24** (체크포인트 복구) |
+| **Qwen3.5-27B** | 프롬프트 마스킹 + MAX_SEQ=4096 | 26.75 → **28-30** |
+
+**Phase 4: 코드 정리 (예상 소요: 반나절)**
+
+| # | 작업 |
+|---|------|
+| 10 | `prepare_dataset.py` 3종 → 1종 통합 + `--family` 인자 |
+| 11 | `train_sft_unsloth_ddp.py` 3종 → 1종 + `--instruction-part`/`--response-part` 인자 |
+| 12 | 빈 placeholder 폴더 제거 (`scripts/`, `train/`, `tests/`) |
+| 13 | `ouro_sft/`에 README + `prepare_dataset.py` 추가 (다른 SFT 폴더와 대칭) |
 
 큰 모델이 오히려 떨어진 이유:
 

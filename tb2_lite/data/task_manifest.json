@@ -1,7 +1,10 @@
 {
   "input_path": "eval/eval_dataset.jsonl",
   "num_tasks": 50,
-  "num_steps": 386,
+  "num_steps": 303,
+  "prompt_mode": "cumulative_messages",
+  "include_invalid_refs": false,
+  "include_empty_command_refs": false,
   "dev_tasks": 20,
   "dev_task_ids": [
     "task-005",

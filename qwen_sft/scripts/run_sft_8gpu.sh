@@ -75,6 +75,12 @@ fi
 if [[ "${UNSLOTH_RETURN_LOGITS:-0}" == "1" ]]; then
   EXTRA_ARGS+=(--return-logits)
 fi
+if [[ -n "${HOLDOUT_PATH:-}" ]]; then
+  EXTRA_ARGS+=(--holdout-path "$HOLDOUT_PATH")
+fi
+if [[ "${OVERWRITE_PROCESSED_DATA:-0}" == "1" ]]; then
+  EXTRA_ARGS+=(--overwrite-processed-data)
+fi
 if [[ "${PUSH_TO_HUB:-0}" == "1" ]]; then
   if [[ -z "${HF_TOKEN:-}" ]]; then
     echo "HF_TOKEN is required when PUSH_TO_HUB=1."
@@ -134,6 +140,7 @@ if [[ -n "${MODEL_NAME:-}" ]]; then
 fi
 echo "model_path=$MODEL_PATH"
 echo "data_path=$DATA_PATH"
+echo "holdout_path=${HOLDOUT_PATH:-eval/eval_dataset.jsonl}"
 echo "processed_data_path=$PROCESSED_DATA_PATH"
 echo "output_dir=$OUTPUT_DIR"
 echo "train_mode=${TRAIN_MODE:-full}"

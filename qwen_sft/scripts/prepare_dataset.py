@@ -4,10 +4,18 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
+import sys
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 from datasets import concatenate_datasets, load_dataset, load_from_disk
 from transformers import AutoTokenizer
+
+from terminal_sft_utils import is_holdout_row, load_holdout_keys, stable_hash, tokenizer_metadata
 
 NON_CODING_PREFIXES = {
     "file_operations",
@@ -57,7 +65,9 @@ def has_coding_keywords(example: dict) -> bool:
     return any(keyword in text for keyword in CODING_KEYWORDS)
 
 
-def keep_example(example: dict) -> bool:
+def keep_example(example: dict, holdout_keys: set[tuple[str, str]] | None = None) -> bool:
+    if holdout_keys and is_holdout_row(example, holdout_keys):
+        return False
     prefix = task_prefix(str(example.get("task", "")))
     if prefix in EXCLUDED_PREFIXES:
         return False
@@ -92,6 +102,8 @@ def main() -> None:
     )
     parser.add_argument("--max-seq-length", type=int, default=8192)
     parser.add_argument("--num-proc", type=int, default=max(1, (os.cpu_count() or 8) // 2))
+    parser.add_argument("--holdout-path", default="eval/eval_dataset.jsonl")
+    parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
 
     root = Path(args.dataset_root)
@@ -101,6 +113,8 @@ def main() -> None:
     tokenized_path = root / "sft_tokenized"
     meta_path = root / "prepare_meta.json"
     root.mkdir(parents=True, exist_ok=True)
+    holdout_keys = load_holdout_keys(args.holdout_path)
+    holdout_hash = stable_hash(json.dumps(sorted(holdout_keys)))
 
     if raw_path.exists():
         merged = load_from_disk(str(raw_path))
@@ -112,10 +126,26 @@ def main() -> None:
         merged = concatenate_datasets(splits)
         merged.save_to_disk(str(raw_path))
 
+    existing_meta = {}
+    if meta_path.exists():
+        try:
+            existing_meta = json.loads(meta_path.read_text())
+        except Exception:
+            existing_meta = {}
+    cache_matches = existing_meta.get("holdout_hash") == holdout_hash
+    if args.overwrite or not cache_matches:
+        for path in [filtered_path, text_path, tokenized_path]:
+            if path.exists():
+                shutil.rmtree(path)
+
     if filtered_path.exists():
         filtered = load_from_disk(str(filtered_path))
     else:
-        filtered = merged.filter(keep_example, num_proc=args.num_proc, desc="filter_non_coding")
+        filtered = merged.filter(
+            lambda example: keep_example(example, holdout_keys),
+            num_proc=args.num_proc,
+            desc="filter_non_coding_holdout",
+        )
         filtered.save_to_disk(str(filtered_path))
 
     tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=False)
@@ -160,6 +190,10 @@ def main() -> None:
         "tokenized_path": str(tokenized_path),
         "model_path": args.model_path,
         "max_seq_length": args.max_seq_length,
+        "holdout_path": args.holdout_path,
+        "holdout_keys": len(holdout_keys),
+        "holdout_hash": holdout_hash,
+        **tokenizer_metadata(tokenizer, args.model_path),
     }
     meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2))
     print(json.dumps(meta, ensure_ascii=False, indent=2))

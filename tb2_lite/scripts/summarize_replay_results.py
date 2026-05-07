@@ -14,6 +14,7 @@ def load_rows(results_dir: Path) -> list[dict]:
     for path in sorted(results_dir.glob("*.json")):
         data = json.loads(path.read_text())
         agg = data["aggregate"]
+        prompt_meta = data.get("prompt_template", {})
         rows.append({
             "model": data["model"],
             "model_short": data["model_short"],
@@ -27,8 +28,10 @@ def load_rows(results_dir: Path) -> list[dict]:
             "load_time": data["load_time_sec"],
             "steps": agg["steps"],
             "tasks": agg["tasks"],
+            "template_status": prompt_meta.get("template_status", "unknown"),
+            "rank_eligible": bool(prompt_meta.get("rank_eligible", True)),
         })
-    rows.sort(key=lambda row: (-row["score"], -row["cmd_f1"], -row["first_exact"]))
+    rows.sort(key=lambda row: (not row["rank_eligible"], -row["score"], -row["cmd_f1"], -row["first_exact"]))
     return rows
 
 
@@ -39,15 +42,21 @@ def build_markdown(rows: list[dict], results_dir: Path) -> str:
         "",
         "Primary ranking uses `next_action_score = 0.7 * avg_command_f1 + 0.3 * first_cmd_exact`.",
         "",
-        "| Rank | Model | Score | Cmd F1 | First Cmd Exact | Valid JSON | Complete Recall | Premature Complete | Sec/Step | Load (s) |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        "| Rank | Model | Score | Cmd F1 | First Cmd Exact | Valid JSON | Template | Sec/Step | Load (s) |",
+        "| --- | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
     ]
+    rank = 0
     for idx, row in enumerate(rows, start=1):
+        if row["rank_eligible"]:
+            rank += 1
+            rank_text = str(rank)
+        else:
+            rank_text = "excluded"
         lines.append(
             "| "
-            f"{idx} | {row['model_short']} | {row['score']:.2f} | {row['cmd_f1']:.4f} | "
+            f"{rank_text} | {row['model_short']} | {row['score']:.2f} | {row['cmd_f1']:.4f} | "
             f"{row['first_exact']:.1f}% | {row['valid_json']:.1f}% | "
-            f"{row['complete_recall']:.1f}% | {row['false_complete']:.1f}% | "
+            f"{row['template_status']} | "
             f"{row['sec_per_step']:.3f} | {row['load_time']:.1f} |"
         )
 

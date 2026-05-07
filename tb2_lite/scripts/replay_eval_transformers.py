@@ -17,6 +17,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from replay_metrics import aggregate_scores, parse_prediction, score_commands, step_bucket
+from prompt_builder import build_prompts, sanitize_name
 
 
 def load_rows(path: Path) -> list[dict]:
@@ -49,7 +50,6 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     rows = load_rows(eval_path)
-    prompts = [row["prompt"] for row in rows]
 
     dtype_map = {"bfloat16": torch.bfloat16, "float16": torch.float16, "float32": torch.float32}
     torch_dtype = dtype_map.get(args.dtype, torch.bfloat16)
@@ -58,6 +58,7 @@ def main() -> None:
     tokenizer = AutoTokenizer.from_pretrained(args.model, trust_remote_code=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
+    prompts, prompt_meta = build_prompts(tokenizer, rows)
 
     model = AutoModelForCausalLM.from_pretrained(
         args.model,
@@ -122,7 +123,7 @@ def main() -> None:
         })
 
     aggregate = aggregate_scores(per_step)
-    model_short = args.model_short or args.model.rstrip("/").split("/")[-1].replace(" ", "-")
+    model_short = args.model_short or sanitize_name(args.model)
     result = {
         "model": args.model_short or args.model,
         "model_path": args.model,
@@ -141,6 +142,7 @@ def main() -> None:
             "dtype": args.dtype,
             "max_model_len": args.max_model_len,
         },
+        "prompt_template": prompt_meta,
         "aggregate": aggregate,
         "per_step": per_step,
     }

@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 """Fast single-GPU evaluator using transformers."""
-import json, os, re, time, argparse, torch
+import json, os, re, time, argparse, torch, sys
 from datetime import datetime
+from pathlib import Path
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+TB2_SCRIPT_DIR = Path(__file__).resolve().parents[1] / "tb2_lite" / "scripts"
+if str(TB2_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(TB2_SCRIPT_DIR))
+
+from prompt_builder import build_prompt
 
 def main():
     parser = argparse.ArgumentParser()
@@ -40,11 +47,7 @@ def main():
         task = next((m["content"] for m in convs if m["role"] == "user"), "")
         ref = next((m["content"] for m in convs if m["role"] == "assistant"), "")
 
-        msgs = [{"role": "user", "content": task}]
-        try:
-            text = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
-        except Exception:
-            text = f"<|im_start|>user\n{task}<|im_end|>\n<|im_start|>assistant\n"
+        text = build_prompt(tok, {"prompt": task}).prompt
 
         inputs = tok(text, return_tensors="pt", truncation=True, max_length=4096).to(device)
         with torch.no_grad():

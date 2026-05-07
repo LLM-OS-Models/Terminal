@@ -95,7 +95,7 @@ def score_commands(pred_units: list[str], ref_units: list[str]) -> tuple[float, 
     pred_units = normalize_units(pred_units)
     ref_units = normalize_units(ref_units)
     if not pred_units and not ref_units:
-        return 1.0, 1.0, 1.0, 1.0
+        return 0.0, 0.0, 0.0, 0.0
 
     first_exact = float(bool(pred_units and ref_units and pred_units[0].lower() == ref_units[0].lower()))
     if not pred_units:
@@ -150,6 +150,25 @@ def parse_prediction(text: str) -> dict:
 
 def aggregate_scores(per_step: list[dict]) -> dict:
     total = len(per_step)
+    if total == 0:
+        return {
+            "steps": 0,
+            "tasks": 0,
+            "avg_ref_cmds": 0.0,
+            "avg_pred_cmds": 0.0,
+            "valid_json_pct": 0.0,
+            "has_analysis_pct": 0.0,
+            "has_plan_pct": 0.0,
+            "first_cmd_exact_pct": 0.0,
+            "avg_command_precision": 0.0,
+            "avg_command_recall": 0.0,
+            "avg_command_f1": 0.0,
+            "complete_true_recall_pct": 0.0,
+            "premature_complete_rate_pct": 0.0,
+            "by_bucket": {},
+            "by_source_group": {},
+            "next_action_score": 0.0,
+        }
     aggregate: dict[str, object] = {
         "steps": total,
         "tasks": len({row["task_id"] for row in per_step}),
@@ -170,7 +189,7 @@ def aggregate_scores(per_step: list[dict]) -> dict:
         sum(row["pred_task_complete_true"] for row in positive_steps) / max(len(positive_steps), 1) * 100, 1
     )
     aggregate["premature_complete_rate_pct"] = round(
-        sum(row["pred_task_complete_true"] for row in negative_steps) / max(len(negative_steps), 1) * 100, 1
+        sum(bool(row["pred_task_complete"]) for row in negative_steps) / max(len(negative_steps), 1) * 100, 1
     )
 
     by_bucket: dict[str, dict[str, float]] = defaultdict(lambda: {"steps": 0, "avg_command_f1": 0.0})

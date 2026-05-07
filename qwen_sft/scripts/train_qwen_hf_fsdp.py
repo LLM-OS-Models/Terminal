@@ -5,9 +5,14 @@ import argparse
 import json
 import os
 import shutil
+import sys
 import time
 from collections import defaultdict
 from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
 
 import torch
 from datasets import Dataset, load_from_disk
@@ -20,6 +25,15 @@ from transformers import (
     TrainingArguments,
 )
 from transformers.models.gemma4 import Gemma4ForCausalLM
+
+from terminal_sft_utils import (
+    assert_assistant_label_audit,
+    build_turn_pair_examples as build_sft_turn_pair_examples,
+    encode_assistant_only,
+    load_holdout_keys,
+    stable_hash,
+    tokenizer_metadata,
+)
 
 
 def processed_dataset_ready(processed_path: Path) -> bool:
@@ -50,58 +64,19 @@ def wait_for_processed_dataset(processed_path: Path, *, timeout_seconds: int = 3
     raise TimeoutError(f"Timed out waiting for processed dataset at {processed_path}")
 
 
-def build_turn_pair_examples(raw_dataset) -> list[dict[str, str]]:
-    examples: list[dict[str, str]] = []
-    for row in raw_dataset:
-        conversations = row["conversations"]
-        for idx in range(1, len(conversations)):
-            prev_msg = conversations[idx - 1]
-            cur_msg = conversations[idx]
-            if prev_msg.get("role") != "user" or cur_msg.get("role") != "assistant":
-                continue
-
-            assistant_text = cur_msg.get("content", "")
-            has_commands = '"keystrokes"' in assistant_text or '"commands"' in assistant_text
-            empty_commands = '"commands": []' in assistant_text or '"commands":[]' in assistant_text
-            if not has_commands or empty_commands:
-                continue
-
-            examples.append(
-                {
-                    "user": prev_msg.get("content", ""),
-                    "assistant": assistant_text,
-                }
-            )
-    return examples
+def prepare_meta_path(processed_path: Path) -> Path:
+    return processed_path / "prepare_meta.json"
 
 
-def tokenize_text_dataset(
-    *,
-    source_dataset,
-    tokenizer,
-    max_seq_length: int,
-) -> Dataset:
-    num_proc = min(16, os.cpu_count() or 1)
-
-    def tokenize_batch(batch):
-        encoded = tokenizer(
-            batch["text"],
-            add_special_tokens=False,
-            truncation=True,
-            max_length=max_seq_length,
-        )
-        encoded["labels"] = [ids.copy() for ids in encoded["input_ids"]]
-        return encoded
-
-    tokenized = source_dataset.map(
-        tokenize_batch,
-        batched=True,
-        batch_size=128,
-        num_proc=num_proc,
-        remove_columns=source_dataset.column_names,
-        desc=f"Tokenizing text dataset (num_proc={num_proc})",
-    )
-    return tokenized
+def processed_meta_matches(processed_path: Path, expected: dict[str, object]) -> bool:
+    path = prepare_meta_path(processed_path)
+    if not path.exists():
+        return False
+    try:
+        current = json.loads(path.read_text())
+    except Exception:
+        return False
+    return all(current.get(key) == value for key, value in expected.items())
 
 
 def prepare_processed_dataset(
@@ -111,98 +86,75 @@ def prepare_processed_dataset(
     model_path: str,
     max_seq_length: int,
     trust_remote_code: bool = False,
+    holdout_path: str | None = None,
+    allow_text_cache: bool = False,
 ) -> None:
     tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=trust_remote_code)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
     raw_dataset = load_from_disk(raw_data_path)
+    holdout_keys = load_holdout_keys(holdout_path)
 
-    if "text" in raw_dataset.column_names:
-        processed = tokenize_text_dataset(
-            source_dataset=raw_dataset,
+    if "conversations" not in raw_dataset.column_names:
+        if "text" in raw_dataset.column_names:
+            legacy_note = " --allow-text-cache was set, but legacy text-cache training is disabled after the template audit."
+            raise RuntimeError(
+                "Refusing to train from a preformatted text cache. "
+                "Use raw conversations so the current model chat_template and assistant-only labels are applied."
+                + (legacy_note if allow_text_cache else "")
+            )
+        raise RuntimeError(f"Unsupported dataset columns: {raw_dataset.column_names}")
+
+    examples, skipped_holdout = build_sft_turn_pair_examples(raw_dataset, holdout_keys)
+
+    rows: list[dict[str, list[int] | int]] = []
+    skipped_empty_assistant = 0
+    for ex in examples:
+        encoded = encode_assistant_only(
             tokenizer=tokenizer,
+            user=ex["user"],
+            assistant=ex["assistant"],
             max_seq_length=max_seq_length,
         )
-        print(
-            json.dumps(
-                {
-                    "source_mode": "processed_text",
-                    "source_rows": len(raw_dataset),
-                    "processed_rows": len(processed),
-                    "max_seq_length": max_seq_length,
-                },
-                ensure_ascii=False,
-            ),
-            flush=True,
-        )
-        processed.save_to_disk(processed_data_path)
-        return
-
-    examples = build_turn_pair_examples(raw_dataset)
-
-    rows: list[dict[str, list[int]]] = []
-    for ex in examples:
-        prompt_messages = [{"role": "user", "content": ex["user"]}]
-        full_messages = [
-            {"role": "user", "content": ex["user"]},
-            {"role": "assistant", "content": ex["assistant"]},
-        ]
-
-        prompt_text = tokenizer.apply_chat_template(
-            prompt_messages,
-            tokenize=False,
-            add_generation_prompt=True,
-        )
-        full_text = tokenizer.apply_chat_template(
-            full_messages,
-            tokenize=False,
-            add_generation_prompt=False,
-        )
-
-        full_enc = tokenizer(
-            full_text,
-            add_special_tokens=False,
-            truncation=True,
-            max_length=max_seq_length,
-        )
-        prompt_enc = tokenizer(
-            prompt_text,
-            add_special_tokens=False,
-            truncation=True,
-            max_length=max_seq_length,
-        )
-
-        input_ids = full_enc["input_ids"]
-        attention_mask = full_enc["attention_mask"]
-        prompt_len = min(len(prompt_enc["input_ids"]), len(input_ids))
-        labels = input_ids.copy()
-        labels[:prompt_len] = [-100] * prompt_len
-        if all(x == -100 for x in labels):
+        if encoded is None:
+            skipped_empty_assistant += 1
             continue
+        rows.append(encoded)
 
-        rows.append(
-            {
-                "input_ids": input_ids,
-                "attention_mask": attention_mask,
-                "labels": labels,
-            }
-        )
-
-    processed = Dataset.from_list(rows)
+    audit = assert_assistant_label_audit(rows)
+    train_rows = [
+        {
+            "input_ids": row["input_ids"],
+            "attention_mask": row["attention_mask"],
+            "labels": row["labels"],
+        }
+        for row in rows
+    ]
+    processed = Dataset.from_list(train_rows)
+    meta = {
+        "source_mode": "raw_conversations_template_masked",
+        "raw_data_path": raw_data_path,
+        "model_path": model_path,
+        "raw_rows": len(raw_dataset),
+        "skipped_holdout_conversations": skipped_holdout,
+        "turn_pair_rows": len(examples),
+        "skipped_empty_assistant_rows": skipped_empty_assistant,
+        "processed_rows": len(processed),
+        "max_seq_length": max_seq_length,
+        "holdout_path": holdout_path,
+        "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+        **audit,
+        **tokenizer_metadata(tokenizer, model_path),
+    }
     print(
-        json.dumps(
-            {
-                "raw_rows": len(raw_dataset),
-                "turn_pair_rows": len(examples),
-                "processed_rows": len(processed),
-                "max_seq_length": max_seq_length,
-            },
-            ensure_ascii=False,
-        ),
+        json.dumps(meta, ensure_ascii=False),
         flush=True,
     )
     processed.save_to_disk(processed_data_path)
+    prepare_meta_path(Path(processed_data_path)).write_text(
+        json.dumps(meta, ensure_ascii=False, indent=2)
+    )
 
 
 class CausalLMCollator:
@@ -294,6 +246,9 @@ def main() -> None:
     parser.add_argument("--save-only-model", action="store_true")
     parser.add_argument("--save-total-limit", type=int, default=None)
     parser.add_argument("--skip-final-save", action="store_true")
+    parser.add_argument("--overwrite-processed-data", action="store_true")
+    parser.add_argument("--allow-text-cache", action="store_true")
+    parser.add_argument("--holdout-path", default="eval/eval_dataset.jsonl")
     parser.add_argument(
         "--ddp-find-unused-parameters",
         choices=["auto", "true", "false"],
@@ -307,6 +262,20 @@ def main() -> None:
     distributed = torch.distributed.is_available() and torch.distributed.is_initialized()
 
     processed_path = Path(args.processed_data_path)
+    if local_rank == 0 and args.overwrite_processed_data and processed_path.exists():
+        shutil.rmtree(processed_path, ignore_errors=True)
+    if local_rank == 0 and processed_dataset_ready(processed_path):
+        holdout_keys = load_holdout_keys(args.holdout_path)
+        expected_meta = {
+            "source_mode": "raw_conversations_template_masked",
+            "raw_data_path": args.data_path,
+            "model_path": args.model_path,
+            "max_seq_length": args.max_seq_length,
+            "holdout_path": args.holdout_path,
+            "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+        }
+        if not processed_meta_matches(processed_path, expected_meta):
+            shutil.rmtree(processed_path, ignore_errors=True)
     if local_rank == 0 and processed_path.exists() and not processed_dataset_ready(processed_path):
         shutil.rmtree(processed_path, ignore_errors=True)
 
@@ -318,6 +287,8 @@ def main() -> None:
             model_path=args.model_path,
             max_seq_length=args.max_seq_length,
             trust_remote_code=args.trust_remote_code,
+            holdout_path=args.holdout_path,
+            allow_text_cache=args.allow_text_cache,
         )
 
     if local_rank != 0:

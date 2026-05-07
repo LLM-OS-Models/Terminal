@@ -21,10 +21,7 @@ from replay_metrics import (
     score_commands,
     step_bucket,
 )
-
-
-def sanitize_name(value: str) -> str:
-    return value.rstrip("/").split("/")[-1].replace(" ", "-")
+from prompt_builder import build_prompts, sanitize_name
 
 
 def load_rows(path: Path) -> list[dict]:
@@ -87,18 +84,10 @@ def main() -> None:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     rows = load_rows(eval_path)
-    raw_prompts = [row["prompt"] for row in rows]
 
     from transformers import AutoTokenizer as _AT
     tokenizer = _AT.from_pretrained(args.model, trust_remote_code=True)
-    prompts = []
-    for p in raw_prompts:
-        msgs = [{"role": "user", "content": p}]
-        try:
-            formatted = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
-        except Exception:
-            formatted = p
-        prompts.append(formatted)
+    prompts, prompt_meta = build_prompts(tokenizer, rows)
 
     load_start = time.time()
     llm, llm_kwargs = build_llm(args)
@@ -177,6 +166,7 @@ def main() -> None:
             "language_model_only": args.language_model_only,
             "llm_kwargs": llm_kwargs,
         },
+        "prompt_template": prompt_meta,
         "aggregate": aggregate,
         "per_step": per_step,
     }
