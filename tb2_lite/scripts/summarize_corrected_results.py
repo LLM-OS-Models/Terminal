@@ -112,6 +112,7 @@ def load_rows(results_dir: Path) -> list[dict]:
             "model_short": model_short,
             "model_name": display_name(model_short, model_path),
             "model_path": model_path,
+            "timestamp": data.get("timestamp", ""),
             "status": "ok",
             "score": 100.0 * float(agg.get("avg_command_f1", 0.0)),
             "cmd_f1": float(agg.get("avg_command_f1", 0.0)),
@@ -128,8 +129,29 @@ def load_rows(results_dir: Path) -> list[dict]:
             "rank_eligible": bool(prompt_meta.get("rank_eligible", True)),
             "by_bucket": agg.get("by_bucket", {}),
         })
+    rows = dedupe_rows(rows)
     rows.sort(key=lambda row: (row.get("status") != "ok", not row.get("rank_eligible", False), -row.get("score", 0.0)))
     return rows
+
+
+def timestamp_key(row: dict) -> str:
+    timestamp = row.get("timestamp")
+    return timestamp if isinstance(timestamp, str) else ""
+
+
+def dedupe_rows(rows: list[dict]) -> list[dict]:
+    """Keep one row per displayed HF repository/checkpoint name."""
+    selected: dict[str, dict] = {}
+    passthrough: list[dict] = []
+    for row in rows:
+        if row.get("status") != "ok":
+            passthrough.append(row)
+            continue
+        key = str(row.get("model_name") or row.get("model_short"))
+        current = selected.get(key)
+        if current is None or timestamp_key(row) >= timestamp_key(current):
+            selected[key] = row
+    return list(selected.values()) + passthrough
 
 
 def build_markdown(rows: list[dict], results_dir: Path, title: str) -> str:
@@ -152,7 +174,7 @@ def build_markdown(rows: list[dict], results_dir: Path, title: str) -> str:
         "",
         "## 전체 순위",
         "",
-        "| 순위 | 모델 | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |",
+        "| 순위 | 모델(HF 저장소명) | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |",
         "| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
     ]
     rank = 0
