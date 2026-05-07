@@ -8,6 +8,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from vllm import LLM, SamplingParams
 
@@ -24,7 +25,7 @@ from replay_metrics import (
 from prompt_builder import build_prompts, sanitize_name
 
 
-def load_rows(path: Path) -> list[dict]:
+def load_rows(path: Path, limit: int | None = None) -> list[dict]:
     rows: list[dict] = []
     with path.open() as f:
         for line in f:
@@ -32,7 +33,43 @@ def load_rows(path: Path) -> list[dict]:
             if not line:
                 continue
             rows.append(json.loads(line))
+            if limit is not None and len(rows) >= limit:
+                break
     return rows
+
+
+def add_prompt_length_meta(tokenizer: Any, rows: list[dict], prompts: list[str], args: argparse.Namespace, prompt_meta: dict) -> None:
+    lengths = [len(tokenizer(prompt, add_special_tokens=False).input_ids) for prompt in prompts]
+    too_long = [
+        {
+            "idx": idx,
+            "task_id": rows[idx].get("task_id"),
+            "step_idx": rows[idx].get("step_idx"),
+            "prompt_tokens": length,
+        }
+        for idx, length in enumerate(lengths)
+        if length + args.max_tokens > args.max_model_len
+    ]
+    if too_long:
+        raise RuntimeError(
+            "prompt context overflow before generation: "
+            f"max_model_len={args.max_model_len} max_tokens={args.max_tokens} "
+            f"overflow_count={len(too_long)} examples={too_long[:10]}"
+        )
+    sorted_lengths = sorted(lengths)
+    prompt_meta.update(
+        {
+            "row_count": len(rows),
+            "messages_rows": sum(isinstance(row.get("messages"), list) and bool(row.get("messages")) for row in rows),
+            "prompt_tokens_min": min(lengths) if lengths else 0,
+            "prompt_tokens_max": max(lengths) if lengths else 0,
+            "prompt_tokens_p50": sorted_lengths[len(sorted_lengths) // 2] if sorted_lengths else 0,
+            "prompt_tokens_p95": sorted_lengths[int(len(sorted_lengths) * 0.95) - 1] if sorted_lengths else 0,
+            "prompt_tokens_p99": sorted_lengths[int(len(sorted_lengths) * 0.99) - 1] if sorted_lengths else 0,
+            "max_model_len": args.max_model_len,
+            "max_tokens": args.max_tokens,
+        }
+    )
 
 
 def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
@@ -78,16 +115,27 @@ def main() -> None:
     parser.add_argument("--model-impl", default="auto")
     parser.add_argument("--language-model-only", action="store_true")
     parser.add_argument("--enforce-eager", action="store_true")
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--allow-raw-fallback", action="store_true")
+    parser.add_argument("--skip-if-exists", action="store_true")
     args = parser.parse_args()
 
     eval_path = Path(args.eval_path)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    rows = load_rows(eval_path)
+    model_short = args.model_short or sanitize_name(args.model)
+    out_path = output_dir / f"{model_short}.json"
+    if args.skip_if_exists and out_path.exists():
+        print(json.dumps({"output_path": str(out_path), "skipped": True}, ensure_ascii=False))
+        return
+    rows = load_rows(eval_path, args.limit)
 
     from transformers import AutoTokenizer as _AT
     tokenizer = _AT.from_pretrained(args.model, trust_remote_code=True)
-    prompts, prompt_meta = build_prompts(tokenizer, rows)
+    prompts, prompt_meta = build_prompts(tokenizer, rows, model_name=args.model)
+    if prompt_meta.get("template_status_counts", {}).get("raw_fallback") and not args.allow_raw_fallback:
+        raise RuntimeError(f"raw prompt fallback occurred: {prompt_meta}")
+    add_prompt_length_meta(tokenizer, rows, prompts, args, prompt_meta)
 
     load_start = time.time()
     llm, llm_kwargs = build_llm(args)
@@ -140,7 +188,6 @@ def main() -> None:
         )
 
     aggregate = aggregate_scores(per_step)
-    model_short = args.model_short or sanitize_name(args.model)
     result = {
         "model": args.model_short or args.model,
         "model_path": args.model,
@@ -170,7 +217,6 @@ def main() -> None:
         "aggregate": aggregate,
         "per_step": per_step,
     }
-    out_path = output_dir / f"{model_short}.json"
     out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
     print(json.dumps({"output_path": str(out_path), "score": aggregate["next_action_score"]}, ensure_ascii=False))
 
