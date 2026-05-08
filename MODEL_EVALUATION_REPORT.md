@@ -212,7 +212,7 @@ score = 100 * avg_command_f1
 - checkpoint 상태: `E2B-it checkpoint-1021`, `E2B checkpoint-1021` 저장 완료. 이는 1epoch checkpoint이며, full 2epoch 학습 완료는 아니다. `E4B-it`, `E4B`는 아직 epoch1 checkpoint 전이다.
 - 현재 페이스 기준 완료 예상: `E2B-it 2026-05-08 ~22:35Z`, `E2B 2026-05-08 ~23:55Z`, `E4B-it 2026-05-09 ~19:05Z`, `E4B 2026-05-09 ~19:25Z`. E4B 계열 epoch1 checkpoint는 `2026-05-08 ~23:45~24:00Z` 전후로 본다.
 - VRAM snapshot: GPU0 `92902/143771MB`, GPU1 `91736/143771MB`, GPU2 `111990/143771MB`, GPU3 `125930/143771MB`, GPU4 `98098/143771MB`, GPU5 `143140/143771MB`, GPU6 `129410/143771MB`, GPU7 `121112/143771MB`. 8장 모두 학습 프로세스가 점유 중이며, FSDP 특성상 순간 util은 rank별로 출렁인다.
-- HF upload 상태: `.env`의 `export HF_TOKEN=...` 형식을 upload helper가 못 읽어서 `E2B-it` 1epoch 업로드가 반복 실패했으나, 토큰 값은 출력되지 않았다. `upload_model_repo.py`를 수정해 `export` prefix를 처리하게 했고, 현재 `E2B-it` 1epoch upload가 재시도 중이다.
+- HF upload 상태: `.env`의 `export HF_TOKEN=...` 형식을 upload helper가 못 읽어서 `E2B-it` 1epoch 업로드가 반복 실패했으나, 토큰 값은 출력되지 않았다. `upload_model_repo.py`를 수정해 `export` prefix를 처리하게 했고, `E2B-it` 1epoch와 `E2B` 1epoch는 HF 업로드 완료됐다.
 - 26B/31B용 native 전처리 완료: `26B-A4B-it`, `26B-A4B`, `31B-it`, `31B` 모두 `processed_rows=16311`, `skipped_too_long=5999`, prompt token `p50/p95=3760/7156`, assistant token `p50/p95=390/925`.
 
 | 모델 | GPU | Dataset | Effective batch | Output |
@@ -227,7 +227,7 @@ score = 100 * avg_command_f1
 - 현재 설정은 `per_device_train_batch_size=1`, `nproc_per_node=2`, `gradient_accumulation_steps=8`이므로 effective batch는 `16`이다.
 - 8K sequence Gemma 4는 activation memory가 커서 micro batch를 크게 잡는 것이 항상 유리하지 않다. 우선 OOM 없이 안정적으로 2epoch를 완료시키고, E2B에서만 `per_device=2` ablation을 추가해 throughput/score를 비교한다.
 - HF 업로드 스크립트는 `.env`를 조용히 로드하되 토큰 값은 출력하지 않는다. 공용 컴퓨터 기준으로 토큰/대화 히스토리는 로그와 리포트에 남기지 않는다.
-- checkpoint publish monitor 실행 중: PID `3103778`, log `/home/work/.data/gemma4_native_sft/logs/native_checkpoint_monitor_20260508.log`, state `/home/work/.data/gemma4_native_sft/monitor_state.json`. 180초마다 본학습 output을 스캔하고, checkpoint 파일이 120초 이상 안정되면 HF에 즉시 올린다.
+- checkpoint publish monitor 실행 중: PID `3479746`, log `/home/work/.data/gemma4_native_sft/logs/native_checkpoint_monitor_20260508.log`, state `/home/work/.data/gemma4_native_sft/monitor_state.json`. 180초마다 본학습 output을 스캔하고, checkpoint 파일이 120초 이상 안정되면 HF에 즉시 올린다.
 - native checkpoint 평가는 `gemma4_native_sft/scripts/eval_native_checkpoint.sh`로 고정한다. 옵션은 `thinking-mode off`, `strip-thinking-history on`, `gemma4-empty-thought-channel auto`, `language-model-only`이며, corrected 303-step TB2-lite를 사용한다.
 - 큰 모델 config 준비 완료: `sft_gemma4_26b_a4b_it_native_8gpu.env`, `sft_gemma4_26b_a4b_base_native_8gpu.env`, `smoke_gemma4_31b_it_native_8gpu.env`, `sft_gemma4_31b_it_native_8gpu.env`, `sft_gemma4_31b_base_native_8gpu.env`. 31B는 full 학습 전에 `MAX_STEPS=3` smoke checkpoint를 vLLM로 먼저 검증한다.
 - 작은 모델 checkpoint가 저장될 때마다 즉시 `staging -> HF upload`를 먼저 처리한다. TB2-lite full 303 평가는 GPU가 비는 즉시 붙이고, 평가가 끝나면 `MD 기록 -> HF README 점수 갱신 -> best 후보 선정` 순서로 처리한다. 2epoch 완료 후에는 best checkpoint와 final symlink 기준을 비교한다.
@@ -250,8 +250,8 @@ HF 업로드 이름:
 
 | 단계 | GPU 계획 | 예상 시점(UTC) | 처리 |
 | --- | --- | --- | --- |
-| `E2B-it` epoch1 checkpoint | 0,1 계속 학습 중 | 완료: `2026-05-08`, `checkpoint-1021` | 저장 완료. HF 1epoch 업로드 재시도 중. GPU 여유 없어서 평가는 대기. |
-| `E2B` epoch1 checkpoint | 4,5 계속 학습 중 | 완료: `2026-05-08`, `checkpoint-1021` | 저장 완료. `E2B-it` 업로드 후 HF 1epoch 업로드 큐. GPU 여유 없어서 평가는 대기. |
+| `E2B-it` epoch1 checkpoint | 0,1 계속 학습 중 | 완료: `2026-05-08`, `checkpoint-1021` | 저장/HF 업로드 완료. GPU 여유 없어서 평가는 대기. |
+| `E2B` epoch1 checkpoint | 4,5 계속 학습 중 | 완료: `2026-05-08`, `checkpoint-1021` | 저장/HF 업로드 완료. GPU 여유 없어서 평가는 대기. |
 | `E4B-it` epoch1 checkpoint | 2,3 계속 학습 중 | `2026-05-08 23:45~24:00` | 저장 즉시 보존/HF 업로드 큐 등록. |
 | `E4B` epoch1 checkpoint | 6,7 계속 학습 중 | `2026-05-08 23:45~24:05` | 저장 즉시 보존/HF 업로드 큐 등록. |
 | `E2B-it` 2epoch 완료 | 0,1 해제 | `2026-05-08 22:30~22:50` | GPU 0/1로 `E2B-it` checkpoint 평가, best 선정, HF README 점수 갱신. |
@@ -272,6 +272,16 @@ HF 업로드 이름:
 - 큰 모델까지 모두 끝나는 전체 일정은 26B/31B의 실제 8K step time에 따라 크게 달라진다. 현재 보수 범위는 `2026-05-13~2026-05-17` 사이이며, 각 큰 모델 시작 후 30 step 시점에 정확도를 높여 다시 기록한다.
 - GPU 정책은 `8GPU training 우선`, 8GPU가 필요 없는 중간 구간은 `평가/업로드/재평가/ablation`으로 빈 GPU를 채우는 방식이다.
 
+한국 시간(KST, UTC+9) 기준 운영 메모:
+
+- `2026-05-09 00:35~00:42 KST` 기준, 8GPU는 모두 학습에 점유되어 있다.
+- `E2B-it`와 `E2B` base는 1epoch checkpoint가 저장/HF 업로드 완료됐지만, full 2epoch 학습은 아직 진행 중이다.
+- `E2B-it` full 2epoch 완료 예상은 `2026-05-09 07:30~07:50 KST`다.
+- `E2B` base full 2epoch 완료 예상은 `2026-05-09 08:45~09:10 KST`다.
+- `E4B-it` epoch1 checkpoint 예상은 `2026-05-09 08:45~09:00 KST`, full 2epoch 완료 예상은 `2026-05-10 03:50~04:20 KST`다.
+- `E4B` base epoch1 checkpoint 예상은 `2026-05-09 08:45~09:05 KST`, full 2epoch 완료 예상은 `2026-05-10 04:10~04:40 KST`다.
+- 작은 4개 모델 학습/평가/업로드 정리는 `2026-05-10 05:00~08:00 KST` 전후를 목표로 본다.
+
 ## LFM vs Qwen 분석
 
 - 현재 성공 결과 기준 최고 Qwen은 `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`이고 Score `39.52`다.
@@ -283,6 +293,106 @@ HF 업로드 이름:
 - Qwen 계열은 base 모델 자체의 terminal command priors와 ChatML 포맷 적합성이 강하고, FullFT 결과도 Valid JSON과 Precision을 유지한다. 반면 LFM은 base 점수가 낮은 상태에서 SFT 상승폭은 크지만, Qwen 상위권의 포맷 안정성과 command precision까지는 아직 못 따라간다.
 - 이 차이를 단순히 `모델 지능 차이`라고만 보기는 어렵다. TB2-lite는 일반 추론 지능보다 `터미널 명령을 JSON으로 안정적으로 내는 능력`을 강하게 재므로, 현재 결과는 지능 차이와 포맷/토크나이저/학습 경로 차이가 섞인 값이다.
 - 따라서 현재 낮은 LFM 점수는 단순 모델 크기 문제가 아니라 `base prior`, `JSON 형식 안정성`, `assistant command precision`, `epoch별 과학습/포맷 흔들림`이 합쳐진 결과로 보는 게 맞다.
+
+## 평가 코드 공정성 점검
+
+Qwen 3.5 점수가 매우 높아서 평가 코드가 Qwen에 특화됐는지 확인했다.
+
+확인 범위:
+
+- `tb2_lite/scripts/replay_eval.py`
+- `tb2_lite/scripts/prompt_builder.py`
+- `tb2_lite/scripts/replay_metrics.py`
+- `tb2_lite/scripts/summarize_corrected_results.py`
+- 실제 결과 JSON: `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm/*.json`
+
+결론:
+
+- 점수 계산 자체는 모델명을 보지 않는다. `score_commands()`와 `aggregate_scores()`는 `pred_command_units`와 `ref_command_units`만 비교한다.
+- 순위 기준은 `Score = 100 * avg_command_f1`이고, 이 계산에도 Qwen/LFM/Gemma/Ouro별 가중치는 없다.
+- Qwen 결과는 `template_status_counts={'chat_template': 303}`으로 기록되어 있다. 즉 Qwen 전용 fallback이 아니라 tokenizer의 `apply_chat_template`가 303개 전부 정상 적용됐다.
+- `prompt_builder.py`에는 Qwen 문자열 분기가 있지만, 이는 `chat_template` 실패 시 ChatML fallback을 쓰기 위한 경로다. 현재 Qwen 성공 결과에는 이 fallback이 걸리지 않았다.
+- 따라서 Qwen 상위권은 평가 코드 특혜보다는 `터미널 command prior`, `JSON 포맷 안정성`, `ChatML/assistant 응답 포맷 적합성`이 TB2-lite 태스크와 잘 맞아서 나온 결과로 본다.
+- 다만 TB2-lite 자체가 일반 지능 벤치가 아니라 `터미널 next-action JSON command 재현` 벤치이므로, Qwen에 유리한 domain bias는 존재한다고 보는 것이 맞다.
+
+## 모델군별 해석
+
+현재 모델군별 성격:
+
+| 모델군 | Base prior | SFT 반응 | 속도/효율 | 현재 해석 |
+| --- | --- | --- | --- | --- |
+| Qwen 3.5 | 매우 강함 | 좋지만 상승 여지는 상대적으로 작음 | 매우 빠름 | 최고점 후보. Base부터 TB2-lite 포맷과 잘 맞는다. |
+| LFM | 낮거나 중간 | 매우 좋음 | 매우 빠름 | 학습 효율과 운영 효율이 가장 좋다. RL 반복 실험에 유리하다. |
+| Ouro | 낮은 base도 있으나 SFT 상승폭 큼 | 좋음 | 매우 느림 | 학습은 잘 먹지만 RL/serving 효율은 불리하다. 고점 확인용 후보. |
+| Gemma 4 | 작은 모델 base는 낮음, 26B/31B base는 중간 | 기존 SFT는 실패 사례, native 결과 대기 | 모델별 편차 큼 | native Gemma template으로 다시 확인해야 한다. LFM보다 못 나오면 RL 제외. |
+
+Qwen:
+
+- `Qwen3.5-2B base`가 이미 Score `35.10`이고, `Qwen3.5-9B base`는 `38.10`이다.
+- `Qwen3.5-2B SFT 2Epoch`는 Score `39.52`로 현재 전체 1위다.
+- SFT가 평가를 속였다기보다 base 모델 자체가 터미널 명령, JSON, ChatML 응답 형식에 강하다.
+- RL을 한다면 최고점 갱신 후보는 Qwen이 가장 안정적이다. 단, 이미 상위권이라 추가 상승 여지는 LFM보다 작을 수 있다.
+
+LFM:
+
+- `LFM2-2.6B base` Score `17.06`에서 `LFM2-2.6B SFT 2Epoch` Score `32.85`까지 올라 상승폭이 약 `+15.79`다.
+- `LFM2-24B-A2B base` Score `10.87`에서 TemplateMasked SFT Score `33.46`까지 올라 상승폭이 약 `+22.59`다.
+- 속도도 좋다. `LFM2-2.6B SFT`는 `0.150 sec/step`, `LFM2-24B-A2B TemplateMasked`는 `0.177 sec/step`, `LFM2-8B-A1B SFT`는 `0.126 sec/step` 수준이다.
+- 따라서 LFM은 `학습이 잘 먹고`, `빠르고`, `비용 대비 점수가 잘 오르는` 모델군으로 본다.
+- 약점은 Qwen 대비 Valid JSON과 command precision이다. RL에서는 이 두 항목을 reward로 직접 밀어야 한다.
+
+Ouro:
+
+| 모델 | Base Score | SFT Score | 상승폭 | Sec/Step | 해석 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `Ouro-1.4B` | 15.06 | 28.30 | +13.24 | 2.344 | 학습 반응은 좋지만 속도 불리. |
+| `Ouro-1.4B-Thinking` | 12.69 | 31.74 | +19.05 | 1.698 | Thinking SFT가 더 잘 먹는다. |
+| `Ouro-2.6B` | 6.46 | 29.58 | +23.12 | 5.154 | base는 낮지만 SFT 상승폭은 큼. |
+| `Ouro-2.6B-Thinking` | 미측정/별도 | 35.61 | 큼 | 3.358 | 점수는 좋지만 RL loop에는 느리다. |
+
+- Ouro는 학습이 안 먹는 모델이 아니다. 오히려 base 대비 SFT 상승폭만 보면 꽤 잘 먹는다.
+- 다만 LFM 대비 속도가 너무 느리다. `LFM2-2.6B SFT`가 `0.150 sec/step`인데 `Ouro-2.6B SFT`는 `5.154 sec/step`이라 약 34배 느리다.
+- Ouro config 기준 `model_type=ouro`, `Ouro-2.6B`는 48 layers, hidden size `2048`, attention heads `16`, kv heads `16`, max position `65536`, sliding window 없음이다. 긴 prompt에서 attention/KV 비용이 크고, Qwen만큼 vLLM fast path 최적화를 타지 못하는 것으로 본다.
+- 따라서 Ouro는 `점수는 좋고 학습도 먹지만`, RL처럼 rollout을 많이 돌리는 작업에서는 LFM/Qwen보다 후순위다.
+- Ouro를 넣는다면 `Ouro-2.6B-Thinking-Terminal-SFT` 하나를 고점 확인용으로 소량 RL 테스트하는 정도가 맞다.
+
+Gemma 4:
+
+- 기존 Gemma 작은 모델 SFT는 base보다 낮아서 실패 사례로 본다.
+- 현재 native Gemma 4 rerun은 `Gemma 전용 chat template`, `thinking history 제거`, `assistant JSON target only`, `base 모델 template 주입`을 적용한 새 경로다.
+- Gemma 작은 모델이 LFM보다 못 나오면 RL 후보에서 제외한다.
+- Gemma가 `32점 이상`이면 1개를 RL 후보에 넣고, `33~35점` 근처면 2개까지 후보에 넣는다.
+- 26B-A4B native SFT가 기존 SFT e2 `32.77`을 넘기면 Gemma도 본격 후보군으로 다시 본다.
+
+## RL 후보 계획
+
+RL은 한 번에 너무 많은 모델을 벌리지 않고, Qwen 2개와 LFM 2개를 먼저 잡고 Gemma는 결과 조건부로 추가한다.
+
+| 그룹 | 후보 | 목적 |
+| --- | --- | --- |
+| Qwen | `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` | 현재 최고점 `39.52`. 최고점 갱신 가능성 확인. |
+| Qwen | `Qwen3.5-9B-Terminal-SFT-2Epoch-FullFT-2BData` | 더 큰 Qwen 계열 상한 확인. |
+| LFM | `LFM2-2.6B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 빠른 RL 파이프라인 검증. 비용 대비 상승폭 확인. |
+| LFM | `LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-TemplateMasked` | 효율 좋은 MoE 본선 후보. |
+| Gemma | native 결과 best 0~2개 | LFM보다 잘 나오거나 최소 비슷할 때만 추가. |
+| Ouro | `Ouro-2.6B-Thinking-Terminal-SFT` 선택적 소량 | 점수 고점 후보지만 속도가 느려 후순위. |
+
+실행 순서:
+
+1. `LFM2-2.6B`로 reward/RL 파이프라인을 먼저 검증한다.
+2. `Qwen3.5-2B`로 최고점 갱신 가능성을 확인한다.
+3. `LFM2-24B-A2B`로 효율 좋은 MoE 본선 실험을 한다.
+4. `Qwen3.5-9B`로 Qwen 큰 모델 상한을 확인한다.
+5. Gemma native 결과가 괜찮으면 `Gemma best 1~2개`를 추가한다.
+6. 시간이 남고 속도 비용을 감수할 만하면 Ouro thinking SFT를 소량 RL ablation으로만 넣는다.
+
+Reward 설계 방향:
+
+- `valid_json` 강제: JSON 파싱 실패는 큰 penalty.
+- command F1 직접 최적화: `commands[].keystrokes` token F1을 reward 핵심으로 둔다.
+- first command exact 보조: 실제 터미널 에이전트에서는 첫 명령이 중요하므로 보조 reward로 둔다.
+- precision penalty: 불필요하거나 위험한 명령을 많이 내는 경우 감점한다.
+- premature complete penalty: reference가 완료가 아닌데 `task_complete=true`를 내면 감점한다.
 
 ## 해석 기준
 
