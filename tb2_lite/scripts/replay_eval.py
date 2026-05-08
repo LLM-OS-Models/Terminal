@@ -25,6 +25,68 @@ from replay_metrics import (
 from prompt_builder import build_prompts, sanitize_name
 
 
+def engine_accepts_kwarg(name: str) -> bool:
+    try:
+        from vllm.engine.arg_utils import EngineArgs
+
+        return name in inspect.signature(EngineArgs.__init__).parameters
+    except Exception:
+        return False
+
+
+def parse_chat_template_kwargs(args: argparse.Namespace, tokenizer: Any) -> dict[str, Any]:
+    kwargs: dict[str, Any] = {}
+    mode = str(args.thinking_mode).lower()
+    if mode in {"on", "true", "1", "yes", "enabled"}:
+        kwargs["enable_thinking"] = True
+    elif mode in {"off", "false", "0", "no", "disabled"}:
+        kwargs["enable_thinking"] = False
+    else:
+        identity = f"{args.model} {args.tokenizer_path or ''} {getattr(tokenizer, 'name_or_path', '')}".lower()
+        if "gemma-4" in identity:
+            # TB2-lite expects the model answer itself to be JSON. The official
+            # Gemma 4 template supports thinking, but disabling it keeps the
+            # generated JSON in the assistant content instead of a thought channel.
+            kwargs["enable_thinking"] = False
+    return kwargs
+
+
+def is_gemma4_model(args: argparse.Namespace, tokenizer: Any) -> bool:
+    identity = f"{args.model} {args.tokenizer_path or ''} {getattr(tokenizer, 'name_or_path', '')}".lower()
+    return "gemma-4" in identity
+
+
+def gemma4_has_nonthinking_channel(args: argparse.Namespace, tokenizer: Any) -> bool:
+    identity = f"{args.model} {args.tokenizer_path or ''} {getattr(tokenizer, 'name_or_path', '')}".lower()
+    return "gemma-4-26b" in identity or "gemma-4-31b" in identity
+
+
+def parse_prompt_options(args: argparse.Namespace, tokenizer: Any) -> dict[str, Any]:
+    gemma4 = is_gemma4_model(args, tokenizer)
+
+    strip_mode = str(args.strip_thinking_history).lower()
+    if strip_mode in {"on", "true", "1", "yes", "enabled"}:
+        strip_thinking_history = True
+    elif strip_mode in {"off", "false", "0", "no", "disabled"}:
+        strip_thinking_history = False
+    else:
+        strip_thinking_history = gemma4
+
+    channel_mode = str(args.gemma4_empty_thought_channel).lower()
+    if channel_mode in {"on", "true", "1", "yes", "enabled"}:
+        empty_thought_channel = True
+    elif channel_mode in {"off", "false", "0", "no", "disabled"}:
+        empty_thought_channel = False
+    else:
+        empty_thought_channel = gemma4 and gemma4_has_nonthinking_channel(args, tokenizer)
+
+    return {
+        "strip_thinking_history": strip_thinking_history,
+        "gemma4_empty_thought_channel": empty_thought_channel,
+        "use_gemma4_patched_template": gemma4 and (strip_thinking_history or empty_thought_channel),
+    }
+
+
 def load_rows(path: Path, limit: int | None = None) -> list[dict]:
     rows: list[dict] = []
     with path.open() as f:
@@ -84,12 +146,15 @@ def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
         "gpu_memory_utilization": args.gpu_memory_utilization,
         "cpu_offload_gb": args.cpu_offload_gb,
     }
-    sig = inspect.signature(LLM.__init__)
-    if "limit_mm_per_prompt" in sig.parameters and args.language_model_only:
+    if engine_accepts_kwarg("limit_mm_per_prompt") and args.language_model_only:
         kwargs["limit_mm_per_prompt"] = {"image": 0, "audio": 0, "video": 0}
-    if "disable_mm_preprocessor_cache" in sig.parameters and args.language_model_only:
-        kwargs["disable_mm_preprocessor_cache"] = True
-    if "enforce_eager" in sig.parameters and args.enforce_eager:
+    if engine_accepts_kwarg("language_model_only") and args.language_model_only:
+        kwargs["language_model_only"] = True
+    if engine_accepts_kwarg("skip_mm_profiling") and args.language_model_only:
+        kwargs["skip_mm_profiling"] = True
+    if engine_accepts_kwarg("disable_chunked_mm_input") and args.language_model_only:
+        kwargs["disable_chunked_mm_input"] = True
+    if engine_accepts_kwarg("enforce_eager") and args.enforce_eager:
         kwargs["enforce_eager"] = True
     return LLM(**kwargs), kwargs
 
@@ -113,6 +178,8 @@ def main() -> None:
     parser.add_argument("--repetition-penalty", type=float, default=1.0)
     parser.add_argument("--min-p", type=float, default=0.0)
     parser.add_argument("--thinking-mode", default="auto")
+    parser.add_argument("--strip-thinking-history", default="auto")
+    parser.add_argument("--gemma4-empty-thought-channel", default="auto")
     parser.add_argument("--backend", default="vllm")
     parser.add_argument("--model-impl", default="auto")
     parser.add_argument("--language-model-only", action="store_true")
@@ -135,7 +202,15 @@ def main() -> None:
     from transformers import AutoTokenizer as _AT
     tokenizer_path = args.tokenizer_path or args.model
     tokenizer = _AT.from_pretrained(tokenizer_path, trust_remote_code=True)
-    prompts, prompt_meta = build_prompts(tokenizer, rows, model_name=args.model)
+    chat_template_kwargs = parse_chat_template_kwargs(args, tokenizer)
+    prompt_options = parse_prompt_options(args, tokenizer)
+    prompts, prompt_meta = build_prompts(
+        tokenizer,
+        rows,
+        model_name=args.model,
+        chat_template_kwargs=chat_template_kwargs,
+        prompt_options=prompt_options,
+    )
     if prompt_meta.get("template_status_counts", {}).get("raw_fallback") and not args.allow_raw_fallback:
         raise RuntimeError(f"raw prompt fallback occurred: {prompt_meta}")
     add_prompt_length_meta(tokenizer, rows, prompts, args, prompt_meta)
@@ -207,6 +282,8 @@ def main() -> None:
             "top_p": args.top_p,
             "max_tokens": args.max_tokens,
             "thinking_mode": args.thinking_mode,
+            "strip_thinking_history": args.strip_thinking_history,
+            "gemma4_empty_thought_channel": args.gemma4_empty_thought_channel,
             "dtype": args.dtype,
             "backend": args.backend,
             "model_impl": args.model_impl,
