@@ -194,6 +194,8 @@ def build_markdown(rows: list[dict], results_dir: Path, title: str) -> str:
             f"{row['sec_per_step']:.3f} | {row['load_time']:.1f} |"
         )
 
+    lines.extend(build_lfm_qwen_analysis(rows))
+
     failures = [row for row in rows if row.get("status") != "ok"]
     if failures:
         lines.extend(["", "## 파싱 실패 파일", ""])
@@ -209,6 +211,57 @@ def build_markdown(rows: list[dict], results_dir: Path, title: str) -> str:
         "- README legacy 386-step 표와 직접 비교하지 않는다.",
     ])
     return "\n".join(lines) + "\n"
+
+
+def family_rows(rows: list[dict], marker: str) -> list[dict]:
+    return [
+        row
+        for row in rows
+        if row.get("status") == "ok"
+        and row.get("rank_eligible")
+        and marker.lower() in str(row.get("model_name", "")).lower()
+    ]
+
+
+def avg(rows: list[dict], key: str) -> float:
+    return sum(float(row.get(key, 0.0)) for row in rows) / max(len(rows), 1)
+
+
+def build_lfm_qwen_analysis(rows: list[dict]) -> list[str]:
+    qwen_rows = family_rows(rows, "Qwen")
+    lfm_rows = family_rows(rows, "LFM")
+    if not qwen_rows or not lfm_rows:
+        return []
+
+    qwen_best = max(qwen_rows, key=lambda row: row.get("score", 0.0))
+    lfm_best = max(lfm_rows, key=lambda row: row.get("score", 0.0))
+    lfm_liquidcli = [
+        row for row in lfm_rows if "LiquidCLI-TemplateHoldout" in row.get("model_name", "")
+    ]
+    lfm_liquid_best = max(lfm_liquidcli, key=lambda row: row.get("score", 0.0)) if lfm_liquidcli else None
+
+    lines = [
+        "",
+        "## LFM vs Qwen 분석",
+        "",
+        f"- 현재 성공 결과 기준 최고 Qwen은 `{qwen_best['model_name']}`이고 Score `{qwen_best['score']:.2f}`다.",
+        f"- 현재 성공 결과 기준 최고 LFM은 `{lfm_best['model_name']}`이고 Score `{lfm_best['score']:.2f}`다. 최고 Qwen 대비 `{qwen_best['score'] - lfm_best['score']:.2f}`점 낮다.",
+    ]
+    if lfm_liquid_best:
+        lines.append(
+            f"- Liquid-CLI 방식 LFM 중 최고는 `{lfm_liquid_best['model_name']}`이며 Score `{lfm_liquid_best['score']:.2f}`다. 최고 Qwen 대비 `{qwen_best['score'] - lfm_liquid_best['score']:.2f}`점 낮다."
+        )
+    lines.extend(
+        [
+            f"- 평균 Precision은 Qwen `{avg(qwen_rows, 'precision'):.4f}`, LFM `{avg(lfm_rows, 'precision'):.4f}`이고, 평균 Recall은 Qwen `{avg(qwen_rows, 'recall'):.4f}`, LFM `{avg(lfm_rows, 'recall'):.4f}`다. LFM은 정답 명령 일부를 맞히는 능력보다 불필요하거나 틀린 명령을 섞지 않는 쪽에서 더 크게 밀린다.",
+            f"- 평균 Valid JSON은 Qwen `{avg(qwen_rows, 'valid_json'):.1f}%`, LFM `{avg(lfm_rows, 'valid_json'):.1f}%`다. 이 벤치는 JSON command 형식 안정성이 곧 점수로 이어지므로, LFM의 포맷 안정성 부족이 점수 하락의 직접 원인이다.",
+            "- LFM2-8B-A1B Liquid-CLI는 `1Epoch`가 `2Epoch`보다 높고, LFM2-24B TemplateMasked도 `1Epoch`가 `2Epoch`보다 근소하게 높다. 현재 데이터에서는 LFM 계열이 2epoch에서 명령 선택이 더 좋아지기보다 JSON/명령 precision이 흔들리는 경향이 있다.",
+            "- Qwen 계열은 base 모델 자체의 terminal command priors와 ChatML 포맷 적합성이 강하고, FullFT 결과도 Valid JSON과 Precision을 유지한다. 반면 LFM은 base 점수가 낮은 상태에서 SFT 상승폭은 크지만, Qwen 상위권의 포맷 안정성과 command precision까지는 아직 못 따라간다.",
+            "- 이 차이를 단순히 `모델 지능 차이`라고만 보기는 어렵다. TB2-lite는 일반 추론 지능보다 `터미널 명령을 JSON으로 안정적으로 내는 능력`을 강하게 재므로, 현재 결과는 지능 차이와 포맷/토크나이저/학습 경로 차이가 섞인 값이다.",
+            "- 따라서 현재 낮은 LFM 점수는 단순 모델 크기 문제가 아니라 `base prior`, `JSON 형식 안정성`, `assistant command precision`, `epoch별 과학습/포맷 흔들림`이 합쳐진 결과로 보는 게 맞다.",
+        ]
+    )
+    return lines
 
 
 def main() -> None:

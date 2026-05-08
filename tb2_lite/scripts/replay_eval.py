@@ -73,9 +73,10 @@ def add_prompt_length_meta(tokenizer: Any, rows: list[dict], prompts: list[str],
 
 
 def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
+    tokenizer_path = args.tokenizer_path or args.model
     kwargs: dict = {
         "model": args.model,
-        "tokenizer": args.model,
+        "tokenizer": tokenizer_path,
         "trust_remote_code": True,
         "dtype": args.dtype,
         "tensor_parallel_size": args.tp,
@@ -96,6 +97,7 @@ def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
+    parser.add_argument("--tokenizer-path", default="")
     parser.add_argument("--model-short", default="")
     parser.add_argument("--gpu", default="")
     parser.add_argument("--eval-path", required=True)
@@ -131,7 +133,8 @@ def main() -> None:
     rows = load_rows(eval_path, args.limit)
 
     from transformers import AutoTokenizer as _AT
-    tokenizer = _AT.from_pretrained(args.model, trust_remote_code=True)
+    tokenizer_path = args.tokenizer_path or args.model
+    tokenizer = _AT.from_pretrained(tokenizer_path, trust_remote_code=True)
     prompts, prompt_meta = build_prompts(tokenizer, rows, model_name=args.model)
     if prompt_meta.get("template_status_counts", {}).get("raw_fallback") and not args.allow_raw_fallback:
         raise RuntimeError(f"raw prompt fallback occurred: {prompt_meta}")
