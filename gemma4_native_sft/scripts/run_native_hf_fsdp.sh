@@ -101,6 +101,9 @@ fi
 if [[ -n "${MAX_STEPS:-}" ]]; then
   args+=(--max-steps "$MAX_STEPS")
 fi
+if [[ -n "${OPTIM:-}" ]]; then
+  args+=(--optim "$OPTIM")
+fi
 
 torchrun \
   --nnodes 1 \

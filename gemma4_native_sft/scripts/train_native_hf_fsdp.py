@@ -179,6 +179,7 @@ def main() -> None:
     parser.add_argument("--logging-steps", type=int, default=1)
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
+    parser.add_argument("--optim", default="adamw_torch")
     parser.add_argument("--gradient-checkpointing", action="store_true")
     parser.add_argument("--fsdp", default=None)
     parser.add_argument("--fsdp-config", default=None)
@@ -215,6 +216,7 @@ def main() -> None:
                     "per_device_train_batch_size": args.per_device_train_batch_size,
                     "gradient_accumulation_steps": args.gradient_accumulation_steps,
                     "learning_rate": args.learning_rate,
+                    "optim": args.optim,
                     "num_train_epochs": args.num_train_epochs,
                     "max_steps": args.max_steps,
                     "fsdp": args.fsdp,
@@ -241,7 +243,7 @@ def main() -> None:
         warmup_ratio=args.warmup_ratio,
         lr_scheduler_type="cosine",
         weight_decay=0.01,
-        optim="adamw_torch",
+        optim=args.optim,
         report_to="none",
         gradient_checkpointing=args.gradient_checkpointing,
         dataloader_num_workers=min(8, os.cpu_count() or 1),

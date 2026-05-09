@@ -13,6 +13,7 @@ OUTPUT_DIR="${OUTPUT_DIR:-/home/work/.data/tb2_lite_eval/gemma4_native_sft_20260
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-8192}"
 MAX_TOKENS="${MAX_TOKENS:-1024}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
+PYTHON_BIN="${VLLM_PYTHON:-}"
 
 while (($#)); do
   case "$1" in
@@ -52,7 +53,15 @@ if [[ -z "$MODEL_PATH" || -z "$MODEL_SHORT" ]]; then
   exit 2
 fi
 
-source .liquid-sft-env/bin/activate
+if [[ -z "$PYTHON_BIN" ]]; then
+  if [[ -x ".vllm-0_19_1/bin/python" ]]; then
+    PYTHON_BIN=".vllm-0_19_1/bin/python"
+  elif [[ -x ".vllm-uv-env/bin/python" ]]; then
+    PYTHON_BIN=".vllm-uv-env/bin/python"
+  else
+    PYTHON_BIN="python"
+  fi
+fi
 
 export PYTHONNOUSERSITE=1
 unset PYTHONPATH
@@ -66,7 +75,7 @@ export PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:T
 
 mkdir -p "$OUTPUT_DIR"
 
-CUDA_VISIBLE_DEVICES="$GPU" python tb2_lite/scripts/replay_eval.py \
+CUDA_VISIBLE_DEVICES="$GPU" "$PYTHON_BIN" tb2_lite/scripts/replay_eval.py \
   --model "$MODEL_PATH" \
   --tokenizer-path "$MODEL_PATH" \
   --model-short "$MODEL_SHORT" \
