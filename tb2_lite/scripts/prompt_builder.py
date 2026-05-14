@@ -75,6 +75,8 @@ def render_gemma4_turn(
     empty_thought_channel: bool = False,
 ) -> str:
     parts: list[str] = ["<bos>"]
+    if enable_thinking:
+        parts.append("<|turn>system\n<|think|>\n<turn|>\n")
     for message in messages:
         role = "model" if message["role"] == "assistant" else message["role"]
         if role == "tool":
@@ -87,10 +89,35 @@ def render_gemma4_turn(
     return "".join(parts)
 
 
+def render_deepseek_v4_chat(messages: list[dict[str, str]], enable_thinking: bool = False) -> str:
+    bos = "<｜begin▁of▁sentence｜>"
+    eos = "<｜end▁of▁sentence｜>"
+    user_token = "<｜User｜>"
+    assistant_token = "<｜Assistant｜>"
+    parts: list[str] = [bos]
+    for message in messages:
+        role = message["role"]
+        content = message["content"].strip()
+        if role == "system":
+            parts.append(content)
+        elif role == "user" or role == "tool":
+            parts.append(f"{user_token}{content}")
+        elif role == "assistant":
+            parts.append(f"{assistant_token}{content}{eos}")
+    parts.append(assistant_token)
+    if enable_thinking:
+        parts.append("<think>")
+    else:
+        parts.append("</think>")
+    return "".join(parts)
+
+
 def infer_fallback_style(model_name: str, tokenizer: Any) -> str | None:
     value = f"{model_name} {getattr(tokenizer, 'name_or_path', '')}".lower()
     if "gemma-4" in value:
         return "gemma4_turn"
+    if "deepseek-v4" in value or "deepseek_v4" in value:
+        return "deepseek_v4"
     if any(marker in value for marker in ("qwen", "lfm", "nemotron-terminal", "ouro")):
         return "chatml"
     return None
@@ -148,6 +175,16 @@ def build_prompt(
                     empty_thought_channel=gemma4_empty_thought_channel,
                 ),
                 status="gemma4_fallback",
+                error=str(exc),
+                stripped_thinking_blocks=stripped,
+            )
+        if style == "deepseek_v4":
+            return PromptBuild(
+                prompt=render_deepseek_v4_chat(
+                    messages,
+                    enable_thinking=bool(chat_template_kwargs.get("enable_thinking", False)),
+                ),
+                status="deepseek_v4_fallback",
                 error=str(exc),
                 stripped_thinking_blocks=stripped,
             )

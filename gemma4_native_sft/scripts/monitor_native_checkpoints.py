@@ -201,6 +201,12 @@ def publish_checkpoint(
     return repo_id, staging_dir
 
 
+def defer_checkpoint(*, spec: RunSpec, checkpoint: Path) -> tuple[str, str]:
+    repo_id, epoch_label = select_repo(spec, checkpoint)
+    log(f"DEFER_UPLOAD repo={repo_id} epoch={epoch_label} checkpoint={checkpoint}")
+    return repo_id, epoch_label
+
+
 def scan_once(args: argparse.Namespace, state: dict) -> bool:
     changed = False
     published = state.setdefault("published", {})
@@ -215,24 +221,39 @@ def scan_once(args: argparse.Namespace, state: dict) -> bool:
             if not checkpoint_complete(checkpoint, args.settle_seconds):
                 continue
             log(f"PUBLISH_READY model={spec.model_id} checkpoint={checkpoint}")
-            repo_id, staging_dir = publish_checkpoint(
-                spec=spec,
-                checkpoint=checkpoint,
-                staging_root=Path(args.staging_root),
-                env_file=Path(args.env_file),
-                private=args.private,
-            )
-            published[key] = {
-                "model_id": spec.model_id,
-                "checkpoint": key,
-                "repo_id": repo_id,
-                "staging_dir": str(staging_dir),
-                "published_at": utc_now(),
-                "tb2_eval": "pending",
-            }
+            if args.defer_upload:
+                repo_id, epoch_label = defer_checkpoint(spec=spec, checkpoint=checkpoint)
+                published[key] = {
+                    "model_id": spec.model_id,
+                    "dataset_path": str(spec.dataset_path),
+                    "checkpoint": key,
+                    "repo_id": repo_id,
+                    "epoch_label": epoch_label,
+                    "upload_state": "deferred_until_vllm_eval",
+                    "registered_at": utc_now(),
+                    "tb2_eval": "pending",
+                }
+            else:
+                repo_id, staging_dir = publish_checkpoint(
+                    spec=spec,
+                    checkpoint=checkpoint,
+                    staging_root=Path(args.staging_root),
+                    env_file=Path(args.env_file),
+                    private=args.private,
+                )
+                published[key] = {
+                    "model_id": spec.model_id,
+                    "dataset_path": str(spec.dataset_path),
+                    "checkpoint": key,
+                    "repo_id": repo_id,
+                    "staging_dir": str(staging_dir),
+                    "published_at": utc_now(),
+                    "upload_state": "uploaded",
+                    "tb2_eval": "pending",
+                }
             changed = True
             save_state(Path(args.state_file), state)
-            log(f"PUBLISHED repo={repo_id} checkpoint={checkpoint}")
+            log(f"REGISTERED repo={repo_id} checkpoint={checkpoint} defer_upload={args.defer_upload}")
     return changed
 
 
@@ -245,12 +266,13 @@ def main() -> None:
     parser.add_argument("--settle-seconds", type=int, default=120)
     parser.add_argument("--once", action="store_true")
     parser.add_argument("--private", action="store_true")
+    parser.add_argument("--defer-upload", action="store_true")
     args = parser.parse_args()
 
     state_path = Path(args.state_file)
-    state = load_state(state_path)
     while True:
         try:
+            state = load_state(state_path)
             scan_once(args, state)
             save_state(state_path, state)
         except Exception as exc:

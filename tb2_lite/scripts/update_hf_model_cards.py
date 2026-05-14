@@ -742,6 +742,8 @@ def run_once(args: argparse.Namespace, api: HfApi, state: dict[str, str]) -> int
         for repo_id in sorted(set(org_repos.values())):
             if repo_id in selected:
                 continue
+            if "Native-Liquid" in repo_id:
+                continue
             fingerprint = pending_fingerprint(repo_id, total_results)
             if not args.force and state.get(repo_id) == fingerprint:
                 continue

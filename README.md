@@ -926,3 +926,33 @@ TB2-lite 점수가 높은 모델이 Terminal Bench 2.0에서도 높을 것으로
 | Gemma4-31B e2 transformers | 1 | 평가 중 | ~2시간 |
 | Gemma4-E4B e1 HF+FSDP | 2 | 평가 중 | ~40분 |
 | Gemma4-E4B e2 HF+FSDP | 3 | 평가 중 | ~40분 |
+
+<!-- GEMMA4_NATIVE_AUTO_RESULTS_START -->
+## Gemma 4 Native 자동 평가 현황
+
+업데이트: `2026-05-14 14:21:18 KST`
+
+점수 기준: `Score = 100 * avg_command_f1`. 이 섹션은 `monitor_state.json`과 TB2-lite 결과 JSON에서 자동 생성된다.
+
+| Native 순위 | HF repo | Epoch | Checkpoint | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Sec/Step |
+| ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 34.98 | 0.3498 | 0.4737 | 0.3576 | 30.4% | 35.0% | 0.277 |
+| 2 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 34.42 | 0.3442 | 0.4823 | 0.3397 | 27.1% | 45.5% | 0.360 |
+| 3 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | 0.325 |
+| 4 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | 0.317 |
+| 5 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | 0.302 |
+| 6 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | 0.289 |
+| 7 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | 0.383 |
+| 8 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | 0.219 |
+
+평가 대기:
+
+- `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch`
+- `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch`
+- `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-2Epoch`
+- `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-2Epoch`
+<!-- GEMMA4_NATIVE_AUTO_RESULTS_END -->

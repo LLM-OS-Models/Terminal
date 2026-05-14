@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import inspect
 import json
 import sys
 import time
@@ -10,28 +9,14 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from vllm import LLM, SamplingParams
+from llama_cpp import Llama
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
-from replay_metrics import (
-    aggregate_scores,
-    parse_prediction,
-    score_commands,
-    step_bucket,
-)
 from prompt_builder import build_prompts, sanitize_name
-
-
-def engine_accepts_kwarg(name: str) -> bool:
-    try:
-        from vllm.engine.arg_utils import EngineArgs
-
-        return name in inspect.signature(EngineArgs.__init__).parameters
-    except Exception:
-        return False
+from replay_metrics import aggregate_scores, parse_prediction, score_commands, step_bucket
 
 
 def parse_chat_template_kwargs(args: argparse.Namespace, tokenizer: Any) -> dict[str, Any]:
@@ -44,9 +29,6 @@ def parse_chat_template_kwargs(args: argparse.Namespace, tokenizer: Any) -> dict
     else:
         identity = f"{args.model} {args.tokenizer_path or ''} {getattr(tokenizer, 'name_or_path', '')}".lower()
         if "gemma-4" in identity:
-            # TB2-lite expects the model answer itself to be JSON. The official
-            # Gemma 4 template supports thinking, but disabling it keeps the
-            # generated JSON in the assistant content instead of a thought channel.
             kwargs["enable_thinking"] = False
     return kwargs
 
@@ -87,20 +69,13 @@ def parse_prompt_options(args: argparse.Namespace, tokenizer: Any) -> dict[str, 
     }
 
 
-def load_rows(path: Path, limit: int | None = None) -> list[dict]:
-    rows: list[dict] = []
-    with path.open() as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            rows.append(json.loads(line))
-            if limit is not None and len(rows) >= limit:
-                break
-    return rows
-
-
-def add_prompt_length_meta(tokenizer: Any, rows: list[dict], prompts: list[str], args: argparse.Namespace, prompt_meta: dict) -> None:
+def add_prompt_length_meta(
+    tokenizer: Any,
+    rows: list[dict],
+    prompts: list[str],
+    args: argparse.Namespace,
+    prompt_meta: dict,
+) -> None:
     lengths = [len(tokenizer(prompt, add_special_tokens=False).input_ids) for prompt in prompts]
     too_long = [
         {
@@ -134,6 +109,19 @@ def add_prompt_length_meta(tokenizer: Any, rows: list[dict], prompts: list[str],
     )
 
 
+def load_rows(path: Path, limit: int | None = None) -> list[dict]:
+    rows: list[dict] = []
+    with path.open(encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            rows.append(json.loads(line))
+            if limit is not None and len(rows) >= limit:
+                break
+    return rows
+
+
 def load_tokenizer(tokenizer_path: str) -> Any:
     from transformers import AutoTokenizer, PreTrainedTokenizerFast
 
@@ -145,119 +133,77 @@ def load_tokenizer(tokenizer_path: str) -> Any:
         return PreTrainedTokenizerFast.from_pretrained(tokenizer_path)
 
 
-def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
-    tokenizer_path = args.tokenizer_path or args.model
-    kwargs: dict = {
-        "model": args.model,
-        "tokenizer": tokenizer_path,
-        "trust_remote_code": True,
-        "dtype": args.dtype,
-        "tensor_parallel_size": args.tp,
-        "max_model_len": args.max_model_len,
-        "gpu_memory_utilization": args.gpu_memory_utilization,
-        "cpu_offload_gb": args.cpu_offload_gb,
+def build_llama(args: argparse.Namespace) -> Llama:
+    common = {
+        "repo_id": args.repo_id,
+        "filename": args.filename,
+        "n_ctx": args.max_model_len,
+        "n_batch": args.n_batch,
+        "n_ubatch": args.n_ubatch,
+        "n_gpu_layers": args.n_gpu_layers,
+        "n_threads": args.n_threads,
+        "n_threads_batch": args.n_threads_batch,
+        "flash_attn": args.flash_attn,
+        "offload_kqv": args.offload_kqv,
+        "verbose": bool(args.verbose_llama),
     }
-    optional_string_kwargs = {
-        "model_impl": args.model_impl if args.model_impl and args.model_impl != "auto" else "",
-        "tokenizer_mode": args.tokenizer_mode,
-        "mamba_cache_dtype": args.mamba_cache_dtype,
-        "kv_cache_dtype": args.kv_cache_dtype,
-    }
-    for key, value in optional_string_kwargs.items():
-        if value and engine_accepts_kwarg(key):
-            kwargs[key] = value
-    optional_int_kwargs = {
-        "block_size": args.block_size,
-        "max_num_batched_tokens": args.max_num_batched_tokens,
-        "max_num_seqs": args.max_num_seqs,
-        "data_parallel_size": args.data_parallel_size,
-    }
-    for key, value in optional_int_kwargs.items():
-        if value is not None and engine_accepts_kwarg(key):
-            kwargs[key] = value
-    if args.hf_config_path and engine_accepts_kwarg("hf_config_path"):
-        kwargs["hf_config_path"] = args.hf_config_path
-    if args.hf_overrides_json and engine_accepts_kwarg("hf_overrides"):
-        kwargs["hf_overrides"] = json.loads(args.hf_overrides_json)
-    if args.speculative_config_json and engine_accepts_kwarg("speculative_config"):
-        kwargs["speculative_config"] = json.loads(args.speculative_config_json)
-    if args.enable_expert_parallel and engine_accepts_kwarg("enable_expert_parallel"):
-        kwargs["enable_expert_parallel"] = True
-    if args.disable_custom_all_reduce and engine_accepts_kwarg("disable_custom_all_reduce"):
-        kwargs["disable_custom_all_reduce"] = True
-    if engine_accepts_kwarg("limit_mm_per_prompt") and args.language_model_only:
-        kwargs["limit_mm_per_prompt"] = {"image": 0, "audio": 0, "video": 0}
-    if engine_accepts_kwarg("language_model_only") and args.language_model_only:
-        kwargs["language_model_only"] = True
-    if engine_accepts_kwarg("skip_mm_profiling") and args.language_model_only:
-        kwargs["skip_mm_profiling"] = True
-    if engine_accepts_kwarg("disable_chunked_mm_input") and args.language_model_only:
-        kwargs["disable_chunked_mm_input"] = True
-    if engine_accepts_kwarg("enforce_eager") and args.enforce_eager:
-        kwargs["enforce_eager"] = True
-    return LLM(**kwargs), kwargs
+    if args.cache_dir:
+        common["cache_dir"] = args.cache_dir
+    return Llama.from_pretrained(**common)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", required=True)
-    parser.add_argument("--tokenizer-path", default="")
+    parser.add_argument("--repo-id", required=True)
+    parser.add_argument("--filename", required=True)
+    parser.add_argument("--tokenizer-path", required=True)
     parser.add_argument("--model-short", default="")
     parser.add_argument("--gpu", default="")
     parser.add_argument("--eval-path", required=True)
     parser.add_argument("--output-dir", required=True)
-    parser.add_argument("--dtype", default="bfloat16")
-    parser.add_argument("--tp", type=int, default=1)
-    parser.add_argument("--cpu-offload-gb", type=float, default=0.0)
-    parser.add_argument("--gpu-memory-utilization", type=float, default=0.92)
-    parser.add_argument("--max-model-len", type=int, default=8192)
+    parser.add_argument("--max-model-len", type=int, default=49152)
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=1.0)
     parser.add_argument("--max-tokens", type=int, default=1024)
     parser.add_argument("--repetition-penalty", type=float, default=1.0)
     parser.add_argument("--min-p", type=float, default=0.0)
-    parser.add_argument("--thinking-mode", default="auto")
-    parser.add_argument("--strip-thinking-history", default="auto")
+    parser.add_argument("--thinking-mode", default="off")
+    parser.add_argument("--strip-thinking-history", default="on")
     parser.add_argument("--gemma4-empty-thought-channel", default="auto")
-    parser.add_argument("--backend", default="vllm")
-    parser.add_argument("--model-impl", default="auto")
-    parser.add_argument("--tokenizer-mode", default="")
-    parser.add_argument("--mamba-cache-dtype", default="")
-    parser.add_argument("--kv-cache-dtype", default="")
-    parser.add_argument("--block-size", type=int, default=None)
-    parser.add_argument("--max-num-batched-tokens", type=int, default=None)
-    parser.add_argument("--max-num-seqs", type=int, default=None)
-    parser.add_argument("--data-parallel-size", type=int, default=None)
-    parser.add_argument("--hf-config-path", default="")
-    parser.add_argument("--hf-overrides-json", default="")
-    parser.add_argument("--speculative-config-json", default="")
-    parser.add_argument("--language-model-only", action="store_true")
-    parser.add_argument("--enable-expert-parallel", action="store_true")
-    parser.add_argument("--disable-custom-all-reduce", action="store_true")
-    parser.add_argument("--enforce-eager", action="store_true")
+    parser.add_argument("--n-gpu-layers", type=int, default=-1)
+    parser.add_argument("--n-batch", type=int, default=1024)
+    parser.add_argument("--n-ubatch", type=int, default=512)
+    parser.add_argument("--n-threads", type=int, default=None)
+    parser.add_argument("--n-threads-batch", type=int, default=None)
+    parser.add_argument("--flash-attn", action="store_true")
+    parser.add_argument("--no-offload-kqv", dest="offload_kqv", action="store_false")
+    parser.set_defaults(offload_kqv=True)
+    parser.add_argument("--cache-dir", default="")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--allow-raw-fallback", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
+    parser.add_argument("--verbose-llama", action="store_true")
     args = parser.parse_args()
+    args.model = args.repo_id
 
     eval_path = Path(args.eval_path)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    model_short = args.model_short or sanitize_name(args.model)
+    model_short = args.model_short or sanitize_name(f"{args.repo_id}_{args.filename}")
     out_path = output_dir / f"{model_short}.json"
     if args.skip_if_exists and out_path.exists():
         print(json.dumps({"output_path": str(out_path), "skipped": True}, ensure_ascii=False))
         return
+
     rows = load_rows(eval_path, args.limit)
 
-    tokenizer_path = args.tokenizer_path or args.model
-    tokenizer = load_tokenizer(tokenizer_path)
+    tokenizer = load_tokenizer(args.tokenizer_path)
     chat_template_kwargs = parse_chat_template_kwargs(args, tokenizer)
     prompt_options = parse_prompt_options(args, tokenizer)
     prompts, prompt_meta = build_prompts(
         tokenizer,
         rows,
-        model_name=args.model,
+        model_name=args.repo_id,
         chat_template_kwargs=chat_template_kwargs,
         prompt_options=prompt_options,
     )
@@ -266,26 +212,21 @@ def main() -> None:
     add_prompt_length_meta(tokenizer, rows, prompts, args, prompt_meta)
 
     load_start = time.time()
-    llm, llm_kwargs = build_llm(args)
+    llm = build_llama(args)
     load_time = round(time.time() - load_start, 1)
 
-    sampling_kwargs = {
-        "temperature": args.temperature,
-        "top_p": args.top_p,
-        "max_tokens": args.max_tokens,
-        "repetition_penalty": args.repetition_penalty,
-    }
-    if args.min_p > 0:
-        sampling_kwargs["min_p"] = args.min_p
-    sampling = SamplingParams(**sampling_kwargs)
-
     gen_start = time.time()
-    outputs = llm.generate(prompts, sampling_params=sampling, use_tqdm=True)
-    gen_time = round(time.time() - gen_start, 1)
-
-    per_step: list[dict] = []
-    for row, output in zip(rows, outputs):
-        pred_text = output.outputs[0].text if output.outputs else ""
+    per_step: list[dict[str, Any]] = []
+    for idx, (row, prompt) in enumerate(zip(rows, prompts), start=1):
+        generation = llm(
+            prompt,
+            max_tokens=args.max_tokens,
+            temperature=args.temperature,
+            top_p=args.top_p,
+            repeat_penalty=args.repetition_penalty,
+            min_p=args.min_p,
+        )
+        pred_text = generation["choices"][0].get("text", "") if generation.get("choices") else ""
         pred = parse_prediction(pred_text)
         ref = parse_prediction(row["ref_raw"])
         first_exact, precision, recall, f1 = score_commands(
@@ -314,11 +255,14 @@ def main() -> None:
                 "pred_preview": pred_text[:1200],
             }
         )
+        if idx == 1 or idx % 10 == 0 or idx == len(rows):
+            print(f"progress {idx}/{len(rows)}", flush=True)
 
+    gen_time = round(time.time() - gen_start, 1)
     aggregate = aggregate_scores(per_step)
     result = {
-        "model": args.model_short or args.model,
-        "model_path": args.model,
+        "model": model_short,
+        "model_path": f"{args.repo_id}:{args.filename}",
         "lora_path": None,
         "model_short": model_short,
         "gpu": str(args.gpu),
@@ -334,31 +278,26 @@ def main() -> None:
             "thinking_mode": args.thinking_mode,
             "strip_thinking_history": args.strip_thinking_history,
             "gemma4_empty_thought_channel": args.gemma4_empty_thought_channel,
-            "dtype": args.dtype,
-            "backend": args.backend,
-            "model_impl": args.model_impl,
-            "tp": args.tp,
-            "cpu_offload_gb": args.cpu_offload_gb,
+            "dtype": "gguf",
+            "backend": "llama_cpp",
+            "tp": 1,
             "max_model_len": args.max_model_len,
-            "language_model_only": args.language_model_only,
-            "tokenizer_mode": args.tokenizer_mode,
-            "mamba_cache_dtype": args.mamba_cache_dtype,
-            "kv_cache_dtype": args.kv_cache_dtype,
-            "block_size": args.block_size,
-            "max_num_batched_tokens": args.max_num_batched_tokens,
-            "max_num_seqs": args.max_num_seqs,
-            "data_parallel_size": args.data_parallel_size,
-            "hf_config_path": args.hf_config_path,
-            "hf_overrides_json": args.hf_overrides_json,
-            "speculative_config_json": args.speculative_config_json,
-            "enable_expert_parallel": args.enable_expert_parallel,
-            "llm_kwargs": llm_kwargs,
+            "repo_id": args.repo_id,
+            "filename": args.filename,
+            "tokenizer_path": args.tokenizer_path,
+            "n_gpu_layers": args.n_gpu_layers,
+            "n_batch": args.n_batch,
+            "n_ubatch": args.n_ubatch,
+            "n_threads": args.n_threads,
+            "n_threads_batch": args.n_threads_batch,
+            "flash_attn": args.flash_attn,
+            "offload_kqv": args.offload_kqv,
         },
         "prompt_template": prompt_meta,
         "aggregate": aggregate,
         "per_step": per_step,
     }
-    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({"output_path": str(out_path), "score": aggregate["next_action_score"]}, ensure_ascii=False))
 
 

@@ -15,6 +15,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 import torch
+import torch.nn.functional as F
 from datasets import load_from_disk
 from huggingface_hub import snapshot_download
 from safetensors import safe_open
@@ -164,6 +165,31 @@ class CausalLMCollator:
         return batch
 
 
+class MaskedCausalLMTrainer(Trainer):
+    def compute_loss(
+        self,
+        model: torch.nn.Module,
+        inputs: dict[str, torch.Tensor],
+        return_outputs: bool = False,
+        num_items_in_batch: torch.Tensor | None = None,
+    ) -> torch.Tensor | tuple[torch.Tensor, Any]:
+        labels = inputs.pop("labels")
+        shift_labels = labels[..., 1:].contiguous()
+        active_by_position = shift_labels.ne(-100).any(dim=0)
+        if not active_by_position.any():
+            outputs = model(**inputs, logits_to_keep=1)
+            loss = outputs.logits.sum() * 0.0
+            return (loss, outputs) if return_outputs else loss
+
+        logit_positions = active_by_position.nonzero(as_tuple=False).flatten()
+        logit_positions = logit_positions.to(next(iter(inputs.values())).device)
+        outputs = model(**inputs, logits_to_keep=logit_positions)
+        selected_labels = shift_labels.index_select(1, logit_positions.to(shift_labels.device))
+        active = selected_labels.ne(-100)
+        loss = F.cross_entropy(outputs.logits[active].float(), selected_labels[active], reduction="mean")
+        return (loss, outputs) if return_outputs else loss
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-id", required=True)
@@ -180,6 +206,7 @@ def main() -> None:
     parser.add_argument("--max-steps", type=int, default=-1)
     parser.add_argument("--warmup-ratio", type=float, default=0.03)
     parser.add_argument("--optim", default="adamw_torch")
+    parser.add_argument("--bf16", type=int, choices=[0, 1], default=1)
     parser.add_argument("--gradient-checkpointing", action="store_true")
     parser.add_argument("--fsdp", default=None)
     parser.add_argument("--fsdp-config", default=None)
@@ -199,9 +226,9 @@ def main() -> None:
 
     model = load_gemma4_text_only_model(resolved_model_path).to(dtype=torch.bfloat16)
     model.lm_head.weight = torch.nn.Parameter(model.lm_head.weight.clone())
+    model.config.use_cache = False
     if args.gradient_checkpointing:
         model.gradient_checkpointing_enable()
-        model.config.use_cache = False
 
     if local_rank == 0:
         print(
@@ -217,6 +244,7 @@ def main() -> None:
                     "gradient_accumulation_steps": args.gradient_accumulation_steps,
                     "learning_rate": args.learning_rate,
                     "optim": args.optim,
+                    "bf16": bool(args.bf16),
                     "num_train_epochs": args.num_train_epochs,
                     "max_steps": args.max_steps,
                     "fsdp": args.fsdp,
@@ -236,7 +264,7 @@ def main() -> None:
         learning_rate=args.learning_rate,
         num_train_epochs=args.num_train_epochs,
         max_steps=args.max_steps,
-        bf16=True,
+        bf16=bool(args.bf16),
         logging_steps=args.logging_steps,
         save_steps=args.save_steps,
         save_strategy=args.save_strategy,
@@ -254,7 +282,7 @@ def main() -> None:
         ddp_find_unused_parameters=False if world_size > 1 else None,
     )
 
-    trainer = Trainer(
+    trainer = MaskedCausalLMTrainer(
         model=model,
         args=training_args,
         train_dataset=dataset,

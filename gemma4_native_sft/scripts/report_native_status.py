@@ -167,6 +167,19 @@ def load_monitor_state() -> dict:
         return {"published": {}}
 
 
+def format_eval(value: object) -> str:
+    if isinstance(value, dict):
+        score = value.get("score")
+        result = value.get("result")
+        score_text = f"Score {float(score):.2f}" if isinstance(score, (int, float)) else "done"
+        if result:
+            return f"{score_text}, `{Path(str(result)).name}`"
+        return score_text
+    if value:
+        return str(value)
+    return "pending"
+
+
 def build_report() -> str:
     stamp = now_kst().strftime("%Y-%m-%d %H:%M:%S KST")
     state = load_monitor_state()
@@ -211,7 +224,7 @@ def build_report() -> str:
         for item in sorted(published.values(), key=lambda x: str(x.get("published_at", ""))):
             lines.append(
                 f"- `{item.get('repo_id')}` from `{Path(str(item.get('checkpoint', ''))).name}` "
-                f"at `{item.get('published_at')}`, eval `{item.get('tb2_eval')}`"
+                f"at `{item.get('published_at')}`, eval {format_eval(item.get('tb2_eval'))}"
             )
     else:
         lines.append("- none")

@@ -104,6 +104,9 @@ fi
 if [[ -n "${OPTIM:-}" ]]; then
   args+=(--optim "$OPTIM")
 fi
+if [[ -n "${BF16:-}" ]]; then
+  args+=(--bf16 "$BF16")
+fi
 
 torchrun \
   --nnodes 1 \

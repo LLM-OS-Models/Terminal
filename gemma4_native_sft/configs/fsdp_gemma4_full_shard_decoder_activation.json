@@ -1,0 +1,9 @@
+{
+  "fsdp_backward_prefetch": "BACKWARD_PRE",
+  "fsdp_forward_prefetch": false,
+  "fsdp_sharding_strategy": "FULL_SHARD",
+  "fsdp_state_dict_type": "SHARDED_STATE_DICT",
+  "fsdp_transformer_layer_cls_to_wrap": "Gemma4TextDecoderLayer",
+  "fsdp_use_orig_params": true,
+  "activation_checkpointing": true
+}

@@ -35,58 +35,61 @@ score = 100 * avg_command_f1
 | 15 | `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-1Epoch-FullFT-2BData` | 35.60 | 0.3560 | 0.4537 | 0.3752 | 26.7% | 62.7% | chat_template | 0.291 | 179.0 |
 | 16 | `Qwen/Qwen3.5-4B` | 35.42 | 0.3542 | 0.4836 | 0.3292 | 17.8% | 75.6% | chat_template | 0.185 | 120.0 |
 | 17 | `Qwen/Qwen3.5-2B` | 35.10 | 0.3510 | 0.4944 | 0.3220 | 18.2% | 81.8% | chat_template | 0.077 | 112.8 |
-| 18 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 34.42 | 0.3442 | 0.4823 | 0.3397 | 27.1% | 45.5% | gemma4_native | 0.360 | 93.6 |
-| 19 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-TemplateMasked` | 33.46 | 0.3346 | 0.4363 | 0.3549 | 31.7% | 65.0% | chat_template | 0.177 | 220.0 |
-| 20 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-TemplateMasked` | 33.35 | 0.3335 | 0.4242 | 0.3590 | 26.1% | 66.3% | chat_template | 0.180 | 198.6 |
-| 21 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 32.85 | 0.3285 | 0.4194 | 0.3336 | 31.0% | 55.4% | chat_template | 0.150 | 32.9 |
-| 22 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 32.77 | 0.3277 | 0.3953 | 0.3541 | 18.2% | 24.8% | chat_template | 0.348 | 300.9 |
-| 23 | `Qwen/Qwen3.6-27B` | 32.56 | 0.3256 | 0.4346 | 0.3149 | 15.8% | 73.9% | chat_template | 0.889 | 178.2 |
-| 24 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 32.41 | 0.3241 | 0.4327 | 0.3220 | 29.4% | 56.8% | chat_template | 0.126 | 36.6 |
-| 25 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 31.86 | 0.3186 | 0.4102 | 0.3321 | 30.0% | 55.8% | chat_template | 0.151 | 33.0 |
-| 26 | `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` | 31.74 | 0.3174 | 0.4062 | 0.3410 | 24.8% | 63.7% | chat_template | 1.698 | 92.4 |
-| 27 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.126 | 35.7 |
-| 28 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-7GPU` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.128 | 131.5 |
-| 29 | `Qwen/Qwen3.6-35B-A3B-FP8` | 30.57 | 0.3057 | 0.4248 | 0.2873 | 14.5% | 75.2% | chat_template | 0.203 | 181.9 |
-| 30 | `Qwen/Qwen3.6-35B-A3B` | 30.28 | 0.3028 | 0.4093 | 0.2879 | 14.2% | 73.3% | chat_template | 0.234 | 360.2 |
-| 31 | `LLM-OS-Models/Ouro-2.6B-Terminal-SFT` | 29.58 | 0.2958 | 0.3624 | 0.3156 | 22.8% | 29.4% | chat_template | 5.154 | 332.6 |
-| 32 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.086 | 25.4 |
-| 33 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-8GPU` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.085 | 49.9 |
-| 34 | `google/gemma-4-26B-A4B-it` | 28.51 | 0.2851 | 0.4057 | 0.2643 | 14.2% | 71.9% | chat_template | 0.277 | 747.8 |
-| 35 | `LLM-OS-Models/Ouro-1.4B-terminal-sft` | 28.30 | 0.2830 | 0.3520 | 0.3141 | 22.4% | 27.1% | chat_template | 2.344 | 83.1 |
-| 36 | `gyung/LFM2-8B-Terminal-SFT-Unsloth` | 28.23 | 0.2823 | 0.3817 | 0.2851 | 27.1% | 53.8% | chat_template | 0.124 | 36.0 |
-| 37 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 28.10 | 0.2810 | 0.3615 | 0.2941 | 29.4% | 50.5% | chat_template | 0.085 | 25.4 |
-| 38 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth` | 27.33 | 0.2733 | 0.3526 | 0.2872 | 24.1% | 62.0% | chat_template | 0.124 | 267.1 |
-| 39 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth` | 27.31 | 0.2731 | 0.3643 | 0.2804 | 21.8% | 62.0% | chat_template | 0.147 | 69.7 |
-| 40 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
-| 41 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
-| 42 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
-| 43 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
-| 44 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | gemma4_native | 0.317 | 51.8 |
-| 45 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 24.74 | 0.2474 | 0.3390 | 0.2456 | 12.5% | 56.1% | chat_template | 0.178 | 228.6 |
-| 46 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth` | 22.45 | 0.2245 | 0.3097 | 0.2314 | 18.8% | 47.2% | chat_template | 0.083 | 57.2 |
-| 47 | `google/gemma-4-E4B-it` | 19.36 | 0.1936 | 0.3184 | 0.1822 | 11.6% | 54.8% | chat_template | 0.205 | 175.8 |
-| 48 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
-| 49 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
-| 50 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
-| 51 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
-| 52 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
-| 53 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
-| 54 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
-| 55 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
-| 56 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
-| 57 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
-| 58 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
-| 59 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
-| 60 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
-| 61 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
+| 18 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 34.98 | 0.3498 | 0.4737 | 0.3576 | 30.4% | 35.0% | gemma4_native | 0.277 | 53.2 |
+| 19 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 34.42 | 0.3442 | 0.4823 | 0.3397 | 27.1% | 45.5% | gemma4_native | 0.360 | 93.6 |
+| 20 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-TemplateMasked` | 33.46 | 0.3346 | 0.4363 | 0.3549 | 31.7% | 65.0% | chat_template | 0.177 | 220.0 |
+| 21 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-TemplateMasked` | 33.35 | 0.3335 | 0.4242 | 0.3590 | 26.1% | 66.3% | chat_template | 0.180 | 198.6 |
+| 22 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 32.85 | 0.3285 | 0.4194 | 0.3336 | 31.0% | 55.4% | chat_template | 0.150 | 32.9 |
+| 23 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 32.77 | 0.3277 | 0.3953 | 0.3541 | 18.2% | 24.8% | chat_template | 0.348 | 300.9 |
+| 24 | `Qwen/Qwen3.6-27B` | 32.56 | 0.3256 | 0.4346 | 0.3149 | 15.8% | 73.9% | chat_template | 0.889 | 178.2 |
+| 25 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 32.41 | 0.3241 | 0.4327 | 0.3220 | 29.4% | 56.8% | chat_template | 0.126 | 36.6 |
+| 26 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 31.86 | 0.3186 | 0.4102 | 0.3321 | 30.0% | 55.8% | chat_template | 0.151 | 33.0 |
+| 27 | `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` | 31.74 | 0.3174 | 0.4062 | 0.3410 | 24.8% | 63.7% | chat_template | 1.698 | 92.4 |
+| 28 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.126 | 35.7 |
+| 29 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-7GPU` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.128 | 131.5 |
+| 30 | `Qwen/Qwen3.6-35B-A3B-FP8` | 30.57 | 0.3057 | 0.4248 | 0.2873 | 14.5% | 75.2% | chat_template | 0.203 | 181.9 |
+| 31 | `Qwen/Qwen3.6-35B-A3B` | 30.28 | 0.3028 | 0.4093 | 0.2879 | 14.2% | 73.3% | chat_template | 0.234 | 360.2 |
+| 32 | `LLM-OS-Models/Ouro-2.6B-Terminal-SFT` | 29.58 | 0.2958 | 0.3624 | 0.3156 | 22.8% | 29.4% | chat_template | 5.154 | 332.6 |
+| 33 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.086 | 25.4 |
+| 34 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-8GPU` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.085 | 49.9 |
+| 35 | `google/gemma-4-26B-A4B-it` | 28.51 | 0.2851 | 0.4057 | 0.2643 | 14.2% | 71.9% | chat_template | 0.277 | 747.8 |
+| 36 | `LLM-OS-Models/Ouro-1.4B-terminal-sft` | 28.30 | 0.2830 | 0.3520 | 0.3141 | 22.4% | 27.1% | chat_template | 2.344 | 83.1 |
+| 37 | `gyung/LFM2-8B-Terminal-SFT-Unsloth` | 28.23 | 0.2823 | 0.3817 | 0.2851 | 27.1% | 53.8% | chat_template | 0.124 | 36.0 |
+| 38 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 28.10 | 0.2810 | 0.3615 | 0.2941 | 29.4% | 50.5% | chat_template | 0.085 | 25.4 |
+| 39 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth` | 27.33 | 0.2733 | 0.3526 | 0.2872 | 24.1% | 62.0% | chat_template | 0.124 | 267.1 |
+| 40 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth` | 27.31 | 0.2731 | 0.3643 | 0.2804 | 21.8% | 62.0% | chat_template | 0.147 | 69.7 |
+| 41 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
+| 42 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
+| 43 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
+| 44 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
+| 45 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | gemma4_native | 0.317 | 51.8 |
+| 46 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 24.74 | 0.2474 | 0.3390 | 0.2456 | 12.5% | 56.1% | chat_template | 0.178 | 228.6 |
+| 47 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth` | 22.45 | 0.2245 | 0.3097 | 0.2314 | 18.8% | 47.2% | chat_template | 0.083 | 57.2 |
+| 48 | `google/gemma-4-E4B-it` | 19.36 | 0.1936 | 0.3184 | 0.1822 | 11.6% | 54.8% | chat_template | 0.205 | 175.8 |
+| 49 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | gemma4_native | 0.302 | 52.6 |
+| 50 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
+| 51 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
+| 52 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | gemma4_native | 0.289 | 73.4 |
+| 53 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
+| 54 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
+| 55 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
+| 56 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
+| 57 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
+| 58 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
+| 59 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
+| 60 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
+| 61 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
+| 62 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
+| 63 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
+| 64 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
 
 전체 순위 반영 메모:
 
-- Native Gemma 4 결과 5개를 이 표에 직접 반영했다. 현재 Gemma small best는 `gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch`, Score `34.42`, 전체 `18위`다.
+- Native Gemma 4 결과 8개를 이 표에 직접 반영했다. 현재 Gemma small best는 `gemma-4-E4B-it-Terminal-SFT-Native-Liquid-2Epoch`, Score `34.98`, 전체 `18위`다.
 - E4B-it가 오른 이유는 단순 재평가가 아니라 `Gemma 4 native chat template`, `thinking history 제거`, `assistant JSON-only target`, `Qwen/ChatML 토큰 제거`가 모두 들어간 새 SFT 경로가 먹혔기 때문이다.
 - E2B-it도 구 SFT 실패는 회복했지만 `25.70/24.92`라 E4B-it와 격차가 크다. 작은 Gemma에서는 모델 용량과 JSON/command prior 부족이 남아 있다.
-- E2B/E4B base native는 각각 `11.35`, `12.80`으로 낮다. base에 it 템플릿을 주입해도 instruction-following prior 자체가 부족해서, 작은 base 모델은 주력 후보에서 제외한다.
-- E4B-it native는 최고 LFM `33.46`보다 `+0.96` 높지만, 최고 Qwen `39.52`보다는 `-5.10` 낮다. 따라서 Gemma는 `E4B-it`와 이후 `26B-A4B-it` 결과를 보고 RL 후보 1~2개로 제한한다.
+- E2B/E4B base native는 2epoch에서 각각 `16.22`, `18.47`까지 올랐지만 E2B-it native `25.70`과 E4B-it native `34.98`에는 크게 못 미친다. 작은 base 모델은 주력 후보에서 제외한다.
+- E4B-it native 2epoch는 최고 LFM `33.46`보다 `+1.52` 높지만, 최고 Qwen `39.52`보다는 `-4.54` 낮고 Qwen 2B base `35.10`보다 `-0.12` 낮다. 따라서 Gemma는 `E4B-it`와 이후 `26B-A4B-it` 결과를 보고 RL 후보 1~2개로 제한한다.
 
 ## Gemma 4 재평가 및 재학습 메모
 
@@ -131,15 +134,45 @@ score = 100 * avg_command_f1
 
 ### native SFT full 303 평가 결과
 
-`2026-05-09 09:30 KST` 기준 결과다. 출력 디렉터리: `/home/work/.data/tb2_lite_eval/gemma4_native_sft_20260509`
+`2026-05-09 09:56 KST` 기준 결과다. 출력 디렉터리: `/home/work/.data/tb2_lite_eval/gemma4_native_sft_20260509`
 
 | 모델 | HF repo | Checkpoint | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Sec/Step | 기존 대비 | 전체표 대입 순위 |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
 | `google/gemma-4-E4B-it` | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1021` | 34.42 | 0.3442 | 0.4823 | 0.3397 | 27.1% | 45.5% | 0.360 | E4B-it retemplate best `20.31` 대비 `+14.11` | 18 |
 | `google/gemma-4-E2B-it` | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1021` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | 0.325 | E2B-it retemplate `17.42` 대비 `+8.28`, 구 SFT e1 `10.67` 대비 `+15.03` | 43 |
 | `google/gemma-4-E2B-it` | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | `checkpoint-2042` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | 0.317 | native 1epoch 대비 `-0.78`, 구 SFT e2 `9.22` 대비 `+15.70` | 44 |
-| `google/gemma-4-E4B` | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1021` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | 0.383 | base+template 주입만으로는 instruction prior 부족 | 52 |
-| `google/gemma-4-E2B` | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1021` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | 0.219 | base+template 주입만으로는 instruction prior 부족 | 54 |
+| `google/gemma-4-E2B` | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | `checkpoint-2042` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | 0.289 | native base 1epoch 대비 `+4.87`, 그래도 E2B-it 1epoch 대비 `-9.48` | 50 |
+| `google/gemma-4-E4B` | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1021` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | 0.383 | base+template 주입만으로는 instruction prior 부족 | 53 |
+| `google/gemma-4-E2B` | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1021` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | 0.219 | base+template 주입만으로는 instruction prior 부족 | 55 |
+
+### 26B/31B native SFT full 303 평가 결과
+
+`2026-05-14 08:43 UTC` 기준 결과다. 출력 디렉터리: `/home/work/.data/tb2_lite_eval/gemma4_native_sft_20260509`
+
+공통 실행 설정:
+
+- evaluator: `tb2_lite/scripts/replay_eval.py`
+- launcher: `gemma4_native_sft/scripts/run_large_native_eval_8gpu.py`
+- vLLM: `.vllm-0_19_1`, text-only, `max_model_len=49152`, `max_tokens=1024`, `temperature=0.0`
+- runtime: 8개 모델 1GPU씩 병렬, `gpu_memory_utilization=0.90`, `max_num_seqs=8`, `max_num_batched_tokens=16384`, `--enforce-eager`, `--disable-custom-all-reduce`
+
+| 모델 | HF repo | Checkpoint | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Sec/Step | Load(s) |
+| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `google/gemma-4-26B-A4B-it` | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch` | `checkpoint-2040` | 39.56 | 0.3956 | 0.4702 | 0.4808 | 40.6% | 17.2% | 6.820 | 43.8 |
+| `google/gemma-4-26B-A4B-it` | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-1020` | 38.12 | 0.3812 | 0.4405 | 0.4787 | 42.6% | 13.5% | 6.854 | 38.8 |
+| `google/gemma-4-31B-it` | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-510` | 35.55 | 0.3555 | 0.4650 | 0.3776 | 27.4% | 65.3% | 3.924 | 41.4 |
+| `google/gemma-4-31B-it` | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-2Epoch` | `checkpoint-1020` | 32.57 | 0.3257 | 0.4417 | 0.3396 | 30.7% | 61.7% | 4.036 | 43.2 |
+| `google/gemma-4-31B` | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-2Epoch` | `checkpoint-1020` | 28.96 | 0.2896 | 0.3829 | 0.3254 | 24.4% | 26.4% | 5.950 | 43.2 |
+| `google/gemma-4-31B` | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-510` | 21.08 | 0.2108 | 0.2886 | 0.2422 | 11.2% | 21.1% | 5.650 | 44.7 |
+| `google/gemma-4-26B-A4B` | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch` | `checkpoint-1020` | 19.52 | 0.1952 | 0.2626 | 0.2091 | 15.5% | 25.7% | 7.116 | 36.0 |
+| `google/gemma-4-26B-A4B` | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch` | `checkpoint-510` | 18.66 | 0.1866 | 0.2370 | 0.2152 | 14.5% | 25.1% | 7.020 | 45.3 |
+
+해석:
+
+- 26B-A4B-it native 2epoch가 `39.56`으로 현재 Gemma 계열 최고다. 이 표 기준 전체 1위권 Qwen SFT `39.52`와 같은 레벨이며, 1epoch `38.12`보다 `+1.44` 높다.
+- 31B-it native는 1epoch `35.55`, 2epoch `32.57`로 2epoch가 낮다. 31B-it는 JSON valid가 `60%+`로 높지만, command F1은 26B-A4B-it보다 낮다.
+- base 계열은 31B base 2epoch `28.96`을 제외하면 낮다. 26B-A4B base는 `18~19점대`라 instruction prior 없는 base SFT만으로는 주력 후보가 아니다.
+- 이번 31B native 결과는 이전 HF-FSDP 31B SFT `0.00` 문제와 다르다. native 경로에서는 31B-it가 정상 JSON을 생성하고 30점대 점수를 낸다.
 
 해석:
 
@@ -147,7 +180,7 @@ score = 100 * avg_command_f1
 - 다만 Qwen 상위권과는 아직 차이가 있다. `Qwen3.5-2B SFT 2Epoch` `39.52` 대비 `-5.10`, `Qwen3.5-2B base` `35.10` 대비 `-0.68`, `Ouro-2.6B-Thinking SFT` `35.61` 대비 `-1.19`다.
 - E2B-it는 native 전처리로 구 SFT 실패를 크게 회복했다. 하지만 `25점대`라 LFM/Ouro/Qwen 주력 후보와는 아직 거리가 있다.
 - E2B-it는 2epoch가 1epoch보다 낮다. 현재 Gemma 작은 모델은 epoch를 더 먹인다고 자동으로 좋아지지 않고, JSON/recall 균형이 흔들릴 수 있다.
-- base 모델 SFT(`E2B`, `E4B`)는 낮다. tokenizer/template 주입만으로는 instruction-following prior를 충분히 만들지 못했고, 작은 base는 RL 후보에서 제외하는 쪽이 맞다.
+- base 모델 SFT(`E2B`, `E4B`)는 낮다. `E2B base`는 2epoch에서 `11.35 -> 16.22`로 회복했지만, instruction-following prior가 있는 `E2B-it`에는 `-9.48` 낮다. 작은 base는 RL 후보에서 제외하는 쪽이 맞다.
 - 현재 Gemma RL 후보는 `E4B-it native 1epoch` 1개가 조건부로 살아났다. 2epoch가 유지되거나 26B native가 이보다 높게 나오면 Gemma 후보를 1~2개까지 넣는다.
 
 ### full 303 재평가 실행 결과
@@ -288,8 +321,8 @@ HF 업로드 이름:
 | `E2B-it` epoch1/2epoch 평가 | 0,1 | 완료: `2026-05-09 09:20` 전후 | 1epoch `25.70`, 2epoch `24.92`. best는 1epoch. |
 | `E4B-it` epoch1 평가 | 0 | 완료: `2026-05-09 09:29` | 1epoch `34.42`. 현재 Gemma small best. |
 | `E4B` base epoch1 평가 | 1 | 완료: `2026-05-09 09:29` | 1epoch `12.80`. base는 낮음. |
-| `E2B` base 2epoch 완료 | 4,5 해제 | `2026-05-09 09:52` 전후 | 저장/HF 업로드 후 즉시 2epoch 평가. |
-| `E2B` base 2epoch 평가/카드 갱신 | 0 또는 1 | `2026-05-09 10:20~10:45` | E2B base best 선정. |
+| `E2B` base 2epoch 완료 | 4,5 해제 | 완료: `2026-05-09 09:49` | checkpoint-2042 저장. |
+| `E2B` base 2epoch 평가/카드 갱신 | 4 | 완료: `2026-05-09 09:56` | 2epoch `16.22`. 1epoch `11.35`보다 올랐지만 small base는 제외. |
 | `E4B-it` 2epoch 완료 | 2,3 해제 | `2026-05-10 01:56` 전후 | E4B-it 2epoch 평가, best 선정, HF README 점수 갱신. |
 | `E4B` 2epoch 완료 | 6,7 해제 | `2026-05-10 03:39` 전후 | E4B base 2epoch 평가, best 선정, HF README 점수 갱신. |
 | 작은 4개 평가/업로드 정리 | 8GPU 병렬 평가 가능 | `2026-05-10 05:00~06:30` | 남은 checkpoint 평가와 HF card 점수 갱신을 끝낸다. |
@@ -311,6 +344,71 @@ HF 업로드 이름:
 - GPU 4/5는 `2026-05-09 09:52 KST` 전후 E2B base 완료 후 평가/업로드 작업에 돌린다.
 - 26B-A4B-it는 8GPU가 필요하므로, E4B-it/E4B base가 끝나고 작은 모델 평가가 정리되는 `2026-05-10 05:00~06:30 KST` 전후가 가장 이른 시작 시점이다.
 - 따라서 8GPU 전체를 큰 학습에 다시 묶는 시점은 `2026-05-10 06:00 KST` 안팎으로 본다. 그 전까지는 남는 GPU를 checkpoint 평가, HF 업로드 검증, 필요 시 baseline 재평가로 채운다.
+
+### 26B-A4B-it 4GPU batch tuning update
+
+`2026-05-09 16:16 KST` 기준 실제 운영 결과다. E4B-it/E4B base 2epoch가 아직 GPU 2/3, 6/7에서 진행 중이므로, 비어 있던 GPU 0/1/4/5를 사용해 26B-A4B-it native full을 먼저 시작했다.
+
+데이터/길이 조건:
+
+- dataset: `/home/work/.data/gemma4_native_sft/datasets/google__gemma-4-26B-A4B-it__liquid_raw_json_masked_8192`
+- rows: `16,311`
+- input length: mean `4,389`, p50 `4,234`, p75 `5,915`, p90 `7,162`, p95 `7,651`, p99 `8,075`
+- `4096` 초과 샘플: `8,505/16,311 = 52.1%`
+- `6144` 초과 샘플: `3,557/16,311 = 21.8%`
+- 전처리는 `too_long` 샘플을 truncate하지 않고 drop한다. 따라서 4096 재전처리는 속도는 빨라지지만 학습 샘플 절반 이상을 버리므로, 현재 본학습은 8192를 유지한다.
+
+OOM 원인:
+
+- Gemma 4 26B-A4B-it는 MoE이고, config 기준 `num_experts=128`, `top_k_experts=8`, `moe_intermediate_size=704`, `hidden_size=2816`, `num_hidden_layers=30`이다.
+- 공식 vLLM recipe도 26B-A4B-it를 `26B total / 4B active`, `128` experts, top-8 routing MoE로 설명한다: https://recipes.vllm.ai/Google/gemma-4-26B-A4B-it
+- vLLM Gemma 4 guide 기준 26B-A4B-it BF16 추론은 `1x 80GB`로 가능하지만, 이는 optimizer state/gradient/activation까지 드는 SFT memory와 다르다: https://docs.vllm.ai/projects/recipes/en/latest/Google/Gemma4.html
+- Hugging Face Transformers Gemma4 문서는 `logits_to_keep` forward argument를 제공한다. native trainer는 full vocab logits 전체를 남기지 않도록 active label position만 골라 loss를 계산하는 custom loss를 사용한다: https://huggingface.co/docs/transformers/model_doc/gemma4
+- `Gemma4TextExperts`는 expert weights를 `gate_up_proj`, `down_proj` 두 큰 3D Parameter로 들고 있어 expert block 하나의 FSDP unshard가 bf16 기준 약 `1.42GiB`를 요구한다.
+- 실제 OOM 로그도 반복적으로 `Tried to allocate 1.42 GiB` 또는 grouped-mm expert/SDPA activation 할당에서 실패했다. 따라서 active parameter가 4B라도, training memory는 inference active size처럼 작게 보지 않는다.
+- `flash-attn`/`flash_attn_2_cuda`는 현재 env에 설치되어 있지 않다. Gemma4 code path는 `flash_attention_2`를 지원하지만 바로 켤 수 없다.
+
+Tuning 결과:
+
+| 설정 | effective batch | 결과 | 메모 |
+| --- | ---: | --- | --- |
+| `bsz16/14/12/10/8/6 acc1`, activation FSDP | 64~24 | OOM | 4GPU 8192에서 너무 큼 |
+| `bsz8/7/6/5/4/3 acc1`, no-prefetch activation FSDP | 32~12 | OOM | expert unshard 또는 grouped-mm/attention 피크 |
+| `bsz2/acc2`, no-prefetch activation FSDP | 16 | OOM | `158MiB` 부족, 거의 통과했지만 full에는 불안정 |
+| `bsz2/acc1`, no-prefetch activation FSDP | 8 | OOM | expert unshard `1.42GiB` 부족 |
+| `bsz1/acc4`, no-prefetch activation FSDP | 16 | OOM | SDPA attention `3.99GiB` 부족 |
+| `bsz1/acc4`, qwen sizewrap FSDP + `gradient_checkpointing=1` | 16 | PASS | 4-step smoke 평균 `80.24 sec/step` |
+
+채택 설정:
+
+- config: `gemma4_native_sft/configs/sft_gemma4_26b_a4b_it_native_4gpu.env`
+- run name: `gemma4_26b_a4b_it_native_4gpu_bsz1_acc4_gc_qwenfsdp`
+- GPUs: `0,1,4,5`
+- per-device batch: `1`
+- gradient accumulation: `4`
+- effective batch: `16`
+- FSDP: `full_shard auto_wrap`
+- FSDP config: `qwen_sft/configs/fsdp_qwen_full_shard_sizewrap.json`
+- gradient checkpointing: `1`
+- BF16 flag: `0`, but the native loader casts the model weights to `torch.bfloat16`
+- full training start: `2026-05-09 16:16:37 KST`
+- launcher log: `/home/work/.data/gemma4_native_sft/logs/launcher_gemma4_26b_a4b_it_full_bsz1_acc4_gc_qwenfsdp_20260509T071637Z.log`
+- train log: `/home/work/.data/gemma4_native_sft/logs/gemma4_26b_a4b_it_native_4gpu_bsz1_acc4_gc_qwenfsdp_20260509T071638Z.log`
+
+ETA:
+
+- total optimizer steps: `ceil(16311 / 16) * 2 = 2040`
+- smoke step time: `80.24 sec/step`
+- first full-run step: `1/2040`, `85.89 sec/step`, loss `6.388` at `2026-05-09 16:24 KST`
+- estimated train time: `45.5~48.7h`
+- 1epoch checkpoint 예상: `2026-05-10 15:00~17:00 KST`
+- 2epoch 완료 예상: `2026-05-11 13:40~17:00 KST`
+
+운영 결론:
+
+- 4GPU에서 가장 빠른 실제 통과 설정은 `bsz1/acc4`다. 큰 batch를 억지로 올리면 expert unshard/attention 피크 때문에 OOM이 난다.
+- 8GPU가 완전히 비면 `bsz1/acc2` 또는 `bsz2/acc1`을 다시 테스트할 가치가 있다. 8GPU는 expert unshard 크기 자체를 줄이지는 않지만 shard/gradient/optimizer 여유를 늘려 activation 피크를 낮출 가능성이 있다.
+- 현재 full run은 4GPU에서 계속 진행하고, checkpoint가 저장되면 HF 업로드 -> vLLM 평가 -> 이 보고서와 model card 갱신 순서로 처리한다.
 
 ## LFM vs Qwen 분석
 
@@ -361,6 +459,8 @@ Qwen:
 - `Qwen3.5-2B base`가 이미 Score `35.10`이고, `Qwen3.5-9B base`는 `38.10`이다.
 - `Qwen3.5-2B SFT 2Epoch`는 Score `39.52`로 현재 전체 1위다.
 - SFT가 평가를 속였다기보다 base 모델 자체가 터미널 명령, JSON, ChatML 응답 형식에 강하다.
+- 이 벤치에서는 큰 모델이라고 자동으로 이기지 않는다. `gemma-4-E4B-it` native SFT가 `34.42`까지 올랐는데도 `Qwen3.5-2B base` `35.10`보다 `0.68` 낮고, `Qwen3.5-2B SFT 2Epoch` `39.52`보다는 `5.10` 낮다.
+- 학습하지 않은 `Qwen3.5-9B base`가 `38.10`인 점까지 보면, Qwen 3.5 계열은 TB2-lite의 `terminal next-action JSON command` 분포와 base prior가 유난히 잘 맞는 모델군이다.
 - RL을 한다면 최고점 갱신 후보는 Qwen이 가장 안정적이다. 단, 이미 상위권이라 추가 상승 여지는 LFM보다 작을 수 있다.
 
 LFM:
@@ -388,11 +488,63 @@ Ouro:
 
 Gemma 4:
 
-- 기존 Gemma 작은 모델 SFT는 base보다 낮아서 실패 사례로 본다.
+- 기존 Gemma 작은 모델 SFT는 base보다 낮아서 실패 사례로 본다. Native 재학습 후에는 E4B-it가 `34.42`까지 올라 실패 원인은 일부 제거됐지만, Qwen 3.5 계열의 base prior를 넘지는 못했다.
 - 현재 native Gemma 4 rerun은 `Gemma 전용 chat template`, `thinking history 제거`, `assistant JSON target only`, `base 모델 template 주입`을 적용한 새 경로다.
-- Gemma 작은 모델이 LFM보다 못 나오면 RL 후보에서 제외한다.
-- Gemma가 `32점 이상`이면 1개를 RL 후보에 넣고, `33~35점` 근처면 2개까지 후보에 넣는다.
+- `E4B-it native 1epoch`는 최고 LFM `33.46`보다 높아 RL 후보 1개로 볼 수 있다. 반면 E2B-it `25.70/24.92`, E2B/E4B base `11.35/12.80`은 제외한다.
+- Gemma가 `32점 이상`이면 1개를 RL 후보에 넣고, `33~35점` 근처면 2개까지 후보에 넣는다. 현재 small 기준으로는 `E4B-it native 1epoch`만 조건을 만족한다.
 - 26B-A4B native SFT가 기존 SFT e2 `32.77`을 넘기면 Gemma도 본격 후보군으로 다시 본다.
+- 큰 모델 기대치는 남아 있다. baseline에서 `26B-A4B-it`는 `28.51`, `31B-it`는 `26.33`이지만, E4B-it처럼 native SFT가 `+10` 이상 먹히면 35점대 이상 가능성이 있다. 다만 Qwen 2B SFT `39.52`를 넘길지는 별도 검증이 필요하다.
+
+## 무중단 운영 계획
+
+우선순위는 `학습`, `HF 업로드`, `vLLM 평가`, `문서/모델카드 갱신`, `다음 학습 투입` 순서다. GPU가 비면 평가나 smoke를 먼저 넣고, 8GPU가 모두 비는 순간에는 큰 모델 본학습을 시작한다.
+
+현재 자동화:
+
+- Checkpoint publish monitor: 새 `checkpoint-*`가 안정화되면 HF staging 후 업로드한다. state는 `/home/work/.data/gemma4_native_sft/monitor_state.json`에 저장한다.
+- HF card supervisor: 1시간마다 LLM-OS-Models model card를 갱신한다. Native-Liquid repo는 pending 카드로 덮지 않도록 막았다.
+- 3시간 status supervisor: `KST` 기준 진행률, GPU 사용량, ETA, 업로드/평가 상태를 `/home/work/.data/gemma4_native_sft/logs/native_pipeline_status_latest.md`에 쓴다.
+- native 평가 고정 명령: `gemma4_native_sft/scripts/eval_native_checkpoint.sh`, vLLM `0.19.1`, `thinking-mode off`, `strip-thinking-history on`, `gemma4-empty-thought-channel auto`.
+- 자동 평가 watcher: `gemma4_native_sft/scripts/auto_eval_native_checkpoints.py --watch`. `tb2_eval=pending` checkpoint를 찾아 빈 GPU에서 vLLM 평가를 실행하고, 결과 JSON/monitor state/HF card를 갱신한다.
+
+진행 중/즉시 작업:
+
+1. `E2B base` 2epoch 완료/평가 완료. `2026-05-09 09:56 KST` 결과는 Score `16.22`, 전체 `50위`다.
+2. `E2B base` 2epoch 결과는 전체 순위와 native 결과 표에 반영했다. HF repo/model card는 native 결과 기준으로 갱신 대상이다.
+3. `26B-A4B-it` 1GPU smoke는 OOM으로 실패했다. 원인: `world_size=1`에서 FSDP가 `NO_SHARD`로 바뀌어 한 GPU에 `137.88GB`까지 올라가고 추가 `2.84GB`에서 실패.
+4. `31B-it` 1GPU smoke도 OOM으로 실패했다. 원인: 같은 `NO_SHARD` 경로, 한 GPU에 `139.58GB`까지 올라가고 추가 `442MB`에서 실패.
+5. `26B-A4B-it` 2GPU smoke도 optimizer step에서 OOM으로 실패했다. 각 GPU가 약 `139GB`까지 차서 추가 `1GB` 안팎 allocation에 실패했다.
+6. `31B-it` 2GPU smoke도 optimizer step에서 OOM으로 실패했다. 각 GPU가 약 `139.8GB`까지 차고 추가 `222MB` allocation에서 실패했다.
+7. `26B-A4B` base 2GPU smoke도 optimizer step에서 OOM으로 실패했다. rank0은 추가 `1.42GiB`, rank1은 추가 `968MiB` allocation에서 실패했다.
+8. `26B-A4B-it` 4GPU batch tuning 완료. 4GPU/8192에서 큰 micro batch는 모두 OOM이고, 통과한 최속 설정은 `per_device=1`, `grad_acc=4`, effective batch `16`, qwen sizewrap FSDP + gradient checkpointing이다.
+9. `26B-A4B-it` full native SFT 진행 중. GPUs `0,1,4,5`, run `gemma4_26b_a4b_it_native_4gpu_bsz1_acc4_gc_qwenfsdp`, 시작 `2026-05-09 16:16:37 KST`.
+10. `E4B-it`와 `E4B base` 2epoch는 GPUs `2,3`, `6,7`에서 계속 진행 중이다. 저장되면 HF 업로드 -> vLLM 평가 -> 보고서/model card 갱신 순서로 바로 처리한다.
+
+작은 모델 남은 일정:
+
+| 단계 | 예상 시점(KST) | 처리 |
+| --- | --- | --- |
+| `E2B base` 2epoch 저장/평가 | 완료: `2026-05-09 09:56` | Score `16.22`, 전체 `50위`, report 반영 |
+| `E4B-it` 2epoch 저장 | `2026-05-10 02:00~03:00` 현재 추정 | HF 업로드, `gemma4_e4b_it_native_e2` 평가, 1epoch `34.42`와 비교 |
+| `E4B base` 2epoch 저장 | `2026-05-10 02:00~03:00` 현재 추정 | HF 업로드, `gemma4_e4b_base_native_e2` 평가 |
+| 작은 모델 정리 | `2026-05-10 03:00~05:00` | best checkpoint 선정, 전체 순위/모델카드 갱신 |
+| `26B-A4B-it` 1epoch 저장 | `2026-05-10 15:00~15:20` 현재 추정 | HF 업로드, vLLM 평가, E4B-it `34.42`와 비교 |
+| `26B-A4B-it` 2epoch 완료 | `2026-05-11 13:40~14:20` 현재 추정 | HF 업로드, vLLM 평가, report/model card 갱신 |
+
+큰 모델 학습 순서:
+
+1. `26B-A4B-it` 4GPU full native SFT: 현재 진행 중. 1epoch checkpoint가 저장되면 바로 업로드/평가해서 계속 돌릴지, 8GPU 재시도 가치가 있는지 판단한다.
+2. `26B-A4B` base: small base가 낮으므로 `it` 결과를 먼저 본 뒤 4GPU/8GPU smoke부터 다시 판단한다.
+3. `31B-it`: 기존 31B SFT `0.00` 실패와 1/2GPU smoke OOM 이력이 있으므로, 26B 결과와 GPU 해제 상황을 보고 4GPU 또는 8GPU smoke부터 시작한다.
+4. `31B` base: 마지막. base template 주입 경로 검증용이며, small base 결과상 기대치는 낮다.
+
+결과 처리 규칙:
+
+- checkpoint 저장 즉시 HF 업로드를 먼저 한다.
+- vLLM 평가가 끝나면 `MODEL_EVALUATION_REPORT.md` 전체 순위 표, native 결과 섹션, 모델군 해석을 즉시 갱신한다.
+- HF model card는 native 결과 디렉터리 기준으로 해당 repo만 force update한다.
+- 점수는 항상 `Score = 100 * avg_command_f1`로만 말한다. 로그의 legacy `next_action_score`와 섞지 않는다.
+- GPU가 2장만 비면 smoke/eval을 넣고, 8장이 비면 큰 모델 본학습을 넣는다.
 
 ## RL 후보 계획
 
@@ -429,3 +581,33 @@ Reward 설계 방향:
 - `rank_eligible=false` 또는 `Template=raw_fallback`인 결과는 정상 chat template 평가가 아니므로 순위에서 제외한다.
 - 같은 모델의 epoch/checkpoint 비교는 `Score`를 우선 보고, 거의 같으면 `Recall`, `Precision`, `Valid JSON`을 함께 본다.
 - README legacy 386-step 표와 직접 비교하지 않는다.
+
+<!-- GEMMA4_NATIVE_AUTO_RESULTS_START -->
+## Gemma 4 Native 자동 평가 현황
+
+업데이트: `2026-05-14 14:21:18 KST`
+
+점수 기준: `Score = 100 * avg_command_f1`. 이 섹션은 `monitor_state.json`과 TB2-lite 결과 JSON에서 자동 생성된다.
+
+| Native 순위 | HF repo | Epoch | Checkpoint | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Sec/Step |
+| ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 34.98 | 0.3498 | 0.4737 | 0.3576 | 30.4% | 35.0% | 0.277 |
+| 2 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 34.42 | 0.3442 | 0.4823 | 0.3397 | 27.1% | 45.5% | 0.360 |
+| 3 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | 0.325 |
+| 4 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | 0.317 |
+| 5 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | 0.302 |
+| 6 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 2epoch | `checkpoint-2042` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | 0.289 |
+| 7 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | 0.383 |
+| 8 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 1epoch | `checkpoint-1021` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | 0.219 |
+
+평가 대기:
+
+- `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch`
+- `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch`
+- `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-2Epoch`
+- `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-1Epoch`
+- `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-2Epoch`
+<!-- GEMMA4_NATIVE_AUTO_RESULTS_END -->
