@@ -162,6 +162,10 @@ def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
         "tokenizer_mode": args.tokenizer_mode,
         "mamba_cache_dtype": args.mamba_cache_dtype,
         "kv_cache_dtype": args.kv_cache_dtype,
+        "moe_backend": args.moe_backend,
+        "attention_backend": args.attention_backend,
+        "reasoning_parser": args.reasoning_parser,
+        "quantization": args.quantization,
     }
     for key, value in optional_string_kwargs.items():
         if value and engine_accepts_kwarg(key):
@@ -171,6 +175,7 @@ def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
         "max_num_batched_tokens": args.max_num_batched_tokens,
         "max_num_seqs": args.max_num_seqs,
         "data_parallel_size": args.data_parallel_size,
+        "max_cudagraph_capture_size": args.max_cudagraph_capture_size,
     }
     for key, value in optional_int_kwargs.items():
         if value is not None and engine_accepts_kwarg(key):
@@ -191,10 +196,16 @@ def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
         kwargs["language_model_only"] = True
     if engine_accepts_kwarg("skip_mm_profiling") and args.language_model_only:
         kwargs["skip_mm_profiling"] = True
-    if engine_accepts_kwarg("disable_chunked_mm_input") and args.language_model_only:
+    if engine_accepts_kwarg("disable_chunked_mm_input") and args.language_model_only and not args.keep_chunked_mm_input:
         kwargs["disable_chunked_mm_input"] = True
     if engine_accepts_kwarg("enforce_eager") and args.enforce_eager:
         kwargs["enforce_eager"] = True
+    if engine_accepts_kwarg("enable_prefix_caching") and args.enable_prefix_caching:
+        kwargs["enable_prefix_caching"] = True
+    if engine_accepts_kwarg("enable_chunked_prefill") and args.disable_chunked_prefill:
+        kwargs["enable_chunked_prefill"] = False
+    if engine_accepts_kwarg("async_scheduling") and args.disable_async_scheduling:
+        kwargs["async_scheduling"] = False
     return LLM(**kwargs), kwargs
 
 
@@ -224,15 +235,24 @@ def main() -> None:
     parser.add_argument("--tokenizer-mode", default="")
     parser.add_argument("--mamba-cache-dtype", default="")
     parser.add_argument("--kv-cache-dtype", default="")
+    parser.add_argument("--moe-backend", default="")
+    parser.add_argument("--attention-backend", default="")
+    parser.add_argument("--reasoning-parser", default="")
+    parser.add_argument("--quantization", default="")
     parser.add_argument("--block-size", type=int, default=None)
     parser.add_argument("--max-num-batched-tokens", type=int, default=None)
     parser.add_argument("--max-num-seqs", type=int, default=None)
     parser.add_argument("--data-parallel-size", type=int, default=None)
+    parser.add_argument("--max-cudagraph-capture-size", type=int, default=None)
     parser.add_argument("--hf-config-path", default="")
     parser.add_argument("--hf-overrides-json", default="")
     parser.add_argument("--speculative-config-json", default="")
     parser.add_argument("--language-model-only", action="store_true")
     parser.add_argument("--enable-expert-parallel", action="store_true")
+    parser.add_argument("--enable-prefix-caching", action="store_true")
+    parser.add_argument("--disable-chunked-prefill", action="store_true")
+    parser.add_argument("--disable-async-scheduling", action="store_true")
+    parser.add_argument("--keep-chunked-mm-input", action="store_true")
     parser.add_argument("--disable-custom-all-reduce", action="store_true")
     parser.add_argument("--enforce-eager", action="store_true")
     parser.add_argument("--limit", type=int, default=None)
@@ -344,14 +364,23 @@ def main() -> None:
             "tokenizer_mode": args.tokenizer_mode,
             "mamba_cache_dtype": args.mamba_cache_dtype,
             "kv_cache_dtype": args.kv_cache_dtype,
+            "moe_backend": args.moe_backend,
+            "attention_backend": args.attention_backend,
+            "reasoning_parser": args.reasoning_parser,
+            "quantization": args.quantization,
             "block_size": args.block_size,
             "max_num_batched_tokens": args.max_num_batched_tokens,
             "max_num_seqs": args.max_num_seqs,
             "data_parallel_size": args.data_parallel_size,
+            "max_cudagraph_capture_size": args.max_cudagraph_capture_size,
             "hf_config_path": args.hf_config_path,
             "hf_overrides_json": args.hf_overrides_json,
             "speculative_config_json": args.speculative_config_json,
             "enable_expert_parallel": args.enable_expert_parallel,
+            "enable_prefix_caching": args.enable_prefix_caching,
+            "disable_chunked_prefill": args.disable_chunked_prefill,
+            "disable_async_scheduling": args.disable_async_scheduling,
+            "keep_chunked_mm_input": args.keep_chunked_mm_input,
             "llm_kwargs": llm_kwargs,
         },
         "prompt_template": prompt_meta,
