@@ -87,12 +87,19 @@ def parse_prompt_options(args: argparse.Namespace, tokenizer: Any) -> dict[str, 
     }
 
 
-def load_rows(path: Path, limit: int | None = None) -> list[dict]:
+def load_rows(
+    path: Path,
+    limit: int | None = None,
+    shard_index: int = 0,
+    shard_count: int = 1,
+) -> list[dict]:
     rows: list[dict] = []
     with path.open() as f:
-        for line in f:
+        for row_idx, line in enumerate(f):
             line = line.strip()
             if not line:
+                continue
+            if shard_count > 1 and row_idx % shard_count != shard_index:
                 continue
             rows.append(json.loads(line))
             if limit is not None and len(rows) >= limit:
@@ -225,6 +232,9 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--top-p", type=float, default=1.0)
     parser.add_argument("--max-tokens", type=int, default=1024)
+    parser.add_argument("--stop-string", action="append", default=[])
+    parser.add_argument("--include-stop-str-in-output", action="store_true")
+    parser.add_argument("--no-skip-special-tokens", action="store_true")
     parser.add_argument("--repetition-penalty", type=float, default=1.0)
     parser.add_argument("--min-p", type=float, default=0.0)
     parser.add_argument("--thinking-mode", default="auto")
@@ -256,6 +266,8 @@ def main() -> None:
     parser.add_argument("--disable-custom-all-reduce", action="store_true")
     parser.add_argument("--enforce-eager", action="store_true")
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
     parser.add_argument("--allow-raw-fallback", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
     args = parser.parse_args()
@@ -268,7 +280,11 @@ def main() -> None:
     if args.skip_if_exists and out_path.exists():
         print(json.dumps({"output_path": str(out_path), "skipped": True}, ensure_ascii=False))
         return
-    rows = load_rows(eval_path, args.limit)
+    if args.shard_count < 1:
+        raise ValueError("--shard-count must be >= 1")
+    if not 0 <= args.shard_index < args.shard_count:
+        raise ValueError("--shard-index must be in [0, shard_count)")
+    rows = load_rows(eval_path, args.limit, args.shard_index, args.shard_count)
 
     tokenizer_path = args.tokenizer_path or args.model
     tokenizer = load_tokenizer(tokenizer_path)
@@ -294,7 +310,11 @@ def main() -> None:
         "top_p": args.top_p,
         "max_tokens": args.max_tokens,
         "repetition_penalty": args.repetition_penalty,
+        "skip_special_tokens": not args.no_skip_special_tokens,
     }
+    if args.stop_string:
+        sampling_kwargs["stop"] = args.stop_string
+        sampling_kwargs["include_stop_str_in_output"] = args.include_stop_str_in_output
     if args.min_p > 0:
         sampling_kwargs["min_p"] = args.min_p
     sampling = SamplingParams(**sampling_kwargs)
@@ -305,7 +325,8 @@ def main() -> None:
 
     per_step: list[dict] = []
     for row, output in zip(rows, outputs):
-        pred_text = output.outputs[0].text if output.outputs else ""
+        completion = output.outputs[0] if output.outputs else None
+        pred_text = completion.text if completion else ""
         pred = parse_prediction(pred_text)
         ref = parse_prediction(row["ref_raw"])
         first_exact, precision, recall, f1 = score_commands(
@@ -332,6 +353,9 @@ def main() -> None:
                 "command_recall": round(recall, 4),
                 "command_f1": round(f1, 4),
                 "pred_preview": pred_text[:1200],
+                "finish_reason": getattr(completion, "finish_reason", None) if completion else None,
+                "stop_reason": getattr(completion, "stop_reason", None) if completion else None,
+                "token_ids_preview": list(getattr(completion, "token_ids", [])[:64]) if completion else [],
             }
         )
 
@@ -373,6 +397,11 @@ def main() -> None:
             "max_num_seqs": args.max_num_seqs,
             "data_parallel_size": args.data_parallel_size,
             "max_cudagraph_capture_size": args.max_cudagraph_capture_size,
+            "skip_special_tokens": not args.no_skip_special_tokens,
+            "shard_index": args.shard_index,
+            "shard_count": args.shard_count,
+            "stop_string": args.stop_string,
+            "include_stop_str_in_output": args.include_stop_str_in_output,
             "hf_config_path": args.hf_config_path,
             "hf_overrides_json": args.hf_overrides_json,
             "speculative_config_json": args.speculative_config_json,

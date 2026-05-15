@@ -1,0 +1,22 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Loading deepseek-ai/DeepSeek-V4-Flash
+[DeepSeek] Generating 152 replay steps (shard 1/2) with batch_size=8
+[DeepSeek][Shard 1/2] 8/152 (5.3%) | elapsed 1665.5s | eta 29978.4s
+[DeepSeek][Shard 1/2] 16/152 (10.5%) | elapsed 2702.8s | eta 22973.7s
+[DeepSeek][Shard 1/2] 24/152 (15.8%) | elapsed 3222.0s | eta 17184.0s
+[DeepSeek][Shard 1/2] 32/152 (21.1%) | elapsed 4686.2s | eta 17573.3s
+[DeepSeek][Shard 1/2] 40/152 (26.3%) | elapsed 6214.2s | eta 17399.6s
+[DeepSeek][Shard 1/2] 48/152 (31.6%) | elapsed 7957.4s | eta 17241.0s
+[DeepSeek][Shard 1/2] 56/152 (36.8%) | elapsed 10612.4s | eta 18192.7s
+[DeepSeek][Shard 1/2] 64/152 (42.1%) | elapsed 12442.6s | eta 17108.6s
+[DeepSeek][Shard 1/2] 72/152 (47.4%) | elapsed 14473.8s | eta 16082.0s
+[DeepSeek][Shard 1/2] 80/152 (52.6%) | elapsed 16192.0s | eta 14572.8s
+[DeepSeek][Shard 1/2] 88/152 (57.9%) | elapsed 17809.6s | eta 12952.4s
+[DeepSeek][Shard 1/2] 96/152 (63.2%) | elapsed 19762.9s | eta 11528.4s

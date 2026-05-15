@@ -1,0 +1,207 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Loading deepseek-ai/DeepSeek-V4-Flash
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Generating 152 replay steps (shard 1/2) with batch_size=24
+[DeepSeek][Shard 1/2] 24/152 (15.8%) | elapsed 3115.6s | eta 16616.5s
+[DeepSeek][Shard 1/2] 48/152 (31.6%) | elapsed 8656.3s | eta 18755.3s
+[DeepSeek][Shard 1/2] 72/152 (47.4%) | elapsed 17816.9s | eta 19796.6s
+[DeepSeek][Shard 1/2] 96/152 (63.2%) | elapsed 24523.0s | eta 14305.1s
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank0]:     completion_tokens = generate(
+[rank0]:                         ^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank0]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank0]:     h = layer(h, start_pos, input_ids)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 725, in forward
+[rank0]:     x = self.hc_post(x, residual, post, comb)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank0]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank0]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 15.86 GiB. GPU 0 has a total capacity of 139.81 GiB of which 1.05 GiB is free. Including non-PyTorch memory, this process has 138.75 GiB memory in use. Of the allocated memory 137.13 GiB is allocated by PyTorch, and 100.85 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank1]:     main()
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank1]:     completion_tokens = generate(
+[rank1]:                         ^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank1]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank1]:     h = layer(h, start_pos, input_ids)
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 725, in forward
+[rank1]:     x = self.hc_post(x, residual, post, comb)
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank1]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank1]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 15.86 GiB. GPU 1 has a total capacity of 139.81 GiB of which 1.05 GiB is free. Including non-PyTorch memory, this process has 138.75 GiB memory in use. Of the allocated memory 137.13 GiB is allocated by PyTorch, and 100.85 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank3]:     main()
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank3]:     completion_tokens = generate(
+[rank3]:                         ^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank3]:     return func(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank3]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank3]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank3]:     return func(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank3]:     h = layer(h, start_pos, input_ids)
+[rank3]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 725, in forward
+[rank3]:     x = self.hc_post(x, residual, post, comb)
+[rank3]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank3]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank3]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank3]:     return func(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank3]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 15.86 GiB. GPU 3 has a total capacity of 139.81 GiB of which 1.05 GiB is free. Including non-PyTorch memory, this process has 138.75 GiB memory in use. Of the allocated memory 137.13 GiB is allocated by PyTorch, and 100.85 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank2]:     main()
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank2]:     completion_tokens = generate(
+[rank2]:                         ^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank2]:     return func(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank2]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank2]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank2]:     return func(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank2]:     h = layer(h, start_pos, input_ids)
+[rank2]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 725, in forward
+[rank2]:     x = self.hc_post(x, residual, post, comb)
+[rank2]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank2]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank2]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank2]:     return func(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 15.86 GiB. GPU 2 has a total capacity of 139.81 GiB of which 1.05 GiB is free. Including non-PyTorch memory, this process has 138.75 GiB memory in use. Of the allocated memory 137.13 GiB is allocated by PyTorch, and 100.85 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank0]:[W515 20:42:44.070925735 ProcessGroupNCCL.cpp:1648] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W0515 20:42:46.704000 3355294 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3355487 closing signal SIGTERM
+W0515 20:42:46.705000 3355294 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3355488 closing signal SIGTERM
+W0515 20:42:46.705000 3355294 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3355489 closing signal SIGTERM
+E0515 20:42:47.934000 3355294 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 3 (pid: 3355490) of binary: /home/work/.projects/LLM-OS-Models/Terminal/.deepseek-env/bin/python
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.deepseek-env/bin/torchrun", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 367, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1016, in main
+    run(args)
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 184, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 332, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+tb2_lite/scripts/deepseek_replay_eval.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-05-15_20:42:47
+  host      : main1
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3355487) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2026-05-15_20:42:47
+  host      : main1
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 3355488) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[3]:
+  time      : 2026-05-15_20:42:47
+  host      : main1
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 3355489) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-05-15_20:42:46
+  host      : main1
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 3355490) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

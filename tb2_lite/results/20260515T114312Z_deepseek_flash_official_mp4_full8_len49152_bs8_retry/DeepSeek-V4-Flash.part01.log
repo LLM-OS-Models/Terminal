@@ -1,0 +1,21 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Loading deepseek-ai/DeepSeek-V4-Flash
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Generating 151 replay steps (shard 2/2) with batch_size=8
+[DeepSeek][Shard 2/2] 8/151 (5.3%) | elapsed 1560.6s | eta 27896.1s
+[DeepSeek][Shard 2/2] 16/151 (10.6%) | elapsed 2744.1s | eta 23153.1s
+[DeepSeek][Shard 2/2] 24/151 (15.9%) | elapsed 3869.1s | eta 20473.9s
+[DeepSeek][Shard 2/2] 32/151 (21.2%) | elapsed 5254.7s | eta 19541.1s
+[DeepSeek][Shard 2/2] 40/151 (26.5%) | elapsed 6501.6s | eta 18042.1s
+[DeepSeek][Shard 2/2] 48/151 (31.8%) | elapsed 8611.4s | eta 18478.7s
+[DeepSeek][Shard 2/2] 56/151 (37.1%) | elapsed 10549.8s | eta 17896.9s
+[DeepSeek][Shard 2/2] 64/151 (42.4%) | elapsed 12425.3s | eta 16890.7s
+[DeepSeek][Shard 2/2] 72/151 (47.7%) | elapsed 14892.1s | eta 16340.0s
+[DeepSeek][Shard 2/2] 80/151 (53.0%) | elapsed 16790.8s | eta 14901.8s
+[DeepSeek][Shard 2/2] 88/151 (58.3%) | elapsed 18585.2s | eta 13305.3s

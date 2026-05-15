@@ -32,12 +32,21 @@ class RunConfig:
     name: str
     model_short: str
     log_name: str
+    tp: int = 8
+    data_parallel_size: int | None = None
     max_model_len: int = 32768
     max_tokens: int = 1024
     gpu_memory_utilization: float = 0.94
     max_num_batched_tokens: int = 16384
     max_num_seqs: int = 8
+    max_cudagraph_capture_size: int | None = None
     enforce_eager: bool = False
+    disable_async_scheduling: bool = False
+    disable_chunked_prefill: bool = False
+    moe_backend: str = ""
+    reasoning_parser: str = ""
+    stop_strings: tuple[str, ...] = ()
+    include_stop_str_in_output: bool = False
 
     @property
     def log_path(self) -> Path:
@@ -50,35 +59,116 @@ class RunConfig:
 
 RUN_CONFIGS = [
     RunConfig(
-        name="nomtp_ctx32768_seq8",
-        model_short="deepseek_v4_flash_fp8_nomtp",
-        log_name="deepseek_v4_flash_fp8_vllm_strict_cu129_tp8_nomtp.log",
+        name="official_dp8_ep_deepgemm_ctx32768_seq64_stopbrace",
+        model_short="deepseek_v4_flash_fp8_dp8_ep_deepgemm_seq64_stopbrace",
+        log_name="deepseek_v4_flash_fp8_dp8_ep_deepgemm_seq64_stopbrace.log",
+        tp=1,
+        data_parallel_size=8,
+        gpu_memory_utilization=0.92,
+        max_num_batched_tokens=16384,
+        max_num_seqs=64,
+        max_cudagraph_capture_size=64,
+        enforce_eager=True,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
+        reasoning_parser="deepseek_v4",
+        stop_strings=("\n}",),
+        include_stop_str_in_output=True,
     ),
     RunConfig(
-        name="nomtp_ctx32768_seq4",
-        model_short="deepseek_v4_flash_fp8_nomtp_seq4",
-        log_name="deepseek_v4_flash_fp8_vllm_strict_cu129_tp8_nomtp_seq4.log",
+        name="official_dp4_ep_deepgemm_ctx32768_seq64_stopbrace",
+        model_short="deepseek_v4_flash_fp8_dp4_ep_deepgemm_seq64_stopbrace",
+        log_name="deepseek_v4_flash_fp8_dp4_ep_deepgemm_seq64_stopbrace.log",
+        tp=1,
+        data_parallel_size=4,
         gpu_memory_utilization=0.92,
+        max_num_batched_tokens=16384,
+        max_num_seqs=64,
+        max_cudagraph_capture_size=64,
+        enforce_eager=True,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
+        reasoning_parser="deepseek_v4",
+        stop_strings=("\n}",),
+        include_stop_str_in_output=True,
+    ),
+    RunConfig(
+        name="deepgemm_ctx32768_seq8_asyncoff_stopbrace",
+        model_short="deepseek_v4_flash_fp8_deepgemm_seq8_stopbrace",
+        log_name="deepseek_v4_flash_fp8_deepgemm_seq8_stopbrace.log",
+        gpu_memory_utilization=0.90,
+        max_num_batched_tokens=16384,
+        max_num_seqs=8,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
+        stop_strings=("\n}",),
+        include_stop_str_in_output=True,
+    ),
+    RunConfig(
+        name="deepgemm_ctx32768_seq4_asyncoff_stopbrace",
+        model_short="deepseek_v4_flash_fp8_deepgemm_seq4_stopbrace",
+        log_name="deepseek_v4_flash_fp8_deepgemm_seq4_stopbrace.log",
+        gpu_memory_utilization=0.90,
         max_num_batched_tokens=8192,
         max_num_seqs=4,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
+        stop_strings=("\n}",),
+        include_stop_str_in_output=True,
     ),
     RunConfig(
-        name="nomtp_ctx32768_seq2_eager",
-        model_short="deepseek_v4_flash_fp8_nomtp_seq2_eager",
-        log_name="deepseek_v4_flash_fp8_vllm_strict_cu129_tp8_nomtp_seq2_eager.log",
+        name="deepgemm_ctx32768_seq4_asyncoff",
+        model_short="deepseek_v4_flash_fp8_deepgemm_seq4",
+        log_name="deepseek_v4_flash_fp8_deepgemm_seq4.log",
+        gpu_memory_utilization=0.90,
+        max_num_batched_tokens=8192,
+        max_num_seqs=4,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
+    ),
+    RunConfig(
+        name="deepgemm_ctx32768_seq2_eager_asyncoff",
+        model_short="deepseek_v4_flash_fp8_deepgemm_seq2_eager",
+        log_name="deepseek_v4_flash_fp8_deepgemm_seq2_eager.log",
         gpu_memory_utilization=0.90,
         max_num_batched_tokens=4096,
         max_num_seqs=2,
         enforce_eager=True,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
     ),
     RunConfig(
-        name="nomtp_ctx32768_seq1_eager",
-        model_short="deepseek_v4_flash_fp8_nomtp_seq1_eager",
-        log_name="deepseek_v4_flash_fp8_vllm_strict_cu129_tp8_nomtp_seq1_eager.log",
+        name="deepgemm_ctx32768_seq1_eager_asyncoff",
+        model_short="deepseek_v4_flash_fp8_deepgemm_seq1_eager",
+        log_name="deepseek_v4_flash_fp8_deepgemm_seq1_eager.log",
         gpu_memory_utilization=0.88,
         max_num_batched_tokens=4096,
         max_num_seqs=1,
         enforce_eager=True,
+        disable_async_scheduling=True,
+        moe_backend="deep_gemm",
+    ),
+    RunConfig(
+        name="triton_ctx32768_seq1_eager_asyncoff",
+        model_short="deepseek_v4_flash_fp8_triton_seq1_eager",
+        log_name="deepseek_v4_flash_fp8_triton_seq1_eager.log",
+        gpu_memory_utilization=0.86,
+        max_num_batched_tokens=4096,
+        max_num_seqs=1,
+        enforce_eager=True,
+        disable_async_scheduling=True,
+        moe_backend="triton",
+    ),
+    RunConfig(
+        name="flashinfer_ctx32768_seq1_eager_asyncoff_last",
+        model_short="deepseek_v4_flash_fp8_flashinfer_seq1_eager",
+        log_name="deepseek_v4_flash_fp8_flashinfer_seq1_eager.log",
+        gpu_memory_utilization=0.84,
+        max_num_batched_tokens=4096,
+        max_num_seqs=1,
+        enforce_eager=True,
+        disable_async_scheduling=True,
+        moe_backend="flashinfer_cutlass",
     ),
 ]
 
@@ -148,6 +238,43 @@ def kill_process_group(pid: int) -> None:
                 pass
 
 
+def cleanup_stale_vllm_processes() -> None:
+    current_pid = os.getpid()
+    output = run_text(["ps", "-eo", "pid,ppid,pgid,stat,cmd"], timeout=20)
+    targets: set[tuple[int, int]] = set()
+    for line in output.splitlines()[1:]:
+        parts = line.strip().split(maxsplit=4)
+        if len(parts) < 5:
+            continue
+        pid_s, _ppid_s, pgid_s, _stat, cmd = parts
+        if not pid_s.isdigit() or not pgid_s.isdigit():
+            continue
+        pid = int(pid_s)
+        pgid = int(pgid_s)
+        if pid == current_pid or pgid == os.getpgrp():
+            continue
+        if "sgl-project/DeepSeek-V4-Flash-FP8" in cmd or "VLLM::" in cmd:
+            targets.add((pid, pgid))
+    for pid, pgid in targets:
+        try:
+            os.killpg(pgid, signal.SIGTERM)
+        except Exception:
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except Exception:
+                pass
+    if targets:
+        time.sleep(5)
+    for pid, pgid in targets:
+        try:
+            os.killpg(pgid, signal.SIGKILL)
+        except Exception:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except Exception:
+                pass
+
+
 def strict_ld_library_path() -> str:
     libs = sorted(str(path) for path in STRICT_SITE.glob("nvidia/**/lib") if path.is_dir())
     base = ":".join(libs + ["/usr/local/cuda-12.9/lib64"])
@@ -156,6 +283,7 @@ def strict_ld_library_path() -> str:
 
 
 def start_run(config: RunConfig) -> int:
+    cleanup_stale_vllm_processes()
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     env = os.environ.copy()
@@ -180,7 +308,7 @@ def start_run(config: RunConfig) -> int:
         "--gpu",
         "0,1,2,3,4,5,6,7",
         "--tp",
-        "8",
+        str(config.tp),
         "--eval-path",
         str(EVAL_DATA),
         "--output-dir",
@@ -216,9 +344,24 @@ def start_run(config: RunConfig) -> int:
         '{"expert_dtype":"fp8"}',
         "--allow-raw-fallback",
     ]
+    if config.data_parallel_size is not None:
+        cmd.extend(["--data-parallel-size", str(config.data_parallel_size)])
+    if config.moe_backend:
+        cmd.extend(["--moe-backend", config.moe_backend])
+    if config.reasoning_parser:
+        cmd.extend(["--reasoning-parser", config.reasoning_parser])
+    for stop_string in config.stop_strings:
+        cmd.extend(["--stop-string", stop_string])
+    if config.include_stop_str_in_output:
+        cmd.append("--include-stop-str-in-output")
     if config.enforce_eager:
         cmd.append("--enforce-eager")
+    if config.disable_async_scheduling:
+        cmd.append("--disable-async-scheduling")
+    if config.disable_chunked_prefill:
+        cmd.append("--disable-chunked-prefill")
     with config.log_path.open("ab") as log:
+        log.write(f"\n\n[watchdog] START {utc_now()} config={config.name} pid=pending\n".encode())
         proc = subprocess.Popen(
             cmd,
             cwd=REPO_ROOT,
@@ -267,6 +410,12 @@ def read_tail(path: Path, max_bytes: int = 2_000_000) -> str:
         return handle.read().decode("utf-8", errors="replace")
 
 
+def read_active_log(path: Path, max_bytes: int = 2_000_000) -> str:
+    log_text = read_tail(path, max_bytes=max_bytes)
+    marker_pos = log_text.rfind("[watchdog] START ")
+    return log_text[marker_pos:] if marker_pos >= 0 else log_text
+
+
 def detect_fatal(log_text: str) -> str:
     for pattern in FATAL_PATTERNS:
         if pattern in log_text:
@@ -307,7 +456,7 @@ def result_status() -> dict[str, Any] | None:
 
 def write_status(state: dict[str, Any], config: RunConfig, gpu: dict[str, Any], note: str) -> None:
     result = result_status()
-    log_text = read_tail(config.log_path, max_bytes=300_000)
+    log_text = read_active_log(config.log_path, max_bytes=300_000)
     progress = parse_progress(log_text)
     fatal = detect_fatal(log_text)
     lines = [
@@ -381,7 +530,7 @@ def main() -> None:
             write_status(state, config, gpu, "completed")
             return
 
-        log_text = read_tail(config.log_path)
+        log_text = read_active_log(config.log_path)
         fatal = detect_fatal(log_text)
         pid = int(state.get("pid") or 0)
         alive = pid_alive(pid)

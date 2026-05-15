@@ -1,0 +1,43 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Loading deepseek-ai/DeepSeek-V4-Flash
+[DeepSeek] Generating 151 replay steps (shard 2/2) with batch_size=8
+W0515 13:53:02.816000 3343281 torch/distributed/elastic/agent/server/api.py:753] Received 15 death signal, shutting down workers
+W0515 13:53:02.817000 3343281 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3343444 closing signal SIGTERM
+W0515 13:53:02.818000 3343281 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3343445 closing signal SIGTERM
+W0515 13:53:02.818000 3343281 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3343446 closing signal SIGTERM
+W0515 13:53:02.818000 3343281 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3343447 closing signal SIGTERM
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.deepseek-env/bin/torchrun", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 367, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1016, in main
+    run(args)
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 184, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 323, in launch_agent
+    result = agent.run()
+             ^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/metrics/api.py", line 134, in wrapper
+    result = f(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 745, in run
+    result = self._invoke_run(role)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 933, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 86, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 3343281 got signal: 15

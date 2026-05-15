@@ -1,0 +1,94 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Loading unsloth/DeepSeek-V4-Flash
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 75, in main
+[rank0]:     with open(args.config_path) as handle:
+[rank0]:          ^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: FileNotFoundError: [Errno 2] No such file or directory: '/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Flash/snapshots/bc486f653513c9179e20a970587dcbe928bf7b96/inference/config.json'
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank1]:     main()
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 75, in main
+[rank1]:     with open(args.config_path) as handle:
+[rank1]:          ^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: FileNotFoundError: [Errno 2] No such file or directory: '/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Flash/snapshots/bc486f653513c9179e20a970587dcbe928bf7b96/inference/config.json'
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
+  torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank3]:     main()
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 75, in main
+[rank3]:     with open(args.config_path) as handle:
+[rank3]:          ^^^^^^^^^^^^^^^^^^^^^^
+[rank3]: FileNotFoundError: [Errno 2] No such file or directory: '/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Flash/snapshots/bc486f653513c9179e20a970587dcbe928bf7b96/inference/config.json'
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank2]:     main()
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 75, in main
+[rank2]:     with open(args.config_path) as handle:
+[rank2]:          ^^^^^^^^^^^^^^^^^^^^^^
+[rank2]: FileNotFoundError: [Errno 2] No such file or directory: '/home/work/.data/huggingface/models--unsloth--DeepSeek-V4-Flash/snapshots/bc486f653513c9179e20a970587dcbe928bf7b96/inference/config.json'
+[rank0]:[W515 13:43:28.911981780 ProcessGroupNCCL.cpp:1648] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W0515 13:43:28.848000 3339935 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3340148 closing signal SIGTERM
+W0515 13:43:28.849000 3339935 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3340150 closing signal SIGTERM
+W0515 13:43:28.849000 3339935 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 3340151 closing signal SIGTERM
+E0515 13:43:29.226000 3339935 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 0 (pid: 3340146) of binary: /home/work/.projects/LLM-OS-Models/Terminal/.deepseek-env/bin/python
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.deepseek-env/bin/torchrun", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 367, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1016, in main
+    run(args)
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 184, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 332, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+tb2_lite/scripts/deepseek_replay_eval.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-05-15_13:43:29
+  host      : main1
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 3340148) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2026-05-15_13:43:29
+  host      : main1
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 3340150) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[3]:
+  time      : 2026-05-15_13:43:29
+  host      : main1
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 3340151) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-05-15_13:43:28
+  host      : main1
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3340146) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

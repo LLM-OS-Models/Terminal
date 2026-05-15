@@ -1,0 +1,16 @@
+{
+  "model": "deepseek-ai/DeepSeek-V4-Flash",
+  "model_short": "DeepSeek-V4-Flash",
+  "shard_index": 1,
+  "shard_count": 2,
+  "completed_steps": 96,
+  "total_steps": 151,
+  "progress_pct": 63.6,
+  "elapsed_gen_sec": 24235.4,
+  "eta_sec": 13884.9,
+  "steps_per_sec": 0.004,
+  "batch_size": 24,
+  "max_model_len": 49152,
+  "updated_at": "2026-05-15T20:37:52.625908",
+  "phase": "generating"
+}
