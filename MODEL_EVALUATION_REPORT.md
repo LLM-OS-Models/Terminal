@@ -882,3 +882,59 @@ Reward 설계 방향:
 - `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-1Epoch`
 - `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-2Epoch`
 <!-- GEMMA4_NATIVE_AUTO_RESULTS_END -->
+
+## DeepSeek-V4-Pro 추론 엔진 호환성 분석
+
+업데이트: `2026-05-17`
+
+DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-lite 303-step으로 평가하기 위해 vLLM, SGLang, 공식 inference 세 가지 경로를 시도했다. 결과적으로 **공식 inference만 작동**하며, vLLM과 SGLang은 모두 CUDA/driver 버전 호환성 문제로 실행 불가하다.
+
+### 환경
+
+| 항목 | 사양 |
+| --- | --- |
+| GPU | 8x NVIDIA H200 (143.8 GB each, 1.15 TB total) |
+| Driver | 570.86.10 (CUDA 12.9) |
+| 체크포인트 | `/home/work/deepseek_models/DeepSeek-V4-Pro-mp8/` (858 GB, MP8) |
+| HF 원본 | `/home/work/.data/huggingface/hub/deepseek-ai_DeepSeek-V4-Pro/` (809 GB, 64 safetensors) |
+
+### vLLM: 불가 (CUDA 13 driver 필요)
+
+| 항목 | 내용 |
+| --- | --- |
+| 시도 버전 | vLLM 0.20.2 |
+| 요구 사양 | torch 2.11.0+cu130 (CUDA 13) |
+| 실패 원인 | 시스템 NVIDIA driver 570.86.10이 CUDA 12.9까지만 지원. torch 2.11.0+cu130 실행 시 `"The NVIDIA driver on your system is too old (found version 12090)"` 에러 |
+| 대안 시도 | torch 2.10.0+cu129 + vLLM 0.20.2 → C++ ABI 불일치 (`_ZN2at4cuda24getCurrentCUDABlasHandleEv` undefined symbol). vLLM 0.19.1 → `deepseek_v4` tokenizer mode 미지원 |
+| 결론 | **Driver 업그레이드 없이는 불가**. 공유 시스템이라 driver 변경 불가 |
+
+### SGLang: 불가 (flash_mla 빌드 실패 + CUDA 그래프 SIGSEGV)
+
+| 항목 | 내용 |
+| --- | --- |
+| 시도 버전 | SGLang 0.5.12 + torch 2.9.0+cu129 |
+| 성공 단계 | 모델 감지 (`DeepseekV4ForCausalLM`), 64 safetensors 샤드 로딩, FP8 디퀀트, 웨이트 GPU 적재 (119.68 GB/GPU) |
+| 실패 1 | `--disable-cuda-graph` 없이 실행 시 CUDA 그래프 캡처 단계에서 SIGSEGV (exit code -11). `libucs.so.0` (UCX/NCCL)에서 세그폴트 |
+| 실패 2 | `--disable-cuda-graph` 적용 후 서버는 시작됨 (`Uvicorn running on http://127.0.0.1:8000`)하지만, 첫 추론 요청 시 `ModuleNotFoundError: No module named 'flash_mla'` |
+| flash_mla 빌드 | `pip install flash-mla` 시 CUDA 커널 빌드 실패 (`flash_mla.h: No such file or directory`). torch 2.9.0에서 빌드 불가 |
+| 메모리 이슈 | context_length=16384 + mem-fraction=0.88 → `RuntimeError: Not enough memory`. 웨이트 119.68 GB/GPU + KV 캐시 공간 부족. context_length=8192 + mem-fraction=0.90으로 해결했으나 flash_mla 문제로 실제 추론 불가 |
+| 결론 | **flash_mla 없이 DS-V4 attention 백엔드(dsv4) 작동 불가**. flash_mla는 H200 전용 CUDA 커널로 현재 환경에서 빌드 안 됨 |
+
+### 공식 inference: 작동 확인 (느림)
+
+| 항목 | 내용 |
+| --- | --- |
+| 환경 | `.deepseek-env` (torch 2.12.0.dev+cu128) |
+| 상태 | 모델 로딩 성공 (112 GB/GPU), smoke test 통과 |
+| 속도 | Flash 기준 ~178s/step. Pro는 5.5x 크기 → 예상 ~500-980s/step, 전체 303-step에 **42-83시간** 예상 |
+| 스크립트 | `tb2_lite/scripts/deepseek_replay_eval.py` + `tb2_lite/deepseek_v4/` (커스텀 FP4/F8 커널) |
+
+### 요약
+
+| 엔진 | 상태 | 원인 |
+| --- | --- | --- |
+| vLLM 0.20.2 | **불가** | CUDA 13 driver 필요 (현재 CUDA 12.9) |
+| SGLang 0.5.12 | **불가** | flash_mla 빌드 실패 + CUDA 그래프 SIGSEGV |
+| 공식 inference | **가능** | 느리지만 작동 (~42-83시간 예상) |
+
+**핵심 병목**: DeepSeek-V4 시리즈는 FP4+FP8 혼합 양자화와 커스텀 MLA attention을 사용하여, 범용 추론 엔진(vLLM, SGLang)의 지원이 아직 미흡하다. 특히 flash_mla(H200 전용 CUDA 커널)와 CUDA 13 요구사항이 현재 시스템 환경과 맞지 않아 공식 inference 코드만 유일한 실행 경로다.

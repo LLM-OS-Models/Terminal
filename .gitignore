@@ -33,5 +33,9 @@ unsloth-src/
 .DS_Store
 
 # Other
+.cuda*
+
 # Liquid-CLI
 =4.56.0
+
+
