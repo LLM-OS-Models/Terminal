@@ -1,0 +1,107 @@
+Collecting IPython
+  Downloading ipython-9.13.0-py3-none-any.whl.metadata (4.6 kB)
+Collecting easydict
+  Downloading easydict-1.13-py3-none-any.whl.metadata (4.2 kB)
+Collecting build
+  Downloading build-1.5.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting blobfile==3.0.0
+  Downloading blobfile-3.0.0-py3-none-any.whl.metadata (15 kB)
+Collecting outlines==0.1.11
+  Using cached outlines-0.1.11-py3-none-any.whl.metadata (17 kB)
+Collecting py-spy
+  Downloading py_spy-0.4.2-py2.py3-none-manylinux_2_5_x86_64.manylinux1_x86_64.whl.metadata (510 bytes)
+Collecting soundfile==0.13.1
+  Using cached soundfile-0.13.1-py2.py3-none-manylinux_2_28_x86_64.whl.metadata (16 kB)
+Collecting timm==1.0.16
+  Downloading timm-1.0.16-py3-none-any.whl.metadata (57 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 57.6/57.6 kB 5.6 MB/s eta 0:00:00
+Collecting torch_memory_saver==0.0.9.post1
+  Downloading torch_memory_saver-0.0.9.post1-cp39-abi3-manylinux2014_x86_64.whl.metadata (114 bytes)
+Collecting torchao==0.17.0
+  Using cached torchao-0.17.0-cp310-abi3-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (20 kB)
+Collecting torchcodec==0.11.1
+  Downloading torchcodec-0.11.1-cp312-cp312-manylinux_2_28_x86_64.whl.metadata (11 kB)
+Collecting smg-grpc-servicer
+  Downloading smg_grpc_servicer-0.5.3-py3-none-any.whl.metadata (2.3 kB)
+Collecting pycryptodomex>=3.8 (from blobfile==3.0.0)
+  Downloading pycryptodomex-3.23.0-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.4 kB)
+Requirement already satisfied: urllib3<3,>=1.25.3 in /home/work/.local/lib/python3.12/site-packages (from blobfile==3.0.0) (2.6.3)
+Collecting lxml>=4.9 (from blobfile==3.0.0)
+  Downloading lxml-6.1.0-cp312-cp312-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl.metadata (4.0 kB)
+Requirement already satisfied: filelock>=3.0 in /home/work/.local/lib/python3.12/site-packages (from blobfile==3.0.0) (3.28.0)
+Requirement already satisfied: interegular in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (0.3.3)
+Requirement already satisfied: jinja2 in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (3.1.6)
+Requirement already satisfied: lark in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (1.2.2)
+Collecting nest_asyncio (from outlines==0.1.11)
+  Using cached nest_asyncio-1.6.0-py3-none-any.whl.metadata (2.8 kB)
+Requirement already satisfied: numpy in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (1.26.4)
+Requirement already satisfied: cloudpickle in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (3.1.2)
+Requirement already satisfied: diskcache in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (5.6.3)
+Requirement already satisfied: pydantic>=2.0 in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (2.12.5)
+Requirement already satisfied: referencing in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (0.37.0)
+Requirement already satisfied: jsonschema in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (4.23.0)
+Requirement already satisfied: requests in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (2.33.1)
+Requirement already satisfied: tqdm in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (4.67.3)
+Requirement already satisfied: typing_extensions in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (4.15.0)
+Requirement already satisfied: pycountry in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (26.2.16)
+Collecting airportsdata (from outlines==0.1.11)
+  Downloading airportsdata-20260315-py3-none-any.whl.metadata (8.0 kB)
+Requirement already satisfied: torch in /home/work/.local/lib/python3.12/site-packages (from outlines==0.1.11) (2.12.0.dev20260407+cu128)
+Collecting outlines_core==0.1.26 (from outlines==0.1.11)
+  Downloading outlines_core-0.1.26-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.8 kB)
+Requirement already satisfied: cffi>=1.0 in /home/work/.local/lib/python3.12/site-packages (from soundfile==0.13.1) (2.0.0)
+Requirement already satisfied: torchvision in /home/work/.local/lib/python3.12/site-packages (from timm==1.0.16) (0.27.0.dev20260407+cu128)
+Requirement already satisfied: pyyaml in /home/work/.local/lib/python3.12/site-packages (from timm==1.0.16) (6.0.3)
+Requirement already satisfied: huggingface_hub in /home/work/.local/lib/python3.12/site-packages (from timm==1.0.16) (1.11.0)
+Requirement already satisfied: safetensors in /home/work/.local/lib/python3.12/site-packages (from timm==1.0.16) (0.7.0)
+Collecting decorator>=5.1.0 (from IPython)
+  Downloading decorator-5.2.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting ipython-pygments-lexers>=1.0.0 (from IPython)
+  Downloading ipython_pygments_lexers-1.1.1-py3-none-any.whl.metadata (1.1 kB)
+Collecting jedi>=0.18.2 (from IPython)
+  Downloading jedi-0.20.0-py2.py3-none-any.whl.metadata (23 kB)
+Collecting matplotlib-inline>=0.1.6 (from IPython)
+  Downloading matplotlib_inline-0.2.2-py3-none-any.whl.metadata (2.4 kB)
+Collecting pexpect>4.6 (from IPython)
+  Downloading pexpect-4.9.0-py2.py3-none-any.whl.metadata (2.5 kB)
+Collecting prompt_toolkit<3.1.0,>=3.0.41 (from IPython)
+  Downloading prompt_toolkit-3.0.52-py3-none-any.whl.metadata (6.4 kB)
+Requirement already satisfied: psutil>=7 in /home/work/.local/lib/python3.12/site-packages (from IPython) (7.2.2)
+Requirement already satisfied: pygments>=2.14.0 in /home/work/.local/lib/python3.12/site-packages (from IPython) (2.20.0)
+Collecting stack_data>=0.6.0 (from IPython)
+  Downloading stack_data-0.6.3-py3-none-any.whl.metadata (18 kB)
+Collecting traitlets>=5.13.0 (from IPython)
+  Downloading traitlets-5.15.0-py3-none-any.whl.metadata (10 kB)
+Requirement already satisfied: packaging>=24.0 in /home/work/.local/lib/python3.12/site-packages (from build) (26.1)
+Collecting pyproject_hooks (from build)
+  Downloading pyproject_hooks-1.2.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting smg-grpc-proto>=0.4.7 (from smg-grpc-servicer)
+  Downloading smg_grpc_proto-0.4.7-py3-none-any.whl.metadata (3.3 kB)
+Requirement already satisfied: grpcio>=1.78.0 in /home/work/.local/lib/python3.12/site-packages (from smg-grpc-servicer) (1.80.0)
+Collecting grpcio-reflection>=1.78.0 (from smg-grpc-servicer)
+  Using cached grpcio_reflection-1.80.0-py3-none-any.whl.metadata (1.2 kB)
+Collecting grpcio-health-checking>=1.78.0 (from smg-grpc-servicer)
+  Downloading grpcio_health_checking-1.80.0-py3-none-any.whl.metadata (1.2 kB)
+Requirement already satisfied: pycparser in /home/work/.local/lib/python3.12/site-packages (from cffi>=1.0->soundfile==0.13.1) (3.0)
+INFO: pip is looking at multiple versions of grpcio-health-checking to determine which version is compatible with other requirements. This could take a while.
+  Downloading grpcio_health_checking-1.78.0-py3-none-any.whl.metadata (1.2 kB)
+Collecting smg-grpc-servicer
+  Downloading smg_grpc_servicer-0.5.2-py3-none-any.whl.metadata (2.1 kB)
+  Downloading smg_grpc_servicer-0.5.1-py3-none-any.whl.metadata (2.1 kB)
+  Downloading smg_grpc_servicer-0.5.0-py3-none-any.whl.metadata (2.1 kB)
+INFO: pip is still looking at multiple versions of grpcio-health-checking to determine which version is compatible with other requirements. This could take a while.
+  Downloading smg_grpc_servicer-0.4.2-py3-none-any.whl.metadata (1.9 kB)
+Requirement already satisfied: vllm>=0.16.0 in /home/work/.local/lib/python3.12/site-packages (from smg-grpc-servicer) (0.19.1)
+INFO: pip is looking at multiple versions of grpcio-reflection to determine which version is compatible with other requirements. This could take a while.
+Collecting grpcio-reflection>=1.78.0 (from smg-grpc-servicer)
+  Downloading grpcio_reflection-1.78.0-py3-none-any.whl.metadata (1.2 kB)
+
+The conflict is caused by:
+    grpcio-reflection 1.80.0 depends on protobuf<7.0.0 and >=6.31.1
+    grpcio-reflection 1.78.0 depends on protobuf<7.0.0 and >=6.31.1
+    The user requested (constraint) protobuf==4.24.4
+
+To fix this you could try to:
+1. loosen the range of package versions you've specified
+2. remove package versions to allow pip attempt to solve the dependency conflict
+

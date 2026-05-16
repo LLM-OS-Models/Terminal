@@ -1,0 +1,92 @@
+{
+  "model": "llada21_flash_transformers_smoke_full_decode",
+  "model_path": "inclusionAI/LLaDA2.1-flash",
+  "model_short": "llada21_flash_transformers_smoke_full_decode",
+  "gpu": "transformers-device_map-auto",
+  "eval_path": "tb2_lite/data/replay_full.jsonl",
+  "timestamp": "2026-05-16T11:20:19.955754",
+  "load_time_sec": 123.1,
+  "gen_time_sec": 42.2,
+  "avg_sec_per_step": 42.2,
+  "backend": "transformers-llada",
+  "sampling": {
+    "dtype": "bfloat16",
+    "max_model_len": 32768,
+    "gen_length": 256,
+    "block_length": 32,
+    "threshold": 0.5,
+    "editing_threshold": 0.0,
+    "max_post_steps": 16,
+    "temperature": 0.0,
+    "decode_output": "full"
+  },
+  "prompt_template": {
+    "template_status_counts": {
+      "chat_template": 1
+    },
+    "template_status": "chat_template",
+    "rank_eligible": true,
+    "raw_fallback_errors": [],
+    "chat_template_kwargs": {},
+    "prompt_options": {},
+    "stripped_thinking_blocks": 0
+  },
+  "aggregate": {
+    "steps": 1,
+    "tasks": 1,
+    "avg_ref_cmds": 6.0,
+    "avg_pred_cmds": 0.0,
+    "valid_json_pct": 100.0,
+    "has_analysis_pct": 0.0,
+    "has_plan_pct": 0.0,
+    "first_cmd_exact_pct": 0.0,
+    "avg_command_precision": 0.0,
+    "avg_command_recall": 0.0,
+    "avg_command_f1": 0.0,
+    "complete_true_recall_pct": 0.0,
+    "premature_complete_rate_pct": 0.0,
+    "by_bucket": {
+      "early": {
+        "steps": 1,
+        "avg_command_f1": 0.0
+      }
+    },
+    "by_source_group": {
+      "software_engineering": {
+        "steps": 1,
+        "avg_command_f1": 0.0,
+        "first_cmd_exact_pct": 0.0
+      }
+    },
+    "next_action_score": 0.0
+  },
+  "per_step": [
+    {
+      "task_id": "task-000",
+      "sample_idx": 0,
+      "step_idx": 0,
+      "bucket": "early",
+      "source_group": "software_engineering",
+      "valid_json": true,
+      "has_analysis": false,
+      "has_plan": false,
+      "ref_task_complete": false,
+      "pred_task_complete": null,
+      "pred_task_complete_true": false,
+      "ref_command_units": [
+        "ls -la",
+        "cd myproject",
+        "ls -la",
+        "cat dependencies.json",
+        "cat CMakeLists.txt",
+        "find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | head -20"
+      ],
+      "pred_command_units": [],
+      "first_cmd_exact": 0.0,
+      "command_precision": 0.0,
+      "command_recall": 0.0,
+      "command_f1": 0.0,
+      "pred_preview": "```json\n{\n  \"completed\": true,\n  \"fixed_issues\": [],\n  \"dependency_graph\": {},\n  \"platform_support\": {\n    \"linux\": [],\n    \"windows\": [],\n    \"macos\": []\n  },\n  \"build_commands\": [],\n  \"test_status\": \"none\"\n}\n```"
+    }
+  ]
+}

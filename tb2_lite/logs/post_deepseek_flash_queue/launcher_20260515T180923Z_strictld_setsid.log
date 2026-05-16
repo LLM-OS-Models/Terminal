@@ -1,0 +1,4 @@
+[2026-05-16 03:09:25 KST] waiting for active DeepSeek-V4-Flash run to finish
+[2026-05-16 03:09:28 KST] deepseek DeepSeek-V4-Flash.status.shard00.json 104/152 remaining=48 finish=2026-05-16 05:40 KST
+[2026-05-16 03:09:28 KST] deepseek DeepSeek-V4-Flash.status.shard01.json 104/151 remaining=47 finish=2026-05-16 05:48 KST
+[2026-05-16 03:09:28 KST] deepseek total 208/303 remaining=95 finish=2026-05-16 05:48 KST

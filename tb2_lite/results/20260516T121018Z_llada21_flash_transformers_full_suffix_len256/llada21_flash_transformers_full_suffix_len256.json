@@ -1,0 +1,134 @@
+{
+  "model": "llada21_flash_transformers_full_suffix_len256",
+  "model_path": "inclusionAI/LLaDA2.1-flash",
+  "model_short": "llada21_flash_transformers_full_suffix_len256",
+  "gpu": "transformers-device_map-auto",
+  "eval_path": "tb2_lite/data/replay_full.jsonl",
+  "timestamp": "2026-05-16T12:15:24.917578",
+  "load_time_sec": 54.4,
+  "gen_time_sec": 250.3,
+  "avg_sec_per_step": 125.15,
+  "backend": "transformers-llada",
+  "complete": false,
+  "generated_steps": 2,
+  "total_steps": 303,
+  "sampling": {
+    "dtype": "bfloat16",
+    "max_model_len": 32768,
+    "gen_length": 256,
+    "block_length": 32,
+    "threshold": 0.5,
+    "editing_threshold": 0.0,
+    "max_post_steps": 16,
+    "temperature": 0.0,
+    "decode_output": "full"
+  },
+  "prompt_template": {
+    "template_status_counts": {
+      "chat_template": 303
+    },
+    "template_status": "chat_template",
+    "rank_eligible": true,
+    "raw_fallback_errors": [],
+    "chat_template_kwargs": {},
+    "prompt_options": {},
+    "stripped_thinking_blocks": 0,
+    "llada_prompt_suffix": "FINAL OUTPUT RULE: You are controlling the terminal. Do not write task deliverable files in your answer. Return only one JSON object with exactly these top-level fields: analysis, plan, commands, task_complete. The commands field must be an array of objects with keystrokes and duration. Put shell commands to run in keystrokes. Do not use build_commands, fixed_issues, dependency_graph, platform_support, or validation.json schema in your answer."
+  },
+  "aggregate": {
+    "steps": 2,
+    "tasks": 1,
+    "avg_ref_cmds": 6.5,
+    "avg_pred_cmds": 4.0,
+    "valid_json_pct": 0.0,
+    "has_analysis_pct": 0.0,
+    "has_plan_pct": 0.0,
+    "first_cmd_exact_pct": 0.0,
+    "avg_command_precision": 0.4062,
+    "avg_command_recall": 0.3155,
+    "avg_command_f1": 0.3384,
+    "complete_true_recall_pct": 0.0,
+    "premature_complete_rate_pct": 0.0,
+    "by_bucket": {
+      "early": {
+        "steps": 2,
+        "avg_command_f1": 0.3384
+      }
+    },
+    "by_source_group": {
+      "software_engineering": {
+        "steps": 2,
+        "avg_command_f1": 0.3384,
+        "first_cmd_exact_pct": 0.0
+      }
+    },
+    "next_action_score": 23.69
+  },
+  "per_step": [
+    {
+      "task_id": "task-000",
+      "sample_idx": 0,
+      "step_idx": 0,
+      "bucket": "early",
+      "source_group": "software_engineering",
+      "valid_json": false,
+      "has_analysis": false,
+      "has_plan": false,
+      "ref_task_complete": false,
+      "pred_task_complete": null,
+      "pred_task_complete_true": false,
+      "ref_command_units": [
+        "ls -la",
+        "cd myproject",
+        "ls -la",
+        "cat dependencies.json",
+        "cat CMakeLists.txt",
+        "find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | head -20"
+      ],
+      "pred_command_units": [
+        "cd /app/myproject",
+        "cat CMakeLists.txt",
+        "cat dependencies.json",
+        "mkdir -p build && cd build"
+      ],
+      "first_cmd_exact": 0.0,
+      "command_precision": 0.6875,
+      "command_recall": 0.4167,
+      "command_f1": 0.5189,
+      "pred_preview": "{\n  \"analysis\": \"The project involves a CMake project with library dependencies defined in dependencies.json. The current CMakeLists.txt has has issues including missing dependency resolution, incorrect include directories, and lack of platform compatibility. The goal is to fix the CMake configuration, generate a build script, and produce a validation report.\",\n  \"plan\": [\n    \"Analyze the current CMakeLists.txt for issues\",\n    \"Parse dependencies.json to understand library relationships\",\n    \"Fix CMakeLists.txt with proper link dependencies and include directories\",\n    \"Generate a cross-platform build script (build.sh)\",\n    \"Create a validation report with dependency graph and platform support\"\n  ],\n  \"commands\": [\n    {\n      \"keystrokes\": \"cd /app/myproject\",\n      \"duration\": 1\n    },\n    {\n      \"keystrokes\": \"cat CMakeLists.txt\",\n      \"duration\": 1\n    },\n    {\n      \"keystrokes\": \"cat dependencies.json\",\n      \"duration\": 1\n    },\n    {\n      \"keystrokes\": \"mkdir -p build && cd build\",\n      \"duration\": 1\n   "
+    },
+    {
+      "task_id": "task-000",
+      "sample_idx": 0,
+      "step_idx": 1,
+      "bucket": "early",
+      "source_group": "software_engineering",
+      "valid_json": false,
+      "has_analysis": false,
+      "has_plan": false,
+      "ref_task_complete": false,
+      "pred_task_complete": null,
+      "pred_task_complete_true": false,
+      "ref_command_units": [
+        "cat src/main.cpp",
+        "cat lib/calculator/calculator.h",
+        "cat lib/logger/logger.h",
+        "head -30 lib/logger/platform_specific.cpp",
+        "mkdir -p /app/output",
+        "cd /app/output",
+        "pwd"
+      ],
+      "pred_command_units": [
+        "cmake -E echo \"Configuring CMakeLists.txt\"",
+        "cmake -E remove CMakeLists.txt CMakeLists.txt.bak",
+        "cmake -E copy CMakeLists.txt.bak CMakeLists.txt",
+        "cat CMakeLists.txt"
+      ],
+      "first_cmd_exact": 0.0,
+      "command_precision": 0.125,
+      "command_recall": 0.2143,
+      "command_f1": 0.1579,
+      "pred_preview": "{\n  \"analysis\": \"The CMakeLists.txt file has several issues, including missing C++ standard specification, lack of platform-specific checks, incorrect library linking, and missing system dependencies like Threads. The project structure is correct but requires proper configuration for cross-platform compatibility.\",\n  \"plan\": [\n    \"Update CMakeLists.txt to specify C++17 standard\",\n    \"Add platform-specific compiler checks\",\n    \"Fix library linking and include directories\",\n    \"Add system dependency handling\",\n    \"Verify proper executable generation\"\n  ],\n  \"commands\": [\n    {\n      \"keystrokes\": \"cmake -E echo \\\"Configuring CMakeLists.txt\\\"\",\n      \"duration\": 0\n    },\n    {\n      \"keystrokes\": \"cmake -E remove CMakeLists.txt CMakeLists.txt.bak\",\n      \"duration\": 0\n    },\n    {\n      \"keystrokes\": \"cmake -E copy CMakeLists.txt.bak CMakeLists.txt\",\n      \"duration\": 0\n    },\n    {\n      \"keystrokes\": \"cat CMakeLists.txt\",\n      \"duration\": 0\n   "
+    }
+  ]
+}

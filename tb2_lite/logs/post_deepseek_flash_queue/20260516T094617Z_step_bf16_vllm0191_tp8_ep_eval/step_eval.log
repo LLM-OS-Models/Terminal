@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval_openai.py", line 333, in <module>
+    main()
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval_openai.py", line 244, in main
+    add_prompt_length_meta(tokenizer, rows, prompts, args, prompt_meta)
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval_openai.py", line 129, in add_prompt_length_meta
+    raise RuntimeError(
+RuntimeError: prompt context overflow before generation: max_model_len=32768 max_tokens=1024 overflow_count=3 examples=[{'idx': 261, 'task_id': 'task-044', 'step_idx': 9, 'prompt_tokens': 33992}, {'idx': 262, 'task_id': 'task-044', 'step_idx': 10, 'prompt_tokens': 38809}, {'idx': 263, 'task_id': 'task-044', 'step_idx': 11, 'prompt_tokens': 41842}]

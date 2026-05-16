@@ -44,6 +44,14 @@ def load_tokenizer(tokenizer_path: str) -> Any:
     try:
         return AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
     except Exception as exc:
+        if "Step-3.5-Flash" in tokenizer_path or "Step_hyphen_3_dot_5" in str(exc):
+            from huggingface_hub import snapshot_download
+
+            local_path = Path(snapshot_download(tokenizer_path, local_files_only=True))
+            return PreTrainedTokenizerFast(
+                tokenizer_file=str(local_path / "tokenizer.json"),
+                tokenizer_config_file=str(local_path / "tokenizer_config.json"),
+            )
         if "deepseek_v4" not in str(exc).lower():
             raise
         return PreTrainedTokenizerFast.from_pretrained(tokenizer_path)
@@ -156,6 +164,8 @@ def post_completion(
     }
     if args.min_p > 0:
         payload["min_p"] = args.min_p
+    if args.extra_body:
+        payload.update(args.extra_body)
 
     last_error: str | None = None
     for attempt in range(args.retries + 1):
@@ -186,6 +196,11 @@ def main() -> None:
     parser.add_argument("--max-tokens", type=int, default=1024)
     parser.add_argument("--repetition-penalty", type=float, default=1.0)
     parser.add_argument("--min-p", type=float, default=0.0)
+    parser.add_argument(
+        "--extra-body-json",
+        default="",
+        help="JSON object merged into every OpenAI completion request.",
+    )
     parser.add_argument("--thinking-mode", default="auto")
     parser.add_argument("--strip-thinking-history", default="auto")
     parser.add_argument("--gemma4-empty-thought-channel", default="auto")
@@ -196,6 +211,12 @@ def main() -> None:
     parser.add_argument("--allow-raw-fallback", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
     args = parser.parse_args()
+    if args.extra_body_json:
+        args.extra_body = json.loads(args.extra_body_json)
+        if not isinstance(args.extra_body, dict):
+            raise TypeError("--extra-body-json must decode to a JSON object")
+    else:
+        args.extra_body = {}
 
     eval_path = Path(args.eval_path)
     output_dir = Path(args.output_dir)

@@ -1,0 +1,664 @@
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:299] 
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:299]        █     █     █▄   ▄█
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:299]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.20.2
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:299]   █▄█▀ █     █     █     █  model   stepfun-ai/Step-3.5-Flash-FP8
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:299]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:299] 
+(APIServer pid=362397) INFO 05-16 18:10:33 [utils.py:233] non-default args: {'model_tag': 'stepfun-ai/Step-3.5-Flash-FP8', 'enable_auto_tool_choice': True, 'tool_call_parser': 'step3p5', 'host': '127.0.0.1', 'port': 30001, 'model': 'stepfun-ai/Step-3.5-Flash-FP8', 'trust_remote_code': True, 'max_model_len': 65536, 'quantization': 'fp8', 'served_model_name': ['step3p5-flash'], 'reasoning_parser': 'step3p5', 'tensor_parallel_size': 8, 'enable_expert_parallel': True, 'gpu_memory_utilization': 0.88}
+(APIServer pid=362397) INFO 05-16 18:10:35 [model.py:555] Resolved architecture: Step3p5ForCausalLM
+(APIServer pid=362397) INFO 05-16 18:10:35 [model.py:1680] Using max model len 65536
+(APIServer pid=362397) INFO 05-16 18:10:36 [nixl_utils.py:20] Setting UCX_RCACHE_MAX_UNRELEASED to '1024' to avoid a rare memory leak in UCX when using NIXL.
+(APIServer pid=362397) WARNING 05-16 18:10:36 [nixl_utils.py:34] NIXL is not available
+(APIServer pid=362397) WARNING 05-16 18:10:36 [nixl_utils.py:44] NIXL agent config is not available
+(APIServer pid=362397) INFO 05-16 18:10:36 [scheduler.py:239] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(APIServer pid=362397) INFO 05-16 18:10:36 [vllm.py:840] Asynchronous scheduling is enabled.
+(APIServer pid=362397) INFO 05-16 18:10:36 [kernel.py:205] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'])
+(APIServer pid=362397) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(APIServer pid=362397) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(APIServer pid=362397) INFO 05-16 18:10:42 [compilation.py:303] Enabled custom fusions: norm_quant, act_quant, allreduce_rms
+WARNING 05-16 18:10:51 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:10:51 [nixl_utils.py:44] NIXL agent config is not available
+(EngineCore pid=363069) INFO 05-16 18:10:51 [core.py:109] Initializing a V1 LLM engine (v0.20.2) with config: model='stepfun-ai/Step-3.5-Flash-FP8', speculative_config=None, tokenizer='stepfun-ai/Step-3.5-Flash-FP8', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=65536, download_dir=None, load_format=auto, tensor_parallel_size=8, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=False, quantization=fp8, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='step3p5', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=step3p5-flash, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['+quant_fp8', 'none', '+quant_fp8'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': [], 'compile_ranges_endpoints': [64, 8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.FULL_AND_PIECEWISE: (2, 1)>, 'cudagraph_num_of_warmups': 1, 'cudagraph_capture_sizes': [1, 2, 4, 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192, 200, 208, 216, 224, 232, 240, 248, 256, 272, 288, 304, 320, 336, 352, 368, 384, 400, 416, 432, 448, 464, 480, 496, 512], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': True}, 'max_cudagraph_capture_size': 512, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto')
+(EngineCore pid=363069) INFO 05-16 18:10:51 [multiproc_executor.py:139] DP group leader: node_rank=0, node_rank_within_dp=0, master_addr=127.0.0.1, mq_connect_ip=172.17.0.3 (local), world_size=8, local_world_size=8
+WARNING 05-16 18:11:01 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:01 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:01 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:01 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:01 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:01 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:44] NIXL agent config is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:34] NIXL is not available
+WARNING 05-16 18:11:02 [nixl_utils.py:44] NIXL agent config is not available
+(Worker pid=363370) INFO 05-16 18:11:03 [parallel_state.py:1402] world_size=8 rank=4 local_rank=4 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363366) INFO 05-16 18:11:04 [parallel_state.py:1402] world_size=8 rank=0 local_rank=0 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363372) INFO 05-16 18:11:05 [parallel_state.py:1402] world_size=8 rank=6 local_rank=6 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363367) INFO 05-16 18:11:05 [parallel_state.py:1402] world_size=8 rank=1 local_rank=1 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363373) INFO 05-16 18:11:05 [parallel_state.py:1402] world_size=8 rank=7 local_rank=7 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363368) INFO 05-16 18:11:06 [parallel_state.py:1402] world_size=8 rank=2 local_rank=2 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363371) INFO 05-16 18:11:06 [parallel_state.py:1402] world_size=8 rank=5 local_rank=5 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363369) INFO 05-16 18:11:06 [parallel_state.py:1402] world_size=8 rank=3 local_rank=3 distributed_init_method=tcp://127.0.0.1:55269 backend=nccl
+(Worker pid=363371) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363371) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363372) (Worker pid=363366) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363370) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363373) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363372) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363366) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363370) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363373) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363367) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363367) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363369) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363368) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=363369) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363368) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=363366) INFO 05-16 18:11:06 [pynccl.py:111] vLLM is using nccl==2.28.9
+(Worker pid=363370) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+(Worker pid=363366) (Worker pid=363370) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+(Worker pid=363366) (Worker pid=363370) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+(Worker pid=363366) (Worker pid=363370) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363370) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363370) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) (Worker pid=363372) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+(Worker pid=363370) (Worker pid=363372) (Worker pid=363371) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+(Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+(Worker pid=363371) (Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+(Worker pid=363370) (Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+(Worker pid=363371) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+(Worker pid=363370) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+(Worker pid=363371) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+(Worker pid=363371) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363371) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363368) (Worker pid=363370) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363371) (Worker pid=363368) (Worker pid=363366) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363366) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+(Worker pid=363371) (Worker pid=363368) (Worker pid=363366) (Worker pid=363370) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+(Worker pid=363370) (Worker pid=363371) (Worker pid=363368) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+(Worker pid=363370) (Worker pid=363371) (Worker pid=363368) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+(Worker pid=363366) (Worker pid=363370) (Worker pid=363371) (Worker pid=363368) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+(Worker pid=363366) (Worker pid=363370) (Worker pid=363371) (Worker pid=363368) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+(Worker pid=363366) (Worker pid=363368) (Worker pid=363370) (Worker pid=363371) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+(Worker pid=363366) (Worker pid=363368) (Worker pid=363370) (Worker pid=363371) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+(Worker pid=363366) (Worker pid=363368) (Worker pid=363370) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363366) (Worker pid=363368) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+(Worker pid=363366) (Worker pid=363368) (Worker pid=363371) (Worker pid=363372) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+(Worker pid=363366) (Worker pid=363368) (Worker pid=363371) (Worker pid=363372) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+(Worker pid=363368) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+(Worker pid=363370) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+(Worker pid=363368) (Worker pid=363370) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+(Worker pid=363368) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363366) (Worker pid=363372) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+(Worker pid=363368) (Worker pid=363367) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363368) (Worker pid=363367) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+(Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363367) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363368) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+(Worker pid=363367) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363368) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363367) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+(Worker pid=363368) (Worker pid=363371) (Worker pid=363367) (Worker pid=363370) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+(Worker pid=363368) (Worker pid=363371) (Worker pid=363367) (Worker pid=363370) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363368) (Worker pid=363371) (Worker pid=363367) (Worker pid=363370) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+(Worker pid=363368) (Worker pid=363371) (Worker pid=363370) (Worker pid=363367) (Worker pid=363366) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363368) (Worker pid=363372) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+(Worker pid=363368) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363370) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+(Worker pid=363372) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+(Worker pid=363370) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363372) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+(Worker pid=363370) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363372) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363372) (Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+(Worker pid=363372) (Worker pid=363370) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+(Worker pid=363368) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+(Worker pid=363372) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+(Worker pid=363368) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363371) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+(Worker pid=363371) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+(Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+(Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+(Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363372) (Worker pid=363367) (Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+(Worker pid=363368) (Worker pid=363372) (Worker pid=363371) (Worker pid=363367) (Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+Exception ignored in: ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363368) (Worker pid=363371) (Worker pid=363367) <function CustomAllreduce.__del__ at 0x7f738b099800>ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+
+(Worker pid=363368) (Worker pid=363371) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+(Worker pid=363366) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363370) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+(Worker pid=363371) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+Exception ignored in: (Worker pid=363368) Traceback (most recent call last):
+(Worker pid=363371) (Worker pid=363367) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+<function CustomAllreduce.__del__ at 0x7f7d59179760>ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+(Worker pid=363370) Exception ignored in: (Worker pid=363368) (Worker pid=363371) 
+(Worker pid=363367)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+<function CustomAllreduce.__del__ at 0x7f4835262340>ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+(Worker pid=363366) (Worker pid=363368) Traceback (most recent call last):
+(Worker pid=363371) (Worker pid=363367) 
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+(Worker pid=363366) (Worker pid=363372) (Worker pid=363368) (Worker pid=363371) (Worker pid=363367)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+Traceback (most recent call last):
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363372) (Worker pid=363368) (Worker pid=363367)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363368) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363368) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+(Worker pid=363368) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+(Worker pid=363368) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+(Worker pid=363371) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363367) Exception ignored in: ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<function CustomAllreduce.__del__ at 0x7f6f936b54e0>(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+(Worker pid=363371) (Worker pid=363367) Traceback (most recent call last):
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+(Worker pid=363371) (Worker pid=363367)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+(Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+(Worker pid=363368) Exception ignored in: <function CustomAllreduce.__del__ at 0x7f1cc0e719e0>
+(Worker pid=363368) Traceback (most recent call last):
+(Worker pid=363368)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+(Worker pid=363367) Exception ignored in: <function CustomAllreduce.__del__ at 0x7f1906c7d800>
+(Worker pid=363367) Traceback (most recent call last):
+(Worker pid=363367)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+(Worker pid=363370)     self.close()
+(Worker pid=363370)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+(Worker pid=363366)     self.close()
+(Worker pid=363372) (Worker pid=363371)         self.close()self.close()(Worker pid=363366) (Worker pid=363369) 
+
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+(Worker pid=363369) (Worker pid=363371) (Worker pid=363372) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) (Worker pid=363367) (Worker pid=363368) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+        (Worker pid=363369) self.close()self.close()ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+
+
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+(Worker pid=363369) (Worker pid=363367) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+(Worker pid=363368)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+(Worker pid=363369)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+(Worker pid=363369) ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+(Worker pid=363370)     if not self.disabled and self._ptr:
+(Worker pid=363370)               (Worker pid=363369)  Exception ignored in:     <function CustomAllreduce.__del__ at 0x7fa0af7cdd00>  
+   (Worker pid=363369)  Traceback (most recent call last):
+   (Worker pid=363369)    File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+^^^^^^^^^
+(Worker pid=363370) AttributeError: 'CustomAllreduce' object has no attribute '_ptr'
+(Worker pid=363371)     (Worker pid=363366) if not self.disabled and self._ptr:(Worker pid=363372)     
+    if not self.disabled and self._ptr:if not self.disabled and self._ptr:
+
+(Worker pid=363371)   (Worker pid=363366)  (Worker pid=363372)                                                                           ^    ^  ^ ^^ ^^ ^ ^^^^^^^^^^^^
+^^^(Worker pid=363371) ^^AttributeError(Worker pid=363368) ^
+: (Worker pid=363367)     ^(Worker pid=363366) 'CustomAllreduce' object has no attribute '_ptr'    if not self.disabled and self._ptr:
+AttributeError
+if not self.disabled and self._ptr:
+(Worker pid=363372) : 
+AttributeError'CustomAllreduce' object has no attribute '_ptr': 
+'CustomAllreduce' object has no attribute '_ptr'
+(Worker pid=363368) (Worker pid=363367)                                                           ^^^^^^^^(Worker pid=363369) ^^    ^^self.close()^^
+^^^^
+
+(Worker pid=363368) (Worker pid=363367) AttributeErrorAttributeError(Worker pid=363369) : :   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+'CustomAllreduce' object has no attribute '_ptr''CustomAllreduce' object has no attribute '_ptr'
+
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] WorkerProc failed to start.
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Traceback (most recent call last):
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 837, in worker_main
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     worker = WorkerProc(*args, **kwargs)
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 611, in __init__
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/worker_base.py", line 317, in init_device
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.worker.init_device()  # type: ignore
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return func(*args, **kwargs)
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 263, in init_device
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     init_worker_distributed_environment(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/worker/gpu_worker.py", line 1057, in init_worker_distributed_environment
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     ensure_model_parallel_initialized(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1747, in ensure_model_parallel_initialized
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     initialize_model_parallel(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1578, in initialize_model_parallel
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     _TP = init_model_parallel_group(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 1159, in init_model_parallel_group
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return GroupCoordinator(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/parallel_state.py", line 376, in __init__
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.device_communicator = device_comm_cls(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                                ^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/cuda_communicator.py", line 101, in __init__
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.ca_comm = CustomAllreduce(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                    ^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 175, in __init__
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     self.meta_ptrs = self.create_shared_buffer(
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 301, in create_shared_buffer
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     pointer, handle = ops.allocate_shared_buffer_and_handle(size_in_bytes)
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/_custom_ops.py", line 2997, in allocate_shared_buffer_and_handle
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return torch.ops._C_custom_ar.allocate_shared_buffer_and_handle(size)
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/torch/_ops.py", line 1269, in __call__
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]     return self._op(*args, **kwargs)
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870]            ^^^^^^^^^^^^^^^^^^^^^^^^^
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] torch.AcceleratorError: CUDA error: CUDA driver version is insufficient for CUDA runtime version
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Search for `cudaErrorInsufficientDriver' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+(Worker pid=363373) ERROR 05-16 18:11:09 [multiproc_executor.py:870] 
+(Worker pid=363369)     if not self.disabled and self._ptr:
+(Worker pid=363369)      (Worker pid=363373)  Exception ignored in:     <function CustomAllreduce.__del__ at 0x7fcac48491c0>  
+  (Worker pid=363373)  Traceback (most recent call last):
+  (Worker pid=363373)    File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 293, in __del__
+           ^^^^^^^^^
+(Worker pid=363369) AttributeError: 'CustomAllreduce' object has no attribute '_ptr'
+(Worker pid=363373)     self.close()
+(Worker pid=363373)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/distributed/device_communicators/custom_all_reduce.py", line 285, in close
+(Worker pid=363373)     if not self.disabled and self._ptr:
+(Worker pid=363373)                              ^^^^^^^^^
+(Worker pid=363373) AttributeError: 'CustomAllreduce' object has no attribute '_ptr'
+[rank0]:[W516 18:11:10.190321506 ProcessGroupNCCL.cpp:1575] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136] EngineCore failed to start.
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136] Traceback (most recent call last):
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     return func(*args, **kwargs)
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     super().__init__(
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 118, in __init__
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     self.model_executor = executor_class(vllm_config)
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 107, in __init__
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     super().__init__(vllm_config)
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     return func(*args, **kwargs)
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     self._init_executor()
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 200, in _init_executor
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     self.workers = WorkerProc.wait_for_ready(unready_workers)
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 747, in wait_for_ready
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136]     raise e from None
+(EngineCore pid=363069) ERROR 05-16 18:11:11 [core.py:1136] Exception: WorkerProc initialization failed due to an exception in a background process. See stack trace for root cause.
+(EngineCore pid=363069) Process EngineCore:
+(EngineCore pid=363069) Traceback (most recent call last):
+(EngineCore pid=363069)   File "/usr/lib/python3.12/multiprocessing/process.py", line 314, in _bootstrap
+(EngineCore pid=363069)     self.run()
+(EngineCore pid=363069)   File "/usr/lib/python3.12/multiprocessing/process.py", line 108, in run
+(EngineCore pid=363069)     self._target(*self._args, **self._kwargs)
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1140, in run_engine_core
+(EngineCore pid=363069)     raise e
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 1110, in run_engine_core
+(EngineCore pid=363069)     engine_core = EngineCoreProc(*args, engine_index=dp_rank, **kwargs)
+(EngineCore pid=363069)                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=363069)     return func(*args, **kwargs)
+(EngineCore pid=363069)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 876, in __init__
+(EngineCore pid=363069)     super().__init__(
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core.py", line 118, in __init__
+(EngineCore pid=363069)     self.model_executor = executor_class(vllm_config)
+(EngineCore pid=363069)                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 107, in __init__
+(EngineCore pid=363069)     super().__init__(vllm_config)
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(EngineCore pid=363069)     return func(*args, **kwargs)
+(EngineCore pid=363069)            ^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/abstract.py", line 109, in __init__
+(EngineCore pid=363069)     self._init_executor()
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 200, in _init_executor
+(EngineCore pid=363069)     self.workers = WorkerProc.wait_for_ready(unready_workers)
+(EngineCore pid=363069)                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(EngineCore pid=363069)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/executor/multiproc_executor.py", line 747, in wait_for_ready
+(EngineCore pid=363069)     raise e from None
+(EngineCore pid=363069) Exception: WorkerProc initialization failed due to an exception in a background process. See stack trace for root cause.
+(APIServer pid=362397) Traceback (most recent call last):
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/bin/vllm", line 10, in <module>
+(APIServer pid=362397)     sys.exit(main())
+(APIServer pid=362397)              ^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 92, in main
+(APIServer pid=362397)     args.dispatch_function(args)
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 122, in cmd
+(APIServer pid=362397)     uvloop.run(run_server(args))
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=362397)     return __asyncio.run(
+(APIServer pid=362397)            ^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+(APIServer pid=362397)     return runner.run(main)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=362397)     return self._loop.run_until_complete(task)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=362397)     return await main
+(APIServer pid=362397)            ^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 678, in run_server
+(APIServer pid=362397)     await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 692, in run_server_worker
+(APIServer pid=362397)     async with build_async_engine_client(
+(APIServer pid=362397)   File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+(APIServer pid=362397)     return await anext(self.gen)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 100, in build_async_engine_client
+(APIServer pid=362397)     async with build_async_engine_client_from_engine_args(
+(APIServer pid=362397)   File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+(APIServer pid=362397)     return await anext(self.gen)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 136, in build_async_engine_client_from_engine_args
+(APIServer pid=362397)     async_llm = AsyncLLM.from_vllm_config(
+(APIServer pid=362397)                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 217, in from_vllm_config
+(APIServer pid=362397)     return cls(
+(APIServer pid=362397)            ^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 146, in __init__
+(APIServer pid=362397)     self.engine_core = EngineCoreClient.make_async_mp_client(
+(APIServer pid=362397)                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=362397)     return func(*args, **kwargs)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 130, in make_async_mp_client
+(APIServer pid=362397)     return AsyncMPClient(*client_args)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=362397)     return func(*args, **kwargs)
+(APIServer pid=362397)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 900, in __init__
+(APIServer pid=362397)     super().__init__(
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 535, in __init__
+(APIServer pid=362397)     with launch_core_engines(
+(APIServer pid=362397)   File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+(APIServer pid=362397)     next(self.gen)
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1119, in launch_core_engines
+(APIServer pid=362397)     wait_for_engine_startup(
+(APIServer pid=362397)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/vllm/v1/engine/utils.py", line 1178, in wait_for_engine_startup
+(APIServer pid=362397)     raise RuntimeError(
+(APIServer pid=362397) RuntimeError: Engine core initialization failed. See root cause above. Failed core proc(s): {}

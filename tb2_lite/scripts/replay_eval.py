@@ -147,6 +147,14 @@ def load_tokenizer(tokenizer_path: str) -> Any:
     try:
         return AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
     except Exception as exc:
+        if "Step-3.5-Flash-FP8" in tokenizer_path or "Step_hyphen_3_dot_5" in str(exc):
+            from huggingface_hub import snapshot_download
+
+            local_path = Path(snapshot_download(tokenizer_path, local_files_only=True))
+            return PreTrainedTokenizerFast(
+                tokenizer_file=str(local_path / "tokenizer.json"),
+                tokenizer_config_file=str(local_path / "tokenizer_config.json"),
+            )
         if "deepseek_v4" not in str(exc).lower():
             raise
         return PreTrainedTokenizerFast.from_pretrained(tokenizer_path)

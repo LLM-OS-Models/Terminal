@@ -1,0 +1,30 @@
+/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12090). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+Failed to get device capability: The NVIDIA driver on your system is too old (found version 12090). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver..
+Failed to get device capability: The NVIDIA driver on your system is too old (found version 12090). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver..
+/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/layers/attention/fla/utils.py:223: UserWarning: Triton is not supported on current platform, roll back to CPU.
+  warnings.warn(
+/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/launch_server.py:54: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/launch_server.py", line 66, in <module>
+    server_args = prepare_server_args(sys.argv[1:])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 7299, in prepare_server_args
+    return ServerArgs.from_cli_args(raw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 6685, in from_cli_args
+    return cls(**{attr: getattr(args, attr) for attr in attrs})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 371, in __init__
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 821, in __post_init__
+    self._handle_missing_default_values()
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 1066, in _handle_missing_default_values
+    self.device = get_device()
+                  ^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/utils/common.py", line 1942, in get_device
+    raise RuntimeError("No accelerator (CUDA, XPU, HPU, NPU, MUSA, MPS) is available.")
+RuntimeError: No accelerator (CUDA, XPU, HPU, NPU, MUSA, MPS) is available.

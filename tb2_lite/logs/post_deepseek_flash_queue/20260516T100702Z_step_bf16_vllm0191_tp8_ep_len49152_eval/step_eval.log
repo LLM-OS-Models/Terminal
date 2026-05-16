@@ -1,0 +1,3 @@
+/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval_openai.py:308: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat(),
+{"output_path": "tb2_lite/results/20260516T100702Z_step_bf16_vllm0191_tp8_ep_len49152_eval/step_3_5_flash_bf16_vllm_tp8_ep_len49152.json", "score": 17.33}

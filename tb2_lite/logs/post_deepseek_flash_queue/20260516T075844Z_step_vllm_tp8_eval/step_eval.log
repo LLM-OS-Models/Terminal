@@ -1,0 +1,39 @@
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/huggingface_hub/dataclasses.py", line 251, in validate
+    validator(self)
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/transformers/configuration_utils.py", line 478, in validate_layer_type
+    raise ValueError(
+ValueError: `num_hidden_layers` (45) must be equal to the number of layer types (48)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval.py", line 424, in <module>
+    main()
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval.py", line 290, in main
+    tokenizer = load_tokenizer(tokenizer_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/replay_eval.py", line 148, in load_tokenizer
+    return AutoTokenizer.from_pretrained(tokenizer_path, trust_remote_code=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 692, in from_pretrained
+    config = AutoConfig.from_pretrained(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 395, in from_pretrained
+    return config_class.from_pretrained(pretrained_model_name_or_path, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/transformers/configuration_utils.py", line 662, in from_pretrained
+    return cls.from_dict(config_dict, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/transformers/configuration_utils.py", line 839, in from_dict
+    config = cls(**config_dict)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.data/huggingface/modules/transformers_modules/stepfun_hyphen_ai/Step_hyphen_3_dot_5_hyphen_Flash_hyphen_FP8/6eebda59dd87ca5729648ec7cfed0becfceb273e/configuration_step3p5.py", line 58, in __init__
+    super().__init__(**kwargs)
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/huggingface_hub/dataclasses.py", line 276, in init_with_validate
+    cls.validate(self)  # type: ignore [attr-defined]
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-eval-cu129/lib/python3.12/site-packages/huggingface_hub/dataclasses.py", line 253, in validate
+    raise StrictDataclassClassValidationError(validator=validator.__name__, cause=e) from e
+huggingface_hub.errors.StrictDataclassClassValidationError: Class validation error for validator 'validate_layer_type':
+    ValueError: `num_hidden_layers` (45) must be equal to the number of layer types (48)

@@ -1,0 +1,108 @@
+{
+  "model": "llada21_flash_sglang_smoke_suffix_len256",
+  "model_path": "inclusionAI/LLaDA2.1-flash",
+  "model_short": "llada21_flash_sglang_smoke_suffix_len256",
+  "gpu": "sglang-tp8",
+  "eval_path": "tb2_lite/data/replay_full.jsonl",
+  "timestamp": "2026-05-16T12:26:30.080215",
+  "gen_time_sec": 0.8,
+  "avg_sec_per_step": 0.8,
+  "backend": "sglang-generate-llada",
+  "complete": true,
+  "generated_steps": 1,
+  "total_steps": 1,
+  "sampling": {
+    "max_model_len": 32768,
+    "max_new_tokens": 256,
+    "gen_length": 256,
+    "block_length": 32,
+    "threshold": 0.5,
+    "editing_threshold": 0.0,
+    "max_post_steps": 16,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "ignore_eos": false
+  },
+  "prompt_template": {
+    "template_status_counts": {
+      "chat_template": 1
+    },
+    "template_status": "chat_template",
+    "rank_eligible": true,
+    "raw_fallback_errors": [],
+    "chat_template_kwargs": {},
+    "prompt_options": {},
+    "stripped_thinking_blocks": 0,
+    "llada_prompt_suffix": "FINAL OUTPUT RULE: You are controlling the terminal. Do not write task deliverable files in your answer. Return only one JSON object with exactly these top-level fields: analysis, plan, commands, task_complete. The commands field must be an array of objects with keystrokes and duration. Put shell commands to run in keystrokes. Do not use build_commands, fixed_issues, dependency_graph, platform_support, or validation.json schema in your answer.",
+    "row_count": 1,
+    "prompt_tokens_min": 1731,
+    "prompt_tokens_max": 1731,
+    "prompt_tokens_p50": 1731,
+    "prompt_tokens_p95": 1731,
+    "prompt_tokens_p99": 1731,
+    "max_model_len": 32768,
+    "max_new_tokens": 256
+  },
+  "aggregate": {
+    "steps": 1,
+    "tasks": 1,
+    "avg_ref_cmds": 6.0,
+    "avg_pred_cmds": 3.0,
+    "valid_json_pct": 100.0,
+    "has_analysis_pct": 100.0,
+    "has_plan_pct": 100.0,
+    "first_cmd_exact_pct": 0.0,
+    "avg_command_precision": 0.8333,
+    "avg_command_recall": 0.6667,
+    "avg_command_f1": 0.7407,
+    "complete_true_recall_pct": 0.0,
+    "premature_complete_rate_pct": 0.0,
+    "by_bucket": {
+      "early": {
+        "steps": 1,
+        "avg_command_f1": 0.7407
+      }
+    },
+    "by_source_group": {
+      "software_engineering": {
+        "steps": 1,
+        "avg_command_f1": 0.7407,
+        "first_cmd_exact_pct": 0.0
+      }
+    },
+    "next_action_score": 51.85
+  },
+  "per_step": [
+    {
+      "task_id": "task-000",
+      "sample_idx": 0,
+      "step_idx": 0,
+      "bucket": "early",
+      "source_group": "software_engineering",
+      "valid_json": true,
+      "has_analysis": true,
+      "has_plan": true,
+      "ref_task_complete": false,
+      "pred_task_complete": false,
+      "pred_task_complete_true": false,
+      "ref_command_units": [
+        "ls -la",
+        "cd myproject",
+        "ls -la",
+        "cat dependencies.json",
+        "cat CMakeLists.txt",
+        "find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.hpp' | head -20"
+      ],
+      "pred_command_units": [
+        "cd /app/myproject/",
+        "ls -la",
+        "cat dependencies.json"
+      ],
+      "first_cmd_exact": 0.0,
+      "command_precision": 0.8333,
+      "command_recall": 0.6667,
+      "command_f1": 0.7407,
+      "pred_preview": "{\n  \"analysis\": \"I need to begin by examining the project structure and available files to understand the current state of the CMakeLists.txt and dependencies.json. The first step is to navigate to the project directory and list the available files.\",\n  \"plan\": \"Navigate to the project directory and list the files to understand what's available. Then examine the dependencies.json file to begin the dependency analysis.\",\n  \"commands\": [\n    {\n      \"keystrokes\": \"cd /app/myproject/\\n\",\n      \"duration\": 0.1\n    },\n    {\n      \"keystrokes\": \"ls -la\\n\",\n      \"duration\": 0.1\n    },\n    {\n      \"keystrokes\": \"cat dependencies.json\\n\",\n      \"duration\": 0.1\n    }\n  ],\n  \"task_complete\": false\n}"
+    }
+  ]
+}

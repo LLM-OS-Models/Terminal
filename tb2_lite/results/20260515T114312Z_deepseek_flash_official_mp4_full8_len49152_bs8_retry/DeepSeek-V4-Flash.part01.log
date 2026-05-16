@@ -19,3 +19,17 @@
 [DeepSeek][Shard 2/2] 72/151 (47.7%) | elapsed 14892.1s | eta 16340.0s
 [DeepSeek][Shard 2/2] 80/151 (53.0%) | elapsed 16790.8s | eta 14901.8s
 [DeepSeek][Shard 2/2] 88/151 (58.3%) | elapsed 18585.2s | eta 13305.3s
+[DeepSeek][Shard 2/2] 96/151 (63.6%) | elapsed 20342.8s | eta 11654.7s
+[DeepSeek][Shard 2/2] 104/151 (68.9%) | elapsed 22404.6s | eta 10125.1s
+[DeepSeek][Shard 2/2] 112/151 (74.2%) | elapsed 24355.3s | eta 8480.9s
+[DeepSeek][Shard 2/2] 120/151 (79.5%) | elapsed 26115.5s | eta 6746.5s
+[DeepSeek][Shard 2/2] 128/151 (84.8%) | elapsed 29978.0s | eta 5386.7s
+[DeepSeek][Shard 2/2] 136/151 (90.1%) | elapsed 32457.3s | eta 3579.8s
+[DeepSeek][Shard 2/2] 144/151 (95.4%) | elapsed 35600.4s | eta 1730.6s
+[DeepSeek][Shard 2/2] 151/151 (100.0%) | elapsed 53820.5s | eta 0.0s
+/home/work/.local/lib/python3.12/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+[DeepSeek] DONE DeepSeek-V4-Flash
+  Load: 15.6s | Gen: 53820.5s | 356.427s/step
+  Cmd F1: 0.3036 | First cmd exact: 25.2% | Score: 28.81
+  Saved: tb2_lite/results/20260515T114312Z_deepseek_flash_official_mp4_full8_len49152_bs8_retry/DeepSeek-V4-Flash.part01.json

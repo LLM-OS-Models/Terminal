@@ -1,0 +1,60 @@
+W0516 16:54:36.673000 281642 torch/utils/_pytree.py:630] <enum 'KernelPreference'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+W0516 16:54:37.067000 281642 torch/utils/_pytree.py:630] <enum 'ScaleCalculationMode'> is an Enum subclass and is now natively supported by torch.compile as an opaque value type. Calling register_constant() on Enum subclasses is deprecated and will be an error in a future release.
+/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/launch_server.py:54: UserWarning: 'python -m sglang.launch_server' is still supported, but 'sglang serve' is the recommended entrypoint.
+  Example: sglang serve --model-path <model> [options]
+  warnings.warn(
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/launch_server.py", line 66, in <module>
+    server_args = prepare_server_args(sys.argv[1:])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 7299, in prepare_server_args
+    return ServerArgs.from_cli_args(raw_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 6685, in from_cli_args
+    return cls(**{attr: getattr(args, attr) for attr in attrs})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 371, in __init__
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 836, in __post_init__
+    self._handle_piecewise_cuda_graph()
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 1202, in _handle_piecewise_cuda_graph
+    if self.get_model_config().is_piecewise_cuda_graph_disabled_model:
+       ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/server_args.py", line 6731, in get_model_config
+    from sglang.srt.configs.model_config import ModelConfig
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/configs/model_config.py", line 27, in <module>
+    from sglang.srt.layers.quantization import QUANTIZATION_METHODS
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/layers/quantization/__init__.py", line 19, in <module>
+    from sglang.srt.layers.quantization.auto_round import AutoRoundConfig
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/layers/quantization/auto_round.py", line 12, in <module>
+    from sglang.srt.layers.quantization.utils import get_scalar_types
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/layers/quantization/utils.py", line 13, in <module>
+    from sglang.srt.layers.quantization.fp8_kernel import scaled_fp8_quant
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sglang/srt/layers/quantization/fp8_kernel.py", line 57, in <module>
+    from sgl_kernel import sgl_per_token_quant_fp8
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sgl_kernel/__init__.py", line 6, in <module>
+    common_ops = _load_architecture_specific_ops()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sgl_kernel/load_utils.py", line 197, in _load_architecture_specific_ops
+    raise ImportError(error_msg)
+ImportError: 
+[sgl_kernel] CRITICAL: Could not load any common_ops library!
+
+Attempted locations:
+1. Architecture-specific pattern: /home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sgl_kernel/sm90/common_ops.* - found files: ['/home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sgl_kernel/sm90/common_ops.abi3.so']
+2. Fallback pattern: /home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sgl_kernel/common_ops.* - found files: []
+3. Standard Python import: common_ops - failed
+
+GPU Info:
+- Compute capability: 90
+- Expected variant: SM90 (Hopper/H100 with fast math optimization)
+- CUDA version: 12.8
+
+Please ensure sgl_kernel is properly installed with:
+pip install --upgrade sglang-kernel
+
+Error details from previous import attempts:
+- ImportError: /home/work/.projects/LLM-OS-Models/Terminal/.sglang-eval/lib/python3.12/site-packages/sgl_kernel/sm90/common_ops.abi3.so: undefined symbol: _ZNK2at10TensorBase14const_data_ptrIiLi0EEEPKT_v
+- ModuleNotFoundError: No module named 'common_ops'
+

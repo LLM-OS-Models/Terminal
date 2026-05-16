@@ -1,0 +1,244 @@
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:299] 
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:299]        █     █     █▄   ▄█
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:299]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.19.1
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:299]   █▄█▀ █     █     █     █  model   stepfun-ai/Step-3.5-Flash-FP8
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:299]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:299] 
+(APIServer pid=388002) INFO 05-16 18:26:24 [utils.py:233] non-default args: {'model_tag': 'stepfun-ai/Step-3.5-Flash-FP8', 'enable_auto_tool_choice': True, 'tool_call_parser': 'step3p5', 'host': '127.0.0.1', 'port': 30001, 'model': 'stepfun-ai/Step-3.5-Flash-FP8', 'trust_remote_code': True, 'max_model_len': 32768, 'quantization': 'fp8', 'enforce_eager': True, 'served_model_name': ['step3p5-flash'], 'reasoning_parser': 'step3p5', 'tensor_parallel_size': 8, 'enable_expert_parallel': True, 'disable_custom_all_reduce': True, 'gpu_memory_utilization': 0.86}
+(APIServer pid=388002) INFO 05-16 18:26:35 [model.py:549] Resolved architecture: Step3p5ForCausalLM
+(APIServer pid=388002) INFO 05-16 18:26:35 [model.py:1678] Using max model len 32768
+(APIServer pid=388002) INFO 05-16 18:26:36 [scheduler.py:238] Chunked prefill is enabled with max_num_batched_tokens=8192.
+(APIServer pid=388002) INFO 05-16 18:26:36 [vllm.py:790] Asynchronous scheduling is enabled.
+(APIServer pid=388002) WARNING 05-16 18:26:36 [vllm.py:848] Enforce eager set, disabling torch.compile and CUDAGraphs. This is equivalent to setting -cc.mode=none -cc.cudagraph_mode=none
+(APIServer pid=388002) WARNING 05-16 18:26:36 [vllm.py:859] Inductor compilation was disabled by user settings, optimizations settings that are only active during inductor compilation will be ignored.
+(APIServer pid=388002) INFO 05-16 18:26:36 [vllm.py:1025] Cudagraph is disabled under eager mode
+(APIServer pid=388002) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(APIServer pid=388002) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(APIServer pid=388002) INFO 05-16 18:26:39 [compilation.py:292] Enabled custom fusions: norm_quant, act_quant, allreduce_rms
+(EngineCore pid=389080) INFO 05-16 18:27:39 [core.py:105] Initializing a V1 LLM engine (v0.19.1) with config: model='stepfun-ai/Step-3.5-Flash-FP8', speculative_config=None, tokenizer='stepfun-ai/Step-3.5-Flash-FP8', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=True, dtype=torch.bfloat16, max_seq_len=32768, download_dir=None, load_format=auto, tensor_parallel_size=8, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=fp8, enforce_eager=True, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='step3p5', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=step3p5-flash, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.NONE: 0>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['+quant_fp8', 'all', '+quant_fp8'], 'splitting_ops': [], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_images_per_batch': 0, 'compile_sizes': [], 'compile_ranges_endpoints': [64, 8192], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': [], 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': True, 'fuse_act_quant': True, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': True}, 'max_cudagraph_capture_size': 0, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': True, 'static_all_moe_layers': []}
+(EngineCore pid=389080) INFO 05-16 18:27:39 [multiproc_executor.py:134] DP group leader: node_rank=0, node_rank_within_dp=0, master_addr=127.0.0.1, mq_connect_ip=172.17.0.3 (local), world_size=8, local_world_size=8
+(Worker pid=389972) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=0 local_rank=0 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389975) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=3 local_rank=3 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389976) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=4 local_rank=4 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389974) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=2 local_rank=2 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389977) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=5 local_rank=5 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389979) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=7 local_rank=7 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389973) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=1 local_rank=1 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389978) INFO 05-16 18:27:55 [parallel_state.py:1400] world_size=8 rank=6 local_rank=6 distributed_init_method=tcp://127.0.0.1:36231 backend=nccl
+(Worker pid=389978) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=389977) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=389976) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=389972) (Worker pid=389975) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=389973) (Worker pid=389974) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=389979) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.cudart module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.runtime module instead.
+(Worker pid=389978) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=389977) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=389975) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=389972) (Worker pid=389973) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=389976) (Worker pid=389974) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=389979) <frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+<frozen importlib._bootstrap_external>:1297: FutureWarning: The cuda.nvrtc module is deprecated and will be removed in a future release, please switch to use the cuda.bindings.nvrtc module instead.
+(Worker pid=389972) INFO 05-16 18:27:56 [pynccl.py:111] vLLM is using nccl==2.27.5
+(Worker pid=389972) INFO 05-16 18:28:00 [parallel_state.py:1716] rank 0 in world size 8 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank 0, EPLB rank N/A
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:06 [gpu_model_runner.py:4735] Starting to load model stepfun-ai/Step-3.5-Flash-FP8...
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:09 [cuda.py:334] Using FLASH_ATTN attention backend out of potential backends: ['FLASH_ATTN', 'FLASHINFER', 'TRITON_ATTN', 'FLEX_ATTENTION'].
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:09 [flash_attn.py:596] Using FlashAttention version 3
+(Worker_TP0_EP0 pid=389972) WARNING 05-16 18:28:09 [step3p5.py:499] Enable custom fused all reduce...
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:09 [layer.py:396] [EP Rank 0/8] Expert parallelism is enabled. Expert placement strategy: linear. Local/global number of experts: 36/288. Experts local to global index map: 0->0, 1->1, 2->2, 3->3, 4->4, 5->5, 6->6, 7->7, 8->8, 9->9, 10->10, 11->11, 12->12, 13->13, 14->14, 15->15, 16->16, 17->17, 18->18, 19->19, 20->20, 21->21, 22->22, 23->23, 24->24, 25->25, 26->26, 27->27, 28->28, 29->29, 30->30, 31->31, 32->32, 33->33, 34->34, 35->35.
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:09 [fp8.py:396] Using FLASHINFER_CUTLASS Fp8 MoE backend out of potential backends: ['FLASHINFER_CUTLASS', 'AITER', 'FLASHINFER_TRTLLM', 'TRITON', 'MARLIN', 'BATCHED_TRITON', 'XPU'].
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:10 [fp8.py:396] Using TRITON Fp8 MoE backend out of potential backends: ['FLASHINFER_CUTLASS', 'AITER', 'FLASHINFER_TRTLLM', 'TRITON', 'MARLIN', 'BATCHED_TRITON', 'XPU'].
+(Worker_TP0_EP0 pid=389972) WARNING 05-16 18:28:10 [compilation.py:1223] Op 'quant_fp8' not present in model, enabling with '+quant_fp8' has no effect
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:12 [weight_utils.py:581] Time spent downloading weights for stepfun-ai/Step-3.5-Flash-FP8: 0.550973 seconds
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:13 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:13 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/5)
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/5)
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/5)
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/5)
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/5)
+(Worker_TP4_EP4 pid=389976) INFO 05-16 18:28:14 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 0.90s
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/5)
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/5)
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/5)
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/5)
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:14 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/5)
+(Worker_TP7_EP7 pid=389979) INFO 05-16 18:28:14 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 0.91s
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:14 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:15 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/6)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/6)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/6)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/6)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/6)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:825] Prefetching checkpoint files: 60% (6/6)
+(Worker_TP2_EP2 pid=389974) INFO 05-16 18:28:15 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 1.16s
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:16 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:16 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/6)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:16 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:16 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/6)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:16 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/6)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:16 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/6)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/6)
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/5)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 60% (6/6)
+(Worker_TP3_EP3 pid=389975) INFO 05-16 18:28:17 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 1.86s
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:17 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:   0% Completed | 0/44 [00:00<?, ?it/s]
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/6)
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/5)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/6)
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/5)
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/5)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/6)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/6)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/6)
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:17 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/5)
+(Worker_TP5_EP5 pid=389977) INFO 05-16 18:28:17 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 1.46s
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:17 [weight_utils.py:848] Prefetching checkpoint files into page cache started (in background)
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/6)
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/6)
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/6)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 60% (6/6)
+(Worker_TP1_EP1 pid=389973) INFO 05-16 18:28:18 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 1.85s
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/6)
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/6)
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:18 [weight_utils.py:825] Prefetching checkpoint files: 10% (1/5)
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:19 [weight_utils.py:825] Prefetching checkpoint files: 20% (2/5)
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:19 [weight_utils.py:825] Prefetching checkpoint files: 30% (3/5)
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:19 [weight_utils.py:825] Prefetching checkpoint files: 40% (4/5)
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:19 [weight_utils.py:825] Prefetching checkpoint files: 50% (5/5)
+(Worker_TP6_EP6 pid=389978) INFO 05-16 18:28:19 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 1.49s
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:19 [weight_utils.py:825] Prefetching checkpoint files: 60% (6/6)
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:19 [weight_utils.py:843] Prefetching checkpoint files into page cache finished in 2.57s
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:   2% Completed | 1/44 [00:06<04:39,  6.50s/it]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:   5% Completed | 2/44 [00:06<02:00,  2.86s/it]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:   7% Completed | 3/44 [00:07<01:07,  1.65s/it]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:   9% Completed | 4/44 [00:07<00:42,  1.07s/it]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  11% Completed | 5/44 [00:07<00:29,  1.31it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  14% Completed | 6/44 [00:07<00:21,  1.73it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  16% Completed | 7/44 [00:07<00:16,  2.18it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  18% Completed | 8/44 [00:08<00:13,  2.64it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  20% Completed | 9/44 [00:08<00:11,  3.06it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  23% Completed | 10/44 [00:08<00:09,  3.42it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  25% Completed | 11/44 [00:08<00:08,  3.74it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  27% Completed | 12/44 [00:08<00:07,  4.09it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  30% Completed | 13/44 [00:09<00:07,  4.35it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  32% Completed | 14/44 [00:09<00:06,  4.41it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  34% Completed | 15/44 [00:09<00:06,  4.34it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  36% Completed | 16/44 [00:09<00:06,  4.32it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  39% Completed | 17/44 [00:10<00:06,  4.34it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  41% Completed | 18/44 [00:10<00:05,  4.44it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  43% Completed | 19/44 [00:10<00:05,  4.60it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  45% Completed | 20/44 [00:10<00:04,  4.82it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  48% Completed | 21/44 [00:10<00:05,  4.59it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  50% Completed | 22/44 [00:11<00:04,  4.58it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  52% Completed | 23/44 [00:11<00:04,  4.61it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  55% Completed | 24/44 [00:11<00:04,  4.70it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  57% Completed | 25/44 [00:11<00:03,  4.76it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  59% Completed | 26/44 [00:11<00:03,  4.89it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  61% Completed | 27/44 [00:12<00:03,  4.84it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  64% Completed | 28/44 [00:12<00:03,  4.90it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  66% Completed | 29/44 [00:12<00:03,  4.85it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  68% Completed | 30/44 [00:12<00:02,  4.79it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  70% Completed | 31/44 [00:12<00:02,  4.83it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  73% Completed | 32/44 [00:13<00:02,  4.86it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  75% Completed | 33/44 [00:13<00:02,  4.83it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  77% Completed | 34/44 [00:13<00:02,  4.80it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  80% Completed | 35/44 [00:13<00:01,  4.80it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  82% Completed | 36/44 [00:13<00:01,  4.86it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  84% Completed | 37/44 [00:14<00:01,  4.80it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  86% Completed | 38/44 [00:14<00:01,  4.86it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  89% Completed | 39/44 [00:14<00:01,  4.87it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  91% Completed | 40/44 [00:14<00:00,  4.88it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  93% Completed | 41/44 [00:14<00:00,  4.91it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  95% Completed | 42/44 [00:15<00:00,  4.96it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards:  98% Completed | 43/44 [00:15<00:00,  5.08it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards: 100% Completed | 44/44 [00:15<00:00,  5.11it/s]
+(Worker_TP0_EP0 pid=389972) Loading safetensors checkpoint shards: 100% Completed | 44/44 [00:15<00:00,  2.83it/s]
+(Worker_TP0_EP0 pid=389972) 
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:32 [default_loader.py:384] Loading weights took 15.58 seconds
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:32 [fp8.py:560] Using MoEPrepareAndFinalizeNoDPEPModular
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:28:33 [gpu_model_runner.py:4820] Model loading took 24.01 GiB memory and 26.466291 seconds
+(EngineCore pid=389080) INFO 05-16 18:29:34 [shm_broadcast.py:681] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+(EngineCore pid=389080) INFO 05-16 18:30:34 [shm_broadcast.py:681] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+(EngineCore pid=389080) INFO 05-16 18:31:34 [shm_broadcast.py:681] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+(EngineCore pid=389080) INFO 05-16 18:32:34 [shm_broadcast.py:681] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+(EngineCore pid=389080) INFO 05-16 18:33:35 [shm_broadcast.py:681] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+(EngineCore pid=389080) INFO 05-16 18:34:35 [shm_broadcast.py:681] No available shared memory broadcast block found in 60 seconds. This typically happens when some processes are hanging or doing some time-consuming work (e.g. compilation, weight/kv cache quantization).
+(Worker_TP0_EP0 pid=389972) INFO 05-16 18:34:40 [multiproc_executor.py:764] Parent process exited, terminating worker queues
+(APIServer pid=388002) Traceback (most recent call last):
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/bin/vllm", line 8, in <module>
+(APIServer pid=388002)     sys.exit(main())
+(APIServer pid=388002)              ^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 75, in main
+(APIServer pid=388002)     args.dispatch_function(args)
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 122, in cmd
+(APIServer pid=388002)     uvloop.run(run_server(args))
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=388002)     return __asyncio.run(
+(APIServer pid=388002)            ^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+(APIServer pid=388002)     return runner.run(main)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=388002)     return self._loop.run_until_complete(task)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "uvloop/loop.pyx", line 1512, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=388002)   File "uvloop/loop.pyx", line 1505, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=388002)   File "uvloop/loop.pyx", line 1379, in uvloop.loop.Loop.run_forever
+(APIServer pid=388002)   File "uvloop/loop.pyx", line 557, in uvloop.loop.Loop._run
+(APIServer pid=388002)   File "uvloop/loop.pyx", line 476, in uvloop.loop.Loop._on_idle
+(APIServer pid=388002)   File "uvloop/cbhandles.pyx", line 83, in uvloop.loop.Handle._run
+(APIServer pid=388002)   File "uvloop/cbhandles.pyx", line 61, in uvloop.loop.Handle._run
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=388002)     return await main
+(APIServer pid=388002)            ^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 672, in run_server
+(APIServer pid=388002)     await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 686, in run_server_worker
+(APIServer pid=388002)     async with build_async_engine_client(
+(APIServer pid=388002)   File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+(APIServer pid=388002)     return await anext(self.gen)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 100, in build_async_engine_client
+(APIServer pid=388002)     async with build_async_engine_client_from_engine_args(
+(APIServer pid=388002)   File "/usr/lib/python3.12/contextlib.py", line 210, in __aenter__
+(APIServer pid=388002)     return await anext(self.gen)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 136, in build_async_engine_client_from_engine_args
+(APIServer pid=388002)     async_llm = AsyncLLM.from_vllm_config(
+(APIServer pid=388002)                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 225, in from_vllm_config
+(APIServer pid=388002)     return cls(
+(APIServer pid=388002)            ^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/v1/engine/async_llm.py", line 154, in __init__
+(APIServer pid=388002)     self.engine_core = EngineCoreClient.make_async_mp_client(
+(APIServer pid=388002)                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=388002)     return func(*args, **kwargs)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 130, in make_async_mp_client
+(APIServer pid=388002)     return AsyncMPClient(*client_args)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=388002)     return func(*args, **kwargs)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 887, in __init__
+(APIServer pid=388002)     super().__init__(
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/v1/engine/core_client.py", line 581, in __init__
+(APIServer pid=388002)     if not sync_input_socket.poll(
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/zmq/sugar/socket.py", line 1062, in poll
+(APIServer pid=388002)     evts = dict(p.poll(timeout))
+(APIServer pid=388002)                 ^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/zmq/sugar/poll.py", line 106, in poll
+(APIServer pid=388002)     return zmq_poll(self.sockets, timeout=timeout)
+(APIServer pid=388002)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=388002)   File "zmq/backend/cython/_zmq.py", line 1680, in zmq.backend.cython._zmq.zmq_poll
+(APIServer pid=388002)   File "zmq/backend/cython/_zmq.py", line 179, in zmq.backend.cython._zmq._check_rc
+(APIServer pid=388002)   File "/home/work/.projects/LLM-OS-Models/Terminal/.vllm-0_19_1/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 558, in signal_handler
+(APIServer pid=388002)     raise KeyboardInterrupt("terminated")
+(APIServer pid=388002) KeyboardInterrupt: terminated
