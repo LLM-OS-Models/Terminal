@@ -55,6 +55,7 @@ def main() -> None:
     parser.add_argument("--thinking-mode", choices=["chat", "thinking"], default="thinking")
     parser.add_argument("--progress-every", type=int, default=8)
     parser.add_argument("--token-progress-every", type=int, default=32)
+    parser.add_argument("--resume", action="store_true", help="Resume from incremental results")
     args = parser.parse_args()
 
     world_size = int(os.getenv("WORLD_SIZE", "1"))
@@ -102,6 +103,7 @@ def main() -> None:
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     status_path = output_dir / f"{model_short}.status.shard{args.shard_index:02d}.json"
+    incr_path = output_dir / f"{model_short}.incr.shard{args.shard_index:02d}.jsonl"
     if rank == 0:
         status_path.write_text(
             json.dumps(
@@ -135,8 +137,25 @@ def main() -> None:
     gen_started = time.time()
     per_step: list[dict] = []
     completed_steps = 0
+    skip_steps = 0
     total_batches = (len(rows) + args.batch_size - 1) // args.batch_size
+
+    # Resume: load previously saved incremental results
+    if args.resume and incr_path.exists():
+        with open(incr_path) as f:
+            for line in f:
+                per_step.append(json.loads(line))
+        skip_steps = len(per_step)
+        if rank == 0:
+            print(f"[DeepSeek] Resuming: {skip_steps} steps already completed, skipping")
+
     for batch_index, batch_rows in enumerate(batched(rows, args.batch_size), start=1):
+        # Skip already-completed steps when resuming
+        if skip_steps > 0:
+            skip_steps -= len(batch_rows)
+            completed_steps += len(batch_rows)
+            continue
+
         prompt_tokens = [row["_prompt_tokens"] for row in batch_rows]
 
         def update_inflight_status(tokens_done: int, tokens_total: int, finished_count: int, batch_size_now: int) -> None:
@@ -211,6 +230,11 @@ def main() -> None:
                 "pred_preview": prediction[:500],
             })
         completed_steps += len(batch_rows)
+        # Incremental save: append results after each step
+        if rank == 0:
+            with open(incr_path, "a") as f:
+                for step_result in per_step[-len(batch_rows):]:
+                    f.write(json.dumps(step_result, ensure_ascii=False) + "\n")
         if completed_steps == len(rows) or completed_steps == 1 or completed_steps % args.progress_every == 0:
             elapsed_gen = max(time.time() - gen_started, 1e-6)
             steps_per_sec = completed_steps / elapsed_gen
@@ -243,6 +267,10 @@ def main() -> None:
             )
     torch.cuda.synchronize()
     gen_time = time.time() - gen_started
+
+    # Clean up incremental file on success
+    if rank == 0 and incr_path.exists():
+        incr_path.unlink()
 
     if world_size > 1:
         dist.barrier()

@@ -15,3 +15,667 @@
   torch.cuda.memory._set_allocator_settings("expandable_segments:True")
 /home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py:67: FutureWarning: torch.cuda._set_allocator_settings is deprecated. Use torch._C._accelerator_setAllocatorSettings instead.
   torch.cuda.memory._set_allocator_settings("expandable_segments:True")
+[DeepSeek] Generating 303 replay steps (shard 1/1) with batch_size=1
+[DeepSeek][Shard 1/1] 1/303 (0.3%) | elapsed 511.7s | eta 154547.4s
+[DeepSeek][Shard 1/1] 2/303 (0.7%) | elapsed 1008.3s | eta 151756.6s
+[DeepSeek][Shard 1/1] 3/303 (1.0%) | elapsed 1507.0s | eta 150703.1s
+[DeepSeek][Shard 1/1] 4/303 (1.3%) | elapsed 2004.1s | eta 149807.3s
+[DeepSeek][Shard 1/1] 5/303 (1.7%) | elapsed 2501.7s | eta 149100.7s
+[DeepSeek][Shard 1/1] 6/303 (2.0%) | elapsed 2998.6s | eta 148432.5s
+[DeepSeek][Shard 1/1] 7/303 (2.3%) | elapsed 3497.6s | eta 147897.9s
+[DeepSeek][Shard 1/1] 8/303 (2.6%) | elapsed 3881.7s | eta 143138.5s
+[DeepSeek][Shard 1/1] 9/303 (3.0%) | elapsed 4033.9s | eta 131775.6s
+[DeepSeek][Shard 1/1] 10/303 (3.3%) | elapsed 4259.4s | eta 124800.7s
+[DeepSeek][Shard 1/1] 11/303 (3.6%) | elapsed 4755.7s | eta 126242.7s
+[DeepSeek][Shard 1/1] 12/303 (4.0%) | elapsed 5254.0s | eta 127410.5s
+[DeepSeek][Shard 1/1] 13/303 (4.3%) | elapsed 5702.3s | eta 127205.2s
+[DeepSeek][Shard 1/1] 14/303 (4.6%) | elapsed 5944.7s | eta 122714.9s
+[DeepSeek][Shard 1/1] 15/303 (5.0%) | elapsed 6050.5s | eta 116170.0s
+[DeepSeek][Shard 1/1] 16/303 (5.3%) | elapsed 6216.7s | eta 111512.5s
+[DeepSeek][Shard 1/1] 17/303 (5.6%) | elapsed 6448.8s | eta 108491.3s
+[DeepSeek][Shard 1/1] 18/303 (5.9%) | elapsed 6853.4s | eta 108511.9s
+[DeepSeek][Shard 1/1] 19/303 (6.3%) | elapsed 7019.0s | eta 104914.9s
+[DeepSeek][Shard 1/1] 20/303 (6.6%) | elapsed 7516.6s | eta 106360.4s
+[DeepSeek][Shard 1/1] 21/303 (6.9%) | elapsed 7729.2s | eta 103792.7s
+[DeepSeek][Shard 1/1] 22/303 (7.3%) | elapsed 8225.6s | eta 105063.5s
+[DeepSeek][Shard 1/1] 23/303 (7.6%) | elapsed 8632.3s | eta 105088.9s
+[DeepSeek][Shard 1/1] 24/303 (7.9%) | elapsed 9128.6s | eta 106120.2s
+[DeepSeek][Shard 1/1] 25/303 (8.3%) | elapsed 9627.1s | eta 107053.3s
+[DeepSeek][Shard 1/1] 26/303 (8.6%) | elapsed 10045.5s | eta 107022.8s
+[DeepSeek][Shard 1/1] 27/303 (8.9%) | elapsed 10543.1s | eta 107774.3s
+[DeepSeek][Shard 1/1] 28/303 (9.2%) | elapsed 10903.6s | eta 107088.5s
+[DeepSeek][Shard 1/1] 29/303 (9.6%) | elapsed 11101.9s | eta 104893.5s
+[DeepSeek][Shard 1/1] 30/303 (9.9%) | elapsed 11599.8s | eta 105558.5s
+[DeepSeek][Shard 1/1] 31/303 (10.2%) | elapsed 11789.1s | eta 103440.1s
+[DeepSeek][Shard 1/1] 32/303 (10.6%) | elapsed 12287.1s | eta 104056.3s
+[DeepSeek][Shard 1/1] 33/303 (10.9%) | elapsed 12782.4s | eta 104583.6s
+[DeepSeek][Shard 1/1] 34/303 (11.2%) | elapsed 13240.3s | eta 104754.2s
+[DeepSeek][Shard 1/1] 35/303 (11.6%) | elapsed 13663.7s | eta 104624.8s
+[DeepSeek][Shard 1/1] 36/303 (11.9%) | elapsed 14160.6s | eta 105024.6s
+[DeepSeek][Shard 1/1] 37/303 (12.2%) | elapsed 14657.3s | eta 105374.3s
+[DeepSeek][Shard 1/1] 38/303 (12.5%) | elapsed 14783.6s | eta 103096.0s
+[DeepSeek][Shard 1/1] 39/303 (12.9%) | elapsed 15084.2s | eta 102108.1s
+[DeepSeek][Shard 1/1] 40/303 (13.2%) | elapsed 15580.8s | eta 102444.0s
+[DeepSeek][Shard 1/1] 41/303 (13.5%) | elapsed 15994.7s | eta 102210.0s
+[DeepSeek][Shard 1/1] 42/303 (13.9%) | elapsed 16275.2s | eta 101138.7s
+[DeepSeek][Shard 1/1] 43/303 (14.2%) | elapsed 16774.0s | eta 101424.1s
+[DeepSeek][Shard 1/1] 44/303 (14.5%) | elapsed 17270.0s | eta 101657.2s
+[DeepSeek][Shard 1/1] 45/303 (14.9%) | elapsed 17766.9s | eta 101863.5s
+[DeepSeek][Shard 1/1] 46/303 (15.2%) | elapsed 18265.4s | eta 102047.9s
+[DeepSeek][Shard 1/1] 47/303 (15.5%) | elapsed 18605.3s | eta 101339.7s
+[DeepSeek][Shard 1/1] 48/303 (15.8%) | elapsed 18714.5s | eta 99420.9s
+[DeepSeek][Shard 1/1] 49/303 (16.2%) | elapsed 19216.1s | eta 99610.1s
+[DeepSeek][Shard 1/1] 50/303 (16.5%) | elapsed 19716.7s | eta 99766.6s
+[DeepSeek][Shard 1/1] 51/303 (16.8%) | elapsed 20216.2s | eta 99892.0s
+[DeepSeek][Shard 1/1] 52/303 (17.2%) | elapsed 20608.8s | eta 99477.0s
+[DeepSeek][Shard 1/1] 53/303 (17.5%) | elapsed 21108.6s | eta 99569.1s
+[DeepSeek][Shard 1/1] 54/303 (17.8%) | elapsed 21609.9s | eta 99645.4s
+[DeepSeek][Shard 1/1] 55/303 (18.2%) | elapsed 22113.7s | eta 99712.8s
+[DeepSeek][Shard 1/1] 56/303 (18.5%) | elapsed 22613.1s | eta 99739.9s
+[DeepSeek][Shard 1/1] 57/303 (18.8%) | elapsed 23112.2s | eta 99747.3s
+[DeepSeek][Shard 1/1] 58/303 (19.1%) | elapsed 23610.1s | eta 99732.3s
+[DeepSeek][Shard 1/1] 59/303 (19.5%) | elapsed 23802.5s | eta 98437.5s
+[DeepSeek][Shard 1/1] 60/303 (19.8%) | elapsed 24302.6s | eta 98425.7s
+[DeepSeek][Shard 1/1] 61/303 (20.1%) | elapsed 24709.3s | eta 98027.1s
+[DeepSeek][Shard 1/1] 62/303 (20.5%) | elapsed 25186.8s | eta 97903.7s
+[DeepSeek][Shard 1/1] 63/303 (20.8%) | elapsed 25491.0s | eta 97108.7s
+[DeepSeek][Shard 1/1] 64/303 (21.1%) | elapsed 25742.8s | eta 96133.1s
+[DeepSeek][Shard 1/1] 65/303 (21.5%) | elapsed 25896.0s | eta 94819.1s
+[DeepSeek][Shard 1/1] 66/303 (21.8%) | elapsed 26395.1s | eta 94782.4s
+[DeepSeek][Shard 1/1] 67/303 (22.1%) | elapsed 26895.9s | eta 94737.6s
+[DeepSeek][Shard 1/1] 68/303 (22.4%) | elapsed 27395.5s | eta 94675.5s
+[DeepSeek][Shard 1/1] 69/303 (22.8%) | elapsed 27895.2s | eta 94601.2s
+[DeepSeek][Shard 1/1] 70/303 (23.1%) | elapsed 27906.4s | eta 92888.5s
+[DeepSeek][Shard 1/1] 71/303 (23.4%) | elapsed 28404.0s | eta 92813.2s
+[DeepSeek][Shard 1/1] 72/303 (23.8%) | elapsed 28901.4s | eta 92725.3s
+[DeepSeek][Shard 1/1] 73/303 (24.1%) | elapsed 29400.4s | eta 92631.5s
+[DeepSeek][Shard 1/1] 74/303 (24.4%) | elapsed 29900.8s | eta 92530.7s
+[DeepSeek][Shard 1/1] 75/303 (24.8%) | elapsed 30398.9s | eta 92412.7s
+[DeepSeek][Shard 1/1] 76/303 (25.1%) | elapsed 30898.2s | eta 92287.9s
+[DeepSeek][Shard 1/1] 77/303 (25.4%) | elapsed 31398.5s | eta 92156.6s
+[DeepSeek][Shard 1/1] 78/303 (25.7%) | elapsed 31897.9s | eta 92013.2s
+[DeepSeek][Shard 1/1] 79/303 (26.1%) | elapsed 32396.8s | eta 91859.2s
+[DeepSeek][Shard 1/1] 80/303 (26.4%) | elapsed 32618.5s | eta 90924.1s
+[DeepSeek][Shard 1/1] 81/303 (26.7%) | elapsed 33049.0s | eta 90578.7s
+[DeepSeek][Shard 1/1] 82/303 (27.1%) | elapsed 33354.4s | eta 89894.3s
+[DeepSeek][Shard 1/1] 83/303 (27.4%) | elapsed 33854.8s | eta 89735.7s
+[DeepSeek][Shard 1/1] 84/303 (27.7%) | elapsed 34356.7s | eta 89572.7s
+[DeepSeek][Shard 1/1] 85/303 (28.1%) | elapsed 34858.1s | eta 89400.7s
+[DeepSeek][Shard 1/1] 86/303 (28.4%) | elapsed 35169.0s | eta 88740.4s
+[DeepSeek][Shard 1/1] 87/303 (28.7%) | elapsed 35323.0s | eta 87698.5s
+[DeepSeek][Shard 1/1] 88/303 (29.0%) | elapsed 35438.9s | eta 86583.7s
+[DeepSeek][Shard 1/1] 89/303 (29.4%) | elapsed 35777.4s | eta 86026.6s
+[DeepSeek][Shard 1/1] 90/303 (29.7%) | elapsed 36276.8s | eta 85855.1s
+[DeepSeek][Shard 1/1] 91/303 (30.0%) | elapsed 36777.2s | eta 85678.7s
+[DeepSeek][Shard 1/1] 92/303 (30.4%) | elapsed 37213.7s | eta 85348.9s
+[DeepSeek][Shard 1/1] 93/303 (30.7%) | elapsed 37714.3s | eta 85161.3s
+[DeepSeek][Shard 1/1] 94/303 (31.0%) | elapsed 38214.2s | eta 84965.6s
+[DeepSeek][Shard 1/1] 95/303 (31.4%) | elapsed 38715.5s | eta 84766.5s
+[DeepSeek][Shard 1/1] 96/303 (31.7%) | elapsed 39216.5s | eta 84560.6s
+[DeepSeek][Shard 1/1] 97/303 (32.0%) | elapsed 39547.6s | eta 83987.7s
+[DeepSeek][Shard 1/1] 98/303 (32.3%) | elapsed 40048.6s | eta 83775.2s
+[DeepSeek][Shard 1/1] 99/303 (32.7%) | elapsed 40550.1s | eta 83557.7s
+[DeepSeek][Shard 1/1] 100/303 (33.0%) | elapsed 41050.1s | eta 83331.6s
+[DeepSeek][Shard 1/1] 101/303 (33.3%) | elapsed 41549.7s | eta 83099.5s
+[DeepSeek][Shard 1/1] 102/303 (33.7%) | elapsed 42050.2s | eta 82863.6s
+[DeepSeek][Shard 1/1] 103/303 (34.0%) | elapsed 42551.4s | eta 82624.1s
+[DeepSeek][Shard 1/1] 104/303 (34.3%) | elapsed 43051.2s | eta 82376.8s
+[DeepSeek][Shard 1/1] 105/303 (34.7%) | elapsed 43552.2s | eta 82127.0s
+[DeepSeek][Shard 1/1] 106/303 (35.0%) | elapsed 44054.6s | eta 81875.0s
+[DeepSeek][Shard 1/1] 107/303 (35.3%) | elapsed 44553.5s | eta 81612.0s
+[DeepSeek][Shard 1/1] 108/303 (35.6%) | elapsed 45053.1s | eta 81345.9s
+[DeepSeek][Shard 1/1] 109/303 (36.0%) | elapsed 45459.2s | eta 80909.0s
+[DeepSeek][Shard 1/1] 110/303 (36.3%) | elapsed 45958.2s | eta 80635.7s
+[DeepSeek][Shard 1/1] 111/303 (36.6%) | elapsed 46456.9s | eta 80357.9s
+[DeepSeek][Shard 1/1] 112/303 (37.0%) | elapsed 46957.7s | eta 80079.7s
+[DeepSeek][Shard 1/1] 113/303 (37.3%) | elapsed 47459.3s | eta 79798.8s
+[DeepSeek][Shard 1/1] 114/303 (37.6%) | elapsed 47957.9s | eta 79509.1s
+[DeepSeek][Shard 1/1] 115/303 (38.0%) | elapsed 48457.0s | eta 79216.6s
+[DeepSeek][Shard 1/1] 116/303 (38.3%) | elapsed 48958.8s | eta 78924.9s
+[DeepSeek][Shard 1/1] 117/303 (38.6%) | elapsed 49458.5s | eta 78626.3s
+[DeepSeek][Shard 1/1] 118/303 (38.9%) | elapsed 49958.6s | eta 78324.9s
+[DeepSeek][Shard 1/1] 119/303 (39.3%) | elapsed 50457.4s | eta 78018.1s
+[DeepSeek][Shard 1/1] 120/303 (39.6%) | elapsed 50958.0s | eta 77710.9s
+[DeepSeek][Shard 1/1] 121/303 (39.9%) | elapsed 51384.0s | eta 77288.3s
+[DeepSeek][Shard 1/1] 122/303 (40.3%) | elapsed 51884.2s | eta 76975.7s
+[DeepSeek][Shard 1/1] 123/303 (40.6%) | elapsed 52385.8s | eta 76662.1s
+[DeepSeek][Shard 1/1] 124/303 (40.9%) | elapsed 52886.8s | eta 76344.7s
+[DeepSeek][Shard 1/1] 125/303 (41.3%) | elapsed 53387.1s | eta 76023.3s
+[DeepSeek][Shard 1/1] 126/303 (41.6%) | elapsed 53888.3s | eta 75700.3s
+[DeepSeek][Shard 1/1] 127/303 (41.9%) | elapsed 54015.9s | eta 74856.7s
+[DeepSeek][Shard 1/1] 128/303 (42.2%) | elapsed 54372.0s | eta 74336.7s
+[DeepSeek][Shard 1/1] 129/303 (42.6%) | elapsed 54872.6s | eta 74014.1s
+[DeepSeek][Shard 1/1] 130/303 (42.9%) | elapsed 55366.0s | eta 73679.3s
+[DeepSeek][Shard 1/1] 131/303 (43.2%) | elapsed 55842.2s | eta 73319.6s
+[DeepSeek][Shard 1/1] 132/303 (43.6%) | elapsed 56344.7s | eta 72992.0s
+[DeepSeek][Shard 1/1] 133/303 (43.9%) | elapsed 56846.0s | eta 72660.4s
+[DeepSeek][Shard 1/1] 134/303 (44.2%) | elapsed 57347.3s | eta 72326.1s
+[DeepSeek][Shard 1/1] 135/303 (44.6%) | elapsed 57832.6s | eta 71969.5s
+[DeepSeek][Shard 1/1] 136/303 (44.9%) | elapsed 58334.4s | eta 71631.2s
+[DeepSeek][Shard 1/1] 137/303 (45.2%) | elapsed 58836.7s | eta 71291.2s
+[DeepSeek][Shard 1/1] 138/303 (45.5%) | elapsed 59045.4s | eta 70597.8s
+[DeepSeek][Shard 1/1] 139/303 (45.9%) | elapsed 59545.7s | eta 70255.4s
+[DeepSeek][Shard 1/1] 140/303 (46.2%) | elapsed 59781.0s | eta 69602.2s
+[DeepSeek][Shard 1/1] 141/303 (46.5%) | elapsed 60283.3s | eta 69261.7s
+[DeepSeek][Shard 1/1] 142/303 (46.9%) | elapsed 60784.5s | eta 68917.6s
+[DeepSeek][Shard 1/1] 143/303 (47.2%) | elapsed 61286.6s | eta 68572.4s
+[DeepSeek][Shard 1/1] 144/303 (47.5%) | elapsed 61495.2s | eta 67901.0s
+[DeepSeek][Shard 1/1] 145/303 (47.9%) | elapsed 61652.9s | eta 67180.4s
+[DeepSeek][Shard 1/1] 146/303 (48.2%) | elapsed 62154.7s | eta 66837.6s
+[DeepSeek][Shard 1/1] 147/303 (48.5%) | elapsed 62367.8s | eta 66186.2s
+[DeepSeek][Shard 1/1] 148/303 (48.8%) | elapsed 62871.0s | eta 65844.6s
+[DeepSeek][Shard 1/1] 149/303 (49.2%) | elapsed 63373.0s | eta 65499.6s
+[DeepSeek][Shard 1/1] 150/303 (49.5%) | elapsed 63526.2s | eta 64796.8s
+[DeepSeek][Shard 1/1] 151/303 (49.8%) | elapsed 63676.5s | eta 64098.2s
+[DeepSeek][Shard 1/1] 152/303 (50.2%) | elapsed 64181.0s | eta 63758.8s
+[DeepSeek][Shard 1/1] 153/303 (50.5%) | elapsed 64690.7s | eta 63422.2s
+[DeepSeek][Shard 1/1] 154/303 (50.8%) | elapsed 65192.4s | eta 63075.7s
+[DeepSeek][Shard 1/1] 155/303 (51.2%) | elapsed 65695.2s | eta 62728.3s
+[DeepSeek][Shard 1/1] 156/303 (51.5%) | elapsed 66197.3s | eta 62378.3s
+[DeepSeek][Shard 1/1] 157/303 (51.8%) | elapsed 66486.6s | eta 61828.3s
+[DeepSeek][Shard 1/1] 158/303 (52.1%) | elapsed 66988.4s | eta 61476.7s
+[DeepSeek][Shard 1/1] 159/303 (52.5%) | elapsed 67491.3s | eta 61124.2s
+[DeepSeek][Shard 1/1] 160/303 (52.8%) | elapsed 67621.7s | eta 60436.9s
+[DeepSeek][Shard 1/1] 161/303 (53.1%) | elapsed 68123.4s | eta 60084.0s
+[DeepSeek][Shard 1/1] 162/303 (53.5%) | elapsed 68497.7s | eta 59618.3s
+[DeepSeek][Shard 1/1] 163/303 (53.8%) | elapsed 68917.9s | eta 59193.3s
+[DeepSeek][Shard 1/1] 164/303 (54.1%) | elapsed 69039.7s | eta 58515.4s
+[DeepSeek][Shard 1/1] 165/303 (54.5%) | elapsed 69431.6s | eta 58070.1s
+[DeepSeek][Shard 1/1] 166/303 (54.8%) | elapsed 69934.4s | eta 57717.0s
+[DeepSeek][Shard 1/1] 167/303 (55.1%) | elapsed 70437.0s | eta 57361.9s
+[DeepSeek][Shard 1/1] 168/303 (55.4%) | elapsed 70606.2s | eta 56737.1s
+[DeepSeek][Shard 1/1] 169/303 (55.8%) | elapsed 71112.4s | eta 56384.9s
+[DeepSeek][Shard 1/1] 170/303 (56.1%) | elapsed 71616.4s | eta 56029.3s
+[DeepSeek][Shard 1/1] 171/303 (56.4%) | elapsed 72116.9s | eta 55669.2s
+[DeepSeek][Shard 1/1] 172/303 (56.8%) | elapsed 72620.2s | eta 55309.6s
+[DeepSeek][Shard 1/1] 173/303 (57.1%) | elapsed 72737.9s | eta 54658.5s
+[DeepSeek][Shard 1/1] 174/303 (57.4%) | elapsed 73239.4s | eta 54298.1s
+[DeepSeek][Shard 1/1] 175/303 (57.8%) | elapsed 73740.2s | eta 53935.7s
+[DeepSeek][Shard 1/1] 176/303 (58.1%) | elapsed 74244.4s | eta 53574.1s
+[DeepSeek][Shard 1/1] 177/303 (58.4%) | elapsed 74747.1s | eta 53209.8s
+[DeepSeek][Shard 1/1] 178/303 (58.7%) | elapsed 75247.5s | eta 52842.4s
+[DeepSeek][Shard 1/1] 179/303 (59.1%) | elapsed 75746.7s | eta 52472.6s
+[DeepSeek][Shard 1/1] 180/303 (59.4%) | elapsed 76248.3s | eta 52103.0s
+[DeepSeek][Shard 1/1] 181/303 (59.7%) | elapsed 76749.3s | eta 51731.6s
+[DeepSeek][Shard 1/1] 182/303 (60.1%) | elapsed 77248.2s | eta 51357.3s
+[DeepSeek][Shard 1/1] 183/303 (60.4%) | elapsed 77751.0s | eta 50984.3s
+[DeepSeek][Shard 1/1] 184/303 (60.7%) | elapsed 78252.9s | eta 50609.2s
+[DeepSeek][Shard 1/1] 185/303 (61.1%) | elapsed 78708.9s | eta 50203.5s
+[DeepSeek][Shard 1/1] 186/303 (61.4%) | elapsed 79209.3s | eta 49825.2s
+[DeepSeek][Shard 1/1] 187/303 (61.7%) | elapsed 79711.6s | eta 49446.8s
+[DeepSeek][Shard 1/1] 188/303 (62.0%) | elapsed 80214.6s | eta 49067.5s
+[DeepSeek][Shard 1/1] 189/303 (62.4%) | elapsed 80718.7s | eta 48687.4s
+[DeepSeek][Shard 1/1] 190/303 (62.7%) | elapsed 81220.6s | eta 48304.9s
+[DeepSeek][Shard 1/1] 191/303 (63.0%) | elapsed 81725.9s | eta 47923.1s
+[DeepSeek][Shard 1/1] 192/303 (63.4%) | elapsed 82227.7s | eta 47537.9s
+[DeepSeek][Shard 1/1] 193/303 (63.7%) | elapsed 82463.3s | eta 46999.8s
+[DeepSeek][Shard 1/1] 194/303 (64.0%) | elapsed 82965.4s | eta 46614.6s
+[DeepSeek][Shard 1/1] 195/303 (64.4%) | elapsed 83471.0s | eta 46230.1s
+[DeepSeek][Shard 1/1] 196/303 (64.7%) | elapsed 83975.6s | eta 45843.8s
+[DeepSeek][Shard 1/1] 197/303 (65.0%) | elapsed 84321.6s | eta 45371.0s
+[DeepSeek][Shard 1/1] 198/303 (65.3%) | elapsed 84678.9s | eta 44905.5s
+[DeepSeek][Shard 1/1] 199/303 (65.7%) | elapsed 84819.7s | eta 44327.9s
+[DeepSeek][Shard 1/1] 200/303 (66.0%) | elapsed 85326.2s | eta 43943.0s
+[DeepSeek][Shard 1/1] 201/303 (66.3%) | elapsed 85610.4s | eta 43444.1s
+[DeepSeek][Shard 1/1] 202/303 (66.7%) | elapsed 85900.2s | eta 42950.1s
+[DeepSeek][Shard 1/1] 203/303 (67.0%) | elapsed 86106.9s | eta 42417.2s
+[DeepSeek][Shard 1/1] 204/303 (67.3%) | elapsed 86610.6s | eta 42031.6s
+[DeepSeek][Shard 1/1] 205/303 (67.7%) | elapsed 87115.6s | eta 41645.5s
+[DeepSeek][Shard 1/1] 206/303 (68.0%) | elapsed 87620.0s | eta 41258.0s
+[DeepSeek][Shard 1/1] 207/303 (68.3%) | elapsed 87962.4s | eta 40794.2s
+[DeepSeek][Shard 1/1] 208/303 (68.6%) | elapsed 88403.0s | eta 40376.4s
+[DeepSeek][Shard 1/1] 209/303 (69.0%) | elapsed 88583.2s | eta 39841.3s
+[DeepSeek][Shard 1/1] 210/303 (69.3%) | elapsed 89087.2s | eta 39452.9s
+[DeepSeek][Shard 1/1] 211/303 (69.6%) | elapsed 89483.2s | eta 39016.4s
+[DeepSeek][Shard 1/1] 212/303 (70.0%) | elapsed 89987.2s | eta 38626.6s
+[DeepSeek][Shard 1/1] 213/303 (70.3%) | elapsed 90214.2s | eta 38118.7s
+[DeepSeek][Shard 1/1] 214/303 (70.6%) | elapsed 90716.3s | eta 37727.8s
+[DeepSeek][Shard 1/1] 215/303 (71.0%) | elapsed 91135.3s | eta 37301.9s
+[DeepSeek][Shard 1/1] 216/303 (71.3%) | elapsed 91639.3s | eta 36910.3s
+[DeepSeek][Shard 1/1] 217/303 (71.6%) | elapsed 91754.5s | eta 36363.6s
+[DeepSeek][Shard 1/1] 218/303 (71.9%) | elapsed 92256.8s | eta 35971.7s
+[DeepSeek][Shard 1/1] 219/303 (72.3%) | elapsed 92759.6s | eta 35579.0s
+[DeepSeek][Shard 1/1] 220/303 (72.6%) | elapsed 92832.4s | eta 35023.1s
+[DeepSeek][Shard 1/1] 221/303 (72.9%) | elapsed 93335.7s | eta 34631.4s
+[DeepSeek][Shard 1/1] 222/303 (73.3%) | elapsed 93839.5s | eta 34238.7s
+[DeepSeek][Shard 1/1] 223/303 (73.6%) | elapsed 94343.6s | eta 33845.2s
+[DeepSeek][Shard 1/1] 224/303 (73.9%) | elapsed 94846.4s | eta 33450.3s
+[DeepSeek][Shard 1/1] 225/303 (74.3%) | elapsed 95009.7s | eta 32936.7s
+[DeepSeek][Shard 1/1] 226/303 (74.6%) | elapsed 95514.8s | eta 32542.7s
+[DeepSeek][Shard 1/1] 227/303 (74.9%) | elapsed 96021.4s | eta 32148.2s
+[DeepSeek][Shard 1/1] 228/303 (75.2%) | elapsed 96525.6s | eta 31751.8s
+[DeepSeek][Shard 1/1] 229/303 (75.6%) | elapsed 97032.0s | eta 31355.3s
+[DeepSeek][Shard 1/1] 230/303 (75.9%) | elapsed 97538.2s | eta 30957.8s
+[DeepSeek][Shard 1/1] 231/303 (76.2%) | elapsed 98044.4s | eta 30559.3s
+[DeepSeek][Shard 1/1] 232/303 (76.6%) | elapsed 98551.4s | eta 30160.1s
+[DeepSeek][Shard 1/1] 233/303 (76.9%) | elapsed 99055.4s | eta 29759.1s
+[DeepSeek][Shard 1/1] 234/303 (77.2%) | elapsed 99561.9s | eta 29358.0s
+[DeepSeek][Shard 1/1] 235/303 (77.6%) | elapsed 100066.0s | eta 28955.3s
+[DeepSeek][Shard 1/1] 236/303 (77.9%) | elapsed 100570.0s | eta 28551.7s
+[DeepSeek][Shard 1/1] 237/303 (78.2%) | elapsed 101073.4s | eta 28147.0s
+[DeepSeek][Shard 1/1] 238/303 (78.5%) | elapsed 101110.1s | eta 27614.1s
+[DeepSeek][Shard 1/1] 239/303 (78.9%) | elapsed 101614.2s | eta 27210.5s
+[DeepSeek][Shard 1/1] 240/303 (79.2%) | elapsed 102029.5s | eta 26782.7s
+[DeepSeek][Shard 1/1] 241/303 (79.5%) | elapsed 102202.4s | eta 26292.7s
+[DeepSeek][Shard 1/1] 242/303 (79.9%) | elapsed 102707.6s | eta 25889.1s
+[DeepSeek][Shard 1/1] 243/303 (80.2%) | elapsed 103212.2s | eta 25484.5s
+[DeepSeek][Shard 1/1] 244/303 (80.5%) | elapsed 103720.0s | eta 25079.8s
+[DeepSeek][Shard 1/1] 245/303 (80.9%) | elapsed 104225.3s | eta 24673.7s
+[DeepSeek][Shard 1/1] 246/303 (81.2%) | elapsed 104407.2s | eta 24191.9s
+[DeepSeek][Shard 1/1] 247/303 (81.5%) | elapsed 104913.9s | eta 23786.1s
+[DeepSeek][Shard 1/1] 248/303 (81.8%) | elapsed 105101.1s | eta 23308.7s
+[DeepSeek][Shard 1/1] 249/303 (82.2%) | elapsed 105606.3s | eta 22902.6s
+[DeepSeek][Shard 1/1] 250/303 (82.5%) | elapsed 106114.1s | eta 22496.2s
+[DeepSeek][Shard 1/1] 251/303 (82.8%) | elapsed 106270.9s | eta 22016.3s
+[DeepSeek][Shard 1/1] 252/303 (83.2%) | elapsed 106779.9s | eta 21610.2s
+[DeepSeek][Shard 1/1] 253/303 (83.5%) | elapsed 107286.3s | eta 21202.8s
+[DeepSeek][Shard 1/1] 254/303 (83.8%) | elapsed 107795.5s | eta 20795.2s
+[DeepSeek][Shard 1/1] 255/303 (84.2%) | elapsed 108301.0s | eta 20386.1s
+[DeepSeek][Shard 1/1] 256/303 (84.5%) | elapsed 108807.3s | eta 19976.3s
+[DeepSeek][Shard 1/1] 257/303 (84.8%) | elapsed 109312.9s | eta 19565.7s
+[DeepSeek][Shard 1/1] 258/303 (85.1%) | elapsed 109823.5s | eta 19155.3s
+[DeepSeek][Shard 1/1] 259/303 (85.5%) | elapsed 110331.4s | eta 18743.6s
+[DeepSeek][Shard 1/1] 260/303 (85.8%) | elapsed 110840.2s | eta 18331.3s
+[DeepSeek][Shard 1/1] 261/303 (86.1%) | elapsed 111089.9s | eta 17876.5s
+[DeepSeek][Shard 1/1] 262/303 (86.5%) | elapsed 111599.3s | eta 17464.0s
+[DeepSeek][Shard 1/1] 263/303 (86.8%) | elapsed 112108.7s | eta 17050.8s
+[DeepSeek][Shard 1/1] 264/303 (87.1%) | elapsed 112617.8s | eta 16636.7s
+[DeepSeek][Shard 1/1] 265/303 (87.5%) | elapsed 113127.6s | eta 16222.1s
+[DeepSeek][Shard 1/1] 266/303 (87.8%) | elapsed 113339.7s | eta 15765.3s
+[DeepSeek][Shard 1/1] 267/303 (88.1%) | elapsed 113715.6s | eta 15332.4s
+[DeepSeek][Shard 1/1] 268/303 (88.4%) | elapsed 114223.7s | eta 14917.3s
+[DeepSeek][Shard 1/1] 269/303 (88.8%) | elapsed 114730.0s | eta 14501.2s
+[DeepSeek][Shard 1/1] 270/303 (89.1%) | elapsed 114965.6s | eta 14051.4s
+[DeepSeek][Shard 1/1] 271/303 (89.4%) | elapsed 115480.4s | eta 13636.1s
+[DeepSeek][Shard 1/1] 272/303 (89.8%) | elapsed 115989.0s | eta 13219.3s
+[DeepSeek][Shard 1/1] 273/303 (90.1%) | elapsed 116498.7s | eta 12802.1s
+[DeepSeek][Shard 1/1] 274/303 (90.4%) | elapsed 116701.3s | eta 12351.6s
+[DeepSeek][Shard 1/1] 275/303 (90.8%) | elapsed 117211.0s | eta 11934.2s
+[DeepSeek][Shard 1/1] 276/303 (91.1%) | elapsed 117722.1s | eta 11516.3s
+[DeepSeek][Shard 1/1] 277/303 (91.4%) | elapsed 118163.5s | eta 11091.2s
+[DeepSeek][Shard 1/1] 278/303 (91.7%) | elapsed 118672.3s | eta 10672.0s
+[DeepSeek][Shard 1/1] 279/303 (92.1%) | elapsed 119181.3s | eta 10252.2s
+[DeepSeek][Shard 1/1] 280/303 (92.4%) | elapsed 119692.4s | eta 9831.9s
+[DeepSeek][Shard 1/1] 281/303 (92.7%) | elapsed 119946.5s | eta 9390.8s
+[DeepSeek][Shard 1/1] 282/303 (93.1%) | elapsed 120238.6s | eta 8953.9s
+[DeepSeek][Shard 1/1] 283/303 (93.4%) | elapsed 120748.4s | eta 8533.5s
+[DeepSeek][Shard 1/1] 284/303 (93.7%) | elapsed 121258.9s | eta 8112.4s
+[DeepSeek][Shard 1/1] 285/303 (94.1%) | elapsed 121769.2s | eta 7690.7s
+[DeepSeek][Shard 1/1] 286/303 (94.4%) | elapsed 121973.6s | eta 7250.2s
+[DeepSeek][Shard 1/1] 287/303 (94.7%) | elapsed 122483.6s | eta 6828.4s
+[DeepSeek][Shard 1/1] 288/303 (95.0%) | elapsed 122811.5s | eta 6396.4s
+[DeepSeek][Shard 1/1] 289/303 (95.4%) | elapsed 123322.2s | eta 5974.1s
+[DeepSeek][Shard 1/1] 290/303 (95.7%) | elapsed 123833.4s | eta 5551.2s
+[DeepSeek][Shard 1/1] 291/303 (96.0%) | elapsed 124344.0s | eta 5127.6s
+[DeepSeek][Shard 1/1] 292/303 (96.4%) | elapsed 124804.6s | eta 4701.5s
+[DeepSeek][Shard 1/1] 293/303 (96.7%) | elapsed 125316.3s | eta 4277.0s
+[DeepSeek][Shard 1/1] 294/303 (97.0%) | elapsed 125829.6s | eta 3851.9s
+[DeepSeek][Shard 1/1] 295/303 (97.4%) | elapsed 125992.0s | eta 3416.7s
+[DeepSeek][Shard 1/1] 296/303 (97.7%) | elapsed 126507.5s | eta 2991.7s
+[DeepSeek][Shard 1/1] 297/303 (98.0%) | elapsed 126570.9s | eta 2557.0s
+[DeepSeek][Shard 1/1] 298/303 (98.3%) | elapsed 127084.9s | eta 2132.3s
+[DeepSeek][Shard 1/1] 299/303 (98.7%) | elapsed 127599.2s | eta 1707.0s
+[DeepSeek][Shard 1/1] 300/303 (99.0%) | elapsed 127892.3s | eta 1278.9s
+[DeepSeek][Shard 1/1] 301/303 (99.3%) | elapsed 128440.5s | eta 853.4s
+[rank2]: Traceback (most recent call last):
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank2]:     main()
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank2]:     completion_tokens = generate(
+[rank2]:                         ^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank2]:     return func(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank2]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank2]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank2]:     return func(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank2]:     h = layer(h, start_pos, input_ids)
+[rank2]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank2]:     return self._call_impl(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank2]:     return forward_call(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank2]:     x = self.hc_post(x, residual, post, comb)
+[rank2]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank2]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank2]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank2]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank2]:     return func(*args, **kwargs)
+[rank2]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank2]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 2 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank1]:     main()
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank1]:     completion_tokens = generate(
+[rank1]:                         ^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank1]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank1]:     h = layer(h, start_pos, input_ids)
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank1]:     x = self.hc_post(x, residual, post, comb)
+[rank1]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank1]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank1]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 1 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank0]:     main()
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank0]:     completion_tokens = generate(
+[rank0]:                         ^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank0]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank0]:     h = layer(h, start_pos, input_ids)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank0]:     x = self.hc_post(x, residual, post, comb)
+[rank0]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank0]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank0]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 0 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank3]: Traceback (most recent call last):
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank3]:     main()
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank3]:     completion_tokens = generate(
+[rank3]:                         ^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank3]:     return func(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank3]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank3]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank3]:     return func(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank3]:     h = layer(h, start_pos, input_ids)
+[rank3]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank3]:     return self._call_impl(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank3]:     return forward_call(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank3]:     x = self.hc_post(x, residual, post, comb)
+[rank3]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank3]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank3]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank3]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank3]:     return func(*args, **kwargs)
+[rank3]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank3]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 3 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank7]: Traceback (most recent call last):
+[rank7]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank7]:     main()
+[rank7]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank7]:     completion_tokens = generate(
+[rank7]:                         ^^^^^^^^^
+[rank7]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank7]:     return func(*args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank7]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank7]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank7]:     return func(*args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank7]:     h = layer(h, start_pos, input_ids)
+[rank7]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank7]:     return self._call_impl(*args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank7]:     return forward_call(*args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank7]:     x = self.hc_post(x, residual, post, comb)
+[rank7]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank7]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank7]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank7]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank7]:     return func(*args, **kwargs)
+[rank7]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank7]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 7 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank6]: Traceback (most recent call last):
+[rank6]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank6]:     main()
+[rank6]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank6]:     completion_tokens = generate(
+[rank6]:                         ^^^^^^^^^
+[rank6]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank6]:     return func(*args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank6]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank6]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank6]:     return func(*args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank6]:     h = layer(h, start_pos, input_ids)
+[rank6]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank6]:     return self._call_impl(*args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank6]:     return forward_call(*args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank6]:     x = self.hc_post(x, residual, post, comb)
+[rank6]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank6]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank6]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank6]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank6]:     return func(*args, **kwargs)
+[rank6]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank6]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 6 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank4]: Traceback (most recent call last):
+[rank4]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank4]:     main()
+[rank4]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank4]:     completion_tokens = generate(
+[rank4]:                         ^^^^^^^^^
+[rank4]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank4]:     return func(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank4]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank4]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank4]:     return func(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank4]:     h = layer(h, start_pos, input_ids)
+[rank4]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank4]:     return self._call_impl(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank4]:     return forward_call(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank4]:     x = self.hc_post(x, residual, post, comb)
+[rank4]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank4]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank4]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank4]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank4]:     return func(*args, **kwargs)
+[rank4]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank4]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 4 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank5]: Traceback (most recent call last):
+[rank5]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 319, in <module>
+[rank5]:     main()
+[rank5]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/scripts/deepseek_replay_eval.py", line 179, in main
+[rank5]:     completion_tokens = generate(
+[rank5]:                         ^^^^^^^^^
+[rank5]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank5]:     return func(*args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/generate.py", line 52, in generate
+[rank5]:     logits = model.forward(tokens[:, prev_pos:cur_pos], prev_pos)
+[rank5]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+[rank5]:     return func(*args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 839, in forward
+[rank5]:     h = layer(h, start_pos, input_ids)
+[rank5]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+[rank5]:     return self._call_impl(*args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.local/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+[rank5]:     return forward_call(*args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 731, in forward
+[rank5]:     x = self.hc_post(x, residual, post, comb)
+[rank5]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/deepseek_v4/inference/model.py", line 717, in hc_post
+[rank5]:     y = post.unsqueeze(-1) * x.unsqueeze(-2) + torch.sum(comb.unsqueeze(-1) * residual.unsqueeze(-2), dim=2)
+[rank5]:                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank5]:   File "/home/work/.local/lib/python3.12/site-packages/torch/utils/_device.py", line 122, in __torch_function__
+[rank5]:     return func(*args, **kwargs)
+[rank5]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank5]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 4.15 GiB. GPU 5 has a total capacity of 139.81 GiB of which 3.06 GiB is free. Including non-PyTorch memory, this process has 136.75 GiB memory in use. Of the allocated memory 134.87 GiB is allocated by PyTorch, and 106.12 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+[rank0]:[W518 20:07:31.411941922 ProcessGroupNCCL.cpp:1648] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W0518 20:07:34.744000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187405 closing signal SIGTERM
+W0518 20:07:34.745000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187407 closing signal SIGTERM
+W0518 20:07:34.745000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187408 closing signal SIGTERM
+W0518 20:07:34.745000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187409 closing signal SIGTERM
+W0518 20:07:34.745000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187410 closing signal SIGTERM
+W0518 20:07:34.745000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187411 closing signal SIGTERM
+W0518 20:07:34.745000 1187337 torch/distributed/elastic/multiprocessing/api.py:1014] Sending process 1187412 closing signal SIGTERM
+E0518 20:07:38.876000 1187337 torch/distributed/elastic/multiprocessing/api.py:988] failed (exitcode: 1) local_rank: 1 (pid: 1187406) of binary: /home/work/.projects/LLM-OS-Models/Terminal/.deepseek-env/bin/python
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1020, in <module>
+    main()
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 367, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1016, in main
+    run(args)
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/run.py", line 1007, in run
+    elastic_launch(
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 184, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/work/.local/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 332, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+tb2_lite/scripts/deepseek_replay_eval.py FAILED
+------------------------------------------------------------
+Failures:
+[1]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 1187405) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[2]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 2 (local_rank: 2)
+  exitcode  : 1 (pid: 1187407) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[3]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 3 (local_rank: 3)
+  exitcode  : 1 (pid: 1187408) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[4]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 4 (local_rank: 4)
+  exitcode  : 1 (pid: 1187409) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[5]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 5 (local_rank: 5)
+  exitcode  : 1 (pid: 1187410) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[6]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 6 (local_rank: 6)
+  exitcode  : 1 (pid: 1187411) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+[7]:
+  time      : 2026-05-18_20:07:38
+  host      : main1
+  rank      : 7 (local_rank: 7)
+  exitcode  : 1 (pid: 1187412) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-05-18_20:07:34
+  host      : main1
+  rank      : 1 (local_rank: 1)
+  exitcode  : 1 (pid: 1187406) 
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
