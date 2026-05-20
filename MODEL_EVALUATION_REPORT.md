@@ -76,7 +76,9 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 55 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth` | 27.33 | 0.2733 | 0.3526 | 0.2872 | 24.1% | 62.0% | chat_template | 0.124 | 267.1 |
 | 56 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth` | 27.31 | 0.2731 | 0.3643 | 0.2804 | 21.8% | 62.0% | chat_template | 0.147 | 69.7 |
 | 57 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
-| 30 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, 175/303)` | 35.40 | 0.3540 | 0.4872 | 0.3336 | 29.7% | 52.6% | deepseek_official_mp8_chat_t0 | 376.0 | 15.0 |
+| 30 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=1024, 175/303)` | 35.40 | 0.3540 | 0.4872 | 0.3336 | 29.7% | 52.6% | deepseek_official_mp8_chat_t0 | 376.0 | 15.0 |
+| 59 | `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66 | 0.2666 | 0.3733 | 0.2366 | 23.5% | 31.0% | deepseek_official_mp8 | 441.6 | 15.0 |
+| ~40 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.3, m=4096, 85/303)` | ~33* | 0.33* | — | — | — | 58.8% | deepseek_official_mp8_chat_t03_m4096 | 814.0 | 15.0 |
 | 60 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
 | 60 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
 | 61 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
@@ -142,25 +144,45 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - 작은 Gemma base도 마찬가지다. E4B-it native 2epoch는 `34.98`인데 E4B base native 2epoch는 `18.47`, E2B-it native 1epoch는 `25.70`인데 E2B base native 2epoch는 `16.22`다. base 모델은 규모와 무관하게 terminal JSON command 형식 습득이 약하다.
 - `Jiunsong/supergemma4-26b-uncensored-gguf-v2:Q4_K_M`은 Score `28.21`, Valid JSON `53.8%`로 Qwen GGUF 계열보다 낮다. Gemma 계열 prompt/template을 맞췄는데도 Recall `0.2506`이라 행동 명령을 넓게 복원하지 못한다.
 - `MiniMaxAI/MiniMax-M2.7`은 229B급 MoE이고 H200 8장 vLLM에서 VRAM을 GPU당 약 `134GB`까지 잘 썼지만, 점수는 `32.29`에 그쳤다. 약점은 명확하다. `code` F1 `0.0908`, `swe` `0.2185`, `data_processing` `0.2623`, `data_querying` `0.2686`이 낮고, First Cmd도 `13.5%`라 첫 행동 선택이 약하다. 강한 쪽은 `system_administration` `0.4771`, `dependency_management` `0.4695`, `file_operations` `0.4147`이다. 즉 운영/패키지/파일 명령은 괜찮지만 코드/SWE/데이터 처리 next-action에는 약하다.
-- `DeepSeek-V4-Pro`는 1.6T params, 49B activated, 384 experts MoE 모델이다. 첫 평가(thinking mode, t=1.0)에서 Valid JSON `31.0%`로 Score `26.66`에 그쳐 중단했고, 두 번째 평가(chat mode, t=0.0)를 진행 중이다. **현재 175/303 step (57.8%)에서 Score `35.40`**, Valid JSON `52.6%`로 Flash(`32.22`)를 상회하고 있다. 그러나 Valid JSON인 step의 평균 F1이 `0.4399`임을 감안하면, **max_new_tokens=1024 한계로 analysis가 1024토큰을 다 소모해 commands가 잘리는 구조적 문제**로 추정 Score ~9점을 잃고 있다. Valid JSON step F1 기준 이론적 Score 상한은 `43.99`로 GLM-5.1(`41.68`)을 넘어 2위 가능. **재평가 예정**: max_new_tokens=4096, temperature=0.3, chat mode.
+- `DeepSeek-V4-Pro`는 1.6T params, 49B activated, 384 experts MoE 모델이다. **총 4회 평가**를 진행했다:
 
-  **Pro 강점 분석 (175 step 기준):**
-  - `system_administration` F1 `0.7015` — 전체 source group 중 최강. ls, df, systemctl 등 시스템 명령 예측에 특화.
-  - `debugging` F1 `0.4678` — 환경 분석→원인 파악→수정 흐름에서 강함.
-  - `security` F1 `0.4637` — 파일 탐색/설정 분석에 능함. Valid JSON 시 `73.3%`.
-  - `software_engineering` F1 `0.4020` — 파일 읽기/수정/빌드 파이프라인 양호.
+  **평가 이력:**
 
-  **Pro 약점 분석:**
-  - `data_processing` F1 `0.1611` — 복잡한 파이프라인 명령 예측에 실패.
-  - `swe` F1 `0.1735` — 다단계 수정/테스트 시퀀스 구성 불가.
-  - `model_training` F1 `0.2287` — 학습 스크립트/하이퍼파라미터 조합 약함.
-  - **JSON truncation**: 83개 invalid JSON 중 81개가 1024토큰에서 truncated. analysis가 평균 ~800토큰을 소모해 commands 배열이 생성 한계를 넘음. 이것이 Score의 주요 손실 원인.
+  | Run | Mode | Temp | max_tokens | Steps | Score | Valid JSON | 속도(s/step) | 비고 |
+  |-----|------|------|-----------|-------|-------|-----------|-------------|------|
+  | 1 | thinking | 1.0 | 1024 | 301/303 | 26.66 | 31.0% | 442 | 크래시 종료 |
+  | 2 | chat | 0.0 | 1024 | 175/303 | 35.40 | 52.6% | 376 | **최고 Score** |
+  | 3 | chat | 0.3 | 4096 | 85/303 | 36.93* | 58.8% | 814 | 속도 2.2배, 동일 step -2.44 |
+  | 4 | chat | 0.0 | 4096 | 진행 예정 | ? | ? | ~500예상 | **최적 추정** |
+
+  *Run 3은 85 step 기준, 최종 예상 ~33 (이전 run 동일 step 대비 -2.44)
+
+  **파라미터 분석 결과:**
+  - **t=0.3은 Pro에게 역효과**: Run 2(t=0.0) 동일 85 step Score 39.36 → Run 3(t=0.3) 36.93 (-2.44). 온도를 올리면 Valid JSON은 약간 오르지만(53→59%) 명령 품질이 하락. Pro는 384 expert MoE라 greedy(t=0.0)가 더 안정적.
+  - **m=4096은 Valid JSON 개선에 한계**: 52.6→58.8% (+6%p). 속도는 2.2배 증가(376→814 s/step). mid bucket에서 analysis가 4096토큰까지 확장되며 속도만 느려지고 commands는 여전히 잘리는 step이 많음.
+  - **thinking mode는 최악**: t=1.0+thinking에서 Valid JSON 31%. thinking token이 JSON을 깨먹음. 단 Valid JSON step의 F1은 0.4832로 가장 높음.
+
+  **최적 파라미터**: chat mode, t=0.0, m=4096. 근거:
+  1. t=0.0이 명령 품질 최고 (Run 2에서 증명)
+  2. m=4096이 Valid JSON 개선 (+6%p)
+  3. 둘을 합치면 Valid ~59% × F1 ~0.44 = **Score ~38 예상**
+  4. t=0.0이 t=0.3보다 짧은 응답 생성으로 속도도 더 빠를 것 (~500 s/step 예상)
+
+  **Pro 강점 (Run 2, 175 step 기준):**
+  - `system_administration` F1 `0.7015` — 전체 source group 중 최강
+  - `debugging` F1 `0.4678` — 환경 분석→원인 파악→수정 흐름
+  - `security` F1 `0.4637` — 파일 탐색/설정 분석, Valid JSON 시 `73.3%`
+  - `software_engineering` F1 `0.4020` — 파일 읽기/수정/빌드 파이프라인
+
+  **Pro 약점:**
+  - `data_processing` F1 `0.1611`, `swe` `0.1735`, `model_training` `0.2287`
+  - **JSON truncation**: analysis가 대부분의 토큰을 소모해 commands가 잘림. 이것이 Score의 주요 손실 원인.
+  - **과도한 분석**: Pro는 "문제를 풀이"하려는 경향이 강해 환경 탐색(ls, cat)보다 직접 코드 작성을 우선. reference와 형태가 달라 F1 하락.
 
   **이 점수가 고평가인지 저평가인지:**
-  - **크게 저평가되었다.** Pro의 실제 명령 품질(F1=0.44 on valid steps)은 Flash 전체 평균(0.32)보다 37% 높고, GLM-5.1(0.42)과 동급이다. Score `35.40`은 생성 길이 제한(1024 tokens)으로 인한 인위적 하한이다.
-  - Valid JSON step F1 `0.4399` 기준 이론 상한 Score = `43.99`. 이는 GLM-5.1 `41.68`을 넘어 전체 2위.
-  - max_new_tokens=4096, temperature=0.3으로 재평가하면 Score `40~44` 예상. 이 경우 Flash 대비 `+8~12`점, GLM-5.1과 경쟁 가능.
-  - Pro의 376초/step은 Flash(178초/step)의 2.1배지만, 모델 크기(49B vs 11B activated)를 고려하면 합리적이다.
+  - **크게 저평가되었다.** Pro의 실제 명령 품질(F1=0.44 on valid steps)은 Flash 전체 평균(0.32)보다 37% 높고 GLM-5.1(0.42)과 동급.
+  - Valid JSON step F1 기준 이론 상한 Score = `43.99` (GLM-5.1 41.68을 넘어 2위).
+  - Run 4(chat, t=0.0, m=4096)에서 Score `37~40` 예상.
 - `DeepSeek-V4-Flash`는 최종 공식 MP4 경로에서 Score `32.22`로 전체 39위다. Precision `0.4511`, First Cmd `24.4%`는 중위권이지만 Valid JSON `44.2%`, Recall `0.3037`이라 필요한 명령을 충분히 넓게 복원하지 못했다. `dependency_management` F1 `0.5048`은 강하지만 `math` `0.1302`, `data_processing` `0.1496`, `code` `0.1688`이 낮다. 가장 큰 운영상 약점은 속도다. 평균 `178.033s/step`이라 정상 점수는 나왔지만 대량 평가/실서비스에는 현재 공식 MP4 경로가 너무 느리다.
 - `stepfun-ai/Step-3.5-Flash`는 vLLM `tp=8`, expert parallel, BF16 원본 모델로 full 303-step을 정상 완료했지만 Score `18.80`으로 낮다. 가장 큰 문제는 출력 형식과 짧은 command set이다. Valid JSON은 `27.4%`, invalid JSON은 `220/303`이고, 평균 예측 command는 `2.60`개로 reference 평균 `38.42`개보다 훨씬 적다. Precision `0.2710`, Recall `0.1790`, First Cmd `13.9%`라 첫 명령 선택과 command coverage가 모두 약하다. `software_engineering` F1 `0.2919`, `data_science` `0.2637`, `dependency_management` `0.2397`은 상대적으로 낫지만 `code` `0.0846`, `model_training` `0.1143`, `math` `0.1245`, `swe` `0.1274`가 매우 낮다.
 
