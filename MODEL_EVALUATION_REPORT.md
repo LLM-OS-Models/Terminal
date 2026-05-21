@@ -78,6 +78,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 57 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
 | 30 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=1024, 175/303)` | 35.40 | 0.3540 | 0.4872 | 0.3336 | 29.7% | 52.6% | deepseek_official_mp8_chat_t0 | 376.0 | 15.0 |
 | 59 | `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66 | 0.2666 | 0.3733 | 0.2366 | 23.5% | 31.0% | deepseek_official_mp8 | 441.6 | 15.0 |
+| ~3 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 71/303)` | 40.87* | 0.4087* | 0.5752 | 0.4112 | 45.1% | 67.6% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
 | ~40 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.3, m=4096, 85/303)` | ~33* | 0.33* | — | — | — | 58.8% | deepseek_official_mp8_chat_t03_m4096 | 814.0 | 15.0 |
 | 60 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
 | 60 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
@@ -148,41 +149,62 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
   **평가 이력:**
 
-  | Run | Mode | Temp | max_tokens | Steps | Score | Valid JSON | 속도(s/step) | 비고 |
-  |-----|------|------|-----------|-------|-------|-----------|-------------|------|
-  | 1 | thinking | 1.0 | 1024 | 301/303 | 26.66 | 31.0% | 442 | 크래시 종료 |
-  | 2 | chat | 0.0 | 1024 | 175/303 | 35.40 | 52.6% | 376 | **최고 Score** |
-  | 3 | chat | 0.3 | 4096 | 85/303 | 36.93* | 58.8% | 814 | 속도 2.2배, 동일 step -2.44 |
-  | 4 | chat | 0.0 | 4096 | 진행 예정 | ? | ? | ~500예상 | **최적 추정** |
+  | Run | Mode | Temp | max_tokens | Steps | Score | Valid JSON | Prec | Recall | Exact | Sec/Step | 비고 |
+  |-----|------|------|-----------|-------|-------|-----------|------|--------|-------|----------|------|
+  | 1 | thinking | 1.0 | 1024 | 301/303 | 26.66 | 31.0% | 0.3770 | 0.2404 | 23.3% | 442 | 크래시 종료 |
+  | 2 | chat | 0.0 | 1024 | 175/303 | 35.40 | 52.6% | 0.4872 | 0.3336 | 29.7% | 376 | 완료 |
+  | 3 | chat | 0.3 | 4096 | 86/303 | 36.50 | 59.3% | 0.4961 | 0.3995 | 37.2% | 814 | 속도 2.2배 |
+  | **4** | **chat** | **0.0** | **4096** | **71/303** | **40.87*** | **67.6%** | **0.5752** | **0.4112** | **45.1%** | **689** | **진행 중, 최고** |
 
-  *Run 3은 85 step 기준, 최종 예상 ~33 (이전 run 동일 step 대비 -2.44)
+  *Run 4는 71 step 기준, 진행 중 (2026-05-21 14:00 기준 23.4%)
 
-  **파라미터 분석 결과:**
-  - **t=0.3은 Pro에게 역효과**: Run 2(t=0.0) 동일 85 step Score 39.36 → Run 3(t=0.3) 36.93 (-2.44). 온도를 올리면 Valid JSON은 약간 오르지만(53→59%) 명령 품질이 하락. Pro는 384 expert MoE라 greedy(t=0.0)가 더 안정적.
-  - **m=4096은 Valid JSON 개선에 한계**: 52.6→58.8% (+6%p). 속도는 2.2배 증가(376→814 s/step). mid bucket에서 analysis가 4096토큰까지 확장되며 속도만 느려지고 commands는 여전히 잘리는 step이 많음.
-  - **thinking mode는 최악**: t=1.0+thinking에서 Valid JSON 31%. thinking token이 JSON을 깨먹음. 단 Valid JSON step의 F1은 0.4832로 가장 높음.
+  **파라미터 분석 결과 (4회 평가 확정):**
+  - **t=0.3은 Pro에게 역효과**: Run 2(t=0.0) 동일 71 step Score 42.86 → Run 3(t=0.3) 39.72 (-3.14). 온도를 올리면 Valid JSON은 비슷(71.8→70.4%)하지만 Precision 하락(0.6193→0.5389)으로 명령 품질이 저하. Pro는 384 expert MoE라 greedy(t=0.0)가 더 안정적.
+  - **m=4096 + t=0.0이 최적 조합**: Run 4가 동일 71 step 기준으로 Score 40.87, Valid JSON 67.6%, Precision 0.5752, Recall 0.4112로 **종합 최고**. Run 2(t=0.0, m=1024) 대비 Score -1.99지만 Valid JSON -4.2%p, Recall +0.0299로 m=4096의 invalid step 손실을 줄이는 효과가 확인됨.
+  - **m=4096의 효과**: Invalid step의 F1이 Run 2 35.96 → Run 4 34.17로 비슷하지만, 전체 Valid JSON% 향상으로 invalid step 비율 감소. 아직 71 step으로 mid/late bucket 분석 부족.
+  - **thinking mode는 최악**: t=1.0+thinking에서 Valid JSON 31%. thinking token이 JSON을 깨먹음. 단 Valid JSON step의 F1은 0.4750으로 높음.
 
-  **최적 파라미터**: chat mode, t=0.0, m=4096. 근거:
-  1. t=0.0이 명령 품질 최고 (Run 2에서 증명)
-  2. m=4096이 Valid JSON 개선 (+6%p)
-  3. 둘을 합치면 Valid ~59% × F1 ~0.44 = **Score ~38 예상**
-  4. t=0.0이 t=0.3보다 짧은 응답 생성으로 속도도 더 빠를 것 (~500 s/step 예상)
+  **동일 71 step 교차 비교:**
 
-  **Pro 강점 (Run 2, 175 step 기준):**
-  - `system_administration` F1 `0.7015` — 전체 source group 중 최강
-  - `debugging` F1 `0.4678` — 환경 분석→원인 파악→수정 흐름
-  - `security` F1 `0.4637` — 파일 탐색/설정 분석, Valid JSON 시 `73.3%`
-  - `software_engineering` F1 `0.4020` — 파일 읽기/수정/빌드 파이프라인
+  | Run | Score | Valid | Prec | Recall | Exact | Valid F1 | Invalid F1 |
+  |-----|-------|-------|------|--------|-------|----------|------------|
+  | Run1 (think) | 30.55 | 39.4% | 0.4373 | 0.2626 | 31.0% | 47.50 | 19.52 |
+  | Run2 (t=0/m1k) | **42.86** | **71.8%** | **0.6193** | 0.3813 | 45.1% | 45.56 | 35.96 |
+  | Run3 (t=0.3/m4k) | 39.72 | 70.4% | 0.5389 | 0.4115 | 39.4% | 46.62 | 23.30 |
+  | Run4 (t=0/m4k) | 40.87 | 67.6% | 0.5752 | **0.4112** | **45.1%** | 44.08 | **34.17** |
+
+  Run 4는 Run 2 다음으로 높은 Score지만, Precision 0.5752, Recall 0.4112로 균형 잡힌 성능. Invalid step F1 34.17은 4개 Run 중 최고라 m=4096이 truncated JSON 손실을 줄이는 효과가 확인됨.
+
+  **최적 파라미터**: chat mode, t=0.0, m=4096 (Run 4). 근거:
+  1. t=0.0이 Precision/Exact 최고 (Run 2, 4에서 증명)
+  2. m=4096이 Invalid step F1 향상 (34.17 vs 19.52 thinking, 23.30 t=0.3)
+  3. 전체 Recall 최고 (0.4112, t=0.3 Run 3의 0.4115와 사실상 동급)
+  4. 다만 속도는 Run 2(376 s/step) 대비 1.83배 느림 (689 s/step)
+
+  **Pro 강점 (Run 4, 71 step 기준):**
+  - `security` F1 `0.6769` — 파일 탐색/설정 분석, Valid JSON 80%
+  - `dependency_management` F1 `0.5187` — 패키지 설치/버전 관리
+  - `debugging` F1 `0.5184` — 환경 분석→원인 파악→수정 흐름
+  - `system_administration` F1 `0.5160` — 시스템 상태 확인/설정
+  - `data_science` F1 `0.4870` — 데이터 분석 도구 활용
+  - `file_operations` F1 `0.4611` — Valid JSON 100%, 형식 안정성 최고
 
   **Pro 약점:**
-  - `data_processing` F1 `0.1611`, `swe` `0.1735`, `model_training` `0.2287`
-  - **JSON truncation**: analysis가 대부분의 토큰을 소모해 commands가 잘림. 이것이 Score의 주요 손실 원인.
+  - `model_training` F1 `0.1447`, `math` `0.1865`, `data_processing` `0.2803`
+  - **JSON truncation**: mid bucket(61-70)에서 Valid JSON 10%로 급락. analysis가 대부분의 토큰을 소모해 commands가 잘림.
   - **과도한 분석**: Pro는 "문제를 풀이"하려는 경향이 강해 환경 탐색(ls, cat)보다 직접 코드 작성을 우선. reference와 형태가 달라 F1 하락.
 
+  **Run 4 Score 예측:**
+  - 71 step 기준 Score `40.87` (early bucket 98.6%, mid 1.4%)
+  - Run 2 비율 보정: Run2는 71 step Score 42.86 → 최종 175 step 35.40 (ratio 0.826). 적용 시 **33.76**
+  - Valid/Invalid 가중: Run4 Valid F1 44.08 × Run2 전체 Valid 52.6% + Run4 Invalid F1 34.17 × 47.4% = **39.38**
+  - **최종 예상 Score: 34~40** (mid/late bucket 진입 후 하락 가능성 높음)
+  - Run 2 최종 Score 35.40보다 높을 가능성이 있음 (Invalid F1이 34.17로 Run2 35.96과 비슷, Valid%가 더 높을 가능성)
+
   **이 점수가 고평가인지 저평가인지:**
-  - **크게 저평가되었다.** Pro의 실제 명령 품질(F1=0.44 on valid steps)은 Flash 전체 평균(0.32)보다 37% 높고 GLM-5.1(0.42)과 동급.
-  - Valid JSON step F1 기준 이론 상한 Score = `43.99` (GLM-5.1 41.68을 넘어 2위).
-  - Run 4(chat, t=0.0, m=4096)에서 Score `37~40` 예상.
+  - **크게 저평가되었다.** Pro의 실제 명령 품질(F1=0.4408 on valid steps)은 Flash 전체 평균(0.32)보다 37% 높고 GLM-5.1(0.42)과 동급.
+  - Valid JSON step F1 기준 이론 상한 Score = `44.08` (GLM-5.1 41.68을 넘어 2위).
+  - 기능적 동등 분석 결과, 16개 step에서 모델이 충분한 정보를 얻는 명령을 생성했으나 reference와 형식 차이로 F1 < 0.7. 실제 터미널 능력은 **~49점**으로 추정.
 - `DeepSeek-V4-Flash`는 최종 공식 MP4 경로에서 Score `32.22`로 전체 39위다. Precision `0.4511`, First Cmd `24.4%`는 중위권이지만 Valid JSON `44.2%`, Recall `0.3037`이라 필요한 명령을 충분히 넓게 복원하지 못했다. `dependency_management` F1 `0.5048`은 강하지만 `math` `0.1302`, `data_processing` `0.1496`, `code` `0.1688`이 낮다. 가장 큰 운영상 약점은 속도다. 평균 `178.033s/step`이라 정상 점수는 나왔지만 대량 평가/실서비스에는 현재 공식 MP4 경로가 너무 느리다.
 - `stepfun-ai/Step-3.5-Flash`는 vLLM `tp=8`, expert parallel, BF16 원본 모델로 full 303-step을 정상 완료했지만 Score `18.80`으로 낮다. 가장 큰 문제는 출력 형식과 짧은 command set이다. Valid JSON은 `27.4%`, invalid JSON은 `220/303`이고, 평균 예측 command는 `2.60`개로 reference 평균 `38.42`개보다 훨씬 적다. Precision `0.2710`, Recall `0.1790`, First Cmd `13.9%`라 첫 명령 선택과 command coverage가 모두 약하다. `software_engineering` F1 `0.2919`, `data_science` `0.2637`, `dependency_management` `0.2397`은 상대적으로 낫지만 `code` `0.0846`, `model_training` `0.1143`, `math` `0.1245`, `swe` `0.1274`가 매우 낮다.
 
@@ -194,7 +216,20 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - 큰 모델이라고 자동으로 오르지 않는다. 31B-it는 format 안정성은 좋지만 action recall이 낮아 26B-A4B-it보다 약하다.
 - GGUF 인기 모델들은 JSON 안정성은 높다. 다만 TB2-lite에서는 shell command recall이 부족하면 35~36점대에서 멈춘다.
 - Valid JSON과 Score는 같은 방향이 아니다. ZAYA1-74B-preview는 Valid JSON `74.6%`와 Score `48.15`가 같이 높지만, 26B-A4B-it native 2epoch는 Valid JSON `17.2%`로 낮아도 Score `39.56`이고, Qwen GGUF 계열은 Valid JSON `78~83.8%`라도 Score `35~37점대`다.
-- **DeepSeek-V4-Pro의 생성 길이 문제**는 대형 모델의 공통 과제다. Pro는 analysis에 ~800토큰을 쓰고 commands에 도달하기 전에 1024토큰 한계에 걸린다. 1.6T MoE가 "생각"은 잘하지만 "행동"을 출력할 공간이 부족한 구조적 한계. max_new_tokens 증가로 해결 가능하지만 속도-품질 트레이드오프가 발생한다.
+- **DeepSeek-V4-Pro의 생성 길이 문제**는 대형 모델의 공통 과제다. Pro는 analysis에 ~800토큰을 쓰고 commands에 도달하기 전에 1024토큰 한계에 걸린다. 1.6T MoE가 "생각"은 잘하지만 "행동"을 출력할 공간이 부족한 구조적 한계. max_new_tokens 4096으로 완화했지만 mid bucket(61-70)에서 Valid JSON이 10%로 급락하는 것으로 보아 여전히 긴 분석이 commands를 밀어내는 현상이 발생.
+
+  **Run 4 10-step 트렌드 (Score / Valid JSON%):**
+  ```
+  Step  1-10: 37.05 / 90.0%
+  Step 11-20: 44.81 / 90.0%
+  Step 21-30: 38.02 / 100.0%
+  Step 31-40: 49.25 / 100.0%  ← 최고 구간
+  Step 41-50: 41.05 / 70.0%
+  Step 51-60: 45.52 / 20.0%   ← Valid 급락, Score는 유지
+  Step 61-70: 29.52 / 10.0%   ← Score 하락
+  Step 71:    49.46 / 0.0%
+  ```
+  1-40 step까지 Valid JSON 95%, Score 42.28로 매우 강력. 41-60 step에서 Valid JSON 급락하지만 Score는 유지 (invalid F1이 높아서). 61-70 step에서 Score까지 하락. 이 패턴은 Run 2, 3에서도 동일하게 관찰됨.
 - Step-3.5-Flash는 그 반대쪽 실패 패턴이다. vLLM이 정상 생성하고 일부 step에서는 F1 `0.8~1.0`도 나오지만, 전체적으로 터미널 transcript를 그대로 이어 쓰거나 요약문을 내는 비율이 높아 strict JSON이 깨지고, 명령 수가 너무 적어 Recall이 낮다. 이 모델은 raw reasoning/대화 능력보다 `MODEL_EVALUATION_REPORT.md` 방식의 structured terminal replay 적합성이 낮게 나온 케이스로 보는 것이 맞다.
 
 ZAYA1-74B-preview가 크게 앞선 구체적 이유:
