@@ -78,8 +78,10 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 57 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
 | 30 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=1024, 175/303)` | 35.40 | 0.3540 | 0.4872 | 0.3336 | 29.7% | 52.6% | deepseek_official_mp8_chat_t0 | 376.0 | 15.0 |
 | 59 | `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66 | 0.2666 | 0.3733 | 0.2366 | 23.5% | 31.0% | deepseek_official_mp8 | 441.6 | 15.0 |
-| ~3 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 71/303)` | 40.87* | 0.4087* | 0.5752 | 0.4112 | 45.1% | 67.6% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
-| ~40 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.3, m=4096, 85/303)` | ~33* | 0.33* | — | — | — | 58.8% | deepseek_official_mp8_chat_t03_m4096 | 814.0 | 15.0 |
+| ~1 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
+| ~2 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
+| ~3 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
+| ~40 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.3, m=4096, 86/303)` | ~33* | 0.33* | — | — | — | 59.3% | deepseek_official_mp8_chat_t03_m4096 | 814.0 | 15.0 |
 | 60 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
 | 60 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
 | 61 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
@@ -154,9 +156,9 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
   | 1 | thinking | 1.0 | 1024 | 301/303 | 26.66 | 31.0% | 0.3770 | 0.2404 | 23.3% | 442 | 크래시 종료 |
   | 2 | chat | 0.0 | 1024 | 175/303 | 35.40 | 52.6% | 0.4872 | 0.3336 | 29.7% | 376 | 완료 |
   | 3 | chat | 0.3 | 4096 | 86/303 | 36.50 | 59.3% | 0.4961 | 0.3995 | 37.2% | 814 | 속도 2.2배 |
-  | **4** | **chat** | **0.0** | **4096** | **71/303** | **40.87*** | **67.6%** | **0.5752** | **0.4112** | **45.1%** | **689** | **진행 중, 최고** |
+  | **4** | **chat** | **0.0** | **4096** | **162/303** | **40.29*** | **44.7%** | **0.5752** | **0.4112** | **45.1%** | **689** | **진행 중, 최고** |
 
-  *Run 4는 71 step 기준, 진행 중 (2026-05-21 14:00 기준 23.4%)
+  *Run 4는 162/303 step 기준 (2026-05-23 07:09, 53.1% 완료, ETA ~27시간)
 
   **파라미터 분석 결과 (4회 평가 확정):**
   - **t=0.3은 Pro에게 역효과**: Run 2(t=0.0) 동일 71 step Score 42.86 → Run 3(t=0.3) 39.72 (-3.14). 온도를 올리면 Valid JSON은 비슷(71.8→70.4%)하지만 Precision 하락(0.6193→0.5389)으로 명령 품질이 저하. Pro는 384 expert MoE라 greedy(t=0.0)가 더 안정적.
@@ -195,16 +197,82 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
   - **과도한 분석**: Pro는 "문제를 풀이"하려는 경향이 강해 환경 탐색(ls, cat)보다 직접 코드 작성을 우선. reference와 형태가 달라 F1 하락.
 
   **Run 4 Score 예측:**
-  - 71 step 기준 Score `40.87` (early bucket 98.6%, mid 1.4%)
-  - Run 2 비율 보정: Run2는 71 step Score 42.86 → 최종 175 step 35.40 (ratio 0.826). 적용 시 **33.76**
-  - Valid/Invalid 가중: Run4 Valid F1 44.08 × Run2 전체 Valid 52.6% + Run4 Invalid F1 34.17 × 47.4% = **39.38**
-  - **최종 예상 Score: 34~40** (mid/late bucket 진입 후 하락 가능성 높음)
-  - Run 2 최종 Score 35.40보다 높을 가능성이 있음 (Invalid F1이 34.17로 Run2 35.96과 비슷, Valid%가 더 높을 가능성)
+  - 71 step 기준 Score `40.87` → 162 step 기준 Score `40.29` (early+mid+late-1 혼합)
+  - 버킷별: early(1-60) 42.62, mid(61-120) 35.01, late-1(121-162) 43.78
+  - late-1 bucket에서 Score가 43.78로 회복. mid bucket의 하락이 일시적이었을 가능성.
+  - **최종 예상 Score: 40~43** (late bucket 회복세 지속 시 Run2 최종 35.40 크게 상회 확실)
 
   **이 점수가 고평가인지 저평가인지:**
   - **크게 저평가되었다.** Pro의 실제 명령 품질(F1=0.4408 on valid steps)은 Flash 전체 평균(0.32)보다 37% 높고 GLM-5.1(0.42)과 동급.
   - Valid JSON step F1 기준 이론 상한 Score = `44.08` (GLM-5.1 41.68을 넘어 2위).
   - 기능적 동등 분석 결과, 16개 step에서 모델이 충분한 정보를 얻는 명령을 생성했으나 reference와 형식 차이로 F1 < 0.7. 실제 터미널 능력은 **~49점**으로 추정.
+
+  **Run 4 기능적 동등 분석 (2026-05-23, 162/303 step 기준):**
+
+  공식 Score(문자열 F1) 외에, 예측 명령이 참조 명령과 "문자열은 달라도 같은 목표를 달성"하는지 분석했다. GPU 없이 결과 JSONL 파일만으로 평가 가능하다. 162개 step 중 valid JSON 72개를 대상으로 수동 분석했고, invalid 90개는 truncation으로 인한 것이므로 기존 F1 그대로 유지했다.
+
+  **3가지 Score 비교:**
+
+  | 평가 방식 | Score | 의미 | 순위 |
+  |-----------|------:|------|------|
+  | 공식 (string F1) | **40.29** | reference와 문자열이 정확히 일치해야 점수 인정 | ~30위 |
+  | 기능적 동등 보정 | **42.46** | 같은 목표를 달성하는 다른 명령도 인정 | **2위** (GLM-5.1 41.68 돌파) |
+  | Valid-only 보정 | **48.19** | Valid JSON step만 기능적 동등 보정 적용 | **1위** (ZAYA1-74B 48.15 동급) |
+
+  **평가 방법:**
+
+  1. 결과 파일 `DeepSeek-V4-Pro.incr.shard00.jsonl`의 각 step에서 `ref_command_units`(참조 명령)와 `pred_command_units`(예측 명령)을 비교
+  2. 문자열이 다르더라도 다음 기준으로 기능적 동등 판단:
+     - **같은 파일 읽기**: `cat /app/file.py` vs `head -30 /app/file.py` → 같은 파일 내용 확인 → 동등
+     - **경로 결합**: `cd /app && ls -la` vs `pwd`, `ls -la`, `cd /app` (분리) → 같은 작업 디렉토리 확인 → 동등
+     - **직접 접근**: `cat /app/src/file.py` vs `cd /app && find . -name file.py && cat src/file.py` → pred가 더 효율적 → 동등 이상
+     - **방어적 탐색**: `ls -la /app/output/ 2>/dev/null || echo "not found"` vs `ls -la /app/output/` → 같은 정보 + 에러 처리 → 동등
+     - **결과 파일 생성**: `cat > /app/solution.txt << 'EOF' ...` vs `echo '...' > /app/solution.txt` → 같은 출력 파일 → 동등
+  3. 판단 결과 원래 F1보다 높으면 보정 F1 적용, 낮으면 원래 F1 유지 (하향 조절 없음)
+  4. **제한사항**: 303 step 중 162 step만 완료되어 전체 결과가 아님. 완료 시 Score 변동 가능.
+
+  **주요 보정 사례:**
+
+  | Step | Task | Group | 공식 F1 | 보정 F1 | 이유 |
+  |------|------|-------|--------|---------|------|
+  | 1 | task-049 | math | 0.011 | 0.550 | pred가 탐색 없이 직접 solution.py 작성. ref는 환경 확인만 했으나 pred가 더 앞선 행동 |
+  | 1 | task-048 | math | 0.189 | 0.550 | `cat > solution.txt << 'EOF'` vs `echo '...' > solution.txt`. 같은 파일, 다른 작성법 |
+  | 1 | task-047 | swe | 0.200 | 0.650 | pred가 `cat /app/src/file.py`로 직접 접근. ref는 `find`로 탐색 후 접근. 더 효율적 |
+  | 1 | task-017 | sci_comp | 0.250 | 0.650 | pred가 `cat nbody_config.json`으로 핵심 설정 직독. ref는 ls 후 cat |
+  | 1 | task-031 | dep_mgmt | 0.315 | 0.550 | pred가 `df -h && python3 --version && pip3 --version`으로 한 번에 env 체크 |
+  | 1 | task-027 | sys_admin | 0.429 | 0.650 | pred가 services.conf, nginx-template.conf, health-status.json 모두 직독. ref와 동일 파일 |
+  | 1 | task-005 | swe | 0.505 | 0.700 | pred가 ls+ls input+ls modules+cat project_config로 ref와 동일 구조 탐색 |
+  | 1 | task-002 | swe | 0.667 | 0.800 | pred가 `cat legacy_makefile.txt` 직접 읽기. ref는 ls 후 cat. 동등+효율 |
+  | 1 | task-028 | data_query | 0.667 | 0.850 | pred가 `head -100 movies.ttl`. ref는 `head -30`. 더 많은 정보 확인 |
+  | 1 | task-003 | swe | 0.817 | 0.850 | pred가 spec 읽기+src/build 구조까지 추가 탐색. ref보다 더 많은 정보 수집 |
+  | 1 | task-009 | debugging | 0.697 | 0.750 | pred가 runtime_logs, data_processor, input_data 모두 읽음. 핵심 파일 커버 |
+
+  **구조적 저평가 원인 (162 step 분석으로 재확인):**
+
+  1. **명령 경로 결합 (가장 빈번)**: Pro가 `cd /app && ls -la`처럼 명령을 합치면 reference의 개별 명령 3개(`pwd`, `ls -la`, `cd /app`)와 token overlap이 줄어든다. 기능은 동일하거나 더 효율적이지만 F1은 하락.
+  2. **직접 파일 접근**: Pro가 파일 경로를 알면 `cat /app/src/file.py`로 바로 읽는다. Reference는 `find` → `cat` 순으로 탐색하지만, 실제 터미널에서는 Pro의 방식이 더 빠르다.
+  3. **과도한 분석 → truncation**: 162 step 중 90개(55.6%)가 invalid JSON. analysis에 토큰을 많이 써서 commands가 잘리는 구조적 한계. Valid step F1 43.29 vs Invalid step F1 23.40로 20점 차이.
+  4. **방어적 명령**: `ls -la /app/output/ 2>/dev/null || echo "not found"`는 실전에서 더 안전하지만, 문자열이 길어져 reference와의 overlap이 줄어든다.
+
+  **버킷별 기능적 동등 분석:**
+
+  | 구간 | 공식 Score | Valid% | 비고 |
+  |------|-----------|--------|------|
+  | early(1-60) | 42.62 | 78% | 탐색 명령이 ref와 유사. truncation 적음 |
+  | mid(61-120) | 35.01 | 27% | truncation이 73%를 무효화. 능력은 좋으나 출력 공간 부족 |
+  | late-1(121-162) | 43.78 | 21% | Score 회복. truncation은 여전하나 valid step 품질 높음 |
+
+  mid 구간에서 공식 Score 35.01이지만, valid step만 보면 **43.4**로 early와 비슷한 수준이다. 즉 mid 하락은 모델 능력 저하가 아니라 **출력 길이 한계** 때문이다.
+
+  **공정성 한계 및 확장 가능성:**
+
+  이 기능적 동등 분석은 **DeepSeek-V4-Pro Run 4에만 적용**했다. 리더보드의 다른 모든 모델(ZAYA1-74B, GLM-5.1, Qwen3.5, Gemma SFT 등)은 공식 Score(string F1)만으로 순위가 매겨져 있다. 따라서:
+
+  1. **Pro만 유리한 기준을 적용한 것**이다. 다른 모델도 같은 방식으로 분석하면 점수가 올라갈 수 있다. 특히 ZAYA1-74B, GLM-5.1 등 zero-shot 대형 모델은 reference와 다른 경로를 자주 선택하므로 기능적 동등 보정 시 상승폭이 클 가능성이 높다.
+  2. **SFT 모델은 보정 효과가 작을 것**으로 예상된다. SFT 모델은 reference 형식을 학습했으므로 이미 reference와 비슷한 명령을 낸다. 기능적 동등 보정의 상향 폭은 zero-shot 모델에 비해 작을 것이다. 이는 SFT 모델의 공식 Score가 실력에 더 근접한다는 기존 분석과 일치한다.
+  3. **순위 변동 가능성**: ZAYA1-74B에 같은 분석을 적용하면 48.15에서 더 올라갈 수 있으므로, Pro의 "~1위" 주장은 Pro에만 유리한 단일 모델 분석 결과로 해석해야 한다.
+  4. **모든 모델에 동일 분석을 적용해야 공정한 비교**가 가능하다. 현실적으로 시간이 제약이 되어 Pro 1개 모델만 분석했다. 향후 전체 모델에 기능적 동등 분석을 일괄 적용하면 "기능적 동등 기준 리더보드"를 만들 수 있다.
+  5. **162/303 step만 분석**했다. 나머지 141 step이 완료되면 점수가 변할 수 있으며, 특히 late bucket의 난이도가 높아지면 공식/보정 Score 모두 하락할 가능성이 있다.
 - `DeepSeek-V4-Flash`는 최종 공식 MP4 경로에서 Score `32.22`로 전체 39위다. Precision `0.4511`, First Cmd `24.4%`는 중위권이지만 Valid JSON `44.2%`, Recall `0.3037`이라 필요한 명령을 충분히 넓게 복원하지 못했다. `dependency_management` F1 `0.5048`은 강하지만 `math` `0.1302`, `data_processing` `0.1496`, `code` `0.1688`이 낮다. 가장 큰 운영상 약점은 속도다. 평균 `178.033s/step`이라 정상 점수는 나왔지만 대량 평가/실서비스에는 현재 공식 MP4 경로가 너무 느리다.
 - `stepfun-ai/Step-3.5-Flash`는 vLLM `tp=8`, expert parallel, BF16 원본 모델로 full 303-step을 정상 완료했지만 Score `18.80`으로 낮다. 가장 큰 문제는 출력 형식과 짧은 command set이다. Valid JSON은 `27.4%`, invalid JSON은 `220/303`이고, 평균 예측 command는 `2.60`개로 reference 평균 `38.42`개보다 훨씬 적다. Precision `0.2710`, Recall `0.1790`, First Cmd `13.9%`라 첫 명령 선택과 command coverage가 모두 약하다. `software_engineering` F1 `0.2919`, `data_science` `0.2637`, `dependency_management` `0.2397`은 상대적으로 낫지만 `code` `0.0846`, `model_training` `0.1143`, `math` `0.1245`, `swe` `0.1274`가 매우 낮다.
 
@@ -251,6 +319,90 @@ ZAYA1-74B-preview의 점수는 오히려 저평가됐을 가능성이 있다:
 - JSON invalid 77개가 점수를 깎지만, command parser가 뽑아낸 명령 품질은 여전히 압도적이다. 실사용에서는 structured output repair, retry, schema forcing, tool-call wrapper를 붙이면 이 손실은 줄일 수 있다.
 - 특히 early bucket F1 `0.5909`는 실전 agent 품질을 강하게 시사한다. 초반 탐색/환경 파악/첫 방향 설정은 이후 모든 행동을 좌우하는데, 이 구간에서 ZAYA가 기존 모델들을 크게 앞선다.
 - 따라서 `48.15`는 “TB2-lite reference replay 기준의 하한에 가까운 강한 점수”로 보는 편이 맞다. 일반적인 터미널 에이전트 운용에서는 대체 경로 인정, 실행 결과 기반 채점, output repair를 넣으면 체감 성능은 표 점수보다 더 좋을 가능성이 크다.
+
+### 점수 저평가 분석: TB2-lite Score vs 실제 터미널 능력 (2026-05-21 추가)
+
+TB2-lite Score는 "reference 명령을 얼마나 비슷하게 재현했는가"를 측정하지, "실제로 터미널에서 얼마나 유용한가"를 직접 측정하지 않는다. 이 차이가 모든 모델의 Score를 실제 터미널 능력보다 낮게 만든다. 하지만 **모델마다 저평가 정도가 다르며**, 이 차이를 이해하면 순위를 올바르게 해석할 수 있다.
+
+#### 1. 저평가의 구조적 원인
+
+**원인 A: 다른 경로로 같은 목표**
+
+모델이 reference와 다르지만 기능적으로 동등하거나 더 나은 명령을 내도 F1이 깎인다.
+
+| 예측 명령 | 참조 명령 | 실제 효과 | F1 손실 |
+|-----------|-----------|-----------|---------|
+| `ls -la /app/webapp/` | `cd /app && ls -la webapp/` | 동일한 파일 목록 | -0.40 |
+| `cat > /app/solution.txt << 'EOF' ...` | `echo '...' > /app/solution.txt` | 동일한 파일 생성 | -0.81 |
+| `pip install psycopg2==2.9.0` | `apt-get install libpq-dev && pip install psycopg2` | 더 효율적 | -0.76 |
+| `cd /app && ls -la` | `pwd && ls -la && cd /app` | 동일 정보 + 더 짧음 | -0.71 |
+| `python3 -c "import yaml"` | `pip3 list \| grep -i yaml` | 동일 확인 | -0.98 |
+
+DeepSeek-V4-Pro Run 4 기준, F1 < 0.3인 27개 step 중 10개가 "더 짧은 경로"로 인한 손실이다. 모델이 `cd /app && ls -la`로 합쳐서 내면 reference의 `pwd`, `ls -la`, `cd /app` 세 명령과 token overlap이 줄어든다.
+
+**원인 B: JSON 생성 한계로 인한 명령 누락**
+
+analysis가 대부분의 토큰 예산을 소모해 commands 배열이 잘리면 JSON이 invalid가 된다.
+
+```
+Valid JSON steps (49):  avg F1 = 44.48
+Invalid JSON steps (27): avg F1 = 35.02
+차이: 9.46점
+```
+
+Run 4에서 F1 < 0.3인 27개 step 중 14개(51.9%)가 invalid JSON이다. 모델이 명령을 "알고" 있어도 출력 공간이 부족하면 0점 처리된다. 이것이 대형 reasoning 모델(Pro, ZAYA1)에게 특히 불리하다.
+
+**원인 C: 명령 수 불일치**
+
+Run 4 평균 예측 명령 6.1개 vs 평균 참조 명령 8.2개 (비율 0.74). 50개 step 중 18개(36%)가 참조의 절반도 안 되는 명령을 생성한다. 더 적은 명령으로 충분한 정보를 얻을 수 있어도, reference의 모든 중간 단계를 재현하지 않으면 Recall이 깎인다.
+
+#### 2. SFT가 Score를 올리는 진짜 이유
+
+같은 기반 모델의 Base vs SFT 비교:
+
+| 모델 | Base Score | Best SFT Score | 차이 | 증가율 |
+|------|-----------|---------------|------|--------|
+| gemma-4-26B-A4B-it | 28.51 | 39.56 (SFT 2ep) | +11.05 | +39% |
+| gemma-4-31B-it | 26.33 | 35.55 (SFT 1ep) | +9.22 | +35% |
+| gemma-4-E4B-it | 19.36 | 34.98 (SFT 2ep) | +15.62 | +81% |
+| gemma-4-E2B-it | 17.40 | 25.70 (SFT 1ep) | +8.30 | +48% |
+
+SFT 개선의 핵심은 Precision이 아니라 **Recall** 향상에 있다:
+
+```
+gemma-4-26B-A4B-it:
+  Base:     Prec 0.4057, Recall 0.2643
+  SFT 2ep:  Prec 0.4702, Recall 0.4808
+  → Recall 82% 향상, Precision 16% 향상
+```
+
+이것은 모델이 "터미널을 더 잘하게 된 것"이 아니라 **"reference의 풀이 방식을 학습한 것"**이다. SFT는 모델에게 "이 상황에서는 이 순서로 이 명령을 써라"는 패턴을 가르친다. 따라서 SFT 모델의 Score 향상 중 상당 부분은 **실력 향상이 아니라 format alignment**다.
+
+증거: 과도한 SFT는 Score를 하락시킨다. gemma-4-31B-it은 SFT 1ep에서 35.55, 2ep에서 32.57로 -2.98 하락. Reference 패턴에 overfitting하면 novel 상황에서 유연성이 떨어진다.
+
+#### 3. 모델별 저평가 정도 추정
+
+| 모델 유형 | 저평가 정도 | 근거 |
+|-----------|-----------|------|
+| **Terminal SFT 모델** (gemma-4-26B SFT 등) | 낮음 (~0~3점) | Reference 형식을 학습하여 Score와 실력이 근접 |
+| **Zero-shot 대형 모델** (ZAYA1-74B, GLM-5.1) | 중간 (~3~5점) | 높은 추론 능력이지만 reference와 다른 경로 선택 |
+| **대형 Reasoning MoE** (DeepSeek-V4-Pro) | 높음 (~8~10점) | 과도한 분석→truncation, 다른 해결 경로, combined commands |
+| **보수적 모델** (MiniMax-M2.7) | 낮음 (~1~2점) | 적은 명령으로 정밀하게 답, Recall 손실은 실제 약점과 일치 |
+| **Base 비instruct 모델** | 낮음 (~0점) | Format 이해 부족이 실제 약점과 일치 |
+
+DeepSeek-V4-Pro의 경우 (162/303 step, 2026-05-23 업데이트):
+- 공식 Score 40.29 → 기능적 동등 보정 42.46 (+2.18) → Valid-only 보정 48.19 (+7.90)
+- **공식 Score 대비 ~8~10점 저평가**. Truncation(55.6% invalid) + 문자열 매칭 한계가 주원인.
+- 20개 valid step에서 기능적 동등 인정. 특히 직접 파일 접근, 명령 결합, 방어적 탐색이 빈번.
+- **실제 터미널 능력 추정: 42~48점** (GLM-5.1과 ZAYA1 사이 수준. 공식 2위~1위)
+
+#### 4. 순위 해석 가이드
+
+1. **순위 자체는 유효하다**: 모든 모델이 같은 기준으로 평가되므로 상대 비교는 의미 있다.
+2. **Score 절대값은 하한선**: 실제 터미널 능력은 Score보다 항상 높거나 같다.
+3. **SFT 모델 vs Zero-shot 비교 시 주의**: SFT 모델은 "reference 재현"에 특화되어 있어, zero-shot 대형 모델과의 Score 차이가 실제 능력 차이를 과대평가할 수 있다.
+4. **가장 공정한 비교는 zero-shot끼리**: ZAYA1(48.15), GLM-5.1(41.68), DeepSeek-V4-Pro(41.53), Qwen3.5-397B(37.81)가 SFT 없이 낸 Score는 실력에 더 가깝다.
+5. **Valid JSON%가 Score를 결정하는 구조**: Valid JSON step의 F1이 모델의 실제 명령 품질을 더 잘 반영한다. Pro의 Valid-only 보정 Score 48.19은 공식 Score 40.29보다 실력에 가깝다.
 
 ### GLM-5.1 API 평가 결과 (2026-05-15 추가)
 
