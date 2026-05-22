@@ -546,7 +546,7 @@ def build_model_card(row: dict[str, Any], repo_id: str, rank: int | None, total_
         "",
         "TB2-lite 점수는 일반 지능 벤치마크가 아니라 터미널 next-action JSON 재현 능력을 측정합니다. 따라서 모델 크기, chat template 일치, assistant-only masking, tokenizer, 학습 데이터 holdout 여부가 모두 점수에 영향을 줍니다.",
         "",
-        "README.md와 MODEL_EVALUATION_REPORT.md의 값이 더 최신이면 해당 값을 우선 확인하세요. 이 모델카드는 완료된 평가 JSON을 기준으로 개별 저장소에 빠르게 반영한 스냅샷입니다.",
+        "루트 README.md의 값이 더 최신이면 해당 값을 우선 확인하세요. 이 모델카드는 완료된 평가 JSON을 기준으로 개별 저장소에 빠르게 반영한 스냅샷입니다.",
     ])
     return "\n".join(lines) + "\n"
 

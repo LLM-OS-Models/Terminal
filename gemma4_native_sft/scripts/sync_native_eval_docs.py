@@ -17,8 +17,8 @@ DATA_ROOT = Path("/home/work/.data/gemma4_native_sft")
 STATE_PATH = DATA_ROOT / "monitor_state.json"
 LOG_PATH = DATA_ROOT / "logs/post_eval_doc_watcher.log"
 DOC_SYNC_STATE_PATH = DATA_ROOT / "doc_sync_state.json"
-REPORT_PATH = ROOT_DIR / "MODEL_EVALUATION_REPORT.md"
-README_PATH = ROOT_DIR / "README.md"
+REPORT_PATH = ROOT_DIR / "README.md"
+README_PATH = ROOT_DIR / "PROJECT_OVERVIEW_2026-05-02.md"
 
 START = "<!-- GEMMA4_NATIVE_AUTO_RESULTS_START -->"
 END = "<!-- GEMMA4_NATIVE_AUTO_RESULTS_END -->"

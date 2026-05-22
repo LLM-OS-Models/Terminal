@@ -236,7 +236,7 @@ def build_report() -> str:
             "",
             "1. Finish/upload small Gemma native checkpoints as they save.",
             "2. Evaluate small Gemma native checkpoints with vLLM when GPUs free.",
-            "3. Update MODEL_EVALUATION_REPORT.md and HF model cards after each result.",
+            "3. Update root README.md and HF model cards after each result.",
             "4. Lock root-cause analysis for old low Gemma scores.",
             "5. Start large Gemma native training: 26B-A4B-it, 26B-A4B, then 31B-it smoke, 31B-it full, 31B base full.",
             "6. Decide RL candidates only after large Gemma evaluation is complete.",
