@@ -20,30 +20,31 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 | 순위 | 모델(HF 저장소명) | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |
-| 1 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
-| ~2 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
-| 2 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
-| ~3 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
-| **3** | **`GLM-5.1 (z.ai API)`** | **41.68** | **0.4168** | **0.5377** | **0.4007** | **24.1%** | **90.1%** | **anthropic-api** | **3.298** | **-** |
-| ~3 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
-| 3 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 39.56 | 0.3956 | 0.4702 | 0.4808 | 40.6% | 17.2% | gemma4_native | 6.820 | 43.8 |
-| 4 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` | 39.52 | 0.3952 | 0.5082 | 0.4101 | 33.0% | 82.2% | chat_template | 0.081 | 97.1 |
-| 5 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-1Epoch-FullFT-SameCount` | 38.52 | 0.3852 | 0.4988 | 0.4056 | 32.7% | 83.2% | chat_template | 0.080 | 130.1 |
-| 6 | `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-2Epoch-FullFT-2BData` | 38.26 | 0.3826 | 0.4620 | 0.3905 | 28.4% | 64.4% | chat_template | 0.293 | 377.3 |
-| 7 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 38.12 | 0.3812 | 0.4405 | 0.4787 | 42.6% | 13.5% | gemma4_native | 6.854 | 38.8 |
-| 8 | `Qwen/Qwen3.5-9B` | 38.10 | 0.3810 | 0.4921 | 0.3527 | 20.8% | 78.2% | chat_template | 0.268 | 123.8 |
-| 9 | `nvidia/Nemotron-Terminal-32B` | 38.09 | 0.3809 | 0.5058 | 0.3827 | 40.3% | 58.7% | chat_template | 0.819 | 154.9 |
-| 10 | `Qwen/Qwen3.5-397B-A17B-FP8` | 37.81 | 0.3781 | 0.5107 | 0.3443 | 21.5% | 86.1% | chat_template | 0.860 | 826.5 |
-| 11 | `nvidia/Nemotron-Terminal-14B` | 37.70 | 0.3770 | 0.4688 | 0.3849 | 40.6% | 57.1% | chat_template | 0.360 | 98.8 |
-| 12 | `Qwen/Qwen3.5-122B-A10B-FP8` | 37.28 | 0.3728 | 0.5155 | 0.3408 | 20.5% | 84.2% | chat_template | 0.655 | 746.9 |
-| 13 | `DavidAU/Qwen3.6-40B-Claude-4.6-Opus-Deckard-Heretic-Uncensored-Thinking-NEO-CODE-Di-IMatrix-MAX-GGUF:Q4_K_M` | 37.09 | 0.3709 | 0.5010 | 0.3558 | 20.8% | 83.8% | chat_template | 14.422 | 141.5 |
-| 14 | `LiquidAI/LFM2.5-8B-A1B` | 36.53 | 0.3653 | 0.4812 | 0.3685 | 39.9% | 59.1% | chat_template | 0.097 | 103.4 |
-| 14 | `Qwen/Qwen3.5-35B-A3B-FP8` | 36.44 | 0.3644 | 0.5086 | 0.3317 | 23.1% | 77.6% | chat_template | 0.200 | 222.8 |
-| 15 | `Qwen/Qwen3.5-35B-A3B` | 36.41 | 0.3641 | 0.5068 | 0.3330 | 22.1% | 78.2% | chat_template | 0.228 | 363.1 |
-| 16 | `Qwen/Qwen3.5-27B` | 36.30 | 0.3630 | 0.4985 | 0.3343 | 22.1% | 74.9% | chat_template | 0.893 | 102.6 |
-| 17 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 36.29 | 0.3629 | 0.4813 | 0.3460 | 17.5% | 80.5% | chat_template | 5.577 | - |
-| 18 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-2Epoch-FullFT-2BData` | 36.25 | 0.3625 | 0.4797 | 0.3723 | 26.1% | 61.7% | chat_template | 0.205 | 207.3 |
-| 19 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-1Epoch-FullFT-2BData` | 36.05 | 0.3605 | 0.4601 | 0.3690 | 28.1% | 59.4% | chat_template | 0.206 | 158.5 |
+| 1 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` | 52.30 | 0.5230 | 0.5854 | 0.5431 | 49.5% | 76.9% | chat_template | 0.087 | 44.7 |
+| 2 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
+| ~3 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
+| 3 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
+| ~4 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
+| **4** | **`GLM-5.1 (z.ai API)`** | **41.68** | **0.4168** | **0.5377** | **0.4007** | **24.1%** | **90.1%** | **anthropic-api** | **3.298** | **-** |
+| ~4 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
+| 5 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 39.56 | 0.3956 | 0.4702 | 0.4808 | 40.6% | 17.2% | gemma4_native | 6.820 | 43.8 |
+| 6 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` | 39.52 | 0.3952 | 0.5082 | 0.4101 | 33.0% | 82.2% | chat_template | 0.081 | 97.1 |
+| 7 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-1Epoch-FullFT-SameCount` | 38.52 | 0.3852 | 0.4988 | 0.4056 | 32.7% | 83.2% | chat_template | 0.080 | 130.1 |
+| 8 | `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-2Epoch-FullFT-2BData` | 38.26 | 0.3826 | 0.4620 | 0.3905 | 28.4% | 64.4% | chat_template | 0.293 | 377.3 |
+| 9 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 38.12 | 0.3812 | 0.4405 | 0.4787 | 42.6% | 13.5% | gemma4_native | 6.854 | 38.8 |
+| 10 | `Qwen/Qwen3.5-9B` | 38.10 | 0.3810 | 0.4921 | 0.3527 | 20.8% | 78.2% | chat_template | 0.268 | 123.8 |
+| 11 | `nvidia/Nemotron-Terminal-32B` | 38.09 | 0.3809 | 0.5058 | 0.3827 | 40.3% | 58.7% | chat_template | 0.819 | 154.9 |
+| 12 | `Qwen/Qwen3.5-397B-A17B-FP8` | 37.81 | 0.3781 | 0.5107 | 0.3443 | 21.5% | 86.1% | chat_template | 0.860 | 826.5 |
+| 13 | `nvidia/Nemotron-Terminal-14B` | 37.70 | 0.3770 | 0.4688 | 0.3849 | 40.6% | 57.1% | chat_template | 0.360 | 98.8 |
+| 14 | `Qwen/Qwen3.5-122B-A10B-FP8` | 37.28 | 0.3728 | 0.5155 | 0.3408 | 20.5% | 84.2% | chat_template | 0.655 | 746.9 |
+| 15 | `DavidAU/Qwen3.6-40B-Claude-4.6-Opus-Deckard-Heretic-Uncensored-Thinking-NEO-CODE-Di-IMatrix-MAX-GGUF:Q4_K_M` | 37.09 | 0.3709 | 0.5010 | 0.3558 | 20.8% | 83.8% | chat_template | 14.422 | 141.5 |
+| 16 | `LiquidAI/LFM2.5-8B-A1B` | 36.53 | 0.3653 | 0.4812 | 0.3685 | 39.9% | 59.1% | chat_template | 0.097 | 103.4 |
+| 17 | `Qwen/Qwen3.5-35B-A3B-FP8` | 36.44 | 0.3644 | 0.5086 | 0.3317 | 23.1% | 77.6% | chat_template | 0.200 | 222.8 |
+| 18 | `Qwen/Qwen3.5-35B-A3B` | 36.41 | 0.3641 | 0.5068 | 0.3330 | 22.1% | 78.2% | chat_template | 0.228 | 363.1 |
+| 19 | `Qwen/Qwen3.5-27B` | 36.30 | 0.3630 | 0.4985 | 0.3343 | 22.1% | 74.9% | chat_template | 0.893 | 102.6 |
+| 20 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 36.29 | 0.3629 | 0.4813 | 0.3460 | 17.5% | 80.5% | chat_template | 5.577 | - |
+| 21 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-2Epoch-FullFT-2BData` | 36.25 | 0.3625 | 0.4797 | 0.3723 | 26.1% | 61.7% | chat_template | 0.205 | 207.3 |
+| 22 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-1Epoch-FullFT-2BData` | 36.05 | 0.3605 | 0.4601 | 0.3690 | 28.1% | 59.4% | chat_template | 0.206 | 158.5 |
 | 30 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=1024, 175/303)` | 35.40 | 0.3540 | 0.4872 | 0.3336 | 29.7% | 52.6% | deepseek_official_mp8_chat_t0 | 376.0 | 15.0 |
 | 20 | `nvidia/Nemotron-Terminal-8B` | 35.80 | 0.3580 | 0.4649 | 0.3592 | 35.3% | 54.5% | chat_template | 0.273 | 95.7 |
 | 21 | `Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled` | 35.68 | 0.3568 | 0.4822 | 0.3313 | 22.8% | 74.6% | chat_template | 0.904 | 203.7 |
@@ -120,36 +121,41 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 전체 순위 반영 메모:
 
-- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 2epoch 평가 1개를 이 표에 반영했다.
-- 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch`, Score `50.48`이다. 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+2.33`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+10.92` 높다.
-- 26B-A4B-it native 2epoch는 이제 전체 4위, Qwen3.5-2B SFT 2epoch는 5위다. 26B-A4B-it native 1epoch는 Score `38.12`로 전체 8위, 31B-it native 1epoch는 `35.55`로 전체 27위, 31B-it native 2epoch는 `32.57`로 전체 36위다.
+- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개를 이 표에 반영했다.
+- 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
+- 26B-A4B-it native 2epoch는 이제 전체 5위, Qwen3.5-2B SFT 2epoch는 6위다. 26B-A4B-it native 1epoch는 Score `38.12`로 전체 9위, 31B-it native 1epoch는 `35.55`, 31B-it native 2epoch는 `32.57`이다.
 - Qwen3.5 대형 FP8 완료분은 `Qwen/Qwen3.5-397B-A17B-FP8` Score `37.81`로 전체 10위, `Qwen/Qwen3.5-122B-A10B-FP8` Score `37.28`로 전체 12위다. 둘 다 vLLM `tp=8`, expert parallel, prefix caching, Qwen3 reasoning parser, `max_model_len=32768`로 평가했다.
 - `LiquidAI/LFM2.5-8B-A1B`는 Score `36.53`으로 신규 반영했다. 기존 `LiquidAI/LFM2-8B-A1B` base Score `10.04`보다 `+26.49` 높고, `Qwen/Qwen3.5-35B-A3B-FP8` Score `36.44`를 근소하게 앞선다. First Cmd `39.9%`, Recall `0.3685`, Sec/Step `0.097`이라 8B급 빠른 base 모델 중 매우 강한 결과다.
 - 요청 외부 모델 + API 평가 완료분은 `Zyphra/ZAYA1-74B-preview` 1위, `GLM-5.1 (z.ai API)` 2위, `DavidAU/Qwen3.6-40B Deckard...:Q4_K_M` 13위, `LiquidAI/LFM2.5-8B-A1B` 14위, `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` 17위, `DavidAU/Qwen3.6-27B-Heretic...:Q4_K_M` 25위, `Jackrong/Qwopus3.6-35B-A3B-v1-GGUF:Q4_K_M` 26위, `MiniMaxAI/MiniMax-M2.7` 38위, `DeepSeek-V4-Flash` 39위, `Jiunsong/supergemma4-26b...:Q4_K_M` 53위, `Zyphra/ZAYA1-8B` 65위, `inclusionAI/LLaDA2.1-flash` 66위, `Step-3.5-Flash` 69위, `sapientinc/HRM-Text-1B` 86위다.
 - `DeepSeek-V4-Flash`는 공식 converted MP4 inference 경로로 `2 x tp=4`, 8GPU full replay 303-step을 완료했고 Score `32.22`로 전체 39위다. 이전 vLLM/FP8 경로의 BOS 반복 0점 실패는 최종 결과에서 대체했다. `google/gemma-4-31B-it-assistant`는 아직 결과 JSON 없음.
 - `Step-3.5-Flash`는 공식 vLLM Step-3.5 recipe 계열 설정을 기준으로 FP8 route를 먼저 시도했지만 로컬 CUDA/vLLM 조합에서 illegal address와 MTP layer config 문제가 반복되어, 최종 반영은 BF16 원본 모델 `tp=8`, expert parallel, `max_model_len=49152`로 완료한 303-step 결과다. Score는 `18.80`으로 전체 69위다.
 
-### LFM2.5-8B-A1B ToolBench Full SFT 2epoch 분석
+### LFM2.5-8B-A1B ToolBench Full SFT 분석
 
-`LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch`는 corrected TB2-lite 303-step full replay에서 Score `50.48`을 기록했다. 같은 `score = 100 * avg_command_f1` 기준이며, 결과 JSON은 `tb2_lite/results/20260605T_all_idle_eval/LFM2.5-8B-A1B-terminal-toolbench-full-2epoch-final.json`이다.
+`LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`는 corrected TB2-lite 303-step full replay에서 Score `52.30`을 기록했다. 같은 `score = 100 * avg_command_f1` 기준이며, 결과 JSON은 `tb2_lite/results/20260605T_live_hrm_lora_lfm_epoch1/LFM2.5-8B-A1B-terminal-toolbench-full-1epoch-checkpoint-1542.json`이다. 같은 run의 2epoch 최종 checkpoint는 Score `50.48`이며, 결과 JSON은 `tb2_lite/results/20260605T_all_idle_eval/LFM2.5-8B-A1B-terminal-toolbench-full-2epoch-final.json`이다.
 
 핵심 지표:
-- Score `50.48`, Cmd F1 `0.5048`, Precision `0.5695`, Recall `0.5296`
-- First Cmd `49.2%`, Valid JSON `74.9%`, Next Action score `50.1`
-- 평균 정답 command `38.42`개, 평균 예측 command `22.50`개
-- vLLM 평가 속도 `0.092 sec/step`, load `76.7s`, 303/303 step 완료
+- 1epoch: Score `52.30`, Cmd F1 `0.5230`, Precision `0.5854`, Recall `0.5431`
+- 1epoch: First Cmd `49.5%`, Valid JSON `76.9%`, Next Action score `51.46`
+- 1epoch: 평균 정답 command `38.42`개, 평균 예측 command `21.20`개
+- 1epoch: vLLM 평가 속도 `0.087 sec/step`, load `44.7s`, 303/303 step 완료
+- 2epoch: Score `50.48`, Cmd F1 `0.5048`, Precision `0.5695`, Recall `0.5296`
+- 2epoch: First Cmd `49.2%`, Valid JSON `74.9%`, Next Action score `50.1`
+- 2epoch: 평균 정답 command `38.42`개, 평균 예측 command `22.50`개
+- 2epoch: vLLM 평가 속도 `0.092 sec/step`, load `76.7s`, 303/303 step 완료
 
 왜 점수가 높게 나왔는가:
-- base `LiquidAI/LFM2.5-8B-A1B`가 이미 Score `36.53`으로 강했고, full terminal + ToolBench conversation SFT가 Recall을 `0.3685 -> 0.5296`으로 크게 올렸다.
-- Precision `0.5695`도 높아 command를 많이 맞히면서도 불필요한 command 폭증이 제한됐다. 평균 예측 command는 정답보다 적은 `22.50`개라 보수적이지만, 이전 LFM 계열처럼 지나치게 비거나 산만하지 않았다.
-- early step F1 `0.5968`이 매우 높고, `scientific_computing` `0.6196`, `security` `0.6102`, `data_science` `0.6020`, `software_engineering` `0.5986`, `model_training` `0.5931`에서 강했다. 파일 확인, 데이터 검사, 스크립트 실행, 보안 수정, 과학 계산처럼 명령 패턴이 분명한 태스크에서 특히 잘 맞았다.
+- base `LiquidAI/LFM2.5-8B-A1B`가 이미 Score `36.53`으로 강했고, full terminal + ToolBench conversation SFT가 1epoch에서 Recall을 `0.3685 -> 0.5431`로 크게 올렸다.
+- Precision `0.5854`도 높아 command를 많이 맞히면서도 불필요한 command 폭증이 제한됐다. 평균 예측 command는 정답보다 적은 `21.20`개라 보수적이지만, 이전 LFM 계열처럼 지나치게 비거나 산만하지 않았다.
+- 1epoch는 early step F1 `0.6210`이 매우 높고, `scientific_computing` `0.6394`, `security` `0.6139`, `software_engineering` `0.6023`, `data_querying` `0.5823`, `data_science` `0.5489`에서 강했다. 파일 확인, 데이터 검사, 스크립트 실행, 보안 수정, 과학 계산처럼 명령 패턴이 분명한 태스크에서 특히 잘 맞았다.
+- 2epoch는 `model_training` `0.5931`, `data_science` `0.6020`, `code` `0.2385`처럼 일부 영역이 개선됐지만, 전체적으로 평균 예측 command가 `21.20 -> 22.50`으로 늘고 Valid JSON이 `76.9% -> 74.9%`로 내려가면서 Precision/Recall이 모두 약간 하락했다. 이 run에서는 1epoch가 더 좋은 체크포인트다.
 
 약점과 실패 케이스:
-- late step F1은 `0.4472`로 early `0.5968`보다 낮다. 긴 대화 후반으로 갈수록 이미 끝났다고 판단하거나 다음 검증 command를 생략하는 경향이 있다.
-- 전체 303개 중 invalid JSON이 `76`개, zero-F1이 `19`개, 빈 command 예측이 `18`개였다. 실패는 단순 지식 부족보다 `<think>` 텍스트가 JSON 앞에 붙거나, `task_complete=true`를 너무 빨리 내는 형식 문제가 많다.
-- 가장 약한 영역은 `code` F1 `0.2385`이며 13개 중 invalid JSON이 9개였다. 알고리즘 풀이형 task-042/task-044에서 긴 사고 텍스트를 먼저 내고 commands JSON을 깨뜨리거나, 실제로는 `ls`, `cat`, `python3` 검증이 필요한데 설명만 길게 출력했다.
-- `swe` F1 `0.3488`, `math` `0.3701`, `dependency_management` `0.4197`, `system_administration` `0.4328`도 상대적으로 약하다. 특히 후반 SWE 단계에서는 정답이 `sed`, `grep`, `cat`로 구체 파일을 재확인하는 흐름인데, 모델은 이미 해결됐다고 보고 commands를 비우거나 다른 검색 command를 냈다.
-- `pred_task_complete`는 6회, reference complete는 4회였고, 둘 다 맞은 것은 2회다. completion 판단은 아직 과신이 남아 있다.
+- 1epoch late step F1은 `0.4455`로 early `0.6210`보다 낮다. 긴 대화 후반으로 갈수록 이미 끝났다고 판단하거나 다음 검증 command를 생략하는 경향이 있다.
+- 1epoch 전체 303개 중 invalid JSON이 `70`개, zero-F1이 `23`개였다. 실패는 단순 지식 부족보다 `<think>` 텍스트가 JSON 앞에 붙거나, `task_complete=true`를 너무 빨리 내는 형식 문제가 많다.
+- 가장 약한 영역은 `code` F1 `0.1613`이며 zero-F1 8개, invalid JSON 9개가 몰렸다. 알고리즘 풀이형 task-042/task-043에서 긴 사고 텍스트를 먼저 내고 commands JSON을 깨뜨리거나, 실제로는 `ls`, `cat`, `python3` 검증이 필요한데 설명만 길게 출력했다.
+- `math` F1 `0.4146`, `swe` `0.4378`, `dependency_management` `0.4723`도 상대적으로 약하다. 특히 후반 SWE/수학 단계에서는 정답이 `sed`, `grep`, `cat`, `python3`로 구체 파일을 재확인하는 흐름인데, 모델은 이미 해결됐다고 보고 completion을 앞당기는 경우가 있었다.
+- 1epoch에서 `pred_task_complete=true`가 reference보다 빠른 step은 5개였다. completion 판단은 아직 과신이 남아 있다.
 
 ### 점수 해석: 잘 된 것과 안 된 것
 
@@ -955,11 +961,11 @@ ETA:
 ## LFM vs Qwen 분석
 
 - 현재 성공 결과 기준 최고 Qwen은 `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`이고 Score `39.52`다.
-- 현재 성공 결과 기준 최고 LFM은 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch`이고 Score `50.48`다. 최고 Qwen 대비 `+10.96`점 높다.
-- 이번 LFM2.5-8B-A1B SFT는 기존 최고 LFM이던 `LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-TemplateMasked` Score `33.46`보다 `+17.02` 높다. 모델 크기보다 데이터 구성과 LFM2.5 base prior가 더 크게 작용한 결과로 본다.
-- Qwen 상위권은 Valid JSON이 `80%`대까지 올라가는 반면, 이번 LFM2.5 SFT는 Valid JSON `74.9%`다. 그래도 Recall `0.5296`이 Qwen2B SFT `0.4101`보다 높고 Precision도 `0.5695`로 높아 최종 Cmd F1이 앞섰다.
+- 현재 성공 결과 기준 최고 LFM은 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`이고 Score `52.30`다. 최고 Qwen 대비 `+12.78`점 높다.
+- 이번 LFM2.5-8B-A1B SFT 1epoch는 기존 최고 LFM이던 `LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-TemplateMasked` Score `33.46`보다 `+18.84` 높다. 모델 크기보다 데이터 구성과 LFM2.5 base prior가 더 크게 작용한 결과로 본다.
+- Qwen 상위권은 Valid JSON이 `80%`대까지 올라가는 반면, 이번 LFM2.5 SFT 1epoch는 Valid JSON `76.9%`다. 그래도 Recall `0.5431`이 Qwen2B SFT `0.4101`보다 높고 Precision도 `0.5854`로 높아 최종 Cmd F1이 앞섰다.
 - 핵심 차이는 command coverage다. Qwen2B SFT는 형식 안정성은 매우 좋지만 일부 단계에서 짧고 보수적인 command set을 낸다. LFM2.5 SFT는 정답 command set을 더 넓게 복원하면서 precision 손실을 억제했다.
-- 다만 LFM2.5 SFT도 JSON 안정성은 아직 완벽하지 않다. invalid JSON `76/303`, zero-F1 `19/303`, empty command `18/303`이 남아 있어, 후속 학습에서는 `<think>` 제거, JSON-only assistant target, 후반 step 검증 command 강화가 필요하다.
+- 다만 LFM2.5 SFT도 JSON 안정성은 아직 완벽하지 않다. 1epoch 기준 invalid JSON `70/303`, zero-F1 `23/303`, empty command `19/303`이 남아 있어, 후속 학습에서는 `<think>` 제거, JSON-only assistant target, 후반 step 검증 command 강화가 필요하다.
 
 ## 평가 코드 공정성 점검
 
