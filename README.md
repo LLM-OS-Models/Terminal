@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-05`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, 실시간 평가 스냅샷 반영: `2026-06-06 04:17 KST`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-05`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Mellum2-12B 평가 반영: `2026-06-06`, 실시간 평가 스냅샷 반영: `2026-06-06 04:25 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -105,40 +105,41 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 78 | `inclusionAI/LLaDA2.1-flash` | 20.07 | 0.2007 | 0.3150 | 0.1819 | 11.2% | 28.7% | sglang_llada_suffix | 2.502 | - |
 | 79 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch` | 19.52 | 0.1952 | 0.2626 | 0.2091 | 15.5% | 25.7% | gemma4_native | 7.116 | 36.0 |
 | 80 | `google/gemma-4-E4B-it` | 19.36 | 0.1936 | 0.3184 | 0.1822 | 11.6% | 54.8% | chat_template | 0.205 | 175.8 |
-| 81 | `stepfun-ai/Step-3.5-Flash` | 18.80 | 0.1880 | 0.2710 | 0.1790 | 13.9% | 27.4% | step3p5_vllm_bf16 | 5.368 | - |
-| 82 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch` | 18.66 | 0.1866 | 0.2370 | 0.2152 | 14.5% | 25.1% | gemma4_native | 7.020 | 45.3 |
-| 83 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | gemma4_native | 0.302 | 52.6 |
-| 84 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
-| 85 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
-| 86 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | gemma4_native | 0.289 | 73.4 |
-| 87 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
-| 88 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
-| 89 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
-| 90 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
-| 91 | `KoHRM-Text-1.4B-stage4d direct` | 11.48 | 0.1148 | 0.1995 | 0.0961 | 5.9% | 38.9% | kohrm-local-prefixlm | 14.001 | 13.0 |
-| 92 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
-| 93 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
-| 94 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
-| 95 | `KoHRM-Text-1.4B-stage4d synth,cot` | 10.36 | 0.1036 | 0.1696 | 0.0878 | 4.0% | 36.0% | kohrm-local-prefixlm | 14.406 | 12.0 |
-| 96 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
-| 97 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
-| 98 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
-| 99 | `sapientinc/HRM-Text-1B` | 0.40 | 0.0040 | 0.0057 | 0.0040 | 1.3% | 4.3% | hrm_text_prefixlm | 3.976 | 4.4 |
-| 100 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
-| 101 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
+| 81 | `JetBrains/Mellum2-12B-A2.5B-Thinking` | 18.96 | 0.1896 | 0.2682 | 0.2023 | 15.5% | 35.3% | chat_template | 4.536 | 138.4 |
+| 82 | `stepfun-ai/Step-3.5-Flash` | 18.80 | 0.1880 | 0.2710 | 0.1790 | 13.9% | 27.4% | step3p5_vllm_bf16 | 5.368 | - |
+| 83 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch` | 18.66 | 0.1866 | 0.2370 | 0.2152 | 14.5% | 25.1% | gemma4_native | 7.020 | 45.3 |
+| 84 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | gemma4_native | 0.302 | 52.6 |
+| 85 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
+| 86 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
+| 87 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | gemma4_native | 0.289 | 73.4 |
+| 88 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
+| 89 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
+| 90 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
+| 91 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
+| 92 | `KoHRM-Text-1.4B-stage4d direct` | 11.48 | 0.1148 | 0.1995 | 0.0961 | 5.9% | 38.9% | kohrm-local-prefixlm | 14.001 | 13.0 |
+| 93 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
+| 94 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
+| 95 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
+| 96 | `KoHRM-Text-1.4B-stage4d synth,cot` | 10.36 | 0.1036 | 0.1696 | 0.0878 | 4.0% | 36.0% | kohrm-local-prefixlm | 14.406 | 12.0 |
+| 97 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
+| 98 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
+| 99 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
+| 100 | `sapientinc/HRM-Text-1B` | 0.40 | 0.0040 | 0.0057 | 0.0040 | 1.3% | 4.3% | hrm_text_prefixlm | 3.976 | 4.4 |
+| 101 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
+| 102 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
 
 
 
 전체 순위 반영 메모:
 
-- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 1개를 이 표에 반영했다.
+- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 15개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 1개를 이 표에 반영했다.
 - 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
 - `Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch`는 Score `44.79`로 Qwen 계열 최고점이다. 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` Score `39.52`보다 `+5.27` 높고, GLM-5.1 API Score `41.68`보다도 `+3.11` 높다. 같은 결과 JSON의 legacy `next_action_score`는 `41.64`이며, 전체 순위 기준에는 쓰지 않는다.
 - 26B-A4B-it native 2epoch는 이제 Score `39.56`, Qwen3.5-2B SameCount SFT 2epoch는 Score `39.52`다. 26B-A4B-it native 1epoch는 Score `38.12`, 31B-it native 1epoch는 `35.55`, 31B-it native 2epoch는 `32.57`이다.
 - Qwen3.5 대형 FP8 완료분은 `Qwen/Qwen3.5-397B-A17B-FP8` Score `37.81`로 전체 12위, `Qwen/Qwen3.5-122B-A10B-FP8` Score `37.28`로 전체 14위다. 둘 다 vLLM `tp=8`, expert parallel, prefix caching, Qwen3 reasoning parser, `max_model_len=32768`로 평가했다.
 - `LiquidAI/LFM2.5-8B-A1B`는 Score `36.53`으로 신규 반영했다. 기존 `LiquidAI/LFM2-8B-A1B` base Score `10.04`보다 `+26.49` 높고, `Qwen/Qwen3.5-35B-A3B-FP8` Score `36.44`를 근소하게 앞선다. First Cmd `39.9%`, Recall `0.3685`, Sec/Step `0.097`이라 8B급 빠른 base 모델 중 매우 강한 결과다.
 - KoHRM-Text stage4d 계열은 base direct 2개와 LoRA 6개를 full 303-step으로 평가했다. 최고 LoRA는 `terminal-tool-core-r64` Score `29.11`이고, top2 terminal/tool merge full SFT 1epoch는 Score `31.59`로 LoRA 최고보다 `+2.48` 높다. HRM PrefixLM 구조는 현재 로컬 전용 evaluator로 평가했으며 vLLM chat model 경로는 쓰지 않았다.
-- 요청 외부 모델 + API 평가 완료분 중 최고는 `Zyphra/ZAYA1-74B-preview` Score `48.15`다. 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch 다음 3위이며, 그 다음 주요 완료분은 `GLM-5.1 (z.ai API)` Score `41.68`, `DavidAU/Qwen3.6-40B Deckard...:Q4_K_M` Score `37.09`, `LiquidAI/LFM2.5-8B-A1B` Score `36.53`, `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` Score `36.29`다.
+- 요청 외부 모델 + API 평가 완료분 중 최고는 `Zyphra/ZAYA1-74B-preview` Score `48.15`다. 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch 다음 3위이며, 그 다음 주요 완료분은 `GLM-5.1 (z.ai API)` Score `41.68`, `DavidAU/Qwen3.6-40B Deckard...:Q4_K_M` Score `37.09`, `LiquidAI/LFM2.5-8B-A1B` Score `36.53`, `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` Score `36.29`다. `JetBrains/Mellum2-12B-A2.5B-Thinking`은 Score `18.96`으로 Step-3.5-Flash `18.80`보다 근소하게 높지만, 상위 terminal-action 후보로 보기에는 낮다.
 - `DeepSeek-V4-Flash`는 공식 converted MP4 inference 경로로 `2 x tp=4`, 8GPU full replay 303-step을 완료했고 Score `32.22`로 전체 43위다. 이전 vLLM/FP8 경로의 BOS 반복 0점 실패는 최종 결과에서 대체했다. `google/gemma-4-31B-it-assistant`는 아직 결과 JSON 없음.
 - `Step-3.5-Flash`는 공식 vLLM Step-3.5 recipe 계열 설정을 기준으로 FP8 route를 먼저 시도했지만 로컬 CUDA/vLLM 조합에서 illegal address와 MTP layer config 문제가 반복되어, 최종 반영은 BF16 원본 모델 `tp=8`, expert parallel, `max_model_len=49152`로 완료한 303-step 결과다. Score는 `18.80`으로 전체 80위다.
 
@@ -209,12 +210,12 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 4GPU에서 `GBS=90112`, LR `2e-5`로 학습했고 `fsdp2_epoch_1`을 HF safetensors export로 변환했다. 현재 export `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1`을 full 303-step으로 평가 중이다.
 - `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount`: 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`에서 이어서 LFM2.5 full-conversation terminal/toolcall 데이터로 full SFT를 진행했다. 4096 context, 4GPU, full fine-tuning이다. `b18/b8/b7/b6`는 Qwen3.5 Gated DeltaNet torch fallback OOM 또는 gradient checkpointing metadata mismatch로 실패했고, 안정 런은 `b4_nogc_4096`, global batch `16`이었다. 1epoch 평가 최종 Score는 `44.79`이며 Qwen 계열 최고점으로 전체표에 반영했다.
 
-운영 스냅샷, 2026-06-06 04:19 KST 업데이트:
-- GPU `0,1,2,3`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1` HRM 전용 evaluator 평가 중이다. `batch-size=16`, `max_model_len=4096`, `max_tokens=1024`, 4-shard 저장 주기 `5` step으로 돌리고 있다. 현재 저장된 partial은 `60/303` step, partial Score `50.26`, partial Next Action `51.68`다. 최종 순위표에는 아직 반영하지 않는다. shard별 속도 편차가 커서 현재 기준 예상 완료는 2026-06-06 `05:30~06:10 KST`다.
+운영 스냅샷, 2026-06-06 04:25 KST 업데이트:
+- GPU `0,1,2,3`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1` HRM 전용 evaluator 평가 중이다. `batch-size=16`, `max_model_len=4096`, `max_tokens=1024`, 4-shard 저장 주기 `5` step으로 돌리고 있다. 현재 저장된 partial은 `120/303` step, partial Score `43.68`, partial Next Action `45.58`다. 최종 순위표에는 아직 반영하지 않는다. 초반 50점대 partial은 shard/early 편향이었고, 현재 기준 최종 예상 Score는 `40~46`, 예상 완료는 2026-06-06 `05:15~05:35 KST`다.
 - HRM GPU VRAM은 GPU당 약 `55~57GB`를 쓰고 있다. 학습이 아니라 inference 평가라 VRAM을 전부 채우는 것이 목표가 아니다. 모델이 1.4B이고 PrefixLM SDPA/KV-cache 경로라 VRAM보다 generation latency와 전용 evaluator 병목이 더 크다. 현재 run은 중단하지 않고 끝까지 가져가며, 다음 run에서만 `batch-size`/stop-token 조기 종료를 더 공격적으로 조정한다.
-- GPU `4,5`: `google/gemma-4-12B-it` full replay 평가 중이다. vLLM `tp=2`/`tp=1`은 Gemma4 unified weight shape mismatch로 실패해서, 새 텍스트 전용 fallback `tb2_lite/scripts/replay_eval_gemma4_text.py`를 추가했다. smoke 2-step은 정상 완료했고, full run은 2개 shard를 GPU 1장씩 사용한다. 04:19 KST 기준 양쪽 모두 모델 load 완료 후 GPU util `97%`로 생성 중이며, 첫 10-step 저장 후 ETA를 다시 산정한다.
-- GPU `6,7`: `JetBrains/Mellum2-12B-A2.5B-Thinking` vLLM `tp=2` 평가 중이다. 04:19 KST 기준 progress `256/303`, progress bar ETA `2분 48초`였으므로 예상 완료는 2026-06-06 `04:22~04:23 KST`다. 최종 Score는 JSON 생성 후 전체표에 반영한다.
-- 디스크는 `/home/work/.data` 기준 약 `1.8T` 여유가 있다. 현재 평가들이 끝나면 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF`는 품질 보존을 위해 4-bit GGUF를 우선으로 잡고, 모든 GPU가 비는 시점에 8GPU로 평가하며 partial 저장 주기를 짧게 둔다.
+- GPU `4,5,6,7`: `google/gemma-4-12B-it` full replay 평가 중이다. vLLM `tp=2`/`tp=1`은 Gemma4 unified weight shape mismatch로 실패해서, 새 텍스트 전용 fallback `tb2_lite/scripts/replay_eval_gemma4_text.py`를 추가했다. smoke 2-step은 정상 완료했다. 처음 2-shard GPU `4,5` run은 저장된 full partial이 없어 중단했고, Mellum 완료 후 GPU `4,5,6,7` 4-shard로 재시작했다. 04:25 KST 기준 모델 로딩 중이며, 첫 10-step 저장 후 ETA를 다시 산정한다.
+- GPU `6,7`에서 돌린 `JetBrains/Mellum2-12B-A2.5B-Thinking` vLLM `tp=2` 평가는 2026-06-06 `04:22 KST`에 완료했다. 최종 Score는 `18.96`, Next Action `17.92`, First Cmd `15.5%`, Valid JSON `35.3%`, Sec/Step `4.536`이다. `model_training` `0.3248`, `security` `0.2877`, `debugging` `0.2604`는 상대적으로 낫지만 `swe` `0.0635`, `code` `0.0645`가 낮아 전체 점수가 낮다.
+- 디스크는 `/home/work/.data` 기준 약 `1.8T` 여유가 있다. `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF`는 `UD-Q4_K_M` 9-shard 다운로드를 시작했다. 현재 평가들이 끝나고 Q4_K_M 파일이 준비되면 모든 GPU가 비는 시점에 8GPU로 평가하며 partial 저장 주기를 짧게 둔다.
 
 운영 스냅샷, 2026-06-05 14:03 KST 업데이트:
 - GPU `1,2,3,7`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench` 학습 중이다. 최신 저장 checkpoint는 `step_9000`이며, `step_8000 -> step_9000` 구간 속도는 약 22분 49초/1000 steps다. 이 속도 기준 예상 완료는 2026-06-05 `16:56 KST` 전후다.
