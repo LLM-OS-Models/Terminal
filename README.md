@@ -207,6 +207,12 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - GPU `0,4,5,6`: `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1` export 4-shard 평가 중. VRAM은 약 `55~57GB` 사용 중이고, 모델 로드는 끝났지만 공식 `max_tokens=1024` generation의 첫 진행 로그가 아직 나오지 않았다. 이 평가는 첫 `[10/N]` 진행 로그가 찍히기 전까지 ETA를 신뢰하게 계산할 수 없다.
 - top2 평가가 완료되면 shard JSON 4개를 merge해서 Score, Cmd F1, Precision, Recall, First Cmd, Valid JSON을 이 표와 KoHRM 분석 섹션에 반영한다. Score가 나오기 전에는 순위표에 임의 숫자를 넣지 않는다.
 
+운영 스냅샷, 2026-06-05 13:06 KST 업데이트:
+- KoHRM top2 full SFT export 평가는 `70/303` step partial 기준 Score `36.87`, Cmd F1 `0.3687`, Precision `0.4638`, Recall `0.3786`, First Cmd `31.4%`, Valid JSON `100.0%`다. 이 값은 최종 점수가 아니라 중간 저장분이다.
+- partial 기준으로는 KoHRM LoRA 최고 Score `29.11`과 `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` Score `31.74`를 넘고 있다. 다만 late step F1이 `0.2792`라 후반 step이 더 들어오면 최종 Score는 내려갈 수 있다.
+- 현재 저장 속도 기준 top2 full SFT 평가는 2026-06-05 `13:35~13:42 KST` 전후 완료 예상이다. `lfm25-terminal-toolbench` full SFT 학습은 2026-06-05 `16:52 KST` 전후 완료 예상이다.
+- `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1` 모델카드는 `base_model: LLM-OS-Models/KoHRM-Text-1.4B`, `base_model_relation: finetune`로 업데이트했다. KoHRM LoRA repo 8개는 `base_model_relation: adapter`, `library_name: peft`로 업데이트했고 public 상태를 확인했다.
+
 ### KoHRM 성능 원인과 다음 액션
 
 현재 확인된 결론은 `KoHRM-Text-1.4B-stage4d`가 terminal/tool action을 배울 수는 있지만, LoRA만으로는 출력 계약과 command coverage를 동시에 충분히 끌어올리지 못했다는 것이다. base direct Score `11.48`에서 최고 LoRA Score `29.11`까지 오른 것은 학습 방향이 맞다는 증거지만, Ouro-1.4B-Thinking-Terminal-SFT Score `31.74`, Qwen3.5-2B SFT Score `39.52`, LFM2.5 full SFT Score `52.30`과 비교하면 아직 다음 행동 복원력이 부족하다.
