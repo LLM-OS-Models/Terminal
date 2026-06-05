@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA 결과 반영: `2026-06-05`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-05`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -69,72 +69,73 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 43 | `deepseek-ai/DeepSeek-V4-Flash` | 32.22 | 0.3222 | 0.4511 | 0.3037 | 24.4% | 44.2% | deepseek_official_mp4 | 178.033 | 15.6 |
 | 44 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 31.86 | 0.3186 | 0.4102 | 0.3321 | 30.0% | 55.8% | chat_template | 0.151 | 33.0 |
 | 45 | `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` | 31.74 | 0.3174 | 0.4062 | 0.3410 | 24.8% | 63.7% | chat_template | 1.698 | 92.4 |
-| 46 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.126 | 35.7 |
-| 47 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-7GPU` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.128 | 131.5 |
-| 48 | `Qwen/Qwen3.6-35B-A3B-FP8` | 30.57 | 0.3057 | 0.4248 | 0.2873 | 14.5% | 75.2% | chat_template | 0.203 | 181.9 |
-| 49 | `Qwen/Qwen3.6-35B-A3B` | 30.28 | 0.3028 | 0.4093 | 0.2879 | 14.2% | 73.3% | chat_template | 0.234 | 360.2 |
-| 50 | `LLM-OS-Models/Ouro-2.6B-Terminal-SFT` | 29.58 | 0.2958 | 0.3624 | 0.3156 | 22.8% | 29.4% | chat_template | 5.154 | 332.6 |
-| 51 | `KoHRM-Text-1.4B-stage4d + terminal-tool-core-r64 LoRA` | 29.11 | 0.2911 | 0.3988 | 0.2768 | 22.1% | 63.4% | kohrm-local-lora-prefixlm | 17.217 | 23.2 |
-| 52 | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-2Epoch` | 28.96 | 0.2896 | 0.3829 | 0.3254 | 24.4% | 26.4% | gemma4_native | 5.950 | 43.2 |
-| 53 | `KoHRM-Text-1.4B-stage4d + terminal-comp-jsonfix-r64 LoRA` | 28.80 | 0.2880 | 0.3834 | 0.2878 | 24.4% | 66.7% | kohrm-local-lora-prefixlm | 17.564 | 23.4 |
-| 54 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-8GPU` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.085 | 49.9 |
-| 55 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.086 | 25.4 |
-| 56 | `google/gemma-4-26B-A4B-it` | 28.51 | 0.2851 | 0.4057 | 0.2643 | 14.2% | 71.9% | chat_template | 0.277 | 747.8 |
-| 57 | `KoHRM-Text-1.4B-stage4d + comp-terminal-80m LoRA` | 28.44 | 0.2844 | 0.3718 | 0.2803 | 22.8% | 67.3% | kohrm-local-lora-prefixlm | 17.004 | 20.1 |
-| 58 | `LLM-OS-Models/Ouro-1.4B-terminal-sft` | 28.30 | 0.2830 | 0.3520 | 0.3141 | 22.4% | 27.1% | chat_template | 2.344 | 83.1 |
-| 59 | `gyung/LFM2-8B-Terminal-SFT-Unsloth` | 28.23 | 0.2823 | 0.3817 | 0.2851 | 27.1% | 53.8% | chat_template | 0.124 | 36.0 |
-| 60 | `Jiunsong/supergemma4-26b-uncensored-gguf-v2:Q4_K_M` | 28.21 | 0.2821 | 0.4135 | 0.2506 | 14.5% | 53.8% | gemma4_native | 5.688 | 7.5 |
-| 61 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 28.10 | 0.2810 | 0.3615 | 0.2941 | 29.4% | 50.5% | chat_template | 0.085 | 25.4 |
-| 62 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth` | 27.33 | 0.2733 | 0.3526 | 0.2872 | 24.1% | 62.0% | chat_template | 0.124 | 267.1 |
-| 63 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth` | 27.31 | 0.2731 | 0.3643 | 0.2804 | 21.8% | 62.0% | chat_template | 0.147 | 69.7 |
-| 64 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
-| 65 | `KoHRM-Text-1.4B-stage4d + terminal-tool-jsonfix-r32 LoRA` | 27.15 | 0.2715 | 0.3831 | 0.2574 | 20.8% | 64.4% | kohrm-local-lora-prefixlm | 16.990 | 23.1 |
-| 66 | `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66 | 0.2666 | 0.3733 | 0.2366 | 23.5% | 31.0% | deepseek_official_mp8 | 441.6 | 15.0 |
-| 67 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
-| 68 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
-| 69 | `KoHRM-Text-1.4B-stage4d + behavior-jsonfix-r32 LoRA` | 26.23 | 0.2623 | 0.3807 | 0.2507 | 21.1% | 71.0% | kohrm-local-lora-prefixlm | 15.954 | 22.3 |
-| 70 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
-| 71 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | gemma4_native | 0.317 | 51.8 |
-| 72 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 24.74 | 0.2474 | 0.3390 | 0.2456 | 12.5% | 56.1% | chat_template | 0.178 | 228.6 |
-| 73 | `KoHRM-Text-1.4B-stage4d + behavior-core-r64 LoRA` | 24.68 | 0.2468 | 0.3409 | 0.2405 | 21.8% | 64.4% | kohrm-local-lora-prefixlm | 16.974 | 23.0 |
-| 74 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth` | 22.45 | 0.2245 | 0.3097 | 0.2314 | 18.8% | 47.2% | chat_template | 0.083 | 57.2 |
-| 75 | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-1Epoch` | 21.08 | 0.2108 | 0.2886 | 0.2422 | 11.2% | 21.1% | gemma4_native | 5.650 | 44.7 |
-| 76 | `Zyphra/ZAYA1-8B` | 20.61 | 0.2061 | 0.2844 | 0.2117 | 17.5% | 35.3% | chat_template | 2.339 | 598.3 |
-| 77 | `inclusionAI/LLaDA2.1-flash` | 20.07 | 0.2007 | 0.3150 | 0.1819 | 11.2% | 28.7% | sglang_llada_suffix | 2.502 | - |
-| 78 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch` | 19.52 | 0.1952 | 0.2626 | 0.2091 | 15.5% | 25.7% | gemma4_native | 7.116 | 36.0 |
-| 79 | `google/gemma-4-E4B-it` | 19.36 | 0.1936 | 0.3184 | 0.1822 | 11.6% | 54.8% | chat_template | 0.205 | 175.8 |
-| 80 | `stepfun-ai/Step-3.5-Flash` | 18.80 | 0.1880 | 0.2710 | 0.1790 | 13.9% | 27.4% | step3p5_vllm_bf16 | 5.368 | - |
-| 81 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch` | 18.66 | 0.1866 | 0.2370 | 0.2152 | 14.5% | 25.1% | gemma4_native | 7.020 | 45.3 |
-| 82 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | gemma4_native | 0.302 | 52.6 |
-| 83 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
-| 84 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
-| 85 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | gemma4_native | 0.289 | 73.4 |
-| 86 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
-| 87 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
-| 88 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
-| 89 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
-| 90 | `KoHRM-Text-1.4B-stage4d direct` | 11.48 | 0.1148 | 0.1995 | 0.0961 | 5.9% | 38.9% | kohrm-local-prefixlm | 14.001 | 13.0 |
-| 91 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
-| 92 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
-| 93 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
-| 94 | `KoHRM-Text-1.4B-stage4d synth,cot` | 10.36 | 0.1036 | 0.1696 | 0.0878 | 4.0% | 36.0% | kohrm-local-prefixlm | 14.406 | 12.0 |
-| 95 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
-| 96 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
-| 97 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
-| 98 | `sapientinc/HRM-Text-1B` | 0.40 | 0.0040 | 0.0057 | 0.0040 | 1.3% | 4.3% | hrm_text_prefixlm | 3.976 | 4.4 |
-| 99 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
-| 100 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
+| 46 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1` | 31.59 | 0.3159 | 0.3859 | 0.3415 | 24.8% | 73.3% | kohrm-local-prefixlm-export | 7.5 | 7.3 |
+| 47 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.126 | 35.7 |
+| 48 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-7GPU` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.128 | 131.5 |
+| 49 | `Qwen/Qwen3.6-35B-A3B-FP8` | 30.57 | 0.3057 | 0.4248 | 0.2873 | 14.5% | 75.2% | chat_template | 0.203 | 181.9 |
+| 50 | `Qwen/Qwen3.6-35B-A3B` | 30.28 | 0.3028 | 0.4093 | 0.2879 | 14.2% | 73.3% | chat_template | 0.234 | 360.2 |
+| 51 | `LLM-OS-Models/Ouro-2.6B-Terminal-SFT` | 29.58 | 0.2958 | 0.3624 | 0.3156 | 22.8% | 29.4% | chat_template | 5.154 | 332.6 |
+| 52 | `KoHRM-Text-1.4B-stage4d + terminal-tool-core-r64 LoRA` | 29.11 | 0.2911 | 0.3988 | 0.2768 | 22.1% | 63.4% | kohrm-local-lora-prefixlm | 17.217 | 23.2 |
+| 53 | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-2Epoch` | 28.96 | 0.2896 | 0.3829 | 0.3254 | 24.4% | 26.4% | gemma4_native | 5.950 | 43.2 |
+| 54 | `KoHRM-Text-1.4B-stage4d + terminal-comp-jsonfix-r64 LoRA` | 28.80 | 0.2880 | 0.3834 | 0.2878 | 24.4% | 66.7% | kohrm-local-lora-prefixlm | 17.564 | 23.4 |
+| 55 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-8GPU` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.085 | 49.9 |
+| 56 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.086 | 25.4 |
+| 57 | `google/gemma-4-26B-A4B-it` | 28.51 | 0.2851 | 0.4057 | 0.2643 | 14.2% | 71.9% | chat_template | 0.277 | 747.8 |
+| 58 | `KoHRM-Text-1.4B-stage4d + comp-terminal-80m LoRA` | 28.44 | 0.2844 | 0.3718 | 0.2803 | 22.8% | 67.3% | kohrm-local-lora-prefixlm | 17.004 | 20.1 |
+| 59 | `LLM-OS-Models/Ouro-1.4B-terminal-sft` | 28.30 | 0.2830 | 0.3520 | 0.3141 | 22.4% | 27.1% | chat_template | 2.344 | 83.1 |
+| 60 | `gyung/LFM2-8B-Terminal-SFT-Unsloth` | 28.23 | 0.2823 | 0.3817 | 0.2851 | 27.1% | 53.8% | chat_template | 0.124 | 36.0 |
+| 61 | `Jiunsong/supergemma4-26b-uncensored-gguf-v2:Q4_K_M` | 28.21 | 0.2821 | 0.4135 | 0.2506 | 14.5% | 53.8% | gemma4_native | 5.688 | 7.5 |
+| 62 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 28.10 | 0.2810 | 0.3615 | 0.2941 | 29.4% | 50.5% | chat_template | 0.085 | 25.4 |
+| 63 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth` | 27.33 | 0.2733 | 0.3526 | 0.2872 | 24.1% | 62.0% | chat_template | 0.124 | 267.1 |
+| 64 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth` | 27.31 | 0.2731 | 0.3643 | 0.2804 | 21.8% | 62.0% | chat_template | 0.147 | 69.7 |
+| 65 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
+| 66 | `KoHRM-Text-1.4B-stage4d + terminal-tool-jsonfix-r32 LoRA` | 27.15 | 0.2715 | 0.3831 | 0.2574 | 20.8% | 64.4% | kohrm-local-lora-prefixlm | 16.990 | 23.1 |
+| 67 | `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66 | 0.2666 | 0.3733 | 0.2366 | 23.5% | 31.0% | deepseek_official_mp8 | 441.6 | 15.0 |
+| 68 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
+| 69 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
+| 70 | `KoHRM-Text-1.4B-stage4d + behavior-jsonfix-r32 LoRA` | 26.23 | 0.2623 | 0.3807 | 0.2507 | 21.1% | 71.0% | kohrm-local-lora-prefixlm | 15.954 | 22.3 |
+| 71 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
+| 72 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | gemma4_native | 0.317 | 51.8 |
+| 73 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 24.74 | 0.2474 | 0.3390 | 0.2456 | 12.5% | 56.1% | chat_template | 0.178 | 228.6 |
+| 74 | `KoHRM-Text-1.4B-stage4d + behavior-core-r64 LoRA` | 24.68 | 0.2468 | 0.3409 | 0.2405 | 21.8% | 64.4% | kohrm-local-lora-prefixlm | 16.974 | 23.0 |
+| 75 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth` | 22.45 | 0.2245 | 0.3097 | 0.2314 | 18.8% | 47.2% | chat_template | 0.083 | 57.2 |
+| 76 | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-1Epoch` | 21.08 | 0.2108 | 0.2886 | 0.2422 | 11.2% | 21.1% | gemma4_native | 5.650 | 44.7 |
+| 77 | `Zyphra/ZAYA1-8B` | 20.61 | 0.2061 | 0.2844 | 0.2117 | 17.5% | 35.3% | chat_template | 2.339 | 598.3 |
+| 78 | `inclusionAI/LLaDA2.1-flash` | 20.07 | 0.2007 | 0.3150 | 0.1819 | 11.2% | 28.7% | sglang_llada_suffix | 2.502 | - |
+| 79 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch` | 19.52 | 0.1952 | 0.2626 | 0.2091 | 15.5% | 25.7% | gemma4_native | 7.116 | 36.0 |
+| 80 | `google/gemma-4-E4B-it` | 19.36 | 0.1936 | 0.3184 | 0.1822 | 11.6% | 54.8% | chat_template | 0.205 | 175.8 |
+| 81 | `stepfun-ai/Step-3.5-Flash` | 18.80 | 0.1880 | 0.2710 | 0.1790 | 13.9% | 27.4% | step3p5_vllm_bf16 | 5.368 | - |
+| 82 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch` | 18.66 | 0.1866 | 0.2370 | 0.2152 | 14.5% | 25.1% | gemma4_native | 7.020 | 45.3 |
+| 83 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | gemma4_native | 0.302 | 52.6 |
+| 84 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
+| 85 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
+| 86 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | gemma4_native | 0.289 | 73.4 |
+| 87 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
+| 88 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
+| 89 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
+| 90 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
+| 91 | `KoHRM-Text-1.4B-stage4d direct` | 11.48 | 0.1148 | 0.1995 | 0.0961 | 5.9% | 38.9% | kohrm-local-prefixlm | 14.001 | 13.0 |
+| 92 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
+| 93 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
+| 94 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
+| 95 | `KoHRM-Text-1.4B-stage4d synth,cot` | 10.36 | 0.1036 | 0.1696 | 0.0878 | 4.0% | 36.0% | kohrm-local-prefixlm | 14.406 | 12.0 |
+| 96 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
+| 97 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
+| 98 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
+| 99 | `sapientinc/HRM-Text-1B` | 0.40 | 0.0040 | 0.0057 | 0.0040 | 1.3% | 4.3% | hrm_text_prefixlm | 3.976 | 4.4 |
+| 100 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
+| 101 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
 
 
 
 전체 순위 반영 메모:
 
-- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개를 이 표에 반영했다.
+- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 1개를 이 표에 반영했다.
 - 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
 - 26B-A4B-it native 2epoch는 이제 전체 5위, Qwen3.5-2B SFT 2epoch는 6위다. 26B-A4B-it native 1epoch는 Score `38.12`로 전체 9위, 31B-it native 1epoch는 `35.55`, 31B-it native 2epoch는 `32.57`이다.
 - Qwen3.5 대형 FP8 완료분은 `Qwen/Qwen3.5-397B-A17B-FP8` Score `37.81`로 전체 12위, `Qwen/Qwen3.5-122B-A10B-FP8` Score `37.28`로 전체 14위다. 둘 다 vLLM `tp=8`, expert parallel, prefix caching, Qwen3 reasoning parser, `max_model_len=32768`로 평가했다.
 - `LiquidAI/LFM2.5-8B-A1B`는 Score `36.53`으로 신규 반영했다. 기존 `LiquidAI/LFM2-8B-A1B` base Score `10.04`보다 `+26.49` 높고, `Qwen/Qwen3.5-35B-A3B-FP8` Score `36.44`를 근소하게 앞선다. First Cmd `39.9%`, Recall `0.3685`, Sec/Step `0.097`이라 8B급 빠른 base 모델 중 매우 강한 결과다.
-- KoHRM-Text stage4d 계열은 base direct 2개와 LoRA 6개를 full 303-step으로 평가했다. 최고는 `terminal-tool-core-r64 LoRA` Score `29.11`이며, base direct Score `11.48`보다 `+17.63` 높다. HRM PrefixLM 구조는 현재 로컬 전용 evaluator로 평가했으며 vLLM chat model 경로는 쓰지 않았다.
+- KoHRM-Text stage4d 계열은 base direct 2개와 LoRA 6개를 full 303-step으로 평가했다. 최고 LoRA는 `terminal-tool-core-r64` Score `29.11`이고, top2 terminal/tool merge full SFT 1epoch는 Score `31.59`로 LoRA 최고보다 `+2.48` 높다. HRM PrefixLM 구조는 현재 로컬 전용 evaluator로 평가했으며 vLLM chat model 경로는 쓰지 않았다.
 - 요청 외부 모델 + API 평가 완료분 중 최고는 `Zyphra/ZAYA1-74B-preview` Score `48.15`다. 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch 다음 3위이며, 그 다음 주요 완료분은 `GLM-5.1 (z.ai API)` Score `41.68`, `DavidAU/Qwen3.6-40B Deckard...:Q4_K_M` Score `37.09`, `LiquidAI/LFM2.5-8B-A1B` Score `36.53`, `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` Score `36.29`다.
 - `DeepSeek-V4-Flash`는 공식 converted MP4 inference 경로로 `2 x tp=4`, 8GPU full replay 303-step을 완료했고 Score `32.22`로 전체 43위다. 이전 vLLM/FP8 경로의 BOS 반복 0점 실패는 최종 결과에서 대체했다. `google/gemma-4-31B-it-assistant`는 아직 결과 JSON 없음.
 - `Step-3.5-Flash`는 공식 vLLM Step-3.5 recipe 계열 설정을 기준으로 FP8 route를 먼저 시도했지만 로컬 CUDA/vLLM 조합에서 illegal address와 MTP layer config 문제가 반복되어, 최종 반영은 BF16 원본 모델 `tp=8`, expert parallel, `max_model_len=49152`로 완료한 303-step 결과다. Score는 `18.80`으로 전체 80위다.
@@ -196,48 +197,46 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - Ouro thinking SFT는 느리지만, 이미 terminal thinking/output 분포에 더 잘 맞는다. 평균 속도는 Ouro-1.4B-Thinking-Terminal-SFT `1.698 sec/step`, KoHRM LoRA `15~17 sec/step`이라 KoHRM 로컬 PrefixLM evaluator가 훨씬 느리고, 점수도 낮아 현재 LoRA만으로는 채택 우선순위가 낮다.
 - 결론은 adapter를 더 미세하게 흔드는 것보다 full SFT가 맞다. LoRA가 base 대비 `+17.63`을 만든 것은 방향이 맞다는 증거지만, Ouro/Qwen/LFM 상위권을 넘으려면 KoHRM 자체 가중치를 terminal/tool JSON action 분포로 직접 이동시켜야 한다.
 
-진행 중인 full SFT 및 평가:
+완료된 full SFT 및 평가:
+- `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge`: 현재 1, 2위 LFM2.5 계열의 terminal/tool raw를 합친 full SFT 실험이다. 준비 데이터는 `kohrm_sft_top2_terminal_tool_raw8192_v1`, context `8192`, 약 `245M` tokens, `GBS=90112`, LR `2e-5`, 1epoch로 학습했고 `fsdp2_epoch_1`을 HF safetensors export로 변환했다.
+- export 경로는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1`이고, Hugging Face repo는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1`이다. 모델카드는 `base_model: LLM-OS-Models/KoHRM-Text-1.4B`, `base_model_relation: finetune`로 표기했다.
+- full 303-step replay 최종 Score는 `31.59`다. Cmd F1 `0.3159`, Precision `0.3859`, Recall `0.3415`, First Cmd `24.8%`, Valid JSON `73.3%`다. KoHRM LoRA 최고 Score `29.11`보다 `+2.48` 높고, `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` Score `31.74`보다 `-0.15` 낮다.
+- 처음 시도한 `GBS=180224`는 4GPU local token budget이 GPU당 `45056` tokens까지 커져 CUDA OOM이 났다. 안정 학습은 8GPU pretraining 때의 GPU당 token budget과 맞춘 `22528` tokens/GPU 설정에서 이뤄졌다.
+
+진행 중인 full SFT:
 - `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 4GPU에서 `GBS=90112`, LR `2e-5`로 학습 중이다.
-- `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge`: 현재 1, 2위 LFM2.5 계열의 terminal/tool raw를 합친 두 번째 full SFT 실험이다. 준비 데이터는 `kohrm_sft_top2_terminal_tool_raw8192_v1`, context `8192`, 약 `245M` tokens, `GBS=90112`, LR `2e-5`로 학습을 끝냈고, `fsdp2_epoch_1`을 HF safetensors export로 변환했다.
-- top2 full SFT export 경로는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1`이고, Hugging Face에는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1`로 업로드했다. 원격 SHA는 `bb36cff54ff2ae9bfbcb87b391f7bb7cbda5cba6`이다. 2026-06-05 12:53 KST 기준 GPU `0,4,5,6`에서 4-shard full replay 평가를 시작했으며, 네 shard 모두 모델 로드는 `7.0~7.4s`에 성공했다. 아직 첫 progress/checkpoint JSON이 나오지 않아 공식 Score는 없다.
-- 처음 시도한 `GBS=180224`는 4GPU local token budget이 GPU당 `45056` tokens까지 커져 CUDA OOM이 났다. 현재 설정은 8GPU pretraining 때의 GPU당 token budget과 맞춘 `22528` tokens/GPU라 full SFT 학습은 VRAM을 약 `131GB/144GB`씩 쓰면서 안정적으로 돈다.
+- `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount`: 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`에서 이어서 LFM2.5 full-conversation terminal/toolcall 데이터로 full SFT를 시작했다. 4096 context, 4GPU, full fine-tuning이다. `b18/b8/b7/b6`는 Qwen3.5 Gated DeltaNet torch fallback OOM 또는 gradient checkpointing metadata mismatch로 실패했고, 안정 런은 `b4_nogc_4096`, global batch `16`, 총 `40760` steps다.
 
-운영 스냅샷, 2026-06-05 12:53 KST:
-- GPU `1,2,3,7`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench` 학습 중. 최신 로그는 `6070/16745`, 약 `36%`, 남은 시간 약 `4:00:44`였고, 예상 완료는 2026-06-05 `16:54 KST` 전후다. checkpoint는 `step_6000`까지 저장됐다.
-- GPU `0,4,5,6`: `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1` export 4-shard 평가 중. VRAM은 약 `55~57GB` 사용 중이고, 모델 로드는 끝났지만 공식 `max_tokens=1024` generation의 첫 진행 로그가 아직 나오지 않았다. 이 평가는 첫 `[10/N]` 진행 로그가 찍히기 전까지 ETA를 신뢰하게 계산할 수 없다.
-- top2 평가가 완료되면 shard JSON 4개를 merge해서 Score, Cmd F1, Precision, Recall, First Cmd, Valid JSON을 이 표와 KoHRM 분석 섹션에 반영한다. Score가 나오기 전에는 순위표에 임의 숫자를 넣지 않는다.
-
-운영 스냅샷, 2026-06-05 13:06 KST 업데이트:
-- KoHRM top2 full SFT export 평가는 `70/303` step partial 기준 Score `36.87`, Cmd F1 `0.3687`, Precision `0.4638`, Recall `0.3786`, First Cmd `31.4%`, Valid JSON `100.0%`다. 이 값은 최종 점수가 아니라 중간 저장분이다.
-- partial 기준으로는 KoHRM LoRA 최고 Score `29.11`과 `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` Score `31.74`를 넘고 있다. 다만 late step F1이 `0.2792`라 후반 step이 더 들어오면 최종 Score는 내려갈 수 있다.
-- 현재 저장 속도 기준 top2 full SFT 평가는 2026-06-05 `13:35~13:42 KST` 전후 완료 예상이다. `lfm25-terminal-toolbench` full SFT 학습은 2026-06-05 `16:52 KST` 전후 완료 예상이다.
-- `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1` 모델카드는 `base_model: LLM-OS-Models/KoHRM-Text-1.4B`, `base_model_relation: finetune`로 업데이트했다. KoHRM LoRA repo 8개는 `base_model_relation: adapter`, `library_name: peft`로 업데이트했고 public 상태를 확인했다.
+운영 스냅샷, 2026-06-05 14:03 KST 업데이트:
+- GPU `1,2,3,7`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench` 학습 중이다. 최신 저장 checkpoint는 `step_9000`이며, `step_8000 -> step_9000` 구간 속도는 약 22분 49초/1000 steps다. 이 속도 기준 예상 완료는 2026-06-05 `16:56 KST` 전후다.
+- GPU `0,4,5,6`: `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount` full SFT가 `b4_nogc_4096`으로 진행 중이다. 2026-06-05 14:03 KST 기준 `43/40760` steps, loss는 `0.48~0.86` 범위에서 정상 출력 중이고, 안정 구간 step time은 약 `7.8~8.9s/step`이다. 1epoch 완료 예상은 2026-06-07 `12:00~15:00 KST`, 2epoch 전체 완료 예상은 2026-06-09 `11:00~15:00 KST`다. 아직 평가 점수는 없다.
+- KoHRM LoRA repo 8개는 `base_model_relation: adapter`, `library_name: peft`로 업데이트했고 public 상태를 확인했다.
 
 ### KoHRM 성능 원인과 다음 액션
 
-현재 확인된 결론은 `KoHRM-Text-1.4B-stage4d`가 terminal/tool action을 배울 수는 있지만, LoRA만으로는 출력 계약과 command coverage를 동시에 충분히 끌어올리지 못했다는 것이다. base direct Score `11.48`에서 최고 LoRA Score `29.11`까지 오른 것은 학습 방향이 맞다는 증거지만, Ouro-1.4B-Thinking-Terminal-SFT Score `31.74`, Qwen3.5-2B SFT Score `39.52`, LFM2.5 full SFT Score `52.30`과 비교하면 아직 다음 행동 복원력이 부족하다.
+현재 확인된 결론은 `KoHRM-Text-1.4B-stage4d`가 terminal/tool action을 배울 수는 있고 full SFT가 LoRA보다 확실히 낫지만, LFM/Qwen 상위권을 따라가려면 command coverage와 first action을 더 끌어올려야 한다는 것이다. base direct Score `11.48`에서 최고 LoRA Score `29.11`, top2 full SFT Score `31.59`까지 올랐고, 이는 LoRA 대비 `+2.48`이다. 다만 Ouro-1.4B-Thinking-Terminal-SFT Score `31.74`에는 `-0.15`, Qwen3.5-2B SFT Score `39.52`, LFM2.5 full SFT Score `52.30`과는 아직 차이가 크다.
 
 잘하는 것:
-- LoRA 반응은 확실하다. 최고 LoRA는 base 대비 `+17.63`점, First Cmd `5.9% -> 22.1%`, Valid JSON `38.9% -> 63.4%`로 올랐다. 즉 HRM이 terminal JSON action을 전혀 못 배우는 모델은 아니다.
+- LoRA와 full SFT 반응은 확실하다. 최고 LoRA는 base 대비 `+17.63`점이고, top2 full SFT는 최고 LoRA보다 다시 `+2.48`점 올랐다. HRM이 terminal JSON action을 못 배우는 모델은 아니다.
 - `terminal-tool-core-r64`, `terminal-comp-jsonfix-r64`, `comp-terminal-80m`이 모두 Score `28.44~29.11`에 몰려 있다. terminal 데이터와 tool/JSON 데이터가 함께 들어가면 특정 seed나 단일 데이터 운에만 기대지 않고 28점대 후반까지는 반복적으로 올라간다.
 - JSON-fix 데이터는 형식 안정성에 도움을 준다. `behavior-jsonfix-r32`는 Valid JSON `71.0%`로 최고였고, 다른 LoRA들도 base보다 JSON 유효율이 크게 높았다.
-- KoHRM은 작은 1.4B급 모델임에도 LoRA 후 Score가 `LFM2.5-1.2B` SFT 1epoch `28.10`, 2epoch `28.64`와 비슷하거나 조금 앞서는 구간까지 올라왔다. 작은 모델 후보로는 가능성이 남아 있다.
+- KoHRM은 작은 1.4B급 모델임에도 full SFT 후 Score `31.59`로 `LFM2.5-1.2B` SFT 2epoch `28.64`와 KoHRM LoRA들을 넘었다. 작은 모델 후보로는 가능성이 남아 있다.
 
 못하는 것:
-- command recall이 낮다. 최고 LoRA Recall은 `0.2768`이고 Ouro-1.4B-Thinking-Terminal-SFT는 `0.3410`이다. KoHRM은 JSON을 만들어도 필요한 `ls`, `cat`, `sed`, `python`, `pytest`, `grep/find` 흐름을 충분히 넓게 복원하지 못한다.
-- First Cmd가 약하다. 최고 LoRA First Cmd `22.1%`는 Ouro thinking SFT `24.8%`보다 낮고, LFM2.5 SFT 1epoch `49.5%`, ZAYA `51.8%`와는 큰 차이가 난다. 터미널 에이전트에서는 첫 `ls`, 파일 확인, 테스트 실행 방향이 틀리면 뒤 command F1도 무너진다.
+- command recall은 아직 상위권 대비 낮다. top2 full SFT Recall은 `0.3415`로 Ouro `0.3410`과 비슷해졌지만, Precision `0.3859`가 Ouro `0.4062`보다 낮고 LFM2.5 1epoch Recall `0.5083`과는 큰 차이가 있다. 필요한 `ls`, `cat`, `sed`, `python`, `pytest`, `grep/find` 흐름을 더 정확하고 넓게 복원해야 한다.
+- First Cmd는 full SFT 후 `24.8%`로 Ouro와 같아졌지만, LFM2.5 SFT 1epoch `49.5%`, ZAYA `51.8%`와는 큰 차이가 난다. 터미널 에이전트에서는 첫 `ls`, 파일 확인, 테스트 실행 방향이 틀리면 뒤 command F1도 무너진다.
 - JSON 유효율과 점수가 정비례하지 않는다. `behavior-jsonfix-r32`는 Valid JSON `71.0%`로 최고지만 Score는 `26.23`이다. 형식만 고쳐서는 부족하고, 정답 command set을 더 많이 맞혀야 한다.
 - `synth,cot` 조건은 현재 direct 평가에서 오히려 손해였다. base `11.48`보다 synth,cot `10.36`이 낮아, 사고문을 덧붙이는 방식이 PrefixLM 출력 계약을 흐렸을 가능성이 크다.
-- 속도가 나쁘다. KoHRM LoRA 로컬 evaluator는 `15~17 sec/step`이고 Ouro-1.4B-Thinking-Terminal-SFT는 `1.698 sec/step`, LFM2.5는 `0.087 sec/step`이다. 현재 HRM 구조는 vLLM 일반 causal/chat model fast path를 그대로 타지 못해 평가/반복 실험 비용이 크다.
+- 속도는 아직 약점이다. KoHRM LoRA 로컬 evaluator는 `15~17 sec/step`이었고 full SFT export 4-shard wall 기준도 vLLM 모델들보다 느리다. 현재 HRM 구조는 vLLM 일반 causal/chat model fast path를 그대로 타지 못해 평가/반복 실험 비용이 크다.
 
 왜 Ouro-1.4B-Thinking-Terminal-SFT보다 낮은가:
-- Ouro thinking SFT는 이미 terminal reasoning/output 분포에 맞춰져 있고, 긴 사고 후에도 command JSON으로 돌아오는 패턴이 상대적으로 안정적이다.
+- Ouro thinking SFT는 이미 terminal reasoning/output 분포에 맞춰져 있고, 긴 사고 후에도 command JSON으로 돌아오는 패턴이 상대적으로 안정적이다. KoHRM full SFT는 Recall과 First Cmd는 Ouro 수준까지 왔지만 Precision이 낮아 전체 Score가 `31.59`로 `31.74`보다 `0.15` 낮다.
 - KoHRM stage4d는 pretraining/continued training 쪽의 PrefixLM 모델이라 terminal next-action JSON을 기본 출력 습관으로 갖고 있지 않다. LoRA는 그 습관을 일부 보정하지만, base의 생성 분포 전체를 바꾸기에는 adapter 용량과 데이터 신호가 부족하다.
 - TB2-lite는 `task_complete` 설명력이 아니라 `commands[].keystrokes` F1을 본다. KoHRM은 완성 판단과 설명 텍스트가 앞서거나, 짧은 command만 내는 경우가 있어 precision은 그럭저럭 나오지만 recall과 first command가 막힌다.
-- 그래서 LoRA는 “가능성 확인”으로는 성공이고, “Ouro/Qwen/LFM 상위권 대체”로는 아직 실패다. 현재 full SFT를 하는 이유가 이 지점이다.
+- 그래서 LoRA는 “가능성 확인”으로는 성공이고, top2 full SFT는 “Ouro 근접”까지는 성공이다. 하지만 Qwen/LFM 상위권 대체로는 아직 부족하며, 더 큰 전체 LFM2.5/ToolBench 데이터 full SFT와 Qwen full-conversation 이어학습을 계속 본다.
 
 더 할 수 있는 것:
-- full SFT를 우선 본다. `top2-terminal-tool-merge` full SFT는 이미 학습/변환이 끝났고, 4-shard 평가가 진행 중이다. 이 결과가 LoRA `29.11`을 못 넘으면 데이터 포맷이나 HRM generation path가 병목이고, 넘으면 adapter 한계였다고 볼 수 있다.
+- top2 full SFT는 LoRA `29.11`을 넘어 Score `31.59`까지 올라갔다. 따라서 adapter 한계는 확인됐고, 다음 병목은 command precision, first action, 긴 후반 step 복원, HRM generation 속도다.
 - `lfm25-terminal-toolbench` full SFT는 더 큰 전체 데이터 `1.51B` tokens로 학습 중이다. 이쪽이 끝나면 LFM2.5 성공 데이터 분포가 KoHRM에도 이전되는지 확인할 수 있다.
 - 데이터는 JSON-only assistant target을 더 강하게 해야 한다. `<think>`, 설명문, premature `task_complete=true`를 줄이고, 각 step의 첫 command와 검증 command를 더 많이 보존해야 한다.
 - 평가 속도는 별도 개선 대상이다. vLLM이 바로 안 맞으면 HF export + 전용 batched PrefixLM generation을 더 최적화하고, stop token/EOA 조기 종료를 정확히 잡아 `max_tokens=1024` 전량 생성 낭비를 줄여야 한다.
@@ -252,7 +251,8 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`가 Score `52.30`으로 전체 1위다. Precision `0.5854`, Recall `0.5431`, First Cmd `49.5%`, Valid JSON `76.9%`라 command coverage와 형식 안정성을 동시에 끌어올렸다.
 - 같은 run의 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch`는 Score `50.48`로 전체 2위다. 1epoch보다 약간 낮지만 기존 최고였던 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다도 `+2.33` 높다.
 - `Zyphra/ZAYA1-74B-preview`는 Score `48.15`로 전체 3위이자 비학습/외부 모델 최고다. Precision `0.6196`, Recall `0.5017`, First Cmd `51.8%`, Valid JSON `74.6%`라 여전히 SFT 없이 매우 강하다.
-- `KoHRM-Text-1.4B-stage4d + terminal-tool-core-r64 LoRA`는 Score `29.11`로 KoHRM 계열 최고다. base direct `11.48` 대비 `+17.63`이고, First Cmd `22.1%`, Valid JSON `63.4%`라 LoRA SFT가 HRM PrefixLM을 terminal JSON action 형식으로 실제로 이동시킨 것이 확인됐다.
+- `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1`은 Score `31.59`로 KoHRM 계열 최고다. base direct `11.48` 대비 `+20.11`, 최고 LoRA `29.11` 대비 `+2.48`이고, First Cmd `24.8%`, Valid JSON `73.3%`라 full SFT가 LoRA보다 출력 형식과 첫 행동을 더 안정화했다.
+- `KoHRM-Text-1.4B-stage4d + terminal-tool-core-r64 LoRA`는 Score `29.11`로 adapter 계열 최고다. base direct `11.48` 대비 `+17.63`이고, First Cmd `22.1%`, Valid JSON `63.4%`라 LoRA SFT만으로도 HRM PrefixLM을 terminal JSON action 형식으로 실제로 이동시킨 것이 확인됐다.
 - `gemma-4-26B-A4B-it` native SFT 2epoch는 Score `39.56`으로 Gemma 계열 최고다. Precision `0.4702`, Recall `0.4808`, First Cmd `40.6%`라 명령 집합을 넓게 맞힌다. Valid JSON은 `17.2%`로 낮지만, 실제 command F1이 강하다.
 - 같은 26B-A4B-it 1epoch도 Score `38.12`, Recall `0.4787`, First Cmd `42.6%`로 강하다. 2epoch가 `+1.44` 오른 이유는 precision이 `0.4405 -> 0.4702`로 올라가면서 command 과다/오답이 줄었기 때문이다.
 - `gemma-4-31B-it` native 1epoch는 Score `35.55`, Valid JSON `65.3%`다. 26B-A4B-it보다 format 안정성은 훨씬 좋지만 Recall `0.3776`이라 command coverage가 낮아 상위권에는 못 들어갔다.
@@ -269,6 +269,7 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - 작은 Gemma base도 마찬가지다. E4B-it native 2epoch는 `34.98`인데 E4B base native 2epoch는 `18.47`, E2B-it native 1epoch는 `25.70`인데 E2B base native 2epoch는 `16.22`다. base 모델은 규모와 무관하게 terminal JSON command 형식 습득이 약하다.
 - `Jiunsong/supergemma4-26b-uncensored-gguf-v2:Q4_K_M`은 Score `28.21`, Valid JSON `53.8%`로 Qwen GGUF 계열보다 낮다. Gemma 계열 prompt/template을 맞췄는데도 Recall `0.2506`이라 행동 명령을 넓게 복원하지 못한다.
 - `MiniMaxAI/MiniMax-M2.7`은 229B급 MoE이고 H200 8장 vLLM에서 VRAM을 GPU당 약 `134GB`까지 잘 썼지만, 점수는 `32.29`에 그쳤다. 약점은 명확하다. `code` F1 `0.0908`, `swe` `0.2185`, `data_processing` `0.2623`, `data_querying` `0.2686`이 낮고, First Cmd도 `13.5%`라 첫 행동 선택이 약하다. 강한 쪽은 `system_administration` `0.4771`, `dependency_management` `0.4695`, `file_operations` `0.4147`이다. 즉 운영/패키지/파일 명령은 괜찮지만 코드/SWE/데이터 처리 next-action에는 약하다.
+- `KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1`은 Score `31.59`까지 올랐지만 상위권과의 차이가 명확하다. Precision `0.3859`는 Ouro-1.4B-Thinking-Terminal-SFT `0.4062`보다 낮고, Recall `0.3415`는 LFM2.5 1epoch `0.5431`, Qwen3.5-2B SFT 2epoch `0.4101`보다 낮다. 즉 JSON을 만들고 첫 명령을 맞히는 비율은 개선됐지만, reference가 요구하는 command set을 충분히 넓고 정확하게 복원하지 못한다. 실패 패턴은 후반 step에서 검증/수정 명령을 줄이거나, 설명/완료 판단이 앞서고, `ls/cat/sed/python/pytest` 흐름 중 일부를 생략하는 쪽이다.
 - `sapientinc/HRM-Text-1B`는 Score `0.40`으로 전체 98위다. 실행은 8GPU data parallel shard로 정상 완료했지만, Valid JSON `4.3%`, 평균 예측 command `0.41`개, First Cmd `1.3%`라 TB2-lite가 요구하는 `commands[].keystrokes` 형식을 거의 생성하지 못했다. 이 결과는 새 KoHRM stage4d LoRA가 아니라 pre-alignment 공개 HRM baseline을 terminal next-action JSON agent로 바로 쓰기 어렵다는 신호로 본다.
 - `DeepSeek-V4-Pro`는 1.6T params, 49B activated, 384 experts MoE 모델이다. **총 4회 평가**를 진행했다:
 
