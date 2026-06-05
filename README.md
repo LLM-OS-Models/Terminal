@@ -199,7 +199,7 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 진행 중인 full SFT 및 평가:
 - `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 4GPU에서 `GBS=90112`, LR `2e-5`로 학습 중이다.
 - `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge`: 현재 1, 2위 LFM2.5 계열의 terminal/tool raw를 합친 두 번째 full SFT 실험이다. 준비 데이터는 `kohrm_sft_top2_terminal_tool_raw8192_v1`, context `8192`, 약 `245M` tokens, `GBS=90112`, LR `2e-5`로 학습을 끝냈고, `fsdp2_epoch_1`을 HF safetensors export로 변환했다.
-- top2 full SFT export 경로는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1`이다. 2026-06-05 12:53 KST 기준 GPU `0,4,5,6`에서 4-shard full replay 평가를 시작했으며, 네 shard 모두 모델 로드는 `7.0~7.4s`에 성공했다. 아직 첫 progress/checkpoint JSON이 나오지 않아 공식 Score는 없다.
+- top2 full SFT export 경로는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1`이고, Hugging Face에는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1`로 업로드했다. 원격 SHA는 `bb36cff54ff2ae9bfbcb87b391f7bb7cbda5cba6`이다. 2026-06-05 12:53 KST 기준 GPU `0,4,5,6`에서 4-shard full replay 평가를 시작했으며, 네 shard 모두 모델 로드는 `7.0~7.4s`에 성공했다. 아직 첫 progress/checkpoint JSON이 나오지 않아 공식 Score는 없다.
 - 처음 시도한 `GBS=180224`는 4GPU local token budget이 GPU당 `45056` tokens까지 커져 CUDA OOM이 났다. 현재 설정은 8GPU pretraining 때의 GPU당 token budget과 맞춘 `22528` tokens/GPU라 full SFT 학습은 VRAM을 약 `131GB/144GB`씩 쓰면서 안정적으로 돈다.
 
 운영 스냅샷, 2026-06-05 12:53 KST:
