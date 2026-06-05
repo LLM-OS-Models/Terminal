@@ -188,10 +188,54 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - `synth,cot`는 base direct보다 낮았다. HRM PrefixLM에 사고/합성 조건을 얹는 것만으로는 terminal JSON action을 잘 만들지 못했고, 오히려 불필요한 텍스트가 출력 계약을 흐렸다.
 - LoRA가 성능을 크게 올렸지만 LFM2.5 full SFT 1epoch Score `52.30`, Qwen3.5-2B full SFT 2epoch Score `39.52`와는 아직 차이가 크다. 그래서 현재 후속 작업은 adapter가 아니라 full SFT로 진행한다.
 
-진행 중인 full SFT:
-- `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 현재 4GPU에서 `GBS=90112`, LR `2e-5`로 학습 중이다.
-- `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge`: 현재 1, 2위 모델 계열의 terminal/tool raw를 합친 두 번째 full SFT 실험이다. 준비 데이터는 `kohrm_sft_top2_terminal_tool_raw8192_v1`, context `8192`, 약 `245M` tokens, 같은 `GBS=90112`, LR `2e-5`로 학습 중이다.
-- 처음 시도한 `GBS=180224`는 4GPU local token budget이 GPU당 `45056` tokens까지 커져 CUDA OOM이 났다. 현재 설정은 8GPU pretraining 때의 GPU당 token budget과 맞춘 `22528` tokens/GPU라 VRAM을 약 `63~64GB`씩 쓰면서 안정적으로 돈다.
+왜 `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT`보다 낮은가:
+- KoHRM LoRA 최고점은 `29.11`이고, Ouro-1.4B-Thinking-Terminal-SFT는 `31.74`다. 차이는 `-2.63`점으로 크지는 않지만, 현재 TB2-lite 기준에서는 Ouro thinking SFT가 더 낫다.
+- 가장 큰 차이는 첫 행동과 command coverage다. KoHRM 최고 LoRA는 First Cmd `22.1%`, Recall `0.2768`이고, Ouro-1.4B-Thinking-Terminal-SFT는 First Cmd `24.8%`, Recall `0.3410`이다. KoHRM은 JSON을 꽤 만들지만 필요한 명령 묶음을 덜 넓게 복원한다.
+- KoHRM stage4d base는 PrefixLM pretraining/continued training 쪽 성격이 강하다. terminal replay가 요구하는 출력은 `{"commands":[{"keystrokes":...}]}` 형태의 next-action JSON인데, base direct는 이 계약을 거의 내재화하지 못해 Score `11.48`, First Cmd `5.9%`에 머물렀다.
+- LoRA는 출력 형식을 크게 고쳤지만 adapter 용량과 학습 데이터 폭의 한계가 남았다. Valid JSON은 `63~71%`까지 올라갔지만, 실제 채점은 JSON 유효성보다 command F1을 본다. `behavior-jsonfix-r32`처럼 Valid JSON `71.0%`인 run도 Score는 `26.23`으로 낮다.
+- Ouro thinking SFT는 느리지만, 이미 terminal thinking/output 분포에 더 잘 맞는다. 평균 속도는 Ouro-1.4B-Thinking-Terminal-SFT `1.698 sec/step`, KoHRM LoRA `15~17 sec/step`이라 KoHRM 로컬 PrefixLM evaluator가 훨씬 느리고, 점수도 낮아 현재 LoRA만으로는 채택 우선순위가 낮다.
+- 결론은 adapter를 더 미세하게 흔드는 것보다 full SFT가 맞다. LoRA가 base 대비 `+17.63`을 만든 것은 방향이 맞다는 증거지만, Ouro/Qwen/LFM 상위권을 넘으려면 KoHRM 자체 가중치를 terminal/tool JSON action 분포로 직접 이동시켜야 한다.
+
+진행 중인 full SFT 및 평가:
+- `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 4GPU에서 `GBS=90112`, LR `2e-5`로 학습 중이다.
+- `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge`: 현재 1, 2위 LFM2.5 계열의 terminal/tool raw를 합친 두 번째 full SFT 실험이다. 준비 데이터는 `kohrm_sft_top2_terminal_tool_raw8192_v1`, context `8192`, 약 `245M` tokens, `GBS=90112`, LR `2e-5`로 학습을 끝냈고, `fsdp2_epoch_1`을 HF safetensors export로 변환했다.
+- top2 full SFT export 경로는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1`이다. 2026-06-05 12:53 KST 기준 GPU `0,4,5,6`에서 4-shard full replay 평가를 시작했으며, 네 shard 모두 모델 로드는 `7.0~7.4s`에 성공했다. 아직 첫 progress/checkpoint JSON이 나오지 않아 공식 Score는 없다.
+- 처음 시도한 `GBS=180224`는 4GPU local token budget이 GPU당 `45056` tokens까지 커져 CUDA OOM이 났다. 현재 설정은 8GPU pretraining 때의 GPU당 token budget과 맞춘 `22528` tokens/GPU라 full SFT 학습은 VRAM을 약 `131GB/144GB`씩 쓰면서 안정적으로 돈다.
+
+운영 스냅샷, 2026-06-05 12:53 KST:
+- GPU `1,2,3,7`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench` 학습 중. 최신 로그는 `6070/16745`, 약 `36%`, 남은 시간 약 `4:00:44`였고, 예상 완료는 2026-06-05 `16:54 KST` 전후다. checkpoint는 `step_6000`까지 저장됐다.
+- GPU `0,4,5,6`: `KoHRM-Text-1.4B-fullsft-top2-terminal-tool-merge-epoch1` export 4-shard 평가 중. VRAM은 약 `55~57GB` 사용 중이고, 모델 로드는 끝났지만 공식 `max_tokens=1024` generation의 첫 진행 로그가 아직 나오지 않았다. 이 평가는 첫 `[10/N]` 진행 로그가 찍히기 전까지 ETA를 신뢰하게 계산할 수 없다.
+- top2 평가가 완료되면 shard JSON 4개를 merge해서 Score, Cmd F1, Precision, Recall, First Cmd, Valid JSON을 이 표와 KoHRM 분석 섹션에 반영한다. Score가 나오기 전에는 순위표에 임의 숫자를 넣지 않는다.
+
+### KoHRM 성능 원인과 다음 액션
+
+현재 확인된 결론은 `KoHRM-Text-1.4B-stage4d`가 terminal/tool action을 배울 수는 있지만, LoRA만으로는 출력 계약과 command coverage를 동시에 충분히 끌어올리지 못했다는 것이다. base direct Score `11.48`에서 최고 LoRA Score `29.11`까지 오른 것은 학습 방향이 맞다는 증거지만, Ouro-1.4B-Thinking-Terminal-SFT Score `31.74`, Qwen3.5-2B SFT Score `39.52`, LFM2.5 full SFT Score `52.30`과 비교하면 아직 다음 행동 복원력이 부족하다.
+
+잘하는 것:
+- LoRA 반응은 확실하다. 최고 LoRA는 base 대비 `+17.63`점, First Cmd `5.9% -> 22.1%`, Valid JSON `38.9% -> 63.4%`로 올랐다. 즉 HRM이 terminal JSON action을 전혀 못 배우는 모델은 아니다.
+- `terminal-tool-core-r64`, `terminal-comp-jsonfix-r64`, `comp-terminal-80m`이 모두 Score `28.44~29.11`에 몰려 있다. terminal 데이터와 tool/JSON 데이터가 함께 들어가면 특정 seed나 단일 데이터 운에만 기대지 않고 28점대 후반까지는 반복적으로 올라간다.
+- JSON-fix 데이터는 형식 안정성에 도움을 준다. `behavior-jsonfix-r32`는 Valid JSON `71.0%`로 최고였고, 다른 LoRA들도 base보다 JSON 유효율이 크게 높았다.
+- KoHRM은 작은 1.4B급 모델임에도 LoRA 후 Score가 `LFM2.5-1.2B` SFT 1epoch `28.10`, 2epoch `28.64`와 비슷하거나 조금 앞서는 구간까지 올라왔다. 작은 모델 후보로는 가능성이 남아 있다.
+
+못하는 것:
+- command recall이 낮다. 최고 LoRA Recall은 `0.2768`이고 Ouro-1.4B-Thinking-Terminal-SFT는 `0.3410`이다. KoHRM은 JSON을 만들어도 필요한 `ls`, `cat`, `sed`, `python`, `pytest`, `grep/find` 흐름을 충분히 넓게 복원하지 못한다.
+- First Cmd가 약하다. 최고 LoRA First Cmd `22.1%`는 Ouro thinking SFT `24.8%`보다 낮고, LFM2.5 SFT 1epoch `49.5%`, ZAYA `51.8%`와는 큰 차이가 난다. 터미널 에이전트에서는 첫 `ls`, 파일 확인, 테스트 실행 방향이 틀리면 뒤 command F1도 무너진다.
+- JSON 유효율과 점수가 정비례하지 않는다. `behavior-jsonfix-r32`는 Valid JSON `71.0%`로 최고지만 Score는 `26.23`이다. 형식만 고쳐서는 부족하고, 정답 command set을 더 많이 맞혀야 한다.
+- `synth,cot` 조건은 현재 direct 평가에서 오히려 손해였다. base `11.48`보다 synth,cot `10.36`이 낮아, 사고문을 덧붙이는 방식이 PrefixLM 출력 계약을 흐렸을 가능성이 크다.
+- 속도가 나쁘다. KoHRM LoRA 로컬 evaluator는 `15~17 sec/step`이고 Ouro-1.4B-Thinking-Terminal-SFT는 `1.698 sec/step`, LFM2.5는 `0.087 sec/step`이다. 현재 HRM 구조는 vLLM 일반 causal/chat model fast path를 그대로 타지 못해 평가/반복 실험 비용이 크다.
+
+왜 Ouro-1.4B-Thinking-Terminal-SFT보다 낮은가:
+- Ouro thinking SFT는 이미 terminal reasoning/output 분포에 맞춰져 있고, 긴 사고 후에도 command JSON으로 돌아오는 패턴이 상대적으로 안정적이다.
+- KoHRM stage4d는 pretraining/continued training 쪽의 PrefixLM 모델이라 terminal next-action JSON을 기본 출력 습관으로 갖고 있지 않다. LoRA는 그 습관을 일부 보정하지만, base의 생성 분포 전체를 바꾸기에는 adapter 용량과 데이터 신호가 부족하다.
+- TB2-lite는 `task_complete` 설명력이 아니라 `commands[].keystrokes` F1을 본다. KoHRM은 완성 판단과 설명 텍스트가 앞서거나, 짧은 command만 내는 경우가 있어 precision은 그럭저럭 나오지만 recall과 first command가 막힌다.
+- 그래서 LoRA는 “가능성 확인”으로는 성공이고, “Ouro/Qwen/LFM 상위권 대체”로는 아직 실패다. 현재 full SFT를 하는 이유가 이 지점이다.
+
+더 할 수 있는 것:
+- full SFT를 우선 본다. `top2-terminal-tool-merge` full SFT는 이미 학습/변환이 끝났고, 4-shard 평가가 진행 중이다. 이 결과가 LoRA `29.11`을 못 넘으면 데이터 포맷이나 HRM generation path가 병목이고, 넘으면 adapter 한계였다고 볼 수 있다.
+- `lfm25-terminal-toolbench` full SFT는 더 큰 전체 데이터 `1.51B` tokens로 학습 중이다. 이쪽이 끝나면 LFM2.5 성공 데이터 분포가 KoHRM에도 이전되는지 확인할 수 있다.
+- 데이터는 JSON-only assistant target을 더 강하게 해야 한다. `<think>`, 설명문, premature `task_complete=true`를 줄이고, 각 step의 첫 command와 검증 command를 더 많이 보존해야 한다.
+- 평가 속도는 별도 개선 대상이다. vLLM이 바로 안 맞으면 HF export + 전용 batched PrefixLM generation을 더 최적화하고, stop token/EOA 조기 종료를 정확히 잡아 `max_tokens=1024` 전량 생성 낭비를 줄여야 한다.
+- full SFT 결과가 좋아도 weak area 분석은 다시 해야 한다. 현재 LoRA 기준 약점은 recall, first command, 후반 command 생략, 형식/명령 동시 안정화이고, full SFT가 이 네 개를 얼마나 개선하는지가 다음 판단 기준이다.
 
 ### 점수 해석: 잘 된 것과 안 된 것
 
