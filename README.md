@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-05`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-05`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, 실시간 평가 스냅샷 반영: `2026-06-06 04:17 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -24,6 +24,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 2 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
 | ~3 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
 | 3 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
+| 4 | `LLM-OS-Models/Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch` | 44.79 | 0.4479 | 0.5266 | 0.4701 | 34.3% | 83.2% | chat_template | 0.079 | 15.5 |
 | ~4 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
 | 4 | **`GLM-5.1 (z.ai API)`** | **41.68** | **0.4168** | **0.5377** | **0.4007** | **24.1%** | **90.1%** | **anthropic-api** | **3.298** | **-** |
 | ~5 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
@@ -130,9 +131,10 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 전체 순위 반영 메모:
 
-- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 1개를 이 표에 반영했다.
+- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 14개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 1개를 이 표에 반영했다.
 - 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
-- 26B-A4B-it native 2epoch는 이제 전체 5위, Qwen3.5-2B SFT 2epoch는 6위다. 26B-A4B-it native 1epoch는 Score `38.12`로 전체 9위, 31B-it native 1epoch는 `35.55`, 31B-it native 2epoch는 `32.57`이다.
+- `Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch`는 Score `44.79`로 Qwen 계열 최고점이다. 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` Score `39.52`보다 `+5.27` 높고, GLM-5.1 API Score `41.68`보다도 `+3.11` 높다. 같은 결과 JSON의 legacy `next_action_score`는 `41.64`이며, 전체 순위 기준에는 쓰지 않는다.
+- 26B-A4B-it native 2epoch는 이제 Score `39.56`, Qwen3.5-2B SameCount SFT 2epoch는 Score `39.52`다. 26B-A4B-it native 1epoch는 Score `38.12`, 31B-it native 1epoch는 `35.55`, 31B-it native 2epoch는 `32.57`이다.
 - Qwen3.5 대형 FP8 완료분은 `Qwen/Qwen3.5-397B-A17B-FP8` Score `37.81`로 전체 12위, `Qwen/Qwen3.5-122B-A10B-FP8` Score `37.28`로 전체 14위다. 둘 다 vLLM `tp=8`, expert parallel, prefix caching, Qwen3 reasoning parser, `max_model_len=32768`로 평가했다.
 - `LiquidAI/LFM2.5-8B-A1B`는 Score `36.53`으로 신규 반영했다. 기존 `LiquidAI/LFM2-8B-A1B` base Score `10.04`보다 `+26.49` 높고, `Qwen/Qwen3.5-35B-A3B-FP8` Score `36.44`를 근소하게 앞선다. First Cmd `39.9%`, Recall `0.3685`, Sec/Step `0.097`이라 8B급 빠른 base 모델 중 매우 강한 결과다.
 - KoHRM-Text stage4d 계열은 base direct 2개와 LoRA 6개를 full 303-step으로 평가했다. 최고 LoRA는 `terminal-tool-core-r64` Score `29.11`이고, top2 terminal/tool merge full SFT 1epoch는 Score `31.59`로 LoRA 최고보다 `+2.48` 높다. HRM PrefixLM 구조는 현재 로컬 전용 evaluator로 평가했으며 vLLM chat model 경로는 쓰지 않았다.
@@ -203,9 +205,16 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - full 303-step replay 최종 Score는 `31.59`다. Cmd F1 `0.3159`, Precision `0.3859`, Recall `0.3415`, First Cmd `24.8%`, Valid JSON `73.3%`다. KoHRM LoRA 최고 Score `29.11`보다 `+2.48` 높고, `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` Score `31.74`보다 `-0.15` 낮다.
 - 처음 시도한 `GBS=180224`는 4GPU local token budget이 GPU당 `45056` tokens까지 커져 CUDA OOM이 났다. 안정 학습은 8GPU pretraining 때의 GPU당 token budget과 맞춘 `22528` tokens/GPU 설정에서 이뤄졌다.
 
-진행 중인 full SFT:
-- `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 4GPU에서 `GBS=90112`, LR `2e-5`로 학습 중이다.
-- `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount`: 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`에서 이어서 LFM2.5 full-conversation terminal/toolcall 데이터로 full SFT를 시작했다. 4096 context, 4GPU, full fine-tuning이다. `b18/b8/b7/b6`는 Qwen3.5 Gated DeltaNet torch fallback OOM 또는 gradient checkpointing metadata mismatch로 실패했고, 안정 런은 `b4_nogc_4096`, global batch `16`, 총 `40760` steps다.
+최근 full SFT 및 평가:
+- `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench`: LFM2.5 성공 데이터와 ToolBench terminal turn을 KoHRM PrefixLM target으로 재전처리한 전체 데이터다. 준비 데이터는 `kohrm_sft_lfm25_terminal_toolbench_full_v1`, context `8192`, 약 `1.51B` tokens, 4GPU에서 `GBS=90112`, LR `2e-5`로 학습했고 `fsdp2_epoch_1`을 HF safetensors export로 변환했다. 현재 export `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1`을 full 303-step으로 평가 중이다.
+- `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount`: 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`에서 이어서 LFM2.5 full-conversation terminal/toolcall 데이터로 full SFT를 진행했다. 4096 context, 4GPU, full fine-tuning이다. `b18/b8/b7/b6`는 Qwen3.5 Gated DeltaNet torch fallback OOM 또는 gradient checkpointing metadata mismatch로 실패했고, 안정 런은 `b4_nogc_4096`, global batch `16`이었다. 1epoch 평가 최종 Score는 `44.79`이며 Qwen 계열 최고점으로 전체표에 반영했다.
+
+운영 스냅샷, 2026-06-06 04:19 KST 업데이트:
+- GPU `0,1,2,3`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1` HRM 전용 evaluator 평가 중이다. `batch-size=16`, `max_model_len=4096`, `max_tokens=1024`, 4-shard 저장 주기 `5` step으로 돌리고 있다. 현재 저장된 partial은 `60/303` step, partial Score `50.26`, partial Next Action `51.68`다. 최종 순위표에는 아직 반영하지 않는다. shard별 속도 편차가 커서 현재 기준 예상 완료는 2026-06-06 `05:30~06:10 KST`다.
+- HRM GPU VRAM은 GPU당 약 `55~57GB`를 쓰고 있다. 학습이 아니라 inference 평가라 VRAM을 전부 채우는 것이 목표가 아니다. 모델이 1.4B이고 PrefixLM SDPA/KV-cache 경로라 VRAM보다 generation latency와 전용 evaluator 병목이 더 크다. 현재 run은 중단하지 않고 끝까지 가져가며, 다음 run에서만 `batch-size`/stop-token 조기 종료를 더 공격적으로 조정한다.
+- GPU `4,5`: `google/gemma-4-12B-it` full replay 평가 중이다. vLLM `tp=2`/`tp=1`은 Gemma4 unified weight shape mismatch로 실패해서, 새 텍스트 전용 fallback `tb2_lite/scripts/replay_eval_gemma4_text.py`를 추가했다. smoke 2-step은 정상 완료했고, full run은 2개 shard를 GPU 1장씩 사용한다. 04:19 KST 기준 양쪽 모두 모델 load 완료 후 GPU util `97%`로 생성 중이며, 첫 10-step 저장 후 ETA를 다시 산정한다.
+- GPU `6,7`: `JetBrains/Mellum2-12B-A2.5B-Thinking` vLLM `tp=2` 평가 중이다. 04:19 KST 기준 progress `256/303`, progress bar ETA `2분 48초`였으므로 예상 완료는 2026-06-06 `04:22~04:23 KST`다. 최종 Score는 JSON 생성 후 전체표에 반영한다.
+- 디스크는 `/home/work/.data` 기준 약 `1.8T` 여유가 있다. 현재 평가들이 끝나면 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF`는 품질 보존을 위해 4-bit GGUF를 우선으로 잡고, 모든 GPU가 비는 시점에 8GPU로 평가하며 partial 저장 주기를 짧게 둔다.
 
 운영 스냅샷, 2026-06-05 14:03 KST 업데이트:
 - GPU `1,2,3,7`: `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench` 학습 중이다. 최신 저장 checkpoint는 `step_9000`이며, `step_8000 -> step_9000` 구간 속도는 약 22분 49초/1000 steps다. 이 속도 기준 예상 완료는 2026-06-05 `16:56 KST` 전후다.
