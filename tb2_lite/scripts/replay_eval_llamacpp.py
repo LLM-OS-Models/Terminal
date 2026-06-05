@@ -122,6 +122,64 @@ def load_rows(path: Path, limit: int | None = None) -> list[dict]:
     return rows
 
 
+def write_result(
+    out_path: Path,
+    args: argparse.Namespace,
+    model_short: str,
+    eval_path: Path,
+    prompt_meta: dict[str, Any],
+    per_step: list[dict[str, Any]],
+    load_time: float,
+    gen_time: float,
+    complete: bool,
+    total_steps: int,
+) -> dict[str, Any]:
+    aggregate = aggregate_scores(per_step)
+    result = {
+        "model": model_short,
+        "model_path": f"{args.repo_id}:{args.filename}",
+        "lora_path": None,
+        "model_short": model_short,
+        "gpu": str(args.gpu),
+        "eval_path": str(eval_path),
+        "timestamp": datetime.utcnow().isoformat(),
+        "load_time_sec": load_time,
+        "gen_time_sec": round(gen_time, 1),
+        "avg_sec_per_step": round(gen_time / max(len(per_step), 1), 3),
+        "complete": complete,
+        "generated_steps": len(per_step),
+        "total_steps": len(per_step),
+        "total_input_steps": total_steps,
+        "sampling": {
+            "temperature": args.temperature,
+            "top_p": args.top_p,
+            "max_tokens": args.max_tokens,
+            "thinking_mode": args.thinking_mode,
+            "strip_thinking_history": args.strip_thinking_history,
+            "gemma4_empty_thought_channel": args.gemma4_empty_thought_channel,
+            "dtype": "gguf",
+            "backend": "llama_cpp",
+            "tp": 1,
+            "max_model_len": args.max_model_len,
+            "repo_id": args.repo_id,
+            "filename": args.filename,
+            "tokenizer_path": args.tokenizer_path,
+            "n_gpu_layers": args.n_gpu_layers,
+            "n_batch": args.n_batch,
+            "n_ubatch": args.n_ubatch,
+            "n_threads": args.n_threads,
+            "n_threads_batch": args.n_threads_batch,
+            "flash_attn": args.flash_attn,
+            "offload_kqv": args.offload_kqv,
+        },
+        "prompt_template": prompt_meta,
+        "aggregate": aggregate,
+        "per_step": per_step,
+    }
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    return result
+
+
 def load_tokenizer(tokenizer_path: str) -> Any:
     from transformers import AutoTokenizer, PreTrainedTokenizerFast
 
@@ -180,6 +238,7 @@ def main() -> None:
     parser.set_defaults(offload_kqv=True)
     parser.add_argument("--cache-dir", default="")
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--save-every", type=int, default=0)
     parser.add_argument("--allow-raw-fallback", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
     parser.add_argument("--verbose-llama", action="store_true")
@@ -257,47 +316,35 @@ def main() -> None:
         )
         if idx == 1 or idx % 10 == 0 or idx == len(rows):
             print(f"progress {idx}/{len(rows)}", flush=True)
+        if args.save_every and (idx % args.save_every == 0 or idx == len(rows)):
+            elapsed = time.time() - gen_start
+            write_result(
+                out_path,
+                args,
+                model_short,
+                eval_path,
+                prompt_meta,
+                per_step,
+                load_time,
+                elapsed,
+                idx == len(rows),
+                len(rows),
+            )
 
     gen_time = round(time.time() - gen_start, 1)
-    aggregate = aggregate_scores(per_step)
-    result = {
-        "model": model_short,
-        "model_path": f"{args.repo_id}:{args.filename}",
-        "lora_path": None,
-        "model_short": model_short,
-        "gpu": str(args.gpu),
-        "eval_path": str(eval_path),
-        "timestamp": datetime.utcnow().isoformat(),
-        "load_time_sec": load_time,
-        "gen_time_sec": gen_time,
-        "avg_sec_per_step": round(gen_time / max(len(rows), 1), 3),
-        "sampling": {
-            "temperature": args.temperature,
-            "top_p": args.top_p,
-            "max_tokens": args.max_tokens,
-            "thinking_mode": args.thinking_mode,
-            "strip_thinking_history": args.strip_thinking_history,
-            "gemma4_empty_thought_channel": args.gemma4_empty_thought_channel,
-            "dtype": "gguf",
-            "backend": "llama_cpp",
-            "tp": 1,
-            "max_model_len": args.max_model_len,
-            "repo_id": args.repo_id,
-            "filename": args.filename,
-            "tokenizer_path": args.tokenizer_path,
-            "n_gpu_layers": args.n_gpu_layers,
-            "n_batch": args.n_batch,
-            "n_ubatch": args.n_ubatch,
-            "n_threads": args.n_threads,
-            "n_threads_batch": args.n_threads_batch,
-            "flash_attn": args.flash_attn,
-            "offload_kqv": args.offload_kqv,
-        },
-        "prompt_template": prompt_meta,
-        "aggregate": aggregate,
-        "per_step": per_step,
-    }
-    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    result = write_result(
+        out_path,
+        args,
+        model_short,
+        eval_path,
+        prompt_meta,
+        per_step,
+        load_time,
+        gen_time,
+        True,
+        len(rows),
+    )
+    aggregate = result["aggregate"]
     print(json.dumps({"output_path": str(out_path), "score": aggregate["next_action_score"]}, ensure_ascii=False))
 
 
