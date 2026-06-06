@@ -5,6 +5,10 @@
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
 
+상세 연구 노트:
+- RL/DPO 다음 학습 계획: [`docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md`](docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md)
+- KoHRM/HRM 사용법과 JSON contract 연구: [`docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md`](docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md)
+
 점수 기준:
 
 ```text
