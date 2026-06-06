@@ -126,6 +126,9 @@ run_eval() {
     (
       export CUDA_VISIBLE_DEVICES="$shard"
       export PYTHONUNBUFFERED=1
+      export NUMEXPR_MAX_THREADS="${NUMEXPR_MAX_THREADS:-256}"
+      export KOHRM_FORCE_SDPA_KVCACHE=1
+      export KOHRM_DISABLE_INFERENCE_COMPILE=1
       python tb2_lite/scripts/replay_eval_hrm_text.py \
         --model "$EXPORT" \
         --model-short "${SHORT}-shard${shard}" \

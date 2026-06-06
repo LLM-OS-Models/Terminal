@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 진행 상태 반영: `2026-06-06 15:50 KST`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -26,6 +26,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | 3 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
 | 4 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2` | 45.90 | 0.4590 | 0.5031 | 0.5098 | 44.9% | 68.3% | kohrm-local-prefixlm-export | 10.842 | 10.9 |
 | 5 | `LLM-OS-Models/Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch` | 44.79 | 0.4479 | 0.5266 | 0.4701 | 34.3% | 83.2% | chat_template | 0.079 | 15.5 |
+| 6 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3` | 43.57 | 0.4357 | 0.4703 | 0.5003 | 45.5% | 61.7% | kohrm-local-prefixlm-export-nocompile | 11.156 | 2.9 |
 | ~4 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
 | 4 | **`GLM-5.1 (z.ai API)`** | **41.68** | **0.4168** | **0.5377** | **0.4007** | **24.1%** | **90.1%** | **anthropic-api** | **3.298** | **-** |
 | ~5 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
@@ -135,9 +136,10 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 전체 순위 반영 메모:
 
-- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 17개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 3개를 이 표에 반영했다.
+- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 17개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 4개를 이 표에 반영했다.
 - 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
-- `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`는 Score `45.90`으로 KoHRM 계열 최고점이다. Epoch1 Score `38.56`보다 `+7.34`, Qwen fast-continue fullconv Score `44.79`보다 `+1.11` 높고, LFM2.5 ToolBench SFT 2epoch Score `50.48`보다는 `-4.58` 낮다. 8-shard 평가 wall time은 가장 느린 shard 기준 `3285.1s`, 약 `54분 45초`다.
+- `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`는 Score `45.90`으로 KoHRM 계열 최고점으로 유지한다. Epoch1 Score `38.56`보다 `+7.34`, Qwen fast-continue fullconv Score `44.79`보다 `+1.11` 높고, LFM2.5 ToolBench SFT 2epoch Score `50.48`보다는 `-4.58` 낮다. Epoch3는 Score `43.57`로 Epoch2보다 `-2.33` 낮아 current best로 올리지 않는다. 8-shard Epoch2 평가 wall time은 가장 느린 shard 기준 `3285.1s`, 약 `54분 45초`다.
+- `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3`는 Score `43.57`로 완료됐다. Cmd F1 `0.4357`, Precision `0.4703`, Recall `0.5003`, First Cmd `45.5%`, Valid JSON `61.7%`, 303/303 step이다. Epoch2 Score `45.90`보다 `-2.33` 낮아 KoHRM current best는 Epoch2로 유지한다.
 - `Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch`는 Score `44.79`로 Qwen 계열 최고점이다. 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` Score `39.52`보다 `+5.27` 높고, GLM-5.1 API Score `41.68`보다도 `+3.11` 높다. 같은 결과 JSON의 legacy `next_action_score`는 `41.64`이며, 전체 순위 기준에는 쓰지 않는다.
 - 26B-A4B-it native 2epoch는 이제 Score `39.56`, Qwen3.5-2B SameCount SFT 2epoch는 Score `39.52`다. 26B-A4B-it native 1epoch는 Score `38.12`, 31B-it native 1epoch는 `35.55`, 31B-it native 2epoch는 `32.57`이다.
 - Qwen3.5 대형 FP8 완료분은 `Qwen/Qwen3.5-397B-A17B-FP8` Score `37.81`로 전체 12위, `Qwen/Qwen3.5-122B-A10B-FP8` Score `37.28`로 전체 14위다. 둘 다 vLLM `tp=8`, expert parallel, prefix caching, Qwen3 reasoning parser, `max_model_len=32768`로 평가했다.
@@ -220,14 +222,14 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - Epoch2는 Qwen fast-continue fullconv Score `44.79`보다 `+1.11`, Qwen3.5-2B SameCount 2epoch Score `39.52`보다 `+6.38`, Ouro-1.4B-Thinking-Terminal-SFT Score `31.74`보다 `+14.16` 높다. 다만 LFM2.5-8B-A1B ToolBench SFT 2epoch Score `50.48`보다 `-4.58`, 1epoch Score `52.30`보다 `-6.40` 낮아 아직 최상위 LFM2.5의 coverage/first-action 수준에는 못 미친다.
 - `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount`: 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount`에서 이어서 LFM2.5 full-conversation terminal/toolcall 데이터로 full SFT를 진행했다. 4096 context, 4GPU, full fine-tuning이다. `b18/b8/b7/b6`는 Qwen3.5 Gated DeltaNet torch fallback OOM 또는 gradient checkpointing metadata mismatch로 실패했고, 안정 런은 `b4_nogc_4096`, global batch `16`이었다. 1epoch 평가 최종 Score는 `44.79`이며 Qwen 계열 최고점으로 전체표에 반영했다.
 
-운영 스냅샷, 2026-06-06 15:50 KST 업데이트:
+운영 스냅샷, 2026-06-06 20:15 KST 업데이트:
 - `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch2` 평가는 완료됐다. 최종 Score `45.90`, Next Action `45.60`, 303/303 step 완료다. 현재 KoHRM 최고 결과이며 전체표에서는 ZAYA `48.15` 아래, Qwen fast-continue `44.79` 위다.
 - Epoch2 평가는 8-shard SDPA batch 16으로 돌렸고, 가장 느린 shard 기준 generation time `3285.1s`, 약 `54분 45초`가 걸렸다. load는 `10.9s`, 평균 `10.842 sec/step`이다. Epoch2 학습 자체는 8GPU에서 약 `3시간 16분` 걸렸다.
 - Epoch2 Hugging Face 업로드는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`로 완료했다. 모델 카드에는 `base_model: LLM-OS-Models/KoHRM-Text-1.4B`, `base_model_relation: finetune`, Epoch1 parent, TB2-lite 점수와 사용법을 적는다.
-- Epoch3는 `2026-06-06 15:42:27 KST`에 Epoch2 checkpoint에서 이어서 8GPU로 시작했다. 학습 PID는 `2725821`, checkpoint root는 `/home/work/.data/hrm_text_checkpoints/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-from-epoch2-gbs180k-8gpu`, log는 `/home/work/.data/hrm_text_logs/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-from-epoch2-8gpu.log`다. 15:45 KST 실측 기준 ETA는 `2026-06-06 17:50 KST` 전후다.
-- Epoch3 후처리는 `tb2_lite/scripts/run_kohrm_lfm25_epoch3_after_training.sh`로 예약했다. watcher PID는 `2740400`이고, 학습 종료 후 `HF export -> Hugging Face 업로드 -> 8-shard full replay 평가 -> shard merge -> Epoch3 모델 카드 점수 업데이트` 순서로 진행한다. 업로드 repo는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3`, 예상 평가 결과 경로는 `tb2_lite/results/20260606T_kohrm_lfm25_epoch3_eval_sdpa8_b16/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-sdpa8-b16-merged.json`이다.
-- Epoch3의 점수는 아직 확정 전이다. Epoch2가 Valid JSON과 Recall을 동시에 올렸으므로 3epoch도 확인할 가치가 있지만, LFM2.5는 2epoch에서 1epoch보다 낮아진 전례가 있어 Score/Valid JSON/late bucket이 꺾이면 Epoch2를 배포 기준으로 유지한다. 현재 기대 구간은 보수적으로 Score `46~49`이며, 실제 순위 반영은 full replay가 끝난 뒤만 한다.
-- Epoch3 이후 장기 평가는 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF` `UD_Q4_K_M` 8GPU llama.cpp 평가다. 긴 run은 `--save-every` partial 저장으로 중간 점수를 남긴다.
+- Epoch3는 `2026-06-06 15:42:27 KST`에 Epoch2 checkpoint에서 이어서 8GPU로 시작했고, 학습은 약 `3시간 16분 30초`에 완료됐다. checkpoint root는 `/home/work/.data/hrm_text_checkpoints/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-from-epoch2-gbs180k-8gpu`, export는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3`, Hugging Face repo는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3`다.
+- Epoch3 full 303-step replay 최종 Score는 `43.57`다. Cmd F1 `0.4357`, Precision `0.4703`, Recall `0.5003`, First Cmd `45.5%`, Valid JSON `61.7%`, 평균 예측 command `25.82`개, Next Action `44.15`다. 결과 JSON은 `tb2_lite/results/20260606T_kohrm_lfm25_epoch3_eval_sdpa8_b16/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-sdpa8-b16-nocompile-merged.json`이다.
+- Epoch3는 Epoch2 대비 Score `-2.33`, Precision `-0.0328`, Recall `-0.0095`, First Cmd `+0.6%p`, Valid JSON `-6.6%p`다. First Cmd는 소폭 올랐지만 JSON 안정성과 command precision이 내려가 전체 점수는 하락했다. 따라서 배포/대표 checkpoint는 Epoch2를 유지한다.
+- Epoch3 이후 장기 평가는 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF` `UD-Q4_K_M` 8GPU llama.cpp 평가다. 긴 run은 `--save-every` partial 저장으로 중간 점수를 남긴다.
 
 운영 스냅샷, 2026-06-06 09:52 KST 업데이트:
 - `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1` 평가는 완료됐다. 최종 Score `38.56`, Next Action `38.09`, 303/303 step 완료다. 현재 KoHRM 최고 결과이며, 모델 카드와 HF 업로드 대상으로 확정했다.
@@ -240,9 +242,28 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - GPU `0,4,5,6`: `Qwen3.5-2B-Terminal-ToolCall-FullConv-FromSameCount` full SFT가 `b4_nogc_4096`으로 진행 중이다. 2026-06-05 14:03 KST 기준 `43/40760` steps, loss는 `0.48~0.86` 범위에서 정상 출력 중이고, 안정 구간 step time은 약 `7.8~8.9s/step`이다. 1epoch 완료 예상은 2026-06-07 `12:00~15:00 KST`, 2epoch 전체 완료 예상은 2026-06-09 `11:00~15:00 KST`다. 아직 평가 점수는 없다.
 - KoHRM LoRA repo 8개는 `base_model_relation: adapter`, `library_name: peft`로 업데이트했고 public 상태를 확인했다.
 
+
+### KoHRM LFM25 Epoch3 결과 분석
+
+Epoch3는 Epoch2 checkpoint에서 같은 LFM25/ToolBench full SFT 데이터를 한 pass 더 이어 학습한 결과다. 학습 loss는 W&B summary 기준 `0.5271`, train accuracy는 `0.86567`까지 내려갔지만, TB2-lite full replay에서는 Score `43.57`로 Epoch2 `45.90`보다 `-2.33` 낮았다.
+
+좋아진 점:
+- First Cmd는 `44.9% -> 45.5%`로 `+0.6%p` 올랐다. 첫 행동 선택 감각은 유지되거나 소폭 좋아졌다.
+- `model_training`은 Epoch3에서 F1 `0.4910`로 강한 축에 들어왔다. 일부 학습/실험형 명령 패턴은 추가 pass가 도움이 됐다.
+- early bucket은 `0.5184`로 여전히 가장 강하다. 초반 파일 파악/조회형 단계는 유지됐다.
+
+나빠진 점:
+- Cmd F1은 `0.4590 -> 0.4357`, Precision은 `0.5031 -> 0.4703`, Recall은 `0.5098 -> 0.5003`로 모두 하락했다.
+- Valid JSON은 `68.3% -> 61.7%`로 `-6.6%p` 내려갔다. 첫 명령은 맞히더라도 최종 JSON contract와 command set 복원이 흔들린다.
+- 약점 source group은 `math` `0.3150`, `dependency_management` `0.3580`, `security` `0.3580`, `data_processing` `0.3621`, `swe` `0.3815`다. 후반 수정/검증이나 dependency/security 계열은 추가 epoch가 오히려 안정성을 깎았다.
+
+해석:
+- Epoch2까지는 같은 데이터 반복이 JSON 안정성과 command coverage를 같이 올렸지만, Epoch3에서는 반복 학습이 출력 분포를 더 정교하게 만들기보다 일부 command를 과하게 좁히거나 JSON formatting을 흔든 것으로 보인다.
+- 다음 액션은 Epoch3를 계속 미는 것보다 Epoch2를 기준으로 유지하고, 더 다양한 terminal/tool replay나 DPO/RL-style preference, 혹은 late-step/error-recovery 중심 데이터로 보강하는 쪽이 낫다.
+
 ### KoHRM 성능 원인과 다음 액션
 
-현재 확인된 결론은 `KoHRM-Text-1.4B-stage4d`가 terminal/tool action을 강하게 배울 수 있고, 충분히 큰 full SFT 데이터와 추가 epoch가 들어가면 Qwen 2B SFT를 넘어선다는 것이다. base direct Score `11.48`에서 최고 LoRA Score `29.11`, top2 full SFT Score `31.59`, LFM25/ToolBench full SFT Epoch1 Score `38.56`, Epoch2 Score `45.90`까지 올랐다. Epoch2는 LoRA 최고 대비 `+16.79`, top2 full SFT 대비 `+14.31`, Ouro-1.4B-Thinking-Terminal-SFT Score `31.74` 대비 `+14.16`, Qwen fast-continue Score `44.79` 대비 `+1.11` 높다. 다만 LFM2.5 full SFT 2epoch Score `50.48`에는 `-4.58`, 1epoch Score `52.30`에는 `-6.40` 낮아 최상위 LFM2.5의 coverage에는 아직 못 미친다.
+현재 확인된 결론은 `KoHRM-Text-1.4B-stage4d`가 terminal/tool action을 강하게 배울 수 있지만, 같은 LFM25/ToolBench 데이터를 3번째 pass까지 계속 돌리는 것은 성능을 더 밀어 올리지 못했다는 것이다. base direct Score `11.48`에서 최고 LoRA Score `29.11`, top2 full SFT Score `31.59`, LFM25/ToolBench full SFT Epoch1 Score `38.56`, Epoch2 Score `45.90`까지 올랐지만 Epoch3는 Score `43.57`로 내려갔다. 따라서 현재 KoHRM current best는 Epoch2다. Epoch3는 First Cmd를 `45.5%`로 소폭 올렸으나 Precision `0.4703`와 Valid JSON `61.7%`가 내려가 전체 command F1이 하락했다.
 
 잘하는 것:
 - LoRA와 full SFT 반응은 확실하다. 최고 LoRA는 base 대비 `+17.63`점이고, LFM25 Epoch2 full SFT는 최고 LoRA보다 다시 `+16.79`점 올랐다. HRM이 terminal JSON action을 못 배우는 모델은 아니다.
@@ -269,10 +290,10 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 
 더 할 수 있는 것:
 - top2 full SFT는 LoRA `29.11`을 넘어 Score `31.59`까지 올라갔다. 따라서 adapter 한계는 확인됐고, 다음 병목은 command precision, first action, 긴 후반 step 복원, HRM generation 속도다.
-- `lfm25-terminal-toolbench` full SFT 2epoch는 이미 Score `45.90`으로 성공했고, 3epoch는 `2026-06-06 15:42:27 KST`에 8GPU로 시작했다. 후처리 watcher가 export, Hub 업로드, 8-shard full replay, 모델카드 점수 업데이트까지 이어서 실행한다. LFM2.5 자체는 2epoch가 1epoch보다 낮아진 전례가 있으므로, 3epoch는 Score/Valid JSON/late bucket이 꺾이는지 확인한 뒤 Epoch2 유지 여부를 결정한다.
+- `lfm25-terminal-toolbench` full SFT 2epoch는 Score `45.90`으로 성공했고, 3epoch는 Score `43.57`로 하락했다. 같은 데이터 추가 pass만으로는 더 밀어 올리지 말고, Epoch2를 기준으로 late-step/error-recovery 데이터, JSON-only target 강화, preference/DPO식 command selection 보강을 추가하는 쪽이 맞다.
 - 데이터는 JSON-only assistant target을 더 강하게 해야 한다. `<think>`, 설명문, premature `task_complete=true`를 줄이고, 각 step의 첫 command와 검증 command를 더 많이 보존해야 한다.
 - 평가 속도는 별도 개선 대상이다. vLLM이 바로 안 맞으면 HF export + 전용 batched PrefixLM generation을 더 최적화하고, stop token/EOA 조기 종료를 정확히 잡아 `max_tokens=1024` 전량 생성 낭비를 줄여야 한다.
-- full SFT 결과가 좋아도 weak area 분석은 계속 필요하다. 현재 Epoch2 기준 약점은 `swe`, `dependency_management`, `model_training`, late bucket, First Cmd의 LFM/ZAYA 대비 격차다. 3epoch가 이 네 개를 개선하면 유지하고, Valid JSON/Precision이 꺾이면 Epoch2를 배포 기준으로 둔다.
+- full SFT 결과가 좋아도 weak area 분석은 계속 필요하다. 현재 배포 기준은 Epoch2이고, 약점은 `swe`, `dependency_management`, `model_training`, late bucket, First Cmd의 LFM/ZAYA 대비 격차다. Epoch3에서 Valid JSON/Precision이 꺾였으므로 추가 단순 epoch보다 데이터 구성과 출력 contract 보강을 우선한다.
 
 ### 점수 해석: 잘 된 것과 안 된 것
 
