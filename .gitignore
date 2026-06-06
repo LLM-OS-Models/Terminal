@@ -28,6 +28,7 @@ __pycache__/
 
 # Third-party source
 unsloth-src/
+context-1-data-gen/
 
 # OS
 .DS_Store
@@ -37,5 +38,4 @@ unsloth-src/
 
 # Liquid-CLI
 =4.56.0
-
 
