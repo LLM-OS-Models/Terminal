@@ -257,9 +257,15 @@ Epoch3는 Epoch2 checkpoint에서 같은 LFM25/ToolBench full SFT 데이터를 �
 - Valid JSON은 `68.3% -> 61.7%`로 `-6.6%p` 내려갔다. 첫 명령은 맞히더라도 최종 JSON contract와 command set 복원이 흔들린다.
 - 약점 source group은 `math` `0.3150`, `dependency_management` `0.3580`, `security` `0.3580`, `data_processing` `0.3621`, `swe` `0.3815`다. 후반 수정/검증이나 dependency/security 계열은 추가 epoch가 오히려 안정성을 깎았다.
 
+JSON 안정성:
+- JSON을 잘 맞추는 능력은 Epoch3에서 오르지 않았다. 흐름은 Epoch1 `55.1%` -> Epoch2 `68.3%` -> Epoch3 `61.7%`다. Epoch2에서는 command coverage와 JSON validity가 같이 올랐지만, Epoch3에서는 First Cmd만 소폭 오르고 JSON contract가 내려갔다.
+- LoRA 실험에서도 비슷한 신호가 있었다. `behavior-jsonfix-r32`는 Valid JSON `71.0%`로 높았지만 Score는 `26.23`에 머물렀다. 즉 JSON-fix 데이터는 형식에는 도움을 주지만, terminal next-action 점수를 올리려면 `commands[].keystrokes` 자체를 더 맞혀야 한다.
+- 이번 Epoch3 하락은 단순히 "JSON 데이터가 부족했다"기보다, 같은 target을 한 번 더 반복하면서 모델이 출력해야 할 command 후보와 완료 판단을 더 좁게 잡고, 긴 출력에서 field/array contract를 안정적으로 닫는 능력은 약해진 쪽에 가깝다.
+
 해석:
 - Epoch2까지는 같은 데이터 반복이 JSON 안정성과 command coverage를 같이 올렸지만, Epoch3에서는 반복 학습이 출력 분포를 더 정교하게 만들기보다 일부 command를 과하게 좁히거나 JSON formatting을 흔든 것으로 보인다.
-- 다음 액션은 Epoch3를 계속 미는 것보다 Epoch2를 기준으로 유지하고, 더 다양한 terminal/tool replay나 DPO/RL-style preference, 혹은 late-step/error-recovery 중심 데이터로 보강하는 쪽이 낫다.
+- 과적합이라고 부를 수 있는 부분은 있다. train loss `0.5271`과 train accuracy `0.86567`은 좋아졌는데 held-out replay Score와 Valid JSON이 내려갔기 때문이다. 다만 전형적인 암기형 과적합만으로 보기는 어렵고, PrefixLM 출력 contract가 얇은 상태에서 같은 분포를 더 돌리며 command distribution과 `task_complete`/JSON closing 습관이 틀어진 "contract overfit" 쪽으로 보는 게 맞다.
+- 다음 액션은 Epoch3를 계속 미는 것보다 Epoch2를 기준으로 유지하고, 더 다양한 terminal/tool replay나 DPO/RL-style preference, 혹은 late-step/error-recovery 중심 데이터로 보강하는 쪽이 낫다. LFM2.5나 Qwen 2B는 이미 vLLM/chat-template 경로와 평가 속도가 안정적이므로, RL을 빨리 돌려 비교하기 좋은 축이고, HRM은 별도로 JSON-only decoding/stop handling/PrefixLM 전용 serving을 연구해야 한다.
 
 ### KoHRM 성능 원인과 다음 액션
 
@@ -292,6 +298,7 @@ Epoch3는 Epoch2 checkpoint에서 같은 LFM25/ToolBench full SFT 데이터를 �
 - top2 full SFT는 LoRA `29.11`을 넘어 Score `31.59`까지 올라갔다. 따라서 adapter 한계는 확인됐고, 다음 병목은 command precision, first action, 긴 후반 step 복원, HRM generation 속도다.
 - `lfm25-terminal-toolbench` full SFT 2epoch는 Score `45.90`으로 성공했고, 3epoch는 Score `43.57`로 하락했다. 같은 데이터 추가 pass만으로는 더 밀어 올리지 말고, Epoch2를 기준으로 late-step/error-recovery 데이터, JSON-only target 강화, preference/DPO식 command selection 보강을 추가하는 쪽이 맞다.
 - 데이터는 JSON-only assistant target을 더 강하게 해야 한다. `<think>`, 설명문, premature `task_complete=true`를 줄이고, 각 step의 첫 command와 검증 command를 더 많이 보존해야 한다.
+- RL/DPO를 먼저 돌린다면 LFM2.5와 Qwen 2B가 우선순위다. 이유는 평가/serving이 vLLM fast path를 잘 타고, 이미 SFT 점수가 높아 reward signal을 빠르게 확인할 수 있기 때문이다. HRM은 바로 RL로 밀기보다 Epoch2 checkpoint를 고정한 뒤 JSON schema constrained decoding, `task_complete=false`/command array 보존 보상, late-step replay 보상, stop token/EOA 조기 종료를 먼저 안정화해야 한다.
 - 평가 속도는 별도 개선 대상이다. vLLM이 바로 안 맞으면 HF export + 전용 batched PrefixLM generation을 더 최적화하고, stop token/EOA 조기 종료를 정확히 잡아 `max_tokens=1024` 전량 생성 낭비를 줄여야 한다.
 - full SFT 결과가 좋아도 weak area 분석은 계속 필요하다. 현재 배포 기준은 Epoch2이고, 약점은 `swe`, `dependency_management`, `model_training`, late bucket, First Cmd의 LFM/ZAYA 대비 격차다. Epoch3에서 Valid JSON/Precision이 꺾였으므로 추가 단순 epoch보다 데이터 구성과 출력 contract 보강을 우선한다.
 
