@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -27,11 +27,12 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |
 | 1 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` | 52.30 | 0.5230 | 0.5854 | 0.5431 | 49.5% | 76.9% | chat_template | 0.087 | 44.7 |
 | 2 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
-| ~3 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
-| 3 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
-| 4 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2` | 45.90 | 0.4590 | 0.5031 | 0.5098 | 44.9% | 68.3% | kohrm-local-prefixlm-export | 10.842 | 10.9 |
-| 5 | `LLM-OS-Models/Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch` | 44.79 | 0.4479 | 0.5266 | 0.4701 | 34.3% | 83.2% | chat_template | 0.079 | 15.5 |
-| 6 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3` | 43.57 | 0.4357 | 0.4703 | 0.5003 | 45.5% | 61.7% | kohrm-local-prefixlm-export-nocompile | 11.156 | 2.9 |
+| 3 | `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` | 49.97 | 0.4997 | 0.6191 | 0.4785 | 49.2% | 81.5% | chat_template | 26.688 | 542.9 |
+| ~4 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
+| 4 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
+| 5 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2` | 45.90 | 0.4590 | 0.5031 | 0.5098 | 44.9% | 68.3% | kohrm-local-prefixlm-export | 10.842 | 10.9 |
+| 6 | `LLM-OS-Models/Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch` | 44.79 | 0.4479 | 0.5266 | 0.4701 | 34.3% | 83.2% | chat_template | 0.079 | 15.5 |
+| 7 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3` | 43.57 | 0.4357 | 0.4703 | 0.5003 | 45.5% | 61.7% | kohrm-local-prefixlm-export-nocompile | 11.156 | 2.9 |
 | ~4 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
 | 4 | **`GLM-5.1 (z.ai API)`** | **41.68** | **0.4168** | **0.5377** | **0.4007** | **24.1%** | **90.1%** | **anthropic-api** | **3.298** | **-** |
 | ~5 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
@@ -141,8 +142,8 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 전체 순위 반영 메모:
 
-- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 17개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 4개를 이 표에 반영했다.
-- 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, 기존 full-run 1위 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
+- 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 18개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 4개를 이 표에 반영했다.
+- 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`보다 `+2.33`, `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
 - `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`는 Score `45.90`으로 KoHRM 계열 최고점으로 유지한다. Epoch1 Score `38.56`보다 `+7.34`, Qwen fast-continue fullconv Score `44.79`보다 `+1.11` 높고, LFM2.5 ToolBench SFT 2epoch Score `50.48`보다는 `-4.58` 낮다. Epoch3는 Score `43.57`로 Epoch2보다 `-2.33` 낮아 current best로 올리지 않는다. 8-shard Epoch2 평가 wall time은 가장 느린 shard 기준 `3285.1s`, 약 `54분 45초`다.
 - `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3`는 Score `43.57`로 완료됐다. Cmd F1 `0.4357`, Precision `0.4703`, Recall `0.5003`, First Cmd `45.5%`, Valid JSON `61.7%`, 303/303 step이다. Epoch2 Score `45.90`보다 `-2.33` 낮아 KoHRM current best는 Epoch2로 유지한다.
 - `Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch`는 Score `44.79`로 Qwen 계열 최고점이다. 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` Score `39.52`보다 `+5.27` 높고, GLM-5.1 API Score `41.68`보다도 `+3.11` 높다. 같은 결과 JSON의 legacy `next_action_score`는 `41.64`이며, 전체 순위 기준에는 쓰지 않는다.
@@ -150,7 +151,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - Qwen3.5 대형 FP8 완료분은 `Qwen/Qwen3.5-397B-A17B-FP8` Score `37.81`로 전체 12위, `Qwen/Qwen3.5-122B-A10B-FP8` Score `37.28`로 전체 14위다. 둘 다 vLLM `tp=8`, expert parallel, prefix caching, Qwen3 reasoning parser, `max_model_len=32768`로 평가했다.
 - `LiquidAI/LFM2.5-8B-A1B`는 Score `36.53`으로 신규 반영했다. 기존 `LiquidAI/LFM2-8B-A1B` base Score `10.04`보다 `+26.49` 높고, `Qwen/Qwen3.5-35B-A3B-FP8` Score `36.44`를 근소하게 앞선다. First Cmd `39.9%`, Recall `0.3685`, Sec/Step `0.097`이라 8B급 빠른 base 모델 중 매우 강한 결과다.
 - KoHRM-Text stage4d 계열은 base direct 2개와 LoRA 6개를 full 303-step으로 평가했다. 최고 LoRA는 `terminal-tool-core-r64` Score `29.11`이고, top2 terminal/tool merge full SFT 1epoch는 Score `31.59`, LFM2.5/ToolBench full SFT는 Epoch1 Score `38.56`, Epoch2 Score `45.90`이다. Epoch2는 LoRA 최고보다 `+16.79`, top2 full SFT보다 `+14.31`, Ouro-1.4B-Thinking-Terminal-SFT보다 `+14.16` 높아 현재 KoHRM 최고 결과다. HRM PrefixLM 구조는 현재 로컬 전용 evaluator로 평가했으며 vLLM chat model 경로는 쓰지 않았다.
-- 요청 외부 모델 + API 평가 완료분 중 최고는 `Zyphra/ZAYA1-74B-preview` Score `48.15`다. 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch 다음 3위이며, 그 다음 주요 완료분은 `GLM-5.1 (z.ai API)` Score `41.68`, `DavidAU/Qwen3.6-40B Deckard...:Q4_K_M` Score `37.09`, `LiquidAI/LFM2.5-8B-A1B` Score `36.53`, `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` Score `36.29`다. `google/gemma-4-12B-it`은 text-only fallback으로 Score `28.58`, `JetBrains/Mellum2-12B-A2.5B-Thinking`은 Score `18.96`으로 완료했다. 둘 다 상위 terminal-action 후보로 보기에는 낮다.
+- 요청 외부 모델 + API 평가 완료분 중 최고는 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`다. 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch 다음 3위이며, 비학습/외부 모델 최고 결과다. 그 다음 주요 완료분은 `Zyphra/ZAYA1-74B-preview` Score `48.15`, `GLM-5.1 (z.ai API)` Score `41.68`, `DavidAU/Qwen3.6-40B Deckard...:Q4_K_M` Score `37.09`, `LiquidAI/LFM2.5-8B-A1B` Score `36.53`, `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` Score `36.29`다. `google/gemma-4-12B-it`은 text-only fallback으로 Score `28.58`, `JetBrains/Mellum2-12B-A2.5B-Thinking`은 Score `18.96`으로 완료했다. 둘 다 상위 terminal-action 후보로 보기에는 낮다.
 - `DeepSeek-V4-Flash`는 공식 converted MP4 inference 경로로 `2 x tp=4`, 8GPU full replay 303-step을 완료했고 Score `32.22`로 전체 43위다. 이전 vLLM/FP8 경로의 BOS 반복 0점 실패는 최종 결과에서 대체했다. `google/gemma-4-31B-it-assistant`는 아직 결과 JSON 없음.
 - `Step-3.5-Flash`는 공식 vLLM Step-3.5 recipe 계열 설정을 기준으로 FP8 route를 먼저 시도했지만 로컬 CUDA/vLLM 조합에서 illegal address와 MTP layer config 문제가 반복되어, 최종 반영은 BF16 원본 모델 `tp=8`, expert parallel, `max_model_len=49152`로 완료한 303-step 결과다. Score는 `18.80`으로 전체 80위다.
 
@@ -234,7 +235,7 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - Epoch3는 `2026-06-06 15:42:27 KST`에 Epoch2 checkpoint에서 이어서 8GPU로 시작했고, 학습은 약 `3시간 16분 30초`에 완료됐다. checkpoint root는 `/home/work/.data/hrm_text_checkpoints/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-from-epoch2-gbs180k-8gpu`, export는 `/home/work/.data/hrm_text_exports/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3`, Hugging Face repo는 `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3`다.
 - Epoch3 full 303-step replay 최종 Score는 `43.57`다. Cmd F1 `0.4357`, Precision `0.4703`, Recall `0.5003`, First Cmd `45.5%`, Valid JSON `61.7%`, 평균 예측 command `25.82`개, Next Action `44.15`다. 결과 JSON은 `tb2_lite/results/20260606T_kohrm_lfm25_epoch3_eval_sdpa8_b16/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-sdpa8-b16-nocompile-merged.json`이다.
 - Epoch3는 Epoch2 대비 Score `-2.33`, Precision `-0.0328`, Recall `-0.0095`, First Cmd `+0.6%p`, Valid JSON `-6.6%p`다. First Cmd는 소폭 올랐지만 JSON 안정성과 command precision이 내려가 전체 점수는 하락했다. 따라서 배포/대표 checkpoint는 Epoch2를 유지한다.
-- Epoch3 이후 장기 평가는 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF` `UD-Q4_K_M` 8GPU llama.cpp 평가다. `2026-06-06 21:25 KST` 기준 110/303 partial이 생성됐고, partial Score `52.68`, Cmd F1 `0.5190`, Valid JSON `74.5%`, 평균 `27.861 sec/step`, 예상 완료는 `2026-06-06 22:55 KST`다. 아직 full 303/303 완료 전이라 전체 순위에는 반영하지 않고, 최종 점수만 순위표에 넣는다.
+- Epoch3 이후 장기 평가였던 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF` `UD-Q4_K_M` 8GPU llama.cpp 평가는 완료됐다. 최종 Score `49.97`, Next Action `49.74`, Cmd F1 `0.4997`, Precision `0.6191`, Recall `0.4785`, First Cmd `49.2%`, Valid JSON `81.5%`, 평균 `26.688 sec/step`, load `542.9s`, generation `8086.4s`, 303/303 step이다. LFM2.5 ToolBench SFT 1epoch/2epoch 바로 아래 전체 3위이며, 비학습/외부 모델 중 최고점이다.
 - Harness-1 -> LFM2.5 작업은 `LiquidAI/LFM2.5-8B-A1B`에 논문식 LoRA SFT warm-start를 붙이는 방향으로 준비했다. 논문은 SFT와 RL 모두 LoRA rank `32`이며, SFT는 BC+/Web/Patents/SEC teacher trajectories `899`개를 turn별 약 `26K` examples로 확장하고, RL은 SEC train query `3,453`개에서 약 `82K` rollout을 돌리는 구조다. GPU 모델/학습 시간/비용은 논문에 공개되어 있지 않고 Tinker managed service로 low-level worker가 추상화됐다고 되어 있다. 로컬 구현은 `Liquid-CLI/scripts/build_lfm_harness1_dataset.py`, `Liquid-CLI/train_unsloth_processed_lora.py`, `Liquid-CLI/scripts/run_lfm_harness1_lora_sft.sh`에 추가했다. BrowseComp+ public source와 decrypted 830-query file은 `/home/work/.data/harness1/external/BrowseComp-Plus`에 준비했다. 다만 이 파일은 문제/정답/qrel이고 Harness SFT teacher trajectory가 아니므로, 실제 SFT 시작에는 Harness `.env.local`, Chroma index, API credentials 또는 별도 확보한 trajectory JSON/JSONL이 필요하다.
 
 운영 스냅샷, 2026-06-06 09:52 KST 업데이트:
@@ -315,8 +316,9 @@ JSON 안정성:
 잘 된 모델:
 
 - `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`가 Score `52.30`으로 전체 1위다. Precision `0.5854`, Recall `0.5431`, First Cmd `49.5%`, Valid JSON `76.9%`라 command coverage와 형식 안정성을 동시에 끌어올렸다.
-- 같은 run의 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch`는 Score `50.48`로 전체 2위다. 1epoch보다 약간 낮지만 기존 최고였던 `Zyphra/ZAYA1-74B-preview` Score `48.15`보다도 `+2.33` 높다.
-- `Zyphra/ZAYA1-74B-preview`는 Score `48.15`로 전체 3위이자 비학습/외부 모델 최고다. Precision `0.6196`, Recall `0.5017`, First Cmd `51.8%`, Valid JSON `74.6%`라 여전히 SFT 없이 매우 강하다.
+- 같은 run의 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch`는 Score `50.48`로 전체 2위다. 1epoch보다 약간 낮지만 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`보다 `+0.51`, `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+2.33` 높다.
+- `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M`는 Score `49.97`로 전체 3위이자 비학습/외부 모델 최고다. Precision `0.6191`, Recall `0.4785`, First Cmd `49.2%`, Valid JSON `81.5%`라 command precision과 format 안정성이 동시에 높다. 다만 550B MoE GGUF라 평균 `26.688 sec/step`으로 매우 느리다.
+- `Zyphra/ZAYA1-74B-preview`는 Score `48.15`로 전체 4위다. Precision `0.6196`, Recall `0.5017`, First Cmd `51.8%`, Valid JSON `74.6%`라 여전히 SFT 없이 매우 강하고, Nemotron보다 훨씬 빠르다.
 - `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1`은 Score `31.59`로 KoHRM 계열 최고다. base direct `11.48` 대비 `+20.11`, 최고 LoRA `29.11` 대비 `+2.48`이고, First Cmd `24.8%`, Valid JSON `73.3%`라 full SFT가 LoRA보다 출력 형식과 첫 행동을 더 안정화했다.
 - `KoHRM-Text-1.4B-stage4d + terminal-tool-core-r64 LoRA`는 Score `29.11`로 adapter 계열 최고다. base direct `11.48` 대비 `+17.63`이고, First Cmd `22.1%`, Valid JSON `63.4%`라 LoRA SFT만으로도 HRM PrefixLM을 terminal JSON action 형식으로 실제로 이동시킨 것이 확인됐다.
 - `gemma-4-26B-A4B-it` native SFT 2epoch는 Score `39.56`으로 Gemma 계열 최고다. Precision `0.4702`, Recall `0.4808`, First Cmd `40.6%`라 명령 집합을 넓게 맞힌다. Valid JSON은 `17.2%`로 낮지만, 실제 command F1이 강하다.
@@ -633,15 +635,15 @@ Score `41.68`로 현재 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch와
 
 ### 실제 최고 모델 판단
 
-현재 이 벤치마크 기준 최고 모델은 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`다. Score `52.30`으로 전체 1위이고, 같은 run의 2epoch `50.48`이 전체 2위다. 비학습/외부 모델 최고는 `Zyphra/ZAYA1-74B-preview` Score `48.15`이며, LFM 1epoch가 ZAYA보다 `+4.15` 높다.
+현재 이 벤치마크 기준 최고 모델은 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`다. Score `52.30`으로 전체 1위이고, 같은 run의 2epoch `50.48`이 전체 2위다. 비학습/외부 모델 최고는 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`이며, LFM 1epoch가 Nemotron보다 `+2.33` 높다.
 
 다만 실전 배치 기준으로는 품질, API 운용, 속도/비용의 선택이 갈린다.
 
 - 품질 우선이면 현재는 LFM2.5 ToolBench SFT 1epoch다. Score `52.30`, Recall `0.5431`, Sec/Step `0.087`로 품질과 속도가 동시에 좋다.
-- 비학습/외부 모델 우선이면 `Zyphra/ZAYA1-74B-preview`다. Score `48.15`, First Cmd `51.8%`라 SFT 없이도 첫 행동 선택과 command quality가 매우 강하다.
+- 비학습/외부 모델 품질 우선이면 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M`다. Score `49.97`, Valid JSON `81.5%`로 가장 높다. 속도까지 같이 보면 `Zyphra/ZAYA1-74B-preview`도 유력하다. Score `48.15`, First Cmd `51.8%`, Sec/Step `4.151`이라 Nemotron보다 훨씬 빠르다.
 - API 운용 우선이면 `GLM-5.1`이 대안이다. Score `41.68`, Valid JSON `90.1%`로 포맷 안정성 최고, API 호출만으로 로컬 GPU 불필요다.
 - 비용/속도/안정성까지 보면 `Qwen3.5-2B SFT 2Epoch`도 여전히 강하다. Score `39.52`, Sec/Step `0.081`이라 매우 빠르다.
-- ZAYA와 GLM-5.1을 제외한 공개 비학습 모델 중 최고는 `Qwen/Qwen3.5-9B`다. Score `38.10`이고, `nvidia/Nemotron-Terminal-32B` `38.09`, `nvidia/Nemotron-Terminal-14B` `37.70`보다 높다.
+- Nemotron-3 Ultra, ZAYA, GLM-5.1을 제외한 공개 비학습 모델 중 최고는 `Qwen/Qwen3.5-9B`다. Score `38.10`이고, `nvidia/Nemotron-Terminal-32B` `38.09`, `nvidia/Nemotron-Terminal-14B` `37.70`보다 높다.
 
 이 결과가 특이한 이유:
 
@@ -801,7 +803,7 @@ Qwen3.5 대형 점수의 저평가 가능성:
 
 해석:
 
-- 26B-A4B-it native 2epoch가 `39.56`으로 현재 Gemma 계열 최고다. 최신 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch가 `52.30`/`50.48`로 1, 2위이고, ZAYA1-74B-preview는 `48.15`로 비학습/외부 모델 최고다. Gemma 26B-A4B-it 2epoch는 Qwen SFT `39.52`와 같은 39점대 학습 모델 최고권이며 1epoch `38.12`보다 `+1.44` 높다.
+- 26B-A4B-it native 2epoch가 `39.56`으로 현재 Gemma 계열 최고다. 최신 전체표에서는 LFM2.5 ToolBench SFT 1epoch/2epoch가 `52.30`/`50.48`로 1, 2위이고, Nemotron-3 Ultra GGUF는 `49.97`로 비학습/외부 모델 최고다. Gemma 26B-A4B-it 2epoch는 Qwen SFT `39.52`와 같은 39점대 학습 모델 최고권이며 1epoch `38.12`보다 `+1.44` 높다.
 - 31B-it native는 1epoch `35.55`, 2epoch `32.57`로 2epoch가 낮다. 31B-it는 JSON valid가 `60%+`로 높지만, command F1은 26B-A4B-it보다 낮다.
 - base 계열은 31B base 2epoch `28.96`을 제외하면 낮다. 26B-A4B base는 `18~19점대`라 instruction prior 없는 base SFT만으로는 주력 후보가 아니다.
 - 이번 31B native 결과는 이전 HF-FSDP 31B SFT `0.00` 문제와 다르다. native 경로에서는 31B-it가 정상 JSON을 생성하고 30점대 점수를 낸다.
@@ -817,10 +819,11 @@ Qwen3.5 대형 점수의 저평가 가능성:
 
 ### 요청 외부 모델 full 303 평가 결과
 
-`2026-05-23` 기준 완료분이다. 출력 디렉터리: `/home/work/.data/tb2_lite_eval/requested_models_20260514`, `/home/work/.data/tb2_lite_eval/minimax_m27_20260515T042432Z_minimax_m27_full_tp8_ep`, `tb2_lite/results/20260516T100702Z_step_bf16_vllm0191_tp8_ep_len49152_eval`, `tb2_lite/results/20260516T122826Z_llada21_flash_sglang_full_suffix_len256`, `tb2_lite/results/20260523T_hrm_text_8gpu_direct_m1024_b32`
+`2026-06-07` 기준 완료분이다. 출력 디렉터리: `/home/work/.data/tb2_lite_eval/requested_models_20260514`, `/home/work/.data/tb2_lite_eval/minimax_m27_20260515T042432Z_minimax_m27_full_tp8_ep`, `tb2_lite/results/20260516T100702Z_step_bf16_vllm0191_tp8_ep_len49152_eval`, `tb2_lite/results/20260516T122826Z_llada21_flash_sglang_full_suffix_len256`, `tb2_lite/results/20260523T_hrm_text_8gpu_direct_m1024_b32`, `tb2_lite/results/20260606T_nemotron3_ultra_550b_a55b_gguf_q4km_eval`
 
 | 모델 | Backend | Score | Next Action | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Sec/Step |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF` `UD-Q4_K_M` | `llama.cpp` CUDA 8GPU | 49.97 | 49.74 | 0.4997 | 0.6191 | 0.4785 | 49.2% | 81.5% | 26.688 |
 | `Zyphra/ZAYA1-74B-preview` | `vLLM` `tp=4` | 48.15 | 49.24 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | 4.151 |
 | `Qwen/Qwen3.5-397B-A17B-FP8` | `vLLM` `tp=8` EP FP8 | 37.81 | 32.92 | 0.3781 | 0.5107 | 0.3443 | 21.5% | 86.1% | 0.860 |
 | `Qwen/Qwen3.5-122B-A10B-FP8` | `vLLM` `tp=8` EP FP8 | 37.28 | 32.25 | 0.3728 | 0.5155 | 0.3408 | 20.5% | 84.2% | 0.655 |
