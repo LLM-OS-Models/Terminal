@@ -83,16 +83,24 @@ Tool call은 LFM chat template가 받아들일 수 있게 OpenAI-style function 
 
 - Harness-1 source tree: `/home/work/.projects/LLM-OS-Models/harness-1`
 - BrowseComp+ public repo clone: `/home/work/.data/harness1/external/BrowseComp-Plus`
+- BrowseComp+ decrypted public queries/answers: `/home/work/.data/harness1/external/BrowseComp-Plus/data/browsecomp_plus_decrypted.jsonl`
+- BrowseComp+ TSV/qrels: `/home/work/.data/harness1/external/BrowseComp-Plus/topics-qrels/queries.tsv`, `qrel_golds.txt`, `qrel_evidence.txt`
 - LFM Harness SFT trajectory target dir: `/home/work/.data/harness1/sft_data`
 
 아직 필요한 것:
 
 - `/home/work/.projects/LLM-OS-Models/harness-1/.env.local`
-- BrowseComp+ decrypted answer file path
 - Chroma corpus/index
 - `OPENAI_API_KEY`, `CHROMA_API_KEY`, `CHROMA_DATABASE` 등 Harness generator가 요구하는 credentials
 
-중요: `pat-jj/harness-1` Hugging Face model repo에는 모델 weights만 있고 SFT trajectory dataset은 들어있지 않다. 따라서 공개 trajectory를 단순 다운로드해서 바로 학습하는 경로는 현재 확인되지 않았다. 학습 데이터는 upstream generator로 생성하거나, 별도 확보한 trajectory JSON/JSONL을 `HARNESS_INPUT`으로 넣어야 한다.
+중요: BrowseComp+ 공개 파일은 "문제/정답/qrel"이지 Harness-1 SFT teacher trajectory가 아니다. `pat-jj/harness-1` Hugging Face model repo에도 모델 weights/config/tokenizer만 있고 SFT trajectory dataset은 들어있지 않다. 따라서 공개 trajectory를 단순 다운로드해서 바로 학습하는 경로는 현재 확인되지 않았다. 학습 데이터는 upstream generator로 생성하거나, 별도 확보한 trajectory JSON/JSONL을 `HARNESS_INPUT`으로 넣어야 한다.
+
+2026-06-06 현재 환경 확인:
+
+- `/home/work/.data` 여유 공간은 약 `1.3T`, BrowseComp+ public data 준비에는 충분하다.
+- BrowseComp+ decrypt는 완료됐고 파일 크기는 약 `2.1GB`다.
+- 현재 shell 기준 `OPENAI_API_KEY`, `CHROMA_API_KEY`, `CHROMA_DATABASE`, `HF_TOKEN`/`HUGGINGFACE_TOKEN`, `TINKER_API_KEY`는 export되어 있지 않다.
+- 따라서 지금 바로 H200 8GPU SFT를 시작하면 trajectory 입력이 없어 fail-fast로 멈추는 것이 정상이다. GPU를 쓰려면 먼저 `HARNESS_INPUT`에 실제 trajectory JSON/JSONL이 있어야 한다.
 
 ## 실행 방법
 
@@ -101,6 +109,8 @@ Tool call은 LFM chat template가 받아들일 수 있게 OpenAI-style function 
 ```bash
 bash Liquid-CLI/scripts/prepare_harness1_sources.sh
 ```
+
+이 스크립트는 BrowseComp+ clone 뒤 `data/browsecomp_plus_decrypted.jsonl`과 `topics-qrels/queries.tsv`가 없으면 decrypt까지 실행한다. 이미 파일이 있으면 건너뛴다.
 
 trajectory가 이미 있는 경우:
 
@@ -127,6 +137,15 @@ nohup bash Liquid-CLI/scripts/chain_nemotron_then_lfm_harness1_sft.sh \
 ```
 
 현재는 `.env.local`/trajectory가 없으면 chain이 학습 단계에서 멈춘다. 무의미한 synthetic 데이터로 H200 8대를 태우지 않기 위해 이 fail-fast가 맞다.
+
+현재 필요한 `.env.local` path 예시는 다음과 같다.
+
+```bash
+BROWSECOMPPLUS_QUERIES_PATH=/home/work/.data/harness1/external/BrowseComp-Plus/topics-qrels/queries.tsv
+BROWSECOMPPLUS_QRELS_GOLD_PATH=/home/work/.data/harness1/external/BrowseComp-Plus/topics-qrels/qrel_golds.txt
+BROWSECOMPPLUS_QRELS_EVIDENCE_PATH=/home/work/.data/harness1/external/BrowseComp-Plus/topics-qrels/qrel_evidence.txt
+BROWSECOMPPLUS_ANSWERS_PATH=/home/work/.data/harness1/external/BrowseComp-Plus/data/browsecomp_plus_decrypted.jsonl
+```
 
 ## 예상 시간
 
