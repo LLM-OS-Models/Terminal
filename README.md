@@ -8,6 +8,7 @@
 상세 연구 노트:
 - RL/DPO 다음 학습 계획: [`docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md`](docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md)
 - KoHRM/HRM 사용법과 JSON contract 연구: [`docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md`](docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md)
+- Harness-1 -> LFM2.5 LoRA SFT/RL 계획: [`docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md`](docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md)
 
 점수 기준:
 
@@ -234,6 +235,7 @@ KoHRM-Text stage4d 계열은 corrected TB2-lite 303-step full replay에서 base 
 - Epoch3 full 303-step replay 최종 Score는 `43.57`다. Cmd F1 `0.4357`, Precision `0.4703`, Recall `0.5003`, First Cmd `45.5%`, Valid JSON `61.7%`, 평균 예측 command `25.82`개, Next Action `44.15`다. 결과 JSON은 `tb2_lite/results/20260606T_kohrm_lfm25_epoch3_eval_sdpa8_b16/KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch3-sdpa8-b16-nocompile-merged.json`이다.
 - Epoch3는 Epoch2 대비 Score `-2.33`, Precision `-0.0328`, Recall `-0.0095`, First Cmd `+0.6%p`, Valid JSON `-6.6%p`다. First Cmd는 소폭 올랐지만 JSON 안정성과 command precision이 내려가 전체 점수는 하락했다. 따라서 배포/대표 checkpoint는 Epoch2를 유지한다.
 - Epoch3 이후 장기 평가는 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF` `UD-Q4_K_M` 8GPU llama.cpp 평가다. `2026-06-06 20:39 KST` 기준 10/303 partial이 생성됐고, partial Score `46.86`, Cmd F1 `0.4551`, Precision `0.5394`, Recall `0.4329`, First Cmd `50.0%`, Valid JSON `60.0%`, 평균 `29.205 sec/step`, load `542.9s`다. 10-step partial은 표본이 작아 전체 순위에는 반영하지 않고, full 303-step 완료 후 최종 점수만 순위표에 넣는다.
+- Harness-1 -> LFM2.5 작업은 `LiquidAI/LFM2.5-8B-A1B`에 논문식 LoRA SFT warm-start를 붙이는 방향으로 준비했다. 논문은 SFT와 RL 모두 LoRA rank `32`이며, SFT는 BC+/Web/Patents/SEC teacher trajectories `899`개를 turn별 약 `26K` examples로 확장하고, RL은 SEC train query `3,453`개에서 약 `82K` rollout을 돌리는 구조다. GPU 모델/학습 시간/비용은 논문에 공개되어 있지 않고 Tinker managed service로 low-level worker가 추상화됐다고 되어 있다. 로컬 구현은 `Liquid-CLI/scripts/build_lfm_harness1_dataset.py`, `Liquid-CLI/train_unsloth_processed_lora.py`, `Liquid-CLI/scripts/run_lfm_harness1_lora_sft.sh`에 추가했다. BrowseComp+ public source는 `/home/work/.data/harness1/external/BrowseComp-Plus`로 clone했지만, 실제 SFT trajectory 생성은 Harness `.env.local`, Chroma index, API credentials가 필요하다.
 
 운영 스냅샷, 2026-06-06 09:52 KST 업데이트:
 - `KoHRM-Text-1.4B-fullsft-lfm25-terminal-toolbench-epoch1` 평가는 완료됐다. 최종 Score `38.56`, Next Action `38.09`, 303/303 step 완료다. 현재 KoHRM 최고 결과이며, 모델 카드와 HF 업로드 대상으로 확정했다.
