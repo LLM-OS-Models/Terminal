@@ -23,9 +23,9 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 ## 점수-모델 크기 시각화
 
-![TB2-lite score vs model size](docs/assets/tb2_score_vs_model_scale_2026-06-07.png)
+![TB2-lite score vs model size, linear total parameter scale](docs/assets/tb2_score_vs_model_scale_linear_2026-06-07.png)
 
-위 그림은 x축을 **총 파라미터 수**로 고정하고, MoE active parameter/API/부분 보정 여부는 라벨과 마커로 분리했다. `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`는 8.3B total / 1.5B active 규모로 Score `52.30`을 기록해 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`과 `deepseek-ai/DeepSeek-V4-Pro` valid-only 기능적 동등 보정 Score `48.19`보다 높다. `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`도 1.4B dense 규모에서 Score `45.90`으로 `Qwen/Qwen3.5-397B-A17B-FP8`, `GLM-5.1`, `MiniMaxAI/MiniMax-M2.7`, `deepseek-ai/DeepSeek-V4-Flash`보다 높아, 이 TB2-lite terminal replay에서는 원시 모델 크기보다 terminal/tool SFT 데이터 적합도와 출력 포맷 적합도가 훨씬 크게 작동한다.
+위 그림은 x축을 **총 파라미터 수의 선형 스케일**로 고정하고, MoE active parameter/API/부분 보정 여부는 우측 표와 마커로 분리했다. 기존 로그 스케일 버전은 `docs/assets/tb2_score_vs_model_scale_2026-06-07.png`에 보존했다. `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`는 8.3B total / 1.5B active 규모로 Score `52.30`을 기록해 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`과 `deepseek-ai/DeepSeek-V4-Pro` valid-only 기능적 동등 보정 Score `48.19`보다 높다. `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`도 1.4B dense 규모에서 Score `45.90`으로 `Qwen/Qwen3.5-397B-A17B-FP8`, `GLM-5.1`, `MiniMaxAI/MiniMax-M2.7`, `deepseek-ai/DeepSeek-V4-Flash`보다 높아, 이 TB2-lite terminal replay에서는 원시 모델 크기보다 terminal/tool SFT 데이터 적합도와 출력 포맷 적합도가 훨씬 크게 작동한다.
 
 ## 전체 순위
 
