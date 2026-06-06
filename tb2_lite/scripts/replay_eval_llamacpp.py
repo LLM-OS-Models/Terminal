@@ -135,9 +135,10 @@ def write_result(
     total_steps: int,
 ) -> dict[str, Any]:
     aggregate = aggregate_scores(per_step)
+    model_path = args.model_path or f"{args.repo_id}:{args.filename}"
     result = {
         "model": model_short,
-        "model_path": f"{args.repo_id}:{args.filename}",
+        "model_path": model_path,
         "lora_path": None,
         "model_short": model_short,
         "gpu": str(args.gpu),
@@ -163,8 +164,12 @@ def write_result(
             "max_model_len": args.max_model_len,
             "repo_id": args.repo_id,
             "filename": args.filename,
+            "model_path": args.model_path,
             "tokenizer_path": args.tokenizer_path,
             "n_gpu_layers": args.n_gpu_layers,
+            "split_mode": args.split_mode,
+            "main_gpu": args.main_gpu,
+            "tensor_split": args.tensor_split,
             "n_batch": args.n_batch,
             "n_ubatch": args.n_ubatch,
             "n_threads": args.n_threads,
@@ -193,8 +198,6 @@ def load_tokenizer(tokenizer_path: str) -> Any:
 
 def build_llama(args: argparse.Namespace) -> Llama:
     common = {
-        "repo_id": args.repo_id,
-        "filename": args.filename,
         "n_ctx": args.max_model_len,
         "n_batch": args.n_batch,
         "n_ubatch": args.n_ubatch,
@@ -205,6 +208,17 @@ def build_llama(args: argparse.Namespace) -> Llama:
         "offload_kqv": args.offload_kqv,
         "verbose": bool(args.verbose_llama),
     }
+    if args.split_mode is not None:
+        common["split_mode"] = args.split_mode
+    if args.main_gpu is not None:
+        common["main_gpu"] = args.main_gpu
+    if args.tensor_split:
+        common["tensor_split"] = [float(part) for part in args.tensor_split.split(",")]
+    if args.model_path:
+        common["model_path"] = args.model_path
+        return Llama(**common)
+    common["repo_id"] = args.repo_id
+    common["filename"] = args.filename
     if args.cache_dir:
         common["cache_dir"] = args.cache_dir
     return Llama.from_pretrained(**common)
@@ -214,6 +228,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-id", required=True)
     parser.add_argument("--filename", required=True)
+    parser.add_argument("--model-path", default="")
     parser.add_argument("--tokenizer-path", required=True)
     parser.add_argument("--model-short", default="")
     parser.add_argument("--gpu", default="")
@@ -229,6 +244,9 @@ def main() -> None:
     parser.add_argument("--strip-thinking-history", default="on")
     parser.add_argument("--gemma4-empty-thought-channel", default="auto")
     parser.add_argument("--n-gpu-layers", type=int, default=-1)
+    parser.add_argument("--split-mode", type=int, default=None)
+    parser.add_argument("--main-gpu", type=int, default=None)
+    parser.add_argument("--tensor-split", default="")
     parser.add_argument("--n-batch", type=int, default=1024)
     parser.add_argument("--n-ubatch", type=int, default=512)
     parser.add_argument("--n-threads", type=int, default=None)
