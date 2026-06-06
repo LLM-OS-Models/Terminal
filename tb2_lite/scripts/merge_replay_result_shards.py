@@ -41,9 +41,14 @@ def main() -> None:
     aggregate = aggregate_scores(per_step)
     gen_time = max(float(result.get("gen_time_sec", 0.0)) for result in shard_results)
     load_time = max(float(result.get("load_time_sec", 0.0)) for result in shard_results)
-    total_input_steps = max(
-        int(result.get("total_input_steps", result.get("total_steps", 0)))
+    total_input_candidates = [
+        int(result.get("total_input_steps") or 0)
         for result in shard_results
+    ]
+    total_input_steps = (
+        max(total_input_candidates)
+        if any(total_input_candidates)
+        else len(per_step)
     )
     merged = {
         **{key: value for key, value in first.items() if key not in {"aggregate", "per_step"}},
