@@ -315,6 +315,7 @@ def generate_assistant_text_vllm_http(
     messages: list[dict[str, str]],
     args: argparse.Namespace,
     seed: int,
+    rank: int,
 ) -> str:
     prompt = apply_chat_template_text(tokenizer, messages, add_generation_prompt=True)
     payload: dict[str, Any] = {
@@ -329,8 +330,12 @@ def generate_assistant_text_vllm_http(
     stops = [s for s in args.vllm_stop if s]
     if stops:
         payload["stop"] = stops
+    base_urls = [url.strip() for url in args.vllm_base_url.split(",") if url.strip()]
+    if not base_urls:
+        raise RuntimeError("--vllm-base-url did not contain any usable URL")
+    base_url = base_urls[rank % len(base_urls)]
     request = urllib.request.Request(
-        args.vllm_base_url.rstrip("/") + "/completions",
+        base_url.rstrip("/") + "/completions",
         data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"},
         method="POST",
@@ -355,9 +360,10 @@ def generate_assistant_text(
     args: argparse.Namespace,
     device: torch.device,
     seed: int,
+    rank: int,
 ) -> str:
     if args.rollout_backend == "vllm_http":
-        return generate_assistant_text_vllm_http(tokenizer, messages, args, seed)
+        return generate_assistant_text_vllm_http(tokenizer, messages, args, seed, rank)
 
     prompt_ids = apply_chat_template(tokenizer, messages, add_generation_prompt=True)
     input_ids = torch.tensor([prompt_ids], dtype=torch.long, device=device)
@@ -436,6 +442,7 @@ def rollout_one(
                 args,
                 device,
                 seed=rollout_seed + turn * 7919,
+                rank=rank,
             )
             messages, full_ids, action_mask, obs_mask = append_message_with_mask(
                 tokenizer, messages, full_ids, action_mask, obs_mask, "assistant", text, "action"

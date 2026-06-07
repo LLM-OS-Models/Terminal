@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="${ROOT_DIR:-/home/work/.projects/LLM-OS-Models/Terminal}"
 TRAIN_ENV="${TRAIN_ENV:-$ROOT_DIR/.liquid-sft-env}"
 MODEL_PATH="${MODEL_PATH:-LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch}"
+SFT_ADAPTER_PATH="${SFT_ADAPTER_PATH:-}"
 VLLM_BASE_URL="${VLLM_BASE_URL:-http://127.0.0.1:8123/v1}"
 TRAIN_GPUS="${TRAIN_GPUS:-1,2,3,4,5,6,7}"
 NPROC_PER_NODE="${NPROC_PER_NODE:-7}"
@@ -34,7 +35,8 @@ SANDBOX_ROOT="${SANDBOX_ROOT:-/home/work/.data/liquid_cli_sft/live_terminal_echo
 LAUNCHER="${LAUNCHER:-file}"
 
 cd "$ROOT_DIR"
-curl -fsS "$VLLM_BASE_URL/models" >/dev/null
+FIRST_VLLM_BASE_URL="${VLLM_BASE_URL%%,*}"
+curl -fsS "$FIRST_VLLM_BASE_URL/models" >/dev/null
 
 TORCH_LIB="$TRAIN_ENV/lib/python3.12/site-packages/torch/lib"
 NVIDIA_ROOT="$TRAIN_ENV/lib/python3.12/site-packages/nvidia"
@@ -80,8 +82,14 @@ TRAIN_ARGS=(
   "$@"
 )
 
-if [[ "$GRADIENT_CHECKPOINTING" != "1" ]]; then
+if [[ "$GRADIENT_CHECKPOINTING" == "1" ]]; then
+  TRAIN_ARGS+=(--gradient-checkpointing)
+else
   TRAIN_ARGS+=(--no-gradient-checkpointing)
+fi
+
+if [[ -n "$SFT_ADAPTER_PATH" ]]; then
+  TRAIN_ARGS+=(--sft-adapter-path "$SFT_ADAPTER_PATH")
 fi
 
 COMMON_ENV=(

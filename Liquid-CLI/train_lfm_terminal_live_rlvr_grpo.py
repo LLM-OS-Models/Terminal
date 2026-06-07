@@ -605,6 +605,7 @@ def is_unsafe_command(command: str) -> bool:
         "/workspace",
         "/output",
         "/logs",
+        "/dev/null",
         "$workspace",
         "$output",
         "$logs",
@@ -617,7 +618,7 @@ def is_unsafe_command(command: str) -> bool:
             return True
     for match in re.finditer(r"(?<![\w.-])/(?:[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*)?", lowered):
         path = match.group(0).rstrip("/") or "/"
-        if path in {"/workspace", "/output", "/logs"}:
+        if path in {"/workspace", "/output", "/logs", "/dev/null"}:
             continue
         if any(path.startswith(prefix + "/") for prefix in allowed_abs if prefix.startswith("/")):
             continue
