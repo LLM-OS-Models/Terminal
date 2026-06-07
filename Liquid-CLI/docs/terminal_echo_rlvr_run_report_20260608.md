@@ -87,8 +87,8 @@ Current coefficient:
 This means terminal output is not only context for the next action. It also
 becomes dense supervision for the model's internal terminal world model.
 
-The first step of the current resumed run confirms observation tokens are
-entering the loss:
+The first step of the pre-`/dev/null` resumed run confirmed observation tokens
+were entering the loss:
 
 - step: 0
 - reward_mean: 0.05625
@@ -101,15 +101,15 @@ entering the loss:
 
 Run:
 
-- `run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`
+- `run_20260607T223408Z_resume_ckpt50_vllm4rep_train4_devnullfix`
 
 Run directory:
 
-- `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`
+- `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260607T223408Z_resume_ckpt50_vllm4rep_train4_devnullfix`
 
 Output directory:
 
-- `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`
+- `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260607T223408Z_resume_ckpt50_vllm4rep_train4_devnullfix`
 
 Resume adapter:
 
@@ -141,6 +141,7 @@ Training config:
 - warmup steps: 50
 - max wall time: 47.5 hours
 - no Docker
+- `/dev/null` safety patch active
 
 Why 4:4 is the current best split:
 
@@ -300,12 +301,15 @@ Current resumed run early trace counts at the time this note was written:
 - 17 blocked traces
 - 2 verifier successes
 
-This is too early to judge model quality. It only confirms the live loop is
-running and terminal feedback is being recorded.
+These counts came from the pre-`/dev/null` 4-replica run
+`run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`, which was stopped at step
+1 so the safety patch could take effect. The active `devnullfix` run should be
+judged after it reaches at least checkpoint 50.
 
 ## Next Steps
 
-1. Let the current 4-replica resumed run continue to at least checkpoint 50.
+1. Let the current 4-replica `devnullfix` resumed run continue to at least
+   checkpoint 50.
 2. Evaluate current-run checkpoint-50 against TB2-lite.
 3. If the block rate remains high, restart with the `/dev/null` safety patch
    active and consider relaxing relative-path safe commands further.
@@ -314,4 +318,3 @@ running and terminal feedback is being recorded.
 5. Use TB2-lite for fast gating and TerminalBench-2.0 as the final gate.
 6. For a closer paper reproduction, implement LoRA weight sync into vLLM or move
    to the original SkyRL/Harbor path.
-

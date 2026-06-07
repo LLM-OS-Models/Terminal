@@ -84,8 +84,8 @@ loss는 두 부분으로 구성된다.
 의미는 간단하다. 터미널 출력은 다음 행동을 위한 context일 뿐 아니라,
 모델이 터미널의 작동 방식을 배우는 dense supervision으로도 사용된다.
 
-현재 resumed run의 첫 step은 observation token이 실제 loss에 들어가고
-있음을 확인해준다.
+`/dev/null` 패치 전 resumed run의 첫 step은 observation token이 실제 loss에
+들어가고 있음을 확인해줬다.
 
 - step: 0
 - reward_mean: 0.05625
@@ -98,15 +98,15 @@ loss는 두 부분으로 구성된다.
 
 Run:
 
-- `run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`
+- `run_20260607T223408Z_resume_ckpt50_vllm4rep_train4_devnullfix`
 
 Run directory:
 
-- `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`
+- `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260607T223408Z_resume_ckpt50_vllm4rep_train4_devnullfix`
 
 Output directory:
 
-- `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`
+- `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260607T223408Z_resume_ckpt50_vllm4rep_train4_devnullfix`
 
 Resume adapter:
 
@@ -138,6 +138,7 @@ vLLM URLs:
 - warmup steps: 50
 - max wall time: 47.5 hours
 - no Docker
+- `/dev/null` safety patch active
 
 왜 4:4가 현재 맞는가:
 
@@ -296,12 +297,15 @@ process에는 재시작 전까지 반영되지 않는다.
 - 17 blocked traces
 - 2 verifier successes
 
-아직 모델 품질을 판단하기에는 너무 이르다. 이 수치는 live loop가 돌고 있고
-terminal feedback이 기록되고 있음을 확인해주는 정도다.
+이 수치는 `/dev/null` 패치 전 4-replica run
+`run_20260607T222154Z_resume_ckpt50_vllm4rep_train4`에서 나온 값이다. 해당
+run은 safety patch를 적용하기 위해 step 1에서 중단했다. 현재 활성
+`devnullfix` run은 최소 checkpoint-50까지 간 뒤 판단해야 한다.
 
 ## 다음 단계
 
-1. 현재 4-replica resumed run을 최소 checkpoint-50까지 계속 돌린다.
+1. 현재 4-replica `devnullfix` resumed run을 최소 checkpoint-50까지 계속
+   돌린다.
 2. 현재 run의 checkpoint-50을 TB2-lite로 평가한다.
 3. blocked rate가 계속 높으면 `/dev/null` safety patch가 활성화된 상태로
    재시작하고, 상대경로 safe command 허용 범위를 더 조정한다.
@@ -309,4 +313,3 @@ terminal feedback이 기록되고 있음을 확인해주는 정도다.
 5. TB2-lite는 빠른 gate로 쓰고, TerminalBench-2.0은 최종 gate로 쓴다.
 6. 논문에 더 가까운 재현을 원하면 LoRA weight sync를 vLLM에 구현하거나
    원본 SkyRL/Harbor 경로로 이동해야 한다.
-
