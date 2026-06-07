@@ -67,8 +67,8 @@ surviving after the shell timeout.
 
 Started on `2026-06-07`:
 
-- Run dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260607T135339Z_long2d_wm003_g4_parallel_tp4_safe`
-- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260607T135339Z_long2d_wm003_g4_parallel_tp4_safe`
+- Run dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260607T142109Z_long2d_wm003_g4_tp4_streambackward`
+- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260607T142109Z_long2d_wm003_g4_tp4_streambackward`
 - vLLM GPUs: `0,1,2,3`
 - vLLM tensor parallel size: `4`
 - training GPUs: `4,5,6,7`
@@ -77,20 +77,32 @@ Started on `2026-06-07`:
 - global rollouts per step: `16`
 - max wall time: `47.5h`
 - save interval: every `50` steps
-- max turns: `16`
-- max new tokens per turn: `1024`
-- max terminal output chars: `30000`
+- max turns: `12`
+- max new tokens per turn: `768`
+- max seq length: `16384`
+- max terminal output chars: `12000`
 - world model coefficient: `0.03`
 - learning rate: `5e-7`
 
-First completed step:
+First completed step from this run:
 
 - `step`: 0
-- `reward_mean`: 0.2375
-- `verifier_reward_mean`: 0.25
-- `world_loss_mean`: 1.3473
-- `action_tokens_mean`: 634.0
-- `obs_tokens_mean`: 395.25
+- `reward_mean`: 0.040625
+- `verifier_reward_mean`: 0.125
+- `world_loss_mean`: 1.6652
+- `action_tokens_mean`: 1334.25
+- `obs_tokens_mean`: 765.75
+
+The previous 32k run OOMed before its first checkpoint. The trainer now
+backpropagates each trajectory immediately instead of keeping all rollout
+graphs alive until the end of the step. The launcher also keeps gradient
+checkpointing enabled and sets `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`.
+
+GPU utilization is phase-based: GPUs `0,1,2,3` are hot during vLLM rollout
+generation, while GPUs `4,5,6,7` hold the train ranks and become active during
+trajectory loss/backward. A single `nvidia-smi` snapshot can therefore show
+the vLLM side at high utilization while the training side is waiting for
+rollout results.
 
 ## Previous 100-Step Result
 
@@ -137,9 +149,9 @@ MAX_WALL_TIME_HOURS=47.5 \
 PROMPTS_PER_RANK=1 \
 NUM_GENERATIONS=4 \
 ROLLOUT_WORKERS=4 \
-MAX_TURNS=16 \
-MAX_NEW_TOKENS=1024 \
-MAX_SEQ_LENGTH=32768 \
+MAX_TURNS=12 \
+MAX_NEW_TOKENS=768 \
+MAX_SEQ_LENGTH=16384 \
 WORLD_MODEL_COEFF=0.03 \
 LEARNING_RATE=5e-7 \
 WARMUP_STEPS=50 \
@@ -147,10 +159,12 @@ MAX_GRAD_NORM=0.15 \
 SAVE_STEPS=50 \
 COMMAND_TIMEOUT=30 \
 VERIFIER_TIMEOUT=120 \
-MAX_TERMINAL_OUTPUT_CHARS=30000 \
+MAX_TERMINAL_OUTPUT_CHARS=12000 \
 COMMAND_BONUS=0.0 \
 FORMAT_PENALTY=0.05 \
 REWARD_SUCCESS_BONUS=0.2 \
+GRADIENT_CHECKPOINTING=1 \
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
 bash Liquid-CLI/scripts/run_lfm_terminal_echo_live_grpo_vllm_no_docker.sh
 ```
 

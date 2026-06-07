@@ -780,7 +780,7 @@ def main() -> None:
                 all_trajs.append(traj)
 
         model.train()
-        step_loss = torch.tensor(0.0, device=device)
+        step_loss_value = 0.0
         metrics_sum = {"policy_loss": 0.0, "world_loss": 0.0, "action_tokens": 0.0, "obs_tokens": 0.0}
         rewards_by_prompt: list[list[float]] = []
         cursor = 0
@@ -802,12 +802,13 @@ def main() -> None:
                 else:
                     advantage = 0.0
                 loss, lm = trajectory_loss(model, traj, advantage, args, device)
-                step_loss = step_loss + loss / max(len(all_trajs), 1)
+                scaled_loss = loss / max(len(all_trajs), 1) / args.gradient_accumulation_steps
+                step_loss_value += float(scaled_loss.detach().cpu().item())
+                scaled_loss.backward()
                 for k in metrics_sum:
                     metrics_sum[k] += lm[k]
+                del loss, scaled_loss
 
-        step_loss = step_loss / args.gradient_accumulation_steps
-        step_loss.backward()
         if (step + 1) % args.gradient_accumulation_steps == 0:
             if args.max_grad_norm:
                 torch.nn.utils.clip_grad_norm_(trainable, args.max_grad_norm)
@@ -832,7 +833,7 @@ def main() -> None:
             log = {
                 "event": "train_step",
                 "step": step,
-                "loss": float(step_loss.detach().cpu().item()),
+                "loss": step_loss_value,
                 "reward_mean": global_reward_mean,
                 "verifier_reward_mean": global_vreward_mean,
                 "local_reward_groups": rewards_by_prompt[:4],

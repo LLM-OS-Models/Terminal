@@ -27,6 +27,7 @@ MAX_TERMINAL_OUTPUT_CHARS="${MAX_TERMINAL_OUTPUT_CHARS:-12000}"
 COMMAND_BONUS="${COMMAND_BONUS:-0.02}"
 FORMAT_PENALTY="${FORMAT_PENALTY:-0.05}"
 REWARD_SUCCESS_BONUS="${REWARD_SUCCESS_BONUS:-0.0}"
+GRADIENT_CHECKPOINTING="${GRADIENT_CHECKPOINTING:-1}"
 OUTPUT_DIR="${OUTPUT_DIR:-/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32}"
 TRACE_DIR="${TRACE_DIR:-/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/traces}"
 SANDBOX_ROOT="${SANDBOX_ROOT:-/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/sandboxes}"
@@ -76,13 +77,17 @@ TRAIN_ARGS=(
   --reward-success-bonus "$REWARD_SUCCESS_BONUS"
   --save-steps "$SAVE_STEPS"
   --logging-steps 1
-  --no-gradient-checkpointing
   "$@"
 )
+
+if [[ "$GRADIENT_CHECKPOINTING" != "1" ]]; then
+  TRAIN_ARGS+=(--no-gradient-checkpointing)
+fi
 
 COMMON_ENV=(
   -u PYTHONPATH
   CUDA_VISIBLE_DEVICES="$TRAIN_GPUS"
+  PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
   LD_LIBRARY_PATH="$TORCH_LIB${NVIDIA_LIBS:+:$NVIDIA_LIBS}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 )
 
