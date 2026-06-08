@@ -304,6 +304,7 @@ def run_commands_in_sandbox(commands: list[str], sandbox: Path, args: argparse.N
         event = base.run_subprocess(command, sandbox / "workspace", args.command_timeout)
         event["raw_command"] = raw_command
         events.append(event)
+        base.rewrite_text_tree(sandbox / "workspace", sandbox)
         if event.get("timeout"):
             break
     return events, blocked

@@ -139,6 +139,22 @@ DESTRUCTIVE_PATTERNS = [
     r"\bservice\b",
     r"\bsudo\b",
     r"\bsu\s",
+    r"\btmux\b",
+    r"\bscreen\b",
+    r"\bbyobu\b",
+    r"\bpkill\b",
+    r"\bkillall\b",
+    r"\bkill\s+(?:-[A-Za-z0-9]+\s+)?-?\d+\b",
+    r"\bnohup\b",
+    r"\bsetsid\b",
+    r"\bcrontab\b",
+    r"\bsystemd-run\b",
+    r"\bssh\b",
+    r"\bscp\b",
+    r"\brsync\b",
+    r"\bnc\b",
+    r"\bncat\b",
+    r"\btelnet\b",
     r":\s*\(\s*\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;",
     r"\bchmod\s+-R\s+777\s+/",
     r"\bchown\s+-R\s+.*\s+/",
@@ -697,13 +713,19 @@ def is_unsafe_command(command: str) -> bool:
         if re.search(pattern, lowered):
             return True
     allowed_abs = {
+        "/app",
+        "/tests",
         "/workspace",
         "/output",
         "/logs",
         "/dev/null",
+        "$app",
+        "$tests",
         "$workspace",
         "$output",
         "$logs",
+        "${app}",
+        "${tests}",
         "${workspace}",
         "${output}",
         "${logs}",
@@ -722,7 +744,7 @@ def is_unsafe_command(command: str) -> bool:
 
 
 def ensure_no_gpu_wrappers(sandbox: Path) -> Path:
-    bin_dir = sandbox / "bin_no_gpu"
+    bin_dir = sandbox / "bin_safe"
     bin_dir.mkdir(parents=True, exist_ok=True)
     path_env = os.environ.get("PATH", "")
     wrappers = {
@@ -747,52 +769,90 @@ def ensure_no_gpu_wrappers(sandbox: Path) -> Path:
         )
         wrapper.chmod(wrapper.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-    nvidia_smi = bin_dir / "nvidia-smi"
-    if nvidia_smi.exists() or nvidia_smi.is_symlink():
-        nvidia_smi.unlink()
-    try:
-        nvidia_smi.symlink_to("/bin/false")
-    except OSError:
-        nvidia_smi.write_text("#!/usr/bin/env sh\nexit 1\n", encoding="utf-8")
-        nvidia_smi.chmod(nvidia_smi.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    blocked_bins = {
+        "nvidia-smi": "GPU/CUDA commands are disabled in no-Docker RLVR sandboxes.",
+        "nvcc": "GPU/CUDA commands are disabled in no-Docker RLVR sandboxes.",
+        "tmux": "tmux is disabled in no-Docker RLVR sandboxes.",
+        "screen": "screen is disabled in no-Docker RLVR sandboxes.",
+        "byobu": "byobu is disabled in no-Docker RLVR sandboxes.",
+        "pkill": "process-kill commands are disabled in no-Docker RLVR sandboxes.",
+        "killall": "process-kill commands are disabled in no-Docker RLVR sandboxes.",
+        "systemctl": "host service commands are disabled in no-Docker RLVR sandboxes.",
+        "service": "host service commands are disabled in no-Docker RLVR sandboxes.",
+        "sudo": "privilege escalation is disabled in no-Docker RLVR sandboxes.",
+        "su": "privilege escalation is disabled in no-Docker RLVR sandboxes.",
+        "ssh": "network login commands are disabled in no-Docker RLVR sandboxes.",
+        "scp": "network copy commands are disabled in no-Docker RLVR sandboxes.",
+        "rsync": "network copy commands are disabled in no-Docker RLVR sandboxes.",
+        "nc": "raw network commands are disabled in no-Docker RLVR sandboxes.",
+        "ncat": "raw network commands are disabled in no-Docker RLVR sandboxes.",
+        "telnet": "raw network commands are disabled in no-Docker RLVR sandboxes.",
+        "apt": "system package manager commands are disabled in no-Docker RLVR sandboxes.",
+        "apt-get": "system package manager commands are disabled in no-Docker RLVR sandboxes.",
+        "dpkg": "system package manager commands are disabled in no-Docker RLVR sandboxes.",
+    }
+    for name, message in blocked_bins.items():
+        wrapper = bin_dir / name
+        if wrapper.exists() or wrapper.is_symlink():
+            wrapper.unlink()
+        wrapper.write_text(
+            "#!/usr/bin/env sh\n"
+            f"printf '%s\\n' {shlex.quote(message)} >&2\n"
+            "exit 127\n",
+            encoding="utf-8",
+        )
+        wrapper.chmod(wrapper.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
     return bin_dir
 
 
 def sandbox_subprocess_env(cwd: Path) -> dict[str, str]:
-    env = dict(os.environ)
-    for key in [
-        "CUDA_VISIBLE_DEVICES",
-        "NVIDIA_VISIBLE_DEVICES",
-        "CUDA_DEVICE_ORDER",
-        "HIP_VISIBLE_DEVICES",
-        "ROCR_VISIBLE_DEVICES",
-    ]:
-        env.pop(key, None)
+    sandbox = cwd.parent
+    tmp_dir = sandbox / "tmp"
+    runtime_dir = sandbox / "runtime"
+    cache_dir = sandbox / ".cache"
+    for path in (tmp_dir, runtime_dir, cache_dir / "pip", cache_dir / "uv", cache_dir / "python"):
+        path.mkdir(parents=True, exist_ok=True)
     no_gpu_bin = ensure_no_gpu_wrappers(cwd.parent)
-    env.update(
-        {
-            "WORKSPACE": str(cwd),
-            "OUTPUT": str(cwd.parent / "output"),
-            "LOGS": str(cwd.parent / "logs"),
-            "HOME": str(cwd),
-            "CUDA_VISIBLE_DEVICES": "",
-            "NVIDIA_VISIBLE_DEVICES": "none",
-            "HIP_VISIBLE_DEVICES": "",
-            "ROCR_VISIBLE_DEVICES": "",
-            "PATH": f"{no_gpu_bin}:{env.get('PATH', '')}",
-        }
-    )
-    return env
+    safe_path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    return {
+        "APP": str(cwd),
+        "TESTS": str(sandbox / "tests"),
+        "WORKSPACE": str(cwd),
+        "OUTPUT": str(sandbox / "output"),
+        "LOGS": str(sandbox / "logs"),
+        "HOME": str(cwd),
+        "TMPDIR": str(tmp_dir),
+        "TEMP": str(tmp_dir),
+        "TMP": str(tmp_dir),
+        "XDG_RUNTIME_DIR": str(runtime_dir),
+        "XDG_CACHE_HOME": str(cache_dir),
+        "PIP_CACHE_DIR": str(cache_dir / "pip"),
+        "UV_CACHE_DIR": str(cache_dir / "uv"),
+        "PYTHONPYCACHEPREFIX": str(cache_dir / "python"),
+        "PYTHONNOUSERSITE": "1",
+        "CUDA_VISIBLE_DEVICES": "",
+        "NVIDIA_VISIBLE_DEVICES": "none",
+        "HIP_VISIBLE_DEVICES": "",
+        "ROCR_VISIBLE_DEVICES": "",
+        "TMUX": "",
+        "STY": "",
+        "SSH_AUTH_SOCK": "",
+        "LANG": "C.UTF-8",
+        "LC_ALL": "C.UTF-8",
+        "PATH": f"{no_gpu_bin}:{safe_path}",
+    }
 
 
 def rewrite_paths(command: str, sandbox: Path) -> str:
     replacements = {
+        "/app": str(sandbox / "workspace"),
+        "/tests": str(sandbox / "tests"),
         "/workspace": str(sandbox / "workspace"),
         "/output": str(sandbox / "output"),
         "/logs": str(sandbox / "logs"),
     }
     rewritten = command
-    for src, dst in replacements.items():
+    for src, dst in sorted(replacements.items(), key=lambda item: len(item[0]), reverse=True):
         rewritten = rewritten.replace(src, dst)
     return rewritten
 
@@ -865,6 +925,7 @@ def setup_sandbox(task_binary_b64: str, task_dir_value: str, task_id: str) -> tu
         tests_dst = root / "tests"
         shutil.copytree(tests_src, tests_dst, symlinks=False)
         rewrite_text_tree(tests_dst, root)
+    rewrite_text_tree(workspace, root)
 
     return root, task_root
 
@@ -877,6 +938,8 @@ def rewrite_text_tree(root: Path, sandbox: Path) -> None:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
+        text = text.replace("/app", str(sandbox / "workspace"))
+        text = text.replace("/tests", str(sandbox / "tests"))
         text = text.replace("/workspace", str(sandbox / "workspace"))
         text = text.replace("/output", str(sandbox / "output"))
         text = text.replace("/logs", str(sandbox / "logs"))
@@ -1005,6 +1068,7 @@ def execute_live_task(
             event = run_subprocess(command, sandbox / "workspace", float(GLOBAL_CONFIG["command_timeout"]))
             event["raw_command"] = raw_command
             trace["events"].append(event)
+            rewrite_text_tree(sandbox / "workspace", sandbox)
             last_exit_code = int(event["exit_code"])
             if event["timeout"]:
                 break
