@@ -743,6 +743,10 @@ def ensure_no_gpu_wrappers(sandbox: Path) -> Path:
     nvidia_smi.write_text(
         "#!/usr/bin/env bash\n"
         "echo 'nvidia-smi is disabled inside no-Docker RLVR sandboxes' >&2\n"
+        "pgid=$(ps -o pgid= $$ 2>/dev/null | tr -d ' ')\n"
+        "if [[ -n \"${pgid:-}\" ]]; then\n"
+        "  kill -TERM -- -\"$pgid\" 2>/dev/null || true\n"
+        "fi\n"
         "exit 127\n",
         encoding="utf-8",
     )
