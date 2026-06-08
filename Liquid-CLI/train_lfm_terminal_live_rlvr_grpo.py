@@ -145,6 +145,18 @@ DESTRUCTIVE_PATTERNS = [
     r"\b(cat|head|tail|sed|awk|python|python3|perl|ruby|node)\s+/(etc|home|root|proc|sys|dev|var|usr|bin|sbin|lib|lib64|opt|mnt|media|run|tmp)\b",
 ]
 
+GPU_TASK_PATTERNS = [
+    r"\bnvidia-smi\b",
+    r"\bcuda_visible_devices\b",
+    r"\bnvidia_visible_devices\b",
+    r"\bhip_visible_devices\b",
+    r"\brocr_visible_devices\b",
+    r"\btorch\.cuda\b",
+    r"\bcuda:\d+\b",
+    r"--device\s+cuda(?::\d+)?\b",
+    r"/dev/nvidia",
+]
+
 GLOBAL_CONFIG: dict[str, Any] = {}
 
 
@@ -303,6 +315,46 @@ def find_task_root(root: Path) -> Path:
     return root
 
 
+def has_gpu_dependency_text(text: str) -> bool:
+    lowered = text.lower()
+    return any(re.search(pattern, lowered) for pattern in GPU_TASK_PATTERNS)
+
+
+def path_tree_has_gpu_dependency(root: Path, max_bytes: int = 1_000_000) -> bool:
+    if not root.exists():
+        return False
+    paths = [root] if root.is_file() else list(root.rglob("*"))
+    for path in paths:
+        if not path.is_file():
+            continue
+        try:
+            if path.stat().st_size > max_bytes:
+                continue
+            text = path.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+        if has_gpu_dependency_text(text):
+            return True
+    return False
+
+
+def task_archive_has_gpu_dependency(payload: bytes, max_bytes: int = 1_000_000) -> bool:
+    try:
+        with tarfile.open(fileobj=io.BytesIO(payload), mode="r:gz") as tar:
+            for member in tar.getmembers():
+                if not member.isfile() or member.size > max_bytes:
+                    continue
+                file_obj = tar.extractfile(member)
+                if not file_obj:
+                    continue
+                text = file_obj.read().decode("utf-8", "replace")
+                if has_gpu_dependency_text(text):
+                    return True
+    except Exception:
+        return False
+    return False
+
+
 def extract_instruction_from_task_binary(payload: bytes) -> str:
     with tarfile.open(fileobj=io.BytesIO(payload), mode="r:gz") as tar:
         names = tar.getnames()
@@ -383,6 +435,8 @@ def record_from_task_dir(tokenizer: Any, task_dir: Path, source: str, args: argp
     instruction_path = task_dir / "instruction.md"
     if not instruction_path.exists():
         return None
+    if path_tree_has_gpu_dependency(task_dir):
+        return None
     instruction = instruction_path.read_text(encoding="utf-8", errors="replace").strip()
     if not instruction:
         return None
@@ -406,6 +460,7 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
     records: list[dict[str, Any]] = []
     source_counts: dict[str, int] = {}
     skipped_long = 0
+    skipped_gpu_dependency = 0
 
     def can_add(source: str) -> bool:
         if args.max_rows is not None and len(records) >= args.max_rows:
@@ -425,6 +480,9 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
             if not can_add(source):
                 break
             payload = bytes(row["task_binary"])
+            if task_archive_has_gpu_dependency(payload):
+                skipped_gpu_dependency += 1
+                continue
             instruction = extract_instruction_from_task_binary(payload)
             if not instruction:
                 continue
@@ -452,7 +510,10 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
                 break
             record = record_from_task_dir(tokenizer, task_dir, source, args)
             if record is None:
-                skipped_long += 1
+                if path_tree_has_gpu_dependency(task_dir):
+                    skipped_gpu_dependency += 1
+                else:
+                    skipped_long += 1
                 continue
             add_record(record)
 
@@ -464,7 +525,10 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
                 break
             record = record_from_task_dir(tokenizer, task_dir, source, args)
             if record is None:
-                skipped_long += 1
+                if path_tree_has_gpu_dependency(task_dir):
+                    skipped_gpu_dependency += 1
+                else:
+                    skipped_long += 1
                 continue
             add_record(record)
 
@@ -476,7 +540,10 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
                 break
             record = record_from_task_dir(tokenizer, task_dir, source, args)
             if record is None:
-                skipped_long += 1
+                if path_tree_has_gpu_dependency(task_dir):
+                    skipped_gpu_dependency += 1
+                else:
+                    skipped_long += 1
                 continue
             add_record(record)
 
@@ -488,7 +555,10 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
                 break
             record = record_from_task_dir(tokenizer, task_dir, source, args)
             if record is None:
-                skipped_long += 1
+                if path_tree_has_gpu_dependency(task_dir):
+                    skipped_gpu_dependency += 1
+                else:
+                    skipped_long += 1
                 continue
             add_record(record)
 
@@ -504,6 +574,7 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
                 "train_rows": len(dataset),
                 "source_counts": source_counts,
                 "skipped_long_or_invalid": skipped_long,
+                "skipped_gpu_dependency": skipped_gpu_dependency,
                 "prompt_tokens_min": min(r["prompt_tokens"] for r in records),
                 "prompt_tokens_max": max(r["prompt_tokens"] for r in records),
             },
@@ -718,6 +789,20 @@ def rewrite_paths(command: str, sandbox: Path) -> str:
     return rewritten
 
 
+def terminate_process_group(proc: subprocess.Popen[str] | None, grace_sec: float = 1.0) -> None:
+    if proc is None:
+        return
+    for sig in (signal.SIGTERM, signal.SIGKILL):
+        try:
+            os.killpg(proc.pid, sig)
+        except ProcessLookupError:
+            return
+        except Exception:
+            return
+        if sig == signal.SIGTERM:
+            time.sleep(grace_sec)
+
+
 def copytree_contents(src: Path, dst: Path) -> None:
     if not src.exists():
         return
@@ -794,6 +879,17 @@ def run_subprocess(command: str, cwd: Path, timeout: float) -> dict[str, Any]:
     start = time.monotonic()
     proc: subprocess.Popen[str] | None = None
     try:
+        if has_gpu_dependency_text(command):
+            return {
+                "command": command,
+                "exit_code": 127,
+                "stdout": "",
+                "stderr": "GPU/CUDA commands are disabled in no-Docker RLVR sandboxes.",
+                "duration_sec": round(time.monotonic() - start, 4),
+                "timeout": False,
+                "blocked": True,
+                "reason": "gpu_dependency",
+            }
         proc = subprocess.Popen(
             ["bash", "-lc", command],
             cwd=str(cwd),
@@ -804,6 +900,9 @@ def run_subprocess(command: str, cwd: Path, timeout: float) -> dict[str, Any]:
             env=sandbox_subprocess_env(cwd),
         )
         stdout, stderr = proc.communicate(timeout=timeout)
+        # The shell can exit while leaving background children in its session.
+        # Clean the whole process group so verifier scripts cannot leak loops.
+        terminate_process_group(proc, grace_sec=0.1)
         return {
             "command": command,
             "exit_code": proc.returncode,
@@ -814,10 +913,7 @@ def run_subprocess(command: str, cwd: Path, timeout: float) -> dict[str, Any]:
         }
     except subprocess.TimeoutExpired as exc:
         if proc is not None:
-            try:
-                os.killpg(proc.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
+            terminate_process_group(proc, grace_sec=0.2)
             stdout, stderr = proc.communicate()
         else:
             stdout = exc.stdout if isinstance(exc.stdout, str) else ""
@@ -837,6 +933,14 @@ def run_verifier(sandbox: Path) -> tuple[float, dict[str, Any]]:
     test_sh = tests_dir / "test.sh"
     if not test_sh.exists():
         return 0.0, {"verifier_missing": True, "exit_code": None, "stdout": "", "stderr": "missing tests/test.sh"}
+    if path_tree_has_gpu_dependency(tests_dir):
+        return 0.0, {
+            "verifier_skipped": True,
+            "reason": "gpu_dependency",
+            "exit_code": 127,
+            "stdout": "",
+            "stderr": "GPU/CUDA verifier tasks are skipped in no-Docker RLVR sandboxes.",
+        }
     test_sh.chmod(test_sh.stat().st_mode | 0o111)
     result = run_subprocess(str(test_sh), sandbox / "workspace", float(GLOBAL_CONFIG["verifier_timeout"]))
     reward_path = sandbox / "logs" / "verifier" / "reward.txt"
