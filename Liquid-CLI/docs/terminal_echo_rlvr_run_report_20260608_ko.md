@@ -161,6 +161,19 @@ GPU 배치:
 - global rollouts per step: 16
 - resume adapter: 현재 run의 `checkpoint-50`
 
+첫 step 확인:
+
+- `step 0` 완료
+- `reward_mean`: 0.04375
+- `verifier_reward_mean`: 0.0625
+- `world_loss_mean`: 1.18109
+- `action_tokens_mean`: 1,586.625
+- `obs_tokens_mean`: 1,049.625
+
+이 값은 현재 run이 단순 GRPO reward만 쓰는 것이 아니라, 실제 터미널 실행
+결과(stdout/stderr/exit code에서 만든 observation token)를 ECHO-style
+world-model CE loss로 같이 학습하고 있음을 보여준다.
+
 왜 4-vLLM + 2-train, 총 6대인가:
 
 - 이 8B 모델은 H200 한 장에 vLLM replica 하나를 올릴 수 있다.
@@ -182,7 +195,7 @@ GPU 배치:
 
 - checkpoint-50 저장: `step 48` 기준 몇 분 내
 - 4개 vLLM replica 재기동: 약 1분 내외로 완료됨
-- 새 2-GPU 학습 첫 train step: checkpoint 저장 후 약 15-25분
+- 새 2-GPU 학습 첫 train step: 완료됨
 - 이후 checkpoint는 새 run 기준 50 step마다 저장된다.
 - 이전 속도는 load 시간을 포함해 약 3.4분/step이었다. 4-vLLM + 2-train은
   첫 10 step 실측 후 다시 계산해야 하지만, 목표는 같은 16 rollout을 더 높은

@@ -164,6 +164,19 @@ GPU split:
 - global rollouts per step: 16
 - resume adapter: `checkpoint-50` from the current run
 
+First step confirmed:
+
+- `step 0` complete
+- `reward_mean`: 0.04375
+- `verifier_reward_mean`: 0.0625
+- `world_loss_mean`: 1.18109
+- `action_tokens_mean`: 1,586.625
+- `obs_tokens_mean`: 1,049.625
+
+This confirms the current run is not just using sparse GRPO reward. Real
+terminal execution feedback, converted into observation tokens, is entering the
+ECHO-style world-model CE loss.
+
 Why switch to 4-vLLM + 2-train, six GPUs total:
 
 - The model is small enough that one H200 can serve one vLLM replica.
@@ -188,8 +201,7 @@ Expected timing:
 
 - checkpoint-50 save: within minutes from `step 48`
 - four-vLLM restart: completed in roughly one minute
-- first train step of the new two-GPU run: roughly 15-25 minutes after the
-  checkpoint is written
+- first train step of the new two-GPU run: complete
 - checkpoints after that: every 50 steps in the new run
 - the previous observed speed was about 3.4 minutes/step including load time.
   The 4-vLLM + 2-train run needs its first 10 steps before we can recalculate a
