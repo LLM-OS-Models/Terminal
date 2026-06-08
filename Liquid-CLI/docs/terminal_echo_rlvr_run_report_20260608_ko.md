@@ -217,6 +217,12 @@ TerminalBench/SkyRL 환경과 품질이 같지는 않다.
 
 - filesystem isolation이 Docker보다 약하다. 컨테이너가 흡수할 일을
   host-root command 차단 규칙으로 막아야 한다.
+- no-Docker task/verifier가 host GPU를 직접 건드릴 수 있다. 실제로 한
+  TerminalBench-lite task의 test script가 `CUDA_VISIBLE_DEVICES=7 ... --device
+  cuda:0` 형태로 idle GPU를 잡으려는 것을 확인했다. 이를 막기 위해 sandbox
+  subprocess 환경에서 CUDA/NVIDIA visible-device 변수를 지우고, `python`,
+  `python3`, `pytest`, `pip`, `nvidia-smi`에 no-GPU wrapper를 prepend한다.
+  또한 모델 command에 CUDA/NVIDIA/GPU 사용 패턴이 나오면 unsafe로 차단한다.
 - 안전 필터가 정상 명령까지 잘못 막을 수 있다. 실제로 `2>/dev/null` 때문에
   정상적인 `find` flow가 `unsafe_pattern`으로 막힌 사례를 확인했다.
 - 일부 TerminalBench 스타일 task는 package install, system-level state,

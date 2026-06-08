@@ -224,6 +224,12 @@ Main limitations:
 
 - Filesystem isolation is weaker than Docker. We must block host-root commands
   instead of letting a container absorb them.
+- No-Docker tasks/verifiers can try to touch host GPUs. We observed one
+  TerminalBench-lite test script running `CUDA_VISIBLE_DEVICES=7 ... --device
+  cuda:0`, which could steal an idle GPU. The subprocess environment now clears
+  CUDA/NVIDIA visible-device variables and prepends no-GPU wrappers for
+  `python`, `python3`, `pytest`, `pip`, and `nvidia-smi`. Model-generated
+  commands containing CUDA/NVIDIA/GPU-use patterns are also blocked as unsafe.
 - Safety filters can accidentally block valid commands. We saw this with
   normal shell redirection like `2>/dev/null`, which caused valid `find` flows
   to be marked as `unsafe_pattern`.

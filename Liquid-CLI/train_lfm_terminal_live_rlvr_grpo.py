@@ -27,8 +27,10 @@ import json
 import os
 import random
 import re
+import shlex
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import tarfile
@@ -601,6 +603,20 @@ def parse_commands(text: str) -> tuple[list[str], bool, bool, list[str]]:
 
 def is_unsafe_command(command: str) -> bool:
     lowered = command.lower()
+    gpu_forbidden_patterns = [
+        r"\bcuda_visible_devices\s*=",
+        r"\bnvidia_visible_devices\s*=",
+        r"\bhip_visible_devices\s*=",
+        r"\brocr_visible_devices\s*=",
+        r"\bnvidia-smi\b",
+        r"--device\s+cuda(?::\d+)?\b",
+        r"\bcuda:\d+\b",
+        r"\btorch\.cuda\b",
+        r"\.to\(\s*['\"]cuda",
+    ]
+    for pattern in gpu_forbidden_patterns:
+        if re.search(pattern, lowered):
+            return True
     allowed_abs = {
         "/workspace",
         "/output",
@@ -624,6 +640,70 @@ def is_unsafe_command(command: str) -> bool:
             continue
         return True
     return False
+
+
+def ensure_no_gpu_wrappers(sandbox: Path) -> Path:
+    bin_dir = sandbox / "bin_no_gpu"
+    bin_dir.mkdir(parents=True, exist_ok=True)
+    path_env = os.environ.get("PATH", "")
+    wrappers = {
+        "python": shutil.which("python", path=path_env) or sys.executable,
+        "python3": shutil.which("python3", path=path_env) or sys.executable,
+        "pytest": shutil.which("pytest", path=path_env) or "",
+        "pip": shutil.which("pip", path=path_env) or "",
+        "pip3": shutil.which("pip3", path=path_env) or "",
+    }
+    for name, real_path in wrappers.items():
+        if not real_path:
+            continue
+        wrapper = bin_dir / name
+        wrapper.write_text(
+            "#!/usr/bin/env bash\n"
+            "unset CUDA_VISIBLE_DEVICES NVIDIA_VISIBLE_DEVICES CUDA_DEVICE_ORDER "
+            "HIP_VISIBLE_DEVICES ROCR_VISIBLE_DEVICES\n"
+            "export CUDA_VISIBLE_DEVICES=\n"
+            "export NVIDIA_VISIBLE_DEVICES=none\n"
+            f"exec {shlex.quote(real_path)} \"$@\"\n",
+            encoding="utf-8",
+        )
+        wrapper.chmod(wrapper.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+    nvidia_smi = bin_dir / "nvidia-smi"
+    nvidia_smi.write_text(
+        "#!/usr/bin/env bash\n"
+        "echo 'nvidia-smi is disabled inside no-Docker RLVR sandboxes' >&2\n"
+        "exit 127\n",
+        encoding="utf-8",
+    )
+    nvidia_smi.chmod(nvidia_smi.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    return bin_dir
+
+
+def sandbox_subprocess_env(cwd: Path) -> dict[str, str]:
+    env = dict(os.environ)
+    for key in [
+        "CUDA_VISIBLE_DEVICES",
+        "NVIDIA_VISIBLE_DEVICES",
+        "CUDA_DEVICE_ORDER",
+        "HIP_VISIBLE_DEVICES",
+        "ROCR_VISIBLE_DEVICES",
+    ]:
+        env.pop(key, None)
+    no_gpu_bin = ensure_no_gpu_wrappers(cwd.parent)
+    env.update(
+        {
+            "WORKSPACE": str(cwd),
+            "OUTPUT": str(cwd.parent / "output"),
+            "LOGS": str(cwd.parent / "logs"),
+            "HOME": str(cwd),
+            "CUDA_VISIBLE_DEVICES": "",
+            "NVIDIA_VISIBLE_DEVICES": "none",
+            "HIP_VISIBLE_DEVICES": "",
+            "ROCR_VISIBLE_DEVICES": "",
+            "PATH": f"{no_gpu_bin}:{env.get('PATH', '')}",
+        }
+    )
+    return env
 
 
 def rewrite_paths(command: str, sandbox: Path) -> str:
@@ -721,13 +801,7 @@ def run_subprocess(command: str, cwd: Path, timeout: float) -> dict[str, Any]:
             stderr=subprocess.PIPE,
             text=True,
             start_new_session=True,
-            env={
-                **os.environ,
-                "WORKSPACE": str(cwd),
-                "OUTPUT": str(cwd.parent / "output"),
-                "LOGS": str(cwd.parent / "logs"),
-                "HOME": str(cwd),
-            },
+            env=sandbox_subprocess_env(cwd),
         )
         stdout, stderr = proc.communicate(timeout=timeout)
         return {
