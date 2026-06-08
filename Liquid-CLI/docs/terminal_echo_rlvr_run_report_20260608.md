@@ -150,16 +150,21 @@ Current state:
 - After that checkpoint appears, an automatic watcher stops the current
   4-GPU training job and 4-replica vLLM pool, then starts the next long run.
 
-Next-run plan:
+Current restarted run:
 
-- vLLM: six TP1 replicas on GPUs 0,1,2,3,6,7
+- `run_20260608T012844Z_resume_devnullfix_ckpt50_vllm4rep_train2_total6`
+
+GPU split:
+
+- vLLM: four TP1 replicas on GPUs 0,1,2,3
 - training: two DDP ranks on GPUs 4,5
+- idle/reserved: GPUs 6,7
 - prompts per rank: 2
 - generations per prompt: 4
 - global rollouts per step: 16
 - resume adapter: `checkpoint-50` from the current run
 
-Why switch to 6-vLLM + 2-train:
+Why switch to 4-vLLM + 2-train, six GPUs total:
 
 - The model is small enough that one H200 can serve one vLLM replica.
 - Rollouts are independent HTTP requests, so multiple TP1 replicas usually give
@@ -167,27 +172,29 @@ Why switch to 6-vLLM + 2-train:
 - The current four training ranks only use roughly 39-43GB per H200. The
   bottleneck is not training VRAM. It is rollout generation, terminal
   execution, verifier work, and HTTP round trips.
-- Moving two GPUs from training to vLLM is therefore more sensible for the long
-  run.
+- Two training ranks are therefore enough, while four vLLM replicas keep the
+  rollout side parallel.
+- Total GPU usage is capped at six. GPUs 6 and 7 are left idle/reserved for
+  evaluation, comparison runs, or recovery.
 - `PROMPTS_PER_RANK=2` keeps the global rollout count at 16 despite using only
   two training ranks.
 - Tensor parallel sizes being powers of two matters inside one sharded model,
   but this workload benefits more from replica parallelism on the rollout side.
 - The trainer's vLLM URL routing was also changed from `rank % num_urls` to
-  `(seed + rank) % num_urls`. That lets a two-rank training job use all six
+  `(seed + rank) % num_urls`. That lets a two-rank training job use all four
   vLLM replicas across rollout seeds.
 
 Expected timing:
 
 - checkpoint-50 save: within minutes from `step 48`
-- six-vLLM restart: roughly 5-10 minutes
+- four-vLLM restart: completed in roughly one minute
 - first train step of the new two-GPU run: roughly 15-25 minutes after the
   checkpoint is written
 - checkpoints after that: every 50 steps in the new run
 - the previous observed speed was about 3.4 minutes/step including load time.
-  The 6-vLLM + 2-train run needs its first 10 steps before we can recalculate a
+  The 4-vLLM + 2-train run needs its first 10 steps before we can recalculate a
   reliable ETA, but the target is to process the same 16 rollouts with higher
-  vLLM throughput.
+  vLLM throughput and fewer training GPUs.
 
 ## No-Docker RLVR: What Works And What Is Limited
 

@@ -147,40 +147,46 @@ vLLM URLs:
 - checkpoint 저장 직후 자동 전환 watcher가 기존 4-GPU 학습과 4-replica
   vLLM을 정리하고 새 run을 띄운다.
 
-다음 run 계획:
+현재 재시작된 run:
 
-- vLLM: GPU 0,1,2,3,6,7에 TP1 replica 6개
+- `run_20260608T012844Z_resume_devnullfix_ckpt50_vllm4rep_train2_total6`
+
+GPU 배치:
+
+- vLLM: GPU 0,1,2,3에 TP1 replica 4개
 - training: GPU 4,5에 DDP rank 2개
+- idle/reserved: GPU 6,7
 - prompts per rank: 2
 - generations per prompt: 4
 - global rollouts per step: 16
 - resume adapter: 현재 run의 `checkpoint-50`
 
-왜 6-vLLM + 2-train으로 바꾸는가:
+왜 4-vLLM + 2-train, 총 6대인가:
 
 - 이 8B 모델은 H200 한 장에 vLLM replica 하나를 올릴 수 있다.
 - rollout 요청은 서로 독립적인 HTTP request다. 그래서 하나의 TP4 서버보다
   여러 개의 TP1 replica가 request throughput을 더 잘 뽑을 가능성이 높다.
 - 현재 4-GPU 학습 rank는 VRAM을 약 39-43GB만 쓴다. 병목은 training VRAM이
   아니라 rollout 생성, 터미널 실행, verifier, HTTP 왕복 시간이다.
-- 따라서 training rank를 2개로 줄이고 남는 GPU를 vLLM replica로 돌리는 편이
-  장기 run에서는 더 합리적이다.
+- 따라서 training rank는 2개면 충분하고, vLLM은 4개 replica를 유지한다.
+- 사용 GPU는 총 6대로 제한한다. GPU 6,7은 다음 평가/비교 실험 또는 장애 대응을
+  위해 비워 둔다.
 - `PROMPTS_PER_RANK=2`로 올려 global rollout 수는 기존 16개를 유지한다.
 - tensor parallel size는 단일 모델 shard 내부에서는 2, 4, 8 같은 단위가
   중요하지만, 이 workload에서는 rollout replica 병렬성이 더 중요하다.
 - 방금 trainer의 vLLM URL routing도 `rank % num_urls`에서
-  `(seed + rank) % num_urls`로 바꿨다. 그래서 2-rank 학습에서도 6개 vLLM
+  `(seed + rank) % num_urls`로 바꿨다. 그래서 2-rank 학습에서도 4개 vLLM
   replica가 seed별 rollout에 분산된다.
 
 예상 시간:
 
 - checkpoint-50 저장: `step 48` 기준 몇 분 내
-- 6개 vLLM replica 재기동: 약 5-10분
+- 4개 vLLM replica 재기동: 약 1분 내외로 완료됨
 - 새 2-GPU 학습 첫 train step: checkpoint 저장 후 약 15-25분
 - 이후 checkpoint는 새 run 기준 50 step마다 저장된다.
-- 이전 속도는 load 시간을 포함해 약 3.4분/step이었다. 6-vLLM + 2-train은
+- 이전 속도는 load 시간을 포함해 약 3.4분/step이었다. 4-vLLM + 2-train은
   첫 10 step 실측 후 다시 계산해야 하지만, 목표는 같은 16 rollout을 더 높은
-  vLLM throughput으로 처리하는 것이다.
+  vLLM throughput과 낮은 학습 GPU 수로 처리하는 것이다.
 
 ## no-Docker RLVR의 한계
 
