@@ -333,7 +333,7 @@ def generate_assistant_text_vllm_http(
     base_urls = [url.strip() for url in args.vllm_base_url.split(",") if url.strip()]
     if not base_urls:
         raise RuntimeError("--vllm-base-url did not contain any usable URL")
-    base_url = base_urls[rank % len(base_urls)]
+    base_url = base_urls[(seed + rank) % len(base_urls)]
     request = urllib.request.Request(
         base_url.rstrip("/") + "/completions",
         data=json.dumps(payload).encode("utf-8"),
