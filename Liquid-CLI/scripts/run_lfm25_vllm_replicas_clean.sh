@@ -12,6 +12,8 @@ MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.88}"
 TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-1}"
 LOG_DIR="${LOG_DIR:-/tmp/lfm25_vllm_replicas}"
+READY_TIMEOUT_SEC="${READY_TIMEOUT_SEC:-300}"
+START_STAGGER_SEC="${START_STAGGER_SEC:-0}"
 
 VENV_SITE="$VLLM_ENV/lib/python3.12/site-packages"
 VLLM_LD_LIBRARY_PATH="$VENV_SITE/torch/lib:$VENV_SITE/nvidia/cuda_runtime/lib:$VENV_SITE/nvidia/cublas/lib:$VENV_SITE/nvidia/cudnn/lib:$VENV_SITE/nvidia/nccl/lib:${LD_LIBRARY_PATH:-}"
@@ -51,22 +53,34 @@ for i in "${!GPUS[@]}"; do
       --enforce-eager \
       > "$LOG_DIR/vllm_gpu${gpu}_port${port}.log" 2>&1 &
   PIDS+=("$!")
+  echo "started gpu=$gpu port=$port pid=${PIDS[-1]}"
+  ready=0
+  for _attempt in $(seq 1 "$READY_TIMEOUT_SEC"); do
+    if ! kill -0 "${PIDS[-1]}" 2>/dev/null; then
+      echo "vLLM replica exited before ready gpu=$gpu port=$port pid=${PIDS[-1]}" >&2
+      tail -n 200 "$LOG_DIR/vllm_gpu${gpu}_port${port}.log" >&2 || true
+      exit 1
+    fi
+    if curl -fsS "$url/models" >/dev/null 2>&1; then
+      echo "ready $url"
+      ready=1
+      break
+    fi
+    sleep 1
+  done
+  if [[ "$ready" != "1" ]]; then
+    echo "vLLM replica did not become ready in ${READY_TIMEOUT_SEC}s gpu=$gpu port=$port pid=${PIDS[-1]}" >&2
+    tail -n 200 "$LOG_DIR/vllm_gpu${gpu}_port${port}.log" >&2 || true
+    exit 1
+  fi
+  if [[ "$START_STAGGER_SEC" != "0" ]]; then
+    sleep "$START_STAGGER_SEC"
+  fi
 done
 
 printf '%s\n' "${PIDS[@]}" > "$LOG_DIR/pids.txt"
 printf '%s\n' "${URLS[@]}" > "$LOG_DIR/urls.txt"
 printf '%s\n' "${URLS[*]// /,}" > "$LOG_DIR/vllm_base_urls.txt"
 echo "VLLM_BASE_URLS=$(paste -sd, "$LOG_DIR/urls.txt")"
-
-for i in "${!URLS[@]}"; do
-  url="${URLS[$i]}"
-  for _attempt in $(seq 1 180); do
-    if curl -fsS "$url/models" >/dev/null 2>&1; then
-      echo "ready $url"
-      break
-    fi
-    sleep 5
-  done
-done
 
 wait

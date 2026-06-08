@@ -122,6 +122,8 @@ Rules:
 - Commands execute from /workspace. Required outputs usually belong in /output.
 - stdout, stderr, exit codes, files, and verifier results are used as training feedback.
 - Do not touch files outside /workspace, /output, and /logs.
+- Do not run GPU/CUDA/NVIDIA probes such as nvidia-smi, torch.cuda, nvcc, or
+  CUDA_VISIBLE_DEVICES checks. GPUs are unavailable inside the task sandbox.
 """
 
 DESTRUCTIVE_PATTERNS = [
@@ -147,6 +149,9 @@ DESTRUCTIVE_PATTERNS = [
 
 GPU_TASK_PATTERNS = [
     r"\bnvidia-smi\b",
+    r"\bnvcc\b",
+    r"\bnvidia-debugdump\b",
+    r"\bnvidia-cuda-mps\b",
     r"\bcuda_visible_devices\b",
     r"\bnvidia_visible_devices\b",
     r"\bhip_visible_devices\b",
@@ -680,6 +685,9 @@ def is_unsafe_command(command: str) -> bool:
         r"\bhip_visible_devices\s*=",
         r"\brocr_visible_devices\s*=",
         r"\bnvidia-smi\b",
+        r"\bnvcc\b",
+        r"\bnvidia-debugdump\b",
+        r"\bnvidia-cuda-mps\b",
         r"--device\s+cuda(?::\d+)?\b",
         r"\bcuda:\d+\b",
         r"\btorch\.cuda\b",
@@ -740,17 +748,13 @@ def ensure_no_gpu_wrappers(sandbox: Path) -> Path:
         wrapper.chmod(wrapper.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
     nvidia_smi = bin_dir / "nvidia-smi"
-    nvidia_smi.write_text(
-        "#!/usr/bin/env bash\n"
-        "echo 'nvidia-smi is disabled inside no-Docker RLVR sandboxes' >&2\n"
-        "pgid=$(ps -o pgid= $$ 2>/dev/null | tr -d ' ')\n"
-        "if [[ -n \"${pgid:-}\" ]]; then\n"
-        "  kill -TERM -- -\"$pgid\" 2>/dev/null || true\n"
-        "fi\n"
-        "exit 127\n",
-        encoding="utf-8",
-    )
-    nvidia_smi.chmod(nvidia_smi.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    if nvidia_smi.exists() or nvidia_smi.is_symlink():
+        nvidia_smi.unlink()
+    try:
+        nvidia_smi.symlink_to("/bin/false")
+    except OSError:
+        nvidia_smi.write_text("#!/usr/bin/env sh\nexit 1\n", encoding="utf-8")
+        nvidia_smi.chmod(nvidia_smi.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
     return bin_dir
 
 
