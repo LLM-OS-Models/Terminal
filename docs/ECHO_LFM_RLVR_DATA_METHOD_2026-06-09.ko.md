@@ -82,6 +82,34 @@ GPU 배치:
 
 ## 새로 추가한 데이터 준비 스크립트
 
+다운로드 스크립트:
+
+`Liquid-CLI/scripts/download_echo_public_terminal_data.py`
+
+역할:
+
+- OpenThoughts parquet가 없으면 다운로드한다.
+- Endless Terminals task 파일들을 이어받는다.
+- Hugging Face 429 rate limit이 나오면 죽지 않고 대기 후 재시도한다.
+- `.env`의 HF token을 읽지만 출력하지 않는다.
+
+background 실행:
+
+```bash
+mkdir -p /home/work/.data/echo_terminal_data/logs
+nohup python Liquid-CLI/scripts/download_echo_public_terminal_data.py \
+  --env-file .env \
+  --retry-seconds 180 \
+  --max-attempts 1000 \
+  >/home/work/.data/echo_terminal_data/logs/download_echo_public_terminal_data.log 2>&1 &
+```
+
+로그:
+
+`/home/work/.data/echo_terminal_data/logs/download_echo_public_terminal_data.log`
+
+준비 스크립트:
+
 파일:
 
 `Liquid-CLI/scripts/prepare_echo_terminal_data.py`

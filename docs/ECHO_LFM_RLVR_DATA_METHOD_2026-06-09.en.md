@@ -83,6 +83,34 @@ The current run uses ECHO-style world loss, but its data path is still driven by
 
 ## New data preparation script
 
+Download script:
+
+`Liquid-CLI/scripts/download_echo_public_terminal_data.py`
+
+Responsibilities:
+
+- Download OpenThoughts parquet if missing.
+- Resume Endless Terminals task-file downloads.
+- Sleep and retry instead of exiting on Hugging Face 429 rate limits.
+- Read the HF token from `.env` without printing it.
+
+Background command:
+
+```bash
+mkdir -p /home/work/.data/echo_terminal_data/logs
+nohup python Liquid-CLI/scripts/download_echo_public_terminal_data.py \
+  --env-file .env \
+  --retry-seconds 180 \
+  --max-attempts 1000 \
+  >/home/work/.data/echo_terminal_data/logs/download_echo_public_terminal_data.log 2>&1 &
+```
+
+Log:
+
+`/home/work/.data/echo_terminal_data/logs/download_echo_public_terminal_data.log`
+
+Preparation script:
+
 File:
 
 `Liquid-CLI/scripts/prepare_echo_terminal_data.py`
