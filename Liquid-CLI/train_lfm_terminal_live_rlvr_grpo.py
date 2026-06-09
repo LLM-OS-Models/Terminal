@@ -762,6 +762,8 @@ def is_unsafe_command(command: str) -> bool:
         "/workspace",
         "/output",
         "/logs",
+        "/home/user",
+        "/tmp",
         "/dev/null",
         "$app",
         "$tests",
@@ -779,7 +781,7 @@ def is_unsafe_command(command: str) -> bool:
             return True
     for match in re.finditer(r"(?<![\w.-])/(?:[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*)?", lowered):
         path = match.group(0).rstrip("/") or "/"
-        if path in {"/workspace", "/output", "/logs", "/dev/null"}:
+        if path in allowed_abs:
             continue
         if any(path.startswith(prefix + "/") for prefix in allowed_abs if prefix.startswith("/")):
             continue
@@ -888,17 +890,21 @@ def sandbox_subprocess_env(cwd: Path) -> dict[str, str]:
 
 
 def rewrite_paths(command: str, sandbox: Path) -> str:
+    return rewrite_known_paths(command, sandbox)
+
+
+def rewrite_known_paths(text: str, sandbox: Path) -> str:
     replacements = {
+        "/home/user": str(sandbox / "workspace"),
         "/app": str(sandbox / "workspace"),
         "/tests": str(sandbox / "tests"),
         "/workspace": str(sandbox / "workspace"),
         "/output": str(sandbox / "output"),
         "/logs": str(sandbox / "logs"),
+        "/tmp": str(sandbox / "tmp"),
     }
-    rewritten = command
-    for src, dst in sorted(replacements.items(), key=lambda item: len(item[0]), reverse=True):
-        rewritten = rewritten.replace(src, dst)
-    return rewritten
+    pattern = re.compile("|".join(re.escape(src) for src in sorted(replacements, key=len, reverse=True)))
+    return pattern.sub(lambda match: replacements[match.group(0)], text)
 
 
 def terminate_process_group(proc: subprocess.Popen[str] | None, grace_sec: float = 1.0) -> None:
@@ -982,11 +988,7 @@ def rewrite_text_tree(root: Path, sandbox: Path) -> None:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
-        text = text.replace("/app", str(sandbox / "workspace"))
-        text = text.replace("/tests", str(sandbox / "tests"))
-        text = text.replace("/workspace", str(sandbox / "workspace"))
-        text = text.replace("/output", str(sandbox / "output"))
-        text = text.replace("/logs", str(sandbox / "logs"))
+        text = rewrite_known_paths(text, sandbox)
         path.write_text(text, encoding="utf-8")
 
 

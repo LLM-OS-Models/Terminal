@@ -249,8 +249,17 @@ Current mitigations:
 
 - Each task archive is unpacked into a per-rollout local sandbox.
 - `/workspace`, `/output`, and `/logs` paths are rewritten into that sandbox.
+- `/home/user` is rewritten to the sandbox `workspace`.
+- `/tmp` is rewritten to the sandbox `tmp` directory.
 - `sudo`, `tmux`, `screen`, `nohup`, `setsid`, `pkill`, `killall`, root filesystem scans, and similar unsafe operations are blocked.
 - GPU probe commands are blocked inside task sandboxes.
+
+2026-06-09 fix:
+
+- The previous rewriter used cascading string replacement, so `/home/user/output` could become the broken path `/home/user/home/work/.../output` after only the `/output` segment was rewritten.
+- The unsafe checker also blocked normal `/home/user/...` and `/tmp/...` absolute paths, which incorrectly rejected common commands such as `mkdir`, `ls`, `stat`, and `wc`.
+- Added `rewrite_known_paths()` to perform one regex substitution pass for `/home/user`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, and `/app`.
+- Smoke check now allows `mkdir -p /home/user/diagnostics`, `ls -la /home/user/data`, `stat /home/user/data/status.json`, and `wc -l /tmp/out.txt`, while `rm -rf /` remains blocked.
 
 Longer-term fixes:
 

@@ -250,8 +250,17 @@ Docker/Harbor가 없는 것이 데이터 준비의 장애물은 아니다. 하�
 
 - task archive를 per-rollout local sandbox에 푼다.
 - `/workspace`, `/output`, `/logs`를 sandbox 내부로 rewrite한다.
+- `/home/user`는 sandbox의 `workspace`로 rewrite한다.
+- `/tmp`는 sandbox의 `tmp`로 rewrite한다.
 - `sudo`, `tmux`, `screen`, `nohup`, `setsid`, `pkill`, `killall`, root filesystem 탐색 등은 차단한다.
 - GPU probe 명령도 task sandbox 안에서는 금지한다.
+
+2026-06-09 추가 수정:
+
+- 이전 rewrite는 단순 문자열 치환이라 `/home/user/output` 내부의 `/output`만 먼저 바뀌어 `/home/user/home/work/.../output` 같은 깨진 경로가 생겼다.
+- unsafe checker도 `/home/user/...`와 `/tmp/...` 절대경로를 막아 `mkdir`, `ls`, `stat`, `wc` 같은 정상 터미널 명령까지 차단했다.
+- `rewrite_known_paths()`를 추가해 한 번의 regex substitution으로 `/home/user`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, `/app`을 sandbox 내부 경로로 바꾼다.
+- 스모크 체크 결과 `mkdir -p /home/user/diagnostics`, `ls -la /home/user/data`, `stat /home/user/data/status.json`, `wc -l /tmp/out.txt`는 허용되고, `rm -rf /`는 계속 차단된다.
 
 근본 해결:
 
