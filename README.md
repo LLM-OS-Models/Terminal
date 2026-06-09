@@ -9,6 +9,26 @@
 - RL/DPO 다음 학습 계획: [`docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md`](docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md)
 - KoHRM/HRM 사용법과 JSON contract 연구: [`docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md`](docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md)
 - Harness-1 -> LFM2.5 LoRA SFT/RL 계획: [`docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md`](docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md)
+- No-Docker ECHO RLVR sandbox 안정화: [`Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md`](Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md)
+
+## 진행 중: LFM2.5 ECHO Terminal RLVR
+
+2026-06-09 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 이어서 ECHO-style terminal RLVR을 진행 중이다.
+
+- Base/SFT model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
+- Resume adapter: `run_20260608T040917Z_stable_split_vllm4_train2_p1_g2_rw4_save10/checkpoint-820`
+- Active run: `run_20260609T000050Z_patched_sandbox_resume820_vllm4_train2_setsid`
+- vLLM serving GPUs: `0,1,2,3`
+- Training GPUs: `4,5`
+- Excluded GPUs: `6,7`
+- Sandbox mode: Docker 없이 local workspace sandbox, `/app`/`/tests` rewrite 및 host-sensitive command 차단 적용
+- Objective: verifier RLVR + ECHO-style terminal observation world-model loss
+- Save interval: every 10 train steps
+- First patched checkpoint: `checkpoint-10`
+- Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
+- Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
+
+주의: 이 run은 아직 TB2 최종평가 전이다. 따라서 아래 전체 순위표에는 반영하지 않는다. 순위표 갱신은 충분한 RLVR step을 누적한 뒤 TB2/TB2-lite 평가 결과가 나온 시점에 진행한다.
 
 점수 기준:
 
