@@ -95,6 +95,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--include-tb-dev", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--include-tblite-train", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--local-task-dir", action="append", default=[])
+    parser.add_argument(
+        "--prepared-jsonl",
+        action="append",
+        default=[],
+        help="Optional local JSONL rows with prompt/task_id/source/task_binary_b64 or task_dir. Can be repeated.",
+    )
     parser.add_argument("--max-rows", type=int, default=None)
     parser.add_argument("--max-rows-per-source", type=int, default=None)
     parser.add_argument("--random-state", type=int, default=17)

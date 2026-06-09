@@ -33,6 +33,8 @@ OUTPUT_DIR="${OUTPUT_DIR:-/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-T
 TRACE_DIR="${TRACE_DIR:-/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/traces}"
 SANDBOX_ROOT="${SANDBOX_ROOT:-/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/sandboxes}"
 LAUNCHER="${LAUNCHER:-file}"
+PREPARED_JSONL="${PREPARED_JSONL:-}"
+PREPARED_ONLY="${PREPARED_ONLY:-0}"
 
 cd "$ROOT_DIR"
 FIRST_VLLM_BASE_URL="${VLLM_BASE_URL%%,*}"
@@ -54,10 +56,6 @@ TRAIN_ARGS=(
   --rollout-backend vllm_http
   --vllm-base-url "$VLLM_BASE_URL"
   --vllm-served-model "$MODEL_PATH"
-  --include-openthoughts-rl
-  --include-endless
-  --include-tb-dev
-  --include-tblite-train
   --max-steps "$MAX_STEPS"
   --max-wall-time-hours "$MAX_WALL_TIME_HOURS"
   --prompts-per-rank "$PROMPTS_PER_RANK"
@@ -81,6 +79,29 @@ TRAIN_ARGS=(
   --logging-steps 1
   "$@"
 )
+
+if [[ "$PREPARED_ONLY" == "1" ]]; then
+  TRAIN_ARGS+=(
+    --no-include-openthoughts-rl
+    --no-include-endless
+    --no-include-tb-dev
+    --no-include-tblite-train
+  )
+else
+  TRAIN_ARGS+=(
+    --include-openthoughts-rl
+    --include-endless
+    --include-tb-dev
+    --include-tblite-train
+  )
+fi
+
+if [[ -n "$PREPARED_JSONL" ]]; then
+  IFS=',' read -r -a PREPARED_FILES <<< "$PREPARED_JSONL"
+  for prepared_file in "${PREPARED_FILES[@]}"; do
+    TRAIN_ARGS+=(--prepared-jsonl "$prepared_file")
+  done
+fi
 
 if [[ "$GRADIENT_CHECKPOINTING" == "1" ]]; then
   TRAIN_ARGS+=(--gradient-checkpointing)

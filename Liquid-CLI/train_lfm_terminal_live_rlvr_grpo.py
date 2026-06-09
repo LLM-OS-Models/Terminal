@@ -230,6 +230,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--include-tblite-train", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--tblite-repo", default="open-thoughts/OpenThoughts-TBLite")
     parser.add_argument("--local-task-dir", action="append", default=[])
+    parser.add_argument(
+        "--prepared-jsonl",
+        action="append",
+        default=[],
+        help="Optional local JSONL rows with prompt/task_id/source/task_binary_b64 or task_dir. Can be repeated.",
+    )
     parser.add_argument("--max-rows", type=int, default=None)
     parser.add_argument("--max-rows-per-source", type=int, default=None)
     parser.add_argument("--max-prompt-length", type=int, default=4096)
@@ -493,6 +499,44 @@ def build_dataset(tokenizer: Any, args: argparse.Namespace) -> Dataset:
     def add_record(record: dict[str, Any]) -> None:
         records.append(record)
         source_counts[record["source"]] = source_counts.get(record["source"], 0) + 1
+
+    for prepared in getattr(args, "prepared_jsonl", []) or []:
+        prepared_path = Path(prepared).expanduser().resolve()
+        source_fallback = f"prepared:{prepared_path.stem}"
+        with prepared_path.open("r", encoding="utf-8") as handle:
+            for line in handle:
+                if not can_add(source_fallback):
+                    break
+                if not line.strip():
+                    continue
+                try:
+                    row = json.loads(line)
+                except Exception:
+                    skipped_long += 1
+                    continue
+                prompt = row.get("prompt")
+                task_binary_b64 = str(row.get("task_binary_b64", ""))
+                task_dir = str(row.get("task_dir", ""))
+                if not isinstance(prompt, list) or (not task_binary_b64 and not task_dir):
+                    skipped_long += 1
+                    continue
+                prompt_tokens = text_token_count(tokenizer, prompt)
+                if prompt_tokens > args.max_prompt_length:
+                    skipped_long += 1
+                    continue
+                source = str(row.get("source") or source_fallback)
+                if not can_add(source):
+                    break
+                add_record(
+                    {
+                        "prompt": prompt,
+                        "task_id": str(row.get("task_id") or row.get("echo_path") or f"{prepared_path.stem}:{len(records)}"),
+                        "source": source,
+                        "task_dir": task_dir,
+                        "task_binary_b64": task_binary_b64,
+                        "prompt_tokens": prompt_tokens,
+                    }
+                )
 
     if args.include_openthoughts_rl:
         source = "openthoughts_rl"
