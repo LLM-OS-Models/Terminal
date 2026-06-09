@@ -160,6 +160,7 @@ learning signal needed to build stronger terminal agents later.
 - `train_steps.jsonl`: parsed training metrics from `train.log`.
 - `manifest.json`: sync metadata and counts.
 - `run.env.redacted`: run configuration with secret-like values redacted.
+- `checkpoint_eval_candidates.*`: optional checkpoint summary for later eval sweeps.
 """
     (stage_dir / "README.md").write_text(card, encoding="utf-8")
 
@@ -186,6 +187,10 @@ def stage_snapshot(run_dir: Path, output_dir: Path, stage_root: Path, repo_id: s
             fh.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
     redact_env_file(run_dir / "run.env", stage_dir / "run.env.redacted")
+    for aux_name in ("checkpoint_eval_candidates.md", "checkpoint_eval_candidates.json"):
+        aux_src = run_dir / aux_name
+        if aux_src.exists():
+            shutil.copy2(aux_src, stage_dir / aux_name)
 
     run_env = {}
     env_path = run_dir / "run.env"
