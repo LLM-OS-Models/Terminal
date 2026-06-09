@@ -241,15 +241,15 @@ Limitations:
 
 1. Task isolation is weaker than Docker.
 2. Tasks with hidden Dockerfile package dependencies can fail locally.
-3. `/workspace`, `/output`, and `/logs` rewriting may not cover every task.
+3. `/workspace`, `/work`, `/home/user`, `/output`, and `/logs` rewriting may not cover every task.
 4. Unsafe command filtering is critical because there is no container boundary.
 5. Tasks depending on services, background processes, system packages, networking, or process managers can produce noisy verifier results.
 
 Current mitigations:
 
 - Each task archive is unpacked into a per-rollout local sandbox.
-- `/workspace`, `/output`, and `/logs` paths are rewritten into that sandbox.
-- `/home/user` is rewritten to the sandbox `workspace`.
+- `/workspace`, `/work`, and `/home/user` are rewritten to the sandbox `workspace`.
+- `/output` and `/logs` are rewritten into sandbox output/log paths.
 - `/tmp` is rewritten to the sandbox `tmp` directory.
 - `sudo`, `tmux`, `screen`, `nohup`, `setsid`, `pkill`, `killall`, root filesystem scans, and similar unsafe operations are blocked.
 - GPU probe commands are blocked inside task sandboxes.
@@ -258,7 +258,9 @@ Current mitigations:
 
 - The previous rewriter used cascading string replacement, so `/home/user/output` could become the broken path `/home/user/home/work/.../output` after only the `/output` segment was rewritten.
 - The unsafe checker also blocked normal `/home/user/...` and `/tmp/...` absolute paths, which incorrectly rejected common commands such as `mkdir`, `ls`, `stat`, and `wc`.
-- Added `rewrite_known_paths()` to perform one regex substitution pass for `/home/user`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, and `/app`.
+- A later trace showed the same issue for Endless-style `/work/tickets/...` paths and read-only commands such as `find /home/user ...` and `cat /home/user/...`.
+- Added `rewrite_known_paths()` to perform one regex substitution pass for `/home/user`, `/work`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, and `/app`.
+- Read-only traversal commands such as `find`, `ls`, `cat`, and `wc` now pass when all absolute paths are inside allowed task paths; host-sensitive paths such as `/`, `/etc`, `/proc`, and `/sys` remain blocked.
 - Smoke check now allows `mkdir -p /home/user/diagnostics`, `ls -la /home/user/data`, `stat /home/user/data/status.json`, and `wc -l /tmp/out.txt`, while `rm -rf /` remains blocked.
 
 Longer-term fixes:

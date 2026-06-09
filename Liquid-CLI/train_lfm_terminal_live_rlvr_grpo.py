@@ -158,9 +158,6 @@ DESTRUCTIVE_PATTERNS = [
     r":\s*\(\s*\)\s*\{\s*:\s*\|\s*:\s*&\s*\}\s*;",
     r"\bchmod\s+-R\s+777\s+/",
     r"\bchown\s+-R\s+.*\s+/",
-    r"\b(find|du|grep|rg|ls|tree)\s+/(?:\s|$)",
-    r"\b(find|du|grep|rg|ls|tree)\s+/(etc|home|root|proc|sys|dev|var|usr|bin|sbin|lib|lib64|opt|mnt|media|run|tmp)\b",
-    r"\b(cat|head|tail|sed|awk|python|python3|perl|ruby|node)\s+/(etc|home|root|proc|sys|dev|var|usr|bin|sbin|lib|lib64|opt|mnt|media|run|tmp)\b",
 ]
 
 GPU_TASK_PATTERNS = [
@@ -762,6 +759,7 @@ def is_unsafe_command(command: str) -> bool:
         "/workspace",
         "/output",
         "/logs",
+        "/work",
         "/home/user",
         "/tmp",
         "/dev/null",
@@ -770,11 +768,13 @@ def is_unsafe_command(command: str) -> bool:
         "$workspace",
         "$output",
         "$logs",
+        "$work",
         "${app}",
         "${tests}",
         "${workspace}",
         "${output}",
         "${logs}",
+        "${work}",
     }
     for pattern in DESTRUCTIVE_PATTERNS:
         if re.search(pattern, lowered):
@@ -896,6 +896,7 @@ def rewrite_paths(command: str, sandbox: Path) -> str:
 def rewrite_known_paths(text: str, sandbox: Path) -> str:
     replacements = {
         "/home/user": str(sandbox / "workspace"),
+        "/work": str(sandbox / "workspace"),
         "/app": str(sandbox / "workspace"),
         "/tests": str(sandbox / "tests"),
         "/workspace": str(sandbox / "workspace"),

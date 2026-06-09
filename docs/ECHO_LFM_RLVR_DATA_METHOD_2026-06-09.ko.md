@@ -242,15 +242,15 @@ Docker/Harbor가 없는 것이 데이터 준비의 장애물은 아니다. 하�
 
 1. task 간 격리가 Docker보다 약하다.
 2. Dockerfile에 설치 의존성이 숨어 있는 task는 로컬 실행에서 실패할 수 있다.
-3. `/workspace`, `/output`, `/logs` path rewrite가 완벽하지 않은 task가 있을 수 있다.
+3. `/workspace`, `/work`, `/home/user`, `/output`, `/logs` path rewrite가 완벽하지 않은 task가 있을 수 있다.
 4. 모델이 위험 명령을 내렸을 때 Docker보다 방어선이 약하므로 unsafe command filter가 중요하다.
 5. terminal task가 system package, network, service manager, background process에 의존하면 verifier가 흔들릴 수 있다.
 
 현재 대응:
 
 - task archive를 per-rollout local sandbox에 푼다.
-- `/workspace`, `/output`, `/logs`를 sandbox 내부로 rewrite한다.
-- `/home/user`는 sandbox의 `workspace`로 rewrite한다.
+- `/workspace`, `/work`, `/home/user`는 sandbox의 `workspace`로 rewrite한다.
+- `/output`, `/logs`를 sandbox 내부 출력/로그 경로로 rewrite한다.
 - `/tmp`는 sandbox의 `tmp`로 rewrite한다.
 - `sudo`, `tmux`, `screen`, `nohup`, `setsid`, `pkill`, `killall`, root filesystem 탐색 등은 차단한다.
 - GPU probe 명령도 task sandbox 안에서는 금지한다.
@@ -259,7 +259,9 @@ Docker/Harbor가 없는 것이 데이터 준비의 장애물은 아니다. 하�
 
 - 이전 rewrite는 단순 문자열 치환이라 `/home/user/output` 내부의 `/output`만 먼저 바뀌어 `/home/user/home/work/.../output` 같은 깨진 경로가 생겼다.
 - unsafe checker도 `/home/user/...`와 `/tmp/...` 절대경로를 막아 `mkdir`, `ls`, `stat`, `wc` 같은 정상 터미널 명령까지 차단했다.
-- `rewrite_known_paths()`를 추가해 한 번의 regex substitution으로 `/home/user`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, `/app`을 sandbox 내부 경로로 바꾼다.
+- 그 다음 trace에서 Endless 계열 task가 자주 쓰는 `/work/tickets/...` 경로와 `find /home/user ...`, `cat /home/user/...` 같은 읽기 명령도 동일하게 막히는 것을 확인했다.
+- `rewrite_known_paths()`를 추가해 한 번의 regex substitution으로 `/home/user`, `/work`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, `/app`을 sandbox 내부 경로로 바꾼다.
+- `find`, `ls`, `cat`, `wc`처럼 정상적인 읽기/탐색 명령은 허용 경로 안에서는 통과시키고, `/`, `/etc`, `/proc`, `/sys` 같은 host-sensitive 절대경로는 계속 차단한다.
 - 스모크 체크 결과 `mkdir -p /home/user/diagnostics`, `ls -la /home/user/data`, `stat /home/user/data/status.json`, `wc -l /tmp/out.txt`는 허용되고, `rm -rf /`는 계속 차단된다.
 
 근본 해결:
