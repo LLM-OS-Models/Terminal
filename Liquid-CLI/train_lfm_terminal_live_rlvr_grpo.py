@@ -908,6 +908,64 @@ def rewrite_known_paths(text: str, sandbox: Path) -> str:
     return pattern.sub(lambda match: replacements[match.group(0)], text)
 
 
+def is_path_inside(path: Path, parent: Path) -> bool:
+    try:
+        path.resolve().relative_to(parent.resolve())
+        return True
+    except ValueError:
+        return False
+
+
+def dockerfile_token_to_path(token: str, sandbox: Path) -> Path | None:
+    try:
+        parts = shlex.split(token)
+    except ValueError:
+        return None
+    if not parts:
+        return None
+    rewritten = Path(rewrite_known_paths(parts[0], sandbox))
+    if not rewritten.is_absolute():
+        return None
+    if not is_path_inside(rewritten, sandbox):
+        return None
+    return rewritten
+
+
+def apply_safe_dockerfile_seed_commands(dockerfile: Path, sandbox: Path) -> None:
+    """Replay simple Dockerfile file-seeding commands into the local sandbox.
+
+    We do not execute Dockerfile RUN lines. Endless/Harbor tasks often use
+    Dockerfile heredocs to create initial files under /home/user or /work; this
+    parser handles that safe subset so no-Docker RL sees the intended state.
+    """
+    if not dockerfile.exists():
+        return
+    text = dockerfile.read_text(encoding="utf-8", errors="replace")
+
+    heredoc_re = re.compile(
+        r"RUN\s+cat\s+>\s+(?P<target>(?:'[^']+'|\"[^\"]+\"|\S+))\s+<<['\"]?EOF['\"]?\n(?P<body>.*?)\nEOF",
+        flags=re.DOTALL,
+    )
+    for match in heredoc_re.finditer(text):
+        target = dockerfile_token_to_path(match.group("target"), sandbox)
+        if target is None:
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(match.group("body") + "\n", encoding="utf-8")
+
+    mkdir_re = re.compile(r"RUN\s+mkdir\s+-p\s+(?P<target>(?:'[^']+'|\"[^\"]+\"|\S+))")
+    for match in mkdir_re.finditer(text):
+        target = dockerfile_token_to_path(match.group("target"), sandbox)
+        if target is not None:
+            target.mkdir(parents=True, exist_ok=True)
+
+    rm_re = re.compile(r"RUN\s+rm\s+-f\s+(?P<target>(?:'[^']+'|\"[^\"]+\"|\S+))")
+    for match in rm_re.finditer(text):
+        target = dockerfile_token_to_path(match.group("target"), sandbox)
+        if target is not None and target.exists():
+            target.unlink()
+
+
 def terminate_process_group(proc: subprocess.Popen[str] | None, grace_sec: float = 1.0) -> None:
     if proc is None:
         return
@@ -970,6 +1028,7 @@ def setup_sandbox(task_binary_b64: str, task_dir_value: str, task_id: str) -> tu
                 shutil.copytree(child, target, symlinks=False)
             else:
                 shutil.copy2(child, target)
+        apply_safe_dockerfile_seed_commands(env_dir / "Dockerfile", root)
 
     tests_src = task_root / "tests"
     if tests_src.exists():

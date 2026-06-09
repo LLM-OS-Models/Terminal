@@ -242,9 +242,10 @@ Docker/Harbor가 없는 것이 데이터 준비의 장애물은 아니다. 하�
 
 1. task 간 격리가 Docker보다 약하다.
 2. Dockerfile에 설치 의존성이 숨어 있는 task는 로컬 실행에서 실패할 수 있다.
-3. `/workspace`, `/work`, `/home/user`, `/output`, `/logs` path rewrite가 완벽하지 않은 task가 있을 수 있다.
-4. 모델이 위험 명령을 내렸을 때 Docker보다 방어선이 약하므로 unsafe command filter가 중요하다.
-5. terminal task가 system package, network, service manager, background process에 의존하면 verifier가 흔들릴 수 있다.
+3. Dockerfile `RUN` 단계가 초기 파일을 생성하는 task는, Dockerfile을 그대로 실행하지 않으면 시작 상태가 비어 있을 수 있다.
+4. `/workspace`, `/work`, `/home/user`, `/output`, `/logs` path rewrite가 완벽하지 않은 task가 있을 수 있다.
+5. 모델이 위험 명령을 내렸을 때 Docker보다 방어선이 약하므로 unsafe command filter가 중요하다.
+6. terminal task가 system package, network, service manager, background process에 의존하면 verifier가 흔들릴 수 있다.
 
 현재 대응:
 
@@ -262,6 +263,40 @@ Docker/Harbor가 없는 것이 데이터 준비의 장애물은 아니다. 하�
 - 그 다음 trace에서 Endless 계열 task가 자주 쓰는 `/work/tickets/...` 경로와 `find /home/user ...`, `cat /home/user/...` 같은 읽기 명령도 동일하게 막히는 것을 확인했다.
 - `rewrite_known_paths()`를 추가해 한 번의 regex substitution으로 `/home/user`, `/work`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, `/app`을 sandbox 내부 경로로 바꾼다.
 - `find`, `ls`, `cat`, `wc`처럼 정상적인 읽기/탐색 명령은 허용 경로 안에서는 통과시키고, `/`, `/etc`, `/proc`, `/sys` 같은 host-sensitive 절대경로는 계속 차단한다.
+
+## 2026-06-09 추가 수정: Dockerfile seed replay
+
+새 trace에서 더 큰 문제가 확인됐다. Endless task 중 일부는 `environment/seeds` 디렉터리에 초기 파일을 넣는 대신 Dockerfile 안에서 다음처럼 파일을 만든다.
+
+```text
+RUN cat > /home/user/tickets/ticket-5502/cluster_status/node-beta.status <<'EOF'
+SERVICE=db
+STATE=FAIL
+EOF
+```
+
+Docker/Harbor에서는 이미지 빌드 과정에서 이 파일들이 생기지만, 현재 no-Docker runner는 Dockerfile을 실행하지 않는다. 그래서 모델이 `/home/user/tickets/...`를 읽으려 해도 실제 workspace에는 `test_initial_state.py`만 있고 status 파일이 없었다.
+
+해결:
+
+- Dockerfile 전체를 실행하지 않는다. 임의 `RUN` 실행은 위험하다.
+- 대신 안전한 seed subset만 파싱한다.
+- 지원하는 subset:
+  - `RUN cat > <allowed-path> <<EOF ... EOF`
+  - `RUN rm -f <allowed-path>`
+  - 간단한 `RUN mkdir -p <allowed-path>`
+- `<allowed-path>`는 `/home/user`, `/work`, `/workspace`, `/tmp`, `/output`, `/logs`, `/tests`, `/app`처럼 sandbox 내부로 rewrite 가능한 경로만 허용한다.
+
+검증한 예시:
+
+- `task_000000_010fa6d9`
+- 생성됨:
+  - `workspace/tickets/ticket-5502/cluster_status/node-alpha.status`
+  - `workspace/tickets/ticket-5502/cluster_status/node-beta.status`
+  - `workspace/tickets/ticket-5502/cluster_status/node-gamma.status`
+- 생성되지 않아야 하는 `resolution.log`는 시작 시점에 없음.
+
+이 수정 이후부터 no-Docker 환경에서도 Dockerfile이 만든 초기 파일 상태를 상당 부분 재현할 수 있다. 다만 apt install, service manager, daemon 실행처럼 Dockerfile의 일반 명령 전체를 재현하는 것은 아직 의도적으로 하지 않는다.
 - 스모크 체크 결과 `mkdir -p /home/user/diagnostics`, `ls -la /home/user/data`, `stat /home/user/data/status.json`, `wc -l /tmp/out.txt`는 허용되고, `rm -rf /`는 계속 차단된다.
 
 근본 해결:

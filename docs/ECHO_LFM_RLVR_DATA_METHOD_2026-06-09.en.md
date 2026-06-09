@@ -241,9 +241,10 @@ Limitations:
 
 1. Task isolation is weaker than Docker.
 2. Tasks with hidden Dockerfile package dependencies can fail locally.
-3. `/workspace`, `/work`, `/home/user`, `/output`, and `/logs` rewriting may not cover every task.
-4. Unsafe command filtering is critical because there is no container boundary.
-5. Tasks depending on services, background processes, system packages, networking, or process managers can produce noisy verifier results.
+3. Tasks whose Dockerfile `RUN` steps create initial files can start from an empty state if those seed steps are not replayed.
+4. `/workspace`, `/work`, `/home/user`, `/output`, and `/logs` rewriting may not cover every task.
+5. Unsafe command filtering is critical because there is no container boundary.
+6. Tasks depending on services, background processes, system packages, networking, or process managers can produce noisy verifier results.
 
 Current mitigations:
 
@@ -262,6 +263,26 @@ Current mitigations:
 - Added `rewrite_known_paths()` to perform one regex substitution pass for `/home/user`, `/work`, `/tmp`, `/workspace`, `/output`, `/logs`, `/tests`, and `/app`.
 - Read-only traversal commands such as `find`, `ls`, `cat`, and `wc` now pass when all absolute paths are inside allowed task paths; host-sensitive paths such as `/`, `/etc`, `/proc`, and `/sys` remain blocked.
 - Smoke check now allows `mkdir -p /home/user/diagnostics`, `ls -la /home/user/data`, `stat /home/user/data/status.json`, and `wc -l /tmp/out.txt`, while `rm -rf /` remains blocked.
+
+2026-06-09 additional fix: Dockerfile seed replay
+
+- A later trace exposed a more fundamental no-Docker gap. Some Endless tasks do not store initial files under `environment/seeds`. Instead, their Dockerfile creates them with heredocs such as:
+
+```text
+RUN cat > /home/user/tickets/ticket-5502/cluster_status/node-beta.status <<'EOF'
+SERVICE=db
+STATE=FAIL
+EOF
+```
+
+- In Docker/Harbor, these files appear during image build. In the local no-Docker runner, the Dockerfile is not executed, so the model sees an empty workspace even though the prompt says `/home/user/tickets/...` exists.
+- We do not execute arbitrary Dockerfile `RUN` commands.
+- We parse only a safe file-seeding subset:
+  - `RUN cat > <allowed-path> <<EOF ... EOF`
+  - `RUN rm -f <allowed-path>`
+  - simple `RUN mkdir -p <allowed-path>`
+- `<allowed-path>` must rewrite into the sandbox through `/home/user`, `/work`, `/workspace`, `/tmp`, `/output`, `/logs`, `/tests`, or `/app`.
+- Validated on `task_000000_010fa6d9`: the three `node-*.status` files are created under `workspace/tickets/ticket-5502/cluster_status/`, while `resolution.log` is correctly absent at startup.
 
 Longer-term fixes:
 
