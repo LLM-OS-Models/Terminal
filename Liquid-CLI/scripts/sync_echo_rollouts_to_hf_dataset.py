@@ -125,6 +125,23 @@ executed terminal commands, terminal observations, verifier results, and reward
 fields. The training run uses an ECHO-style objective: verifier RL plus
 cross-entropy on terminal observation tokens.
 
+## Why This Data Matters
+
+These rollouts are intended to be reusable training data, not just debug logs.
+
+- Future RLVR: successful and failed command trajectories can be replayed or
+  reweighted for later verifier-reward training.
+- Future SFT: high-quality successful trajectories can be filtered into
+  terminal-agent demonstrations.
+- World-model learning: terminal observations, including stderr, stack traces,
+  directory listings, and test output, provide supervised targets for learning
+  how the shell environment responds to actions.
+- Error analysis: timeout, unsafe-command, verifier-failure, and partial-credit
+  examples can be mined to improve prompts, rewards, sandboxing, and curricula.
+
+In short, each row preserves the action, the real terminal feedback, and the
+learning signal needed to build stronger terminal agents later.
+
 ## Current Snapshot
 
 - Repository: `{repo_id}`
