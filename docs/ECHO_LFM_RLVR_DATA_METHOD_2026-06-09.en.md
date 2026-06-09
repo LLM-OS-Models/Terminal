@@ -81,6 +81,14 @@ Dataset loaded by the current run:
 
 The current run uses ECHO-style world loss, but its data path is still driven by the HF/local loaders. To make the data source fully explicit for future runs, we added a prepared-data script and `--prepared-jsonl` support.
 
+Latest checked status:
+
+- Latest log step checked: 375.
+- Latest saved checkpoint: `checkpoint-370`.
+- Save interval: 10 steps.
+- Current GPU placement: four vLLM replicas on GPUs 0-3, training ranks on GPUs 4-5.
+- GPUs 6-7 are reserved for another job and must not be used.
+
 ## New data preparation script
 
 Download script:
@@ -137,12 +145,18 @@ python Liquid-CLI/scripts/prepare_echo_terminal_data.py \
 
 Current output:
 
-- 1130 rows total.
-- OpenThoughts-Agent-v1-RL: 728 rows, 64.4248%.
-- Endless Terminals: 402 rows, 35.5752%.
+- 1500 rows total.
+- Endless Terminals: 772 rows, 51.4667%.
+- OpenThoughts-Agent-v1-RL: 728 rows, 48.5333%.
 - Skipped: 0.
 
-The Endless download is currently rate-limited by Hugging Face 429 responses. Re-run the preparation command as more tasks finish downloading.
+Current local raw-data status:
+
+- Endless task directories: 774.
+- Endless files: 13914.
+- OpenThoughts parquet: present.
+
+Two Endless task directories were incomplete or filtered out, so 772 of the 774 local Endless directories became training rows. The downloader retries after Hugging Face 429 rate limits. Re-run the preparation command as more tasks finish downloading.
 
 ## Generated outputs
 
@@ -246,7 +260,7 @@ Longer-term fixes:
 
 ## Recommended next long run
 
-Keep the current run alive. For the next new run, explicitly include prepared data:
+Keep the current run alive. For the next new run, explicitly include prepared data. The `--prepared-jsonl` path has already passed a dry-run check:
 
 ```bash
 PREPARED_JSONL=/home/work/.data/echo_terminal_data/prepared/lfm_live_tasks_mixed.jsonl \

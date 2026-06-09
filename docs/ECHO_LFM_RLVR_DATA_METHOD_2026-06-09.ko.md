@@ -78,7 +78,15 @@ GPU 배치:
 - OpenThoughts TBLite: 98
 - skip: 2개
 
-현재 run은 ECHO식 world loss를 쓰지만, 데이터 입력이 HF loader 중심이라 "준비된 ECHO manifest"와 완전히 고정 연결되지는 않았다. 그래서 아래 데이터 준비 스크립트와 `--prepared-jsonl` 옵션을 추가했다.
+현재 run은 ECHO식 world loss를 쓰지만, 데이터 입력이 HF/local loader 중심이라 "준비된 ECHO manifest"와 완전히 고정 연결되지는 않았다. 그래서 아래 데이터 준비 스크립트와 `--prepared-jsonl` 옵션을 추가했다.
+
+최근 확인 상태:
+
+- 최신 로그 확인 step: 375
+- 최신 저장 checkpoint: `checkpoint-370`
+- 저장 주기: 10 steps
+- 현재 GPU 배치: vLLM 4 replicas on GPU 0-3, training ranks on GPU 4-5
+- GPU 6-7은 다른 작업이므로 사용 금지
 
 ## 새로 추가한 데이터 준비 스크립트
 
@@ -136,12 +144,18 @@ python Liquid-CLI/scripts/prepare_echo_terminal_data.py \
 
 현재 생성 결과:
 
-- 총 1130 rows
-- OpenThoughts-Agent-v1-RL: 728 rows, 64.4248%
-- Endless Terminals: 402 rows, 35.5752%
+- 총 1500 rows
+- Endless Terminals: 772 rows, 51.4667%
+- OpenThoughts-Agent-v1-RL: 728 rows, 48.5333%
 - skipped: 0
 
-Endless downloader가 Hugging Face 429 rate limit으로 중간 대기 중이라, 다운로드가 더 진행되면 같은 명령을 다시 돌려 row 수를 늘리면 된다.
+현재 로컬 raw 기준:
+
+- Endless task directories: 774
+- Endless files: 13914
+- OpenThoughts parquet: present
+
+Endless raw 중 일부 task는 파일 구성이 불완전하거나 필터 조건에 걸려 774개 디렉터리 중 772개가 학습 row로 변환되었다. downloader는 Hugging Face 429 rate limit을 만나면 재시도하도록 만들었고, 다운로드가 더 진행되면 같은 prepare 명령을 다시 돌려 row 수를 늘리면 된다.
 
 ## 생성된 산출물
 
@@ -247,7 +261,7 @@ Docker/Harbor가 없는 것이 데이터 준비의 장애물은 아니다. 하�
 
 ## 다음 장기 run 권장 설정
 
-현재 run을 계속 살리면서, 다음 새 run에서는 prepared data를 명시적으로 넣는 것이 낫다.
+현재 run을 계속 살리면서, 다음 새 run에서는 prepared data를 명시적으로 넣는 것이 낫다. 이미 `--prepared-jsonl` 경로는 dry-run으로 검증했다.
 
 권장:
 
