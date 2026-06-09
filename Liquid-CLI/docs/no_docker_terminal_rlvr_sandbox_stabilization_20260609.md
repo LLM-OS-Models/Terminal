@@ -232,6 +232,34 @@ LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts
 
 이렇게 해야 학습 중 생성된 실패/성공 trajectory와 터미널 관측값을 나중에 다시 SFT/RL 데이터로 재사용할 수 있다.
 
+## 장기 실행 launch 안정화
+
+이번 서버에서는 일반적인 `nohup ... &` 실행이 항상 충분히 안정적이지 않았다. 일부 background process는 shell 실행이 끝난 뒤 바로 사라졌고, 로그도 0바이트로 남았다.
+
+반면 간단한 생존 테스트는 `setsid -f`로 통과했다.
+
+```bash
+setsid -f bash -lc 'sleep 5; date -u > /tmp/codex_setsid_survive_test.txt'
+```
+
+따라서 장기 trainer와 HF sync는 `setsid -f`로 별도 session에 분리해서 띄운다.
+
+주의할 점도 있었다.
+
+처음에는 로그 redirection을 다음처럼 잡았다.
+
+```bash
+> "$TRACE_DIR/../train.log"
+```
+
+하지만 redirection은 script 본문이 `TRACE_DIR`를 만들기 전에 shell이 먼저 처리한다. 이때 `traces/..` 경로의 중간 디렉토리인 `traces`가 아직 없으면 파일 열기가 실패해서 script가 시작 전 종료된다.
+
+따라서 run 시작 전 다음을 보장한다.
+
+- `RUN_DIR`, `TRACE_DIR`, `SANDBOX_ROOT`를 미리 만든다.
+- 로그는 `"$RUN_DIR/train.log"`처럼 이미 존재하는 parent path로 직접 연다.
+- 장기 trainer와 sync는 `setsid -f env ... bash -lc ...` 형태로 띄운다.
+
 ## 한계
 
 이 패치는 Docker나 kernel-level sandbox를 완전히 대체하지 않는다.

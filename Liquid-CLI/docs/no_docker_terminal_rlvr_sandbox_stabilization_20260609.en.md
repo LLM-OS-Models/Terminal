@@ -166,6 +166,34 @@ Important:
 
 This keeps the generated terminal observations and trajectories reusable for later SFT/RL experiments.
 
+## Long-Running Launch Stabilization
+
+Plain `nohup ... &` was not reliable enough in this environment. Some background processes disappeared immediately after the launching shell exited, leaving zero-byte logs.
+
+A simple survival test passed with `setsid -f`:
+
+```bash
+setsid -f bash -lc 'sleep 5; date -u > /tmp/codex_setsid_survive_test.txt'
+```
+
+So long-running trainers and HF sync jobs should be launched in a detached session with `setsid -f`.
+
+One launch bug was also found.
+
+The first detached command redirected logs to:
+
+```bash
+> "$TRACE_DIR/../train.log"
+```
+
+Redirection is evaluated by the shell before the training script creates `TRACE_DIR`. If the intermediate `traces` directory does not exist yet, opening `traces/../train.log` fails and the script exits before Python starts.
+
+The stable launch pattern is:
+
+- Create `RUN_DIR`, `TRACE_DIR`, and `SANDBOX_ROOT` before launching.
+- Redirect logs directly to an existing parent path such as `"$RUN_DIR/train.log"`.
+- Use `setsid -f env ... bash -lc ...` for trainer and sync processes.
+
 ## Limitations
 
 This patch is not a replacement for Docker or kernel-level sandboxing.
