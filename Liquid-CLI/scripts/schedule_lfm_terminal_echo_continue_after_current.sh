@@ -50,11 +50,58 @@ POST_EXIT_GRACE_SEC="${POST_EXIT_GRACE_SEC:-120}"
 AUTOPILOT_DIR="${AUTOPILOT_DIR:-/home/work/.data/liquid_cli_sft/autopilot}"
 LOCK_FILE="${LOCK_FILE:-$AUTOPILOT_DIR/${CURRENT_RUN_ID}.continue.lock}"
 LOG_FILE="${LOG_FILE:-$AUTOPILOT_DIR/${CURRENT_RUN_ID}.continue.log}"
+STATUS_FILE="${STATUS_FILE:-$AUTOPILOT_DIR/${CURRENT_RUN_ID}.continue.status.md}"
+STATUS_JSON="${STATUS_JSON:-$AUTOPILOT_DIR/${CURRENT_RUN_ID}.continue.status.json}"
 
 mkdir -p "$AUTOPILOT_DIR"
 
 log() {
   printf '[%s] %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*" | tee -a "$LOG_FILE"
+}
+
+write_status() {
+  local phase="$1"
+  local message="$2"
+  local latest="${3:-}"
+  local next_run="${4:-}"
+  local next_dir="${5:-}"
+  local now
+  now="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+  cat > "$STATUS_FILE" <<EOF
+# ECHO RLVR Continuation Status
+
+- Updated UTC: \`$now\`
+- Phase: \`$phase\`
+- Message: $message
+- Current run: \`$CURRENT_RUN_ID\`
+- Current launcher PID: \`$CURRENT_LAUNCHER_PID\`
+- Latest checkpoint: \`${latest:-unknown}\`
+- Next run: \`${next_run:-not-started}\`
+- Next run dir: \`${next_dir:-not-started}\`
+- GPU policy: vLLM \`$VLLM_GPUS\`, training \`$TRAIN_GPUS\`, ignore \`6,7\`
+
+Logs:
+
+- Scheduler log: \`$LOG_FILE\`
+- Current train log: \`$CURRENT_RUN_DIR/train.log\`
+EOF
+  cat > "$STATUS_JSON" <<EOF
+{
+  "updated_utc": "$now",
+  "phase": "$phase",
+  "message": $(python -c 'import json,sys; print(json.dumps(sys.argv[1]))' "$message"),
+  "current_run_id": "$CURRENT_RUN_ID",
+  "current_launcher_pid": "$CURRENT_LAUNCHER_PID",
+  "latest_checkpoint": "${latest:-}",
+  "next_run_id": "${next_run:-}",
+  "next_run_dir": "${next_dir:-}",
+  "vllm_gpus": "$VLLM_GPUS",
+  "train_gpus": "$TRAIN_GPUS",
+  "ignored_gpus": "6,7",
+  "scheduler_log": "$LOG_FILE",
+  "current_train_log": "$CURRENT_RUN_DIR/train.log"
+}
+EOF
 }
 
 checkpoint_step() {
@@ -83,28 +130,34 @@ trap 'rm -f "$LOCK_FILE"' EXIT
 cd "$ROOT_DIR"
 log "scheduler armed current_pid=$CURRENT_LAUNCHER_PID current_run=$CURRENT_RUN_ID"
 log "policy: vllm_gpus=$VLLM_GPUS train_gpus=$TRAIN_GPUS ignore_gpus=6,7"
+write_status "armed" "Waiting for current run to finish, then continuing from the latest checkpoint." "$(latest_checkpoint 2>/dev/null | xargs -r basename || true)"
 
 while kill -0 "$CURRENT_LAUNCHER_PID" 2>/dev/null; do
   latest="$(latest_checkpoint || true)"
   if [[ -n "${latest:-}" ]]; then
     log "current run alive latest_checkpoint=$(basename "$latest")"
+    write_status "waiting-current-run" "Current run is still alive; continuation is armed." "$(basename "$latest")"
   else
     log "current run alive latest_checkpoint=none"
+    write_status "waiting-current-run" "Current run is still alive; no checkpoint detected yet." "none"
   fi
   sleep "$SLEEP_SEC"
 done
 
 log "current run exited; waiting ${POST_EXIT_GRACE_SEC}s for final checkpoint flush"
+write_status "current-exited" "Current run exited; waiting for final checkpoint flush." "$(latest_checkpoint 2>/dev/null | xargs -r basename || true)"
 sleep "$POST_EXIT_GRACE_SEC"
 
 RESUME_ADAPTER="$(latest_checkpoint || true)"
 if [[ -z "$RESUME_ADAPTER" || ! -d "$RESUME_ADAPTER" ]]; then
   log "no checkpoint found under $CURRENT_OUTPUT_DIR; cannot continue"
+  write_status "failed" "No checkpoint found; continuation cannot start." "none"
   exit 1
 fi
 
 if ! healthcheck_vllm; then
   log "vLLM endpoint is not healthy; refusing to start continuation without rollout servers"
+  write_status "failed" "vLLM endpoint is not healthy; continuation refused." "$(basename "$RESUME_ADAPTER")"
   exit 1
 fi
 
@@ -160,6 +213,7 @@ NOTES=Auto-continuation after parent max-wall-time; ECHO-style GRPO with termina
 EOF
 
 log "starting continuation run_id=$NEXT_RUN_ID resume=$RESUME_ADAPTER"
+write_status "starting-next-run" "Starting continuation from latest checkpoint." "$(basename "$RESUME_ADAPTER")" "$NEXT_RUN_ID" "$NEXT_RUN_DIR"
 
 setsid bash -lc "
   cd '$ROOT_DIR'
@@ -234,3 +288,4 @@ printf '%s\n' "$ADAPTER_SYNC_PID" > "$NEXT_RUN_DIR/adapter_sync.pid"
 
 log "sync_pids rollout=$ROLLOUT_SYNC_PID adapter=$ADAPTER_SYNC_PID"
 log "continuation scheduled and launched; next_run_dir=$NEXT_RUN_DIR"
+write_status "next-run-launched" "Continuation launched; HF rollout and adapter sync loops also started." "$(basename "$RESUME_ADAPTER")" "$NEXT_RUN_ID" "$NEXT_RUN_DIR"
