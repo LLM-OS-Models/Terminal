@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-12 10:20 UTC / 2026-06-12 19:20 KST
+업데이트: 2026-06-12 10:25 UTC / 2026-06-12 19:25 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
@@ -108,8 +108,9 @@ Score = 100 * avg_command_f1
 | --- | ---: | --- |
 | `run_20260612T095008Z.../checkpoint-5` | `51.89` | SFT 1Epoch `52.30`보다 `-0.41` |
 | `run_20260612T095008Z.../checkpoint-10` | `51.11` | SFT 1Epoch보다 `-1.19` |
+| `run_20260612T095008Z.../checkpoint-15` | `50.53` | SFT 1Epoch보다 `-1.77` |
 
-이 숫자는 "RLVR이 무조건 실패"라는 결론은 아니다. 5~10 step은 너무 이른 구간이고, 이전 parent run에서도 최고점은 중간 checkpoint 선택에서 나왔다. 다만 초반부터 무작정 오른다는 신호도 아니므로, 현재 run은 50 step 단위로 sparse 평가하면서 score-vs-step 곡선을 다시 봐야 한다.
+이 숫자는 "RLVR이 무조건 실패"라는 결론은 아니다. 5~15 step은 너무 이른 구간이고, 이전 parent run에서도 최고점은 중간 checkpoint 선택에서 나왔다. 다만 초반부터 무작정 오른다는 신호도 아니므로, 현재 run은 50 step 단위로 sparse 평가하면서 score-vs-step 곡선을 다시 봐야 한다.
 
 ## GPU6 watcher 수정
 

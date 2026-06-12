@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`, vLLM turbo checkpoint-5/10 및 save50 재시작 반영: `2026-06-12 10:20 UTC`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`, vLLM turbo checkpoint-5/10/15 및 save50 재시작 반영: `2026-06-12 10:25 UTC`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -49,6 +49,7 @@
 | 기존 continuation run best | `lfm25-echo-rlvr-continue-checkpoint-220` | `53.26` | SFT 1Epoch 대비 `+0.96` |
 | 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-5` | `51.89` | SFT 1Epoch baseline `52.30`보다 낮음. 너무 이른 checkpoint라 참고용 |
 | 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-10` | `51.11` | baseline보다 낮음. 초반 RLVR이 곧바로 좋아진다는 증거는 아직 없음 |
+| 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-15` | `50.53` | baseline보다 낮음. save5 early run은 장기 학습 후보로 부적합 |
 | 이번 vLLM turbo save50 active run | `run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005` | N/A | checkpoint-15에서 이어받아 학습 진행 중, checkpoint-50/eval 대기 |
 
 점수 기준:
@@ -75,7 +76,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `230`
+- RLVR 평가 완료 개수: `231`
 
 ## 전체 순위
 

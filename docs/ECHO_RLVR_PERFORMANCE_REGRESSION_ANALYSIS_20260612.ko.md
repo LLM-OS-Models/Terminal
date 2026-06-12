@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 성능 하락 분석
 
-업데이트: 2026-06-12 10:20 UTC / 2026-06-12 19:20 KST
+업데이트: 2026-06-12 10:25 UTC / 2026-06-12 19:25 KST
 
 관련 문서:
 
@@ -47,7 +47,7 @@ RLVR 평가 현황:
 - 현재 best checkpoint: parentrun `checkpoint-610`
 - 현재 best Score: `54.05`
 - SFT 1Epoch `52.30` 대비 best gain: `+1.75`
-- vLLM turbo early run: checkpoint-5/10 평가 완료, baseline 아래
+- vLLM turbo early run: checkpoint-5/10/15 평가 완료, baseline 아래
 - vLLM turbo2 save50 run: checkpoint-15 adapter에서 이어서 학습 중, checkpoint-50 대기
 
 현재 README 기준 RLVR 상위권:
@@ -70,6 +70,7 @@ RLVR 평가 현황:
 | --- | ---: | ---: | --- |
 | turbo `checkpoint-5` | `51.89` | `51.08` | SFT 1Epoch 대비 `-0.41` |
 | turbo `checkpoint-10` | `51.11` | `50.24` | SFT 1Epoch 대비 `-1.19` |
+| turbo `checkpoint-15` | `50.53` | `50.22` | SFT 1Epoch 대비 `-1.77` |
 
 이 결과 때문에 `save_steps=5`를 유지할 이유는 낮아졌다. early checkpoint를 촘촘히 보존하는 장점보다, checkpoint write/HF sync/eval queue가 학습 throughput을 깎는 단점이 더 크다. 현재는 turbo `checkpoint-15`에서 이어받아 `save_steps=50`으로 전환했다.
 
