@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`, vLLM turbo checkpoint-5/10/15 및 raw base rerun 반영: `2026-06-12 10:40 UTC`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~225 반영: `2026-06-12 13:45 UTC`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`, vLLM turbo checkpoint-5/10/15 및 raw base rerun 반영: `2026-06-12 10:40 UTC`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~250 반영: `2026-06-12 13:56 UTC`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -36,12 +36,12 @@
 - Save interval: every 25 train steps. The first raw attempt with `max_turns=6`, `max_new_tokens=512` was stopped before checkpoint because action outputs were too long and step time was too slow.
 - Current observed best RLVR checkpoint: parentrun `checkpoint-610`, TB2-lite replay Score `54.05`
 - Current observed best continuation checkpoint: continuation `checkpoint-220`, TB2-lite replay Score `53.26`
-- New active raw run checkpoints: checkpoint-25~225 evaluated. Current raw-run best is `checkpoint-225`, Score `41.06`.
+- New active raw run checkpoints: checkpoint-25~250 evaluated. Current raw-run best is `checkpoint-225`, Score `41.06`; latest evaluated is `checkpoint-250`, Score `39.95`.
 - GPU6 sweep: evaluating parent/continuation checkpoints and available new checkpoints
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
 - Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
 
-주의: Score `54.05`는 새 active raw run 결과가 아니라, 기존 SFT 1Epoch 기반 parent run의 중간 checkpoint sweep에서 나온 best checkpoint 결과다. 새 active raw run은 checkpoint-25~225까지 평가됐고, 현재 최고는 checkpoint-225 Score `41.06`이다. 따라서 전체 1위 갱신은 기존 parent run checkpoint-610 기준으로 반영하고, raw clean-start RLVR은 별도 진행 곡선으로 추적한다.
+주의: Score `54.05`는 새 active raw run 결과가 아니라, 기존 SFT 1Epoch 기반 parent run의 중간 checkpoint sweep에서 나온 best checkpoint 결과다. 새 active raw run은 checkpoint-25~250까지 평가됐고, 현재 최고는 checkpoint-225 Score `41.06`이다. 따라서 전체 1위 갱신은 기존 parent run checkpoint-610 기준으로 반영하고, raw clean-start RLVR은 별도 진행 곡선으로 추적한다.
 
 현재 분리된 결과:
 
@@ -56,7 +56,7 @@
 | 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-15` | `50.53` | baseline보다 낮음. save5 early run은 장기 학습 후보로 부적합 |
 | 이번 raw clean-start RLVR best | `run_20260612T113238Z.../checkpoint-225` | `41.06` | raw base rerun `39.92` 대비 `+1.14`, SFT 1Epoch `52.30` 대비 `-11.24` |
 | 이번 raw clean-start RLVR checkpoint-200 | `run_20260612T113238Z.../checkpoint-200` | `39.67` | 200 step에서는 최고점 아님 |
-| 이번 raw clean-start RLVR latest evaluated | `run_20260612T113238Z.../checkpoint-225` | `41.06` | 현재 raw run 최고점. 장기 추세 확인 필요 |
+| 이번 raw clean-start RLVR latest evaluated | `run_20260612T113238Z.../checkpoint-250` | `39.95` | 최신 평가는 raw base와 거의 동률. 장기 추세 확인 필요 |
 
 점수 기준:
 
@@ -82,7 +82,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `243`
+- RLVR 평가 완료 개수: `244`
 
 ## 전체 순위
 

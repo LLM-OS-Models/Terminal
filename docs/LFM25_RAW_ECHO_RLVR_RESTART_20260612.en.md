@@ -168,11 +168,11 @@ README score remains:
 Score = 100 * avg_command_f1
 ```
 
-## Checkpoint-25 to Checkpoint-225 TB2-lite Results
+## Checkpoint-25 to Checkpoint-250 TB2-lite Results
 
-Updated: 2026-06-12 13:45 UTC.
+Updated: 2026-06-12 13:56 UTC.
 
-GPU6 evaluated checkpoint-25 through checkpoint-225 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
+GPU6 evaluated checkpoint-25 through checkpoint-250 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
 
 | checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
 | ---: | ---: | ---: | ---: | ---: |
@@ -185,6 +185,7 @@ GPU6 evaluated checkpoint-25 through checkpoint-225 from the current raw clean-s
 | 175 | `40.02` | `40.19` | `40.6%` | `58.1%` |
 | 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
 | 225 | `41.06` | `40.92` | `40.6%` | `57.4%` |
+| 250 | `39.95` | `40.84` | `42.9%` | `59.1%` |
 
 Current raw-run best is `checkpoint-225` with Score `41.06`.
 
@@ -192,7 +193,7 @@ Interpretation:
 
 - Compared with the raw base rerun Score `39.92`, checkpoint-225 is `+1.14`.
 - Compared with the SFT 1Epoch baseline Score `52.30`, checkpoint-225 is still `-11.24`.
-- Checkpoint-225 barely beats checkpoint-125, but the first 225 steps still look like a small recovery/search phase rather than a clear aha moment.
+- Checkpoint-225 barely beats checkpoint-125, but checkpoint-250 falls back to `39.95`. The first 250 steps still look like a small recovery/search phase rather than a clear aha moment.
 - Valid JSON remains in the `57.1%` to `59.7%` band, which confirms that raw terminal JSON/tool formatting is still weak.
 - Verifier reward is still near `0.0`, so this early phase is likely driven more by ECHO observation loss and shaping penalties than by sparse verifier success.
 

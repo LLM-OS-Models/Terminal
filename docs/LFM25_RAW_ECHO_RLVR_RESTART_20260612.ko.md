@@ -209,11 +209,11 @@ GPU6 평가:
 Score = 100 * avg_command_f1
 ```
 
-## checkpoint-25~225 TB2-lite 평가 결과
+## checkpoint-25~250 TB2-lite 평가 결과
 
-업데이트: 2026-06-12 13:45 UTC / 2026-06-12 22:45 KST
+업데이트: 2026-06-12 13:56 UTC / 2026-06-12 22:56 KST
 
-GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-225까지 README와 같은 TB2-lite replay 기준으로 평가했다.
+GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-250까지 README와 같은 TB2-lite replay 기준으로 평가했다.
 
 | checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
 | ---: | ---: | ---: | ---: | ---: |
@@ -226,6 +226,7 @@ GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-22
 | 175 | `40.02` | `40.19` | `40.6%` | `58.1%` |
 | 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
 | 225 | `41.06` | `40.92` | `40.6%` | `57.4%` |
+| 250 | `39.95` | `40.84` | `42.9%` | `59.1%` |
 
 현재 raw run 최고점은 `checkpoint-225`의 Score `41.06`이다.
 
@@ -233,7 +234,7 @@ GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-22
 
 - raw base rerun Score `39.92`와 비교하면 checkpoint-225는 `+1.14` 올랐다.
 - 하지만 SFT 1Epoch baseline Score `52.30`과 비교하면 아직 `-11.24` 낮다.
-- checkpoint-225가 checkpoint-125를 아주 조금 넘겼지만, 225 step까지는 뚜렷한 아하 모먼트가 아니라 작은 회복/탐색 구간으로 보는 편이 맞다.
+- checkpoint-225가 checkpoint-125를 아주 조금 넘겼지만, checkpoint-250은 다시 `39.95`로 내려왔다. 250 step까지는 뚜렷한 아하 모먼트가 아니라 작은 회복/탐색 구간으로 보는 편이 맞다.
 - valid JSON은 `57.1%~59.7%` 범위에 머물러 있어, raw 모델의 terminal JSON/tool format prior가 아직 약하다.
 - verifier reward가 계속 `0.0`에 가까운 구간이어서, 현재는 sparse verifier 성공보다 ECHO observation loss와 format/penalty shaping이 주로 작동하는 것으로 보인다.
 
