@@ -476,6 +476,34 @@ GPU 배치:
 | terminal output cap | `10000 chars` |
 | save interval | `25 steps` |
 
+멀티 GPU 배치 해석:
+
+현재 active run의 effective rollout batch는 다음과 같다.
+
+```text
+train ranks 2 * prompts_per_rank 1 * num_generations 4 = 8 rollouts/step
+```
+
+GPU가 많다고 해서 무조건 train-side batch를 키우는 것이 정답은 아니다. 이 run의 병목은 LoRA optimizer VRAM보다 vLLM rollout, 터미널 명령 실행, verifier timeout 쪽에 더 가깝다. 그래서 현재는 다음처럼 분리했다.
+
+```text
+0,1,2,3: vLLM rollout 전용
+4,5: LoRA/GRPO update 전용
+6: checkpoint 평가 전용
+7: 다른 작업용, 이 실험에서 제외
+```
+
+실행 중인 run에서 batch를 바꾸면 checkpoint 간 비교가 깨진다. 따라서 현재 run은 유지하고, 다음 run에서 더 공격적으로 갈 때만 아래 후보를 쓴다.
+
+| 후보 | 설정 | effective rollouts/step | 기대 효과 | 위험 |
+| --- | --- | ---: | --- | --- |
+| 안정 유지 | `prompts_per_rank=1`, `num_generations=4` | `8` | 현재 곡선과 비교가 가장 깨끗함 | 학습 신호가 느림 |
+| 1차 증량 | `prompts_per_rank=2`, `num_generations=4` | `16` | 같은 group size로 prompt coverage 증가 | 터미널/verifier 병목 증가 |
+| group 증량 | `prompts_per_rank=1`, `num_generations=8` | `16` | GRPO group 내 비교가 더 풍부함 | rollout 시간이 크게 증가하고 long tail task에 취약 |
+| 과격 증량 | `prompts_per_rank=2`, `num_generations=8` | `32` | 신호는 많아짐 | no-Docker verifier 병목과 불안정성이 커짐 |
+
+다음 실험에서 가장 합리적인 첫 증량은 `prompts_per_rank=2`, `num_generations=4`, `rollout_workers=16`이다. 이렇게 하면 group size는 유지하면서 step당 task coverage만 넓어진다. 다만 현재처럼 verifier reward가 계속 `0.0`이면 batch만 키워도 성공 trajectory가 생기지 않을 수 있으므로, batch 증량보다 verifier contract와 task difficulty 조절이 더 큰 병목일 수 있다.
+
 최근 진행 속도:
 
 ```text
