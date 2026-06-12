@@ -51,8 +51,8 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다. 결과 디렉터리는 `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`다.
 
-- 현재 비교 최고점: `LFM2.5-8B-A1B Terminal ToolBench Full SFT 1Epoch` Score `52.30`
-- RLVR 평가 완료 개수: `6`
+- 현재 비교 최고점: `lfm25-echo-rlvr-continue-checkpoint-250` Score `52.88`
+- RLVR 평가 완료 개수: `12`
 - 기준점: SFT 1Epoch Score `52.30`, SFT 2Epoch Score `50.48`, LFM2.5 base Score `36.53`
 - GPU6 watcher 정책: `EVAL_STRIDE=50` 단위 checkpoint와 최신 checkpoint를 지속 평가한다.
 - RLVR checkpoint가 SFT 1Epoch `52.30`을 넘는지 여부는 full eval 완료 후 판단한다.
