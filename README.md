@@ -1,79 +1,27 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`, vLLM turbo checkpoint-5/10/15 및 raw base rerun 반영: `2026-06-12 10:40 UTC`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~250 반영: `2026-06-12 13:56 UTC`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 15:12 KST`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~1175 상세 문서 반영: `2026-06-13 07:31 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
 
-상세 연구 노트:
-- RL/DPO 다음 학습 계획: [`docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md`](docs/RL_DPO_TERMINAL_PLAN_2026-06-06.md)
-- KoHRM/HRM 사용법과 JSON contract 연구: [`docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md`](docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md)
-- Harness-1 -> LFM2.5 LoRA SFT/RL 계획: [`docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md`](docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md)
-- No-Docker ECHO RLVR sandbox 안정화: [`Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md`](Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md)
-- LFM2.5 ECHO RLVR 실행/평가 종합 기록(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
-- LFM2.5 ECHO RLVR runbook(EN): [`docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md)
+## 빠른 점수 보기
+
+- 순위 기준: `Score = 100 * avg_command_f1`
+- 보조 지표: `First Cmd`, `Valid JSON`, `Sec/Step`
+- raw `LiquidAI/LFM2.5-8B-A1B` 기준점은 README에서 Score `36.53`으로 고정한다.
+- 현재 최고점은 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch + ECHO RLVR LoRA checkpoint-610`, Score `54.05`이다.
+- 결과 디렉터리: `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm`
+- GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/results/glm51_api/`
+
+상세 RLVR 실행/평가/원인 분석은 README 상단에서 제외하고 문서로 분리했다.
+
 - LFM2.5 ECHO RLVR 현재 상태(KO): [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)
 - LFM2.5 raw ECHO RLVR 재시작 기록(KO): [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md`](docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md)
-- LFM2.5 raw ECHO RLVR restart log(EN): [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.en.md`](docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.en.md)
 - LFM2.5 ECHO RLVR GPU6 평가 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
-- LFM2.5 ECHO RLVR 기존 run vs 이번 paper-aligned run 비교: [`docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md`](docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md)
-
-## 상태: LFM2.5 ECHO Terminal RLVR
-
-2026-06-12 UTC 기준으로 ECHO-style terminal RLVR을 계속 실험 중이다. SFT 1Epoch 기반 continuation run은 score drift 해석이 어려워 일단 멈췄고, 현재는 순수 raw `LiquidAI/LFM2.5-8B-A1B`에서 새 LoRA adapter를 붙이는 clean-start RLVR run으로 전환했다. raw 재시작의 원인, vLLM 안정화, 데이터 구성, 초기 step 로그는 [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md`](docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md)에 정리했다.
-
-- Active base model: `LiquidAI/LFM2.5-8B-A1B`
-- Resume adapter: none
-- Latest active run: `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k`
-- Latest active run status: raw LFM2.5 clean-start LoRA RLVR in progress, vLLM rollout + ECHO observation loss, checkpoint every 25 steps
-- vLLM rollout GPUs: `0,1,2,3`
-- Training GPUs: `4,5`
-- Evaluation GPU: `6`
-- Excluded GPU: `7`
-- Sandbox mode: Docker 없이 local workspace sandbox, `/app`/`/tests` rewrite 및 host-sensitive command 차단 적용
-- Objective: verifier RLVR + ECHO-style terminal observation world-model loss
-- Active fast raw config: `num_generations=4`, `max_turns=4`, `max_new_tokens=256`, `save_steps=25`, `world_model_coeff=0.05`
-- Save interval: every 25 train steps. The first raw attempt with `max_turns=6`, `max_new_tokens=512` was stopped before checkpoint because action outputs were too long and step time was too slow.
-- Current observed best RLVR checkpoint: parentrun `checkpoint-610`, TB2-lite replay Score `54.05`
-- Current observed best continuation checkpoint: continuation `checkpoint-220`, TB2-lite replay Score `53.26`
-- New active raw run checkpoints: checkpoint-25~250 evaluated. Current raw-run best is `checkpoint-225`, Score `41.06`; latest evaluated is `checkpoint-250`, Score `39.95`.
-- GPU6 sweep: evaluating parent/continuation checkpoints and available new checkpoints
-- Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
-- Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
-
-주의: Score `54.05`는 새 active raw run 결과가 아니라, 기존 SFT 1Epoch 기반 parent run의 중간 checkpoint sweep에서 나온 best checkpoint 결과다. 새 active raw run은 checkpoint-25~250까지 평가됐고, 현재 최고는 checkpoint-225 Score `41.06`이다. 따라서 전체 1위 갱신은 기존 parent run checkpoint-610 기준으로 반영하고, raw clean-start RLVR은 별도 진행 곡선으로 추적한다.
-
-현재 분리된 결과:
-
-| 구분 | run/checkpoint | README Score | 상태 |
-| --- | --- | ---: | --- |
-| 순수 raw base rerun | `LiquidAI/LFM2.5-8B-A1B` / `lfm25-raw-base-no-sft-rerun-20260612` | `39.92` | Terminal ToolBench SFT 전의 순수 LFM2.5. SFT 1Epoch 대비 `-12.38` |
-| no-RL SFT baseline | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` | `52.30` | RLVR 없이 terminal/tool SFT만 적용한 기준점 |
-| 기존 parent run best | `lfm25-echo-rlvr-parentrun-checkpoint-610` | `54.05` | SFT 1Epoch `52.30` 대비 `+1.75`, 현재 전체 1위 |
-| 기존 continuation run best | `lfm25-echo-rlvr-continue-checkpoint-220` | `53.26` | SFT 1Epoch 대비 `+0.96` |
-| 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-5` | `51.89` | SFT 1Epoch baseline `52.30`보다 낮음. 너무 이른 checkpoint라 참고용 |
-| 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-10` | `51.11` | baseline보다 낮음. 초반 RLVR이 곧바로 좋아진다는 증거는 아직 없음 |
-| 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-15` | `50.53` | baseline보다 낮음. save5 early run은 장기 학습 후보로 부적합 |
-| 이번 raw clean-start RLVR best | `run_20260612T113238Z.../checkpoint-225` | `41.06` | raw base rerun `39.92` 대비 `+1.14`, SFT 1Epoch `52.30` 대비 `-11.24` |
-| 이번 raw clean-start RLVR checkpoint-200 | `run_20260612T113238Z.../checkpoint-200` | `39.67` | 200 step에서는 최고점 아님 |
-| 이번 raw clean-start RLVR latest evaluated | `run_20260612T113238Z.../checkpoint-250` | `39.95` | 최신 평가는 raw base와 거의 동률. 장기 추세 확인 필요 |
-
-점수 기준:
-
-```text
-score = 100 * avg_command_f1
-```
-
-`first_cmd_exact_pct`는 순위에 직접 섞지 않고 보조 지표로만 기록한다.
-
-결과 디렉터리: `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm`
-GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/results/glm51_api/`
-
-## 점수-모델 크기 시각화
-
-![TB2-lite score vs model size, piecewise total parameter scale v6](docs/assets/tb2_score_vs_model_scale_piecewise_v6_2026-06-07.png)
-
-위 그림은 x축을 **총 파라미터 수 기반 piecewise 시각 스케일**로 두고, 1.4B/8.3B 튜닝 모델은 왼쪽 작은 클러스터로 묶으며 18~230B 구간은 더 넓히고 754B~1.6T 구간은 압축했다. v6에서는 52.30 점수 박스를 텍스트 실측 bbox 기준으로 유지하고, LFM2.5 설명 박스를 KoHRM 1.4B 설명처럼 점수 박스 바로 아래에 붙였다. 기존 로그 스케일 버전은 `docs/assets/tb2_score_vs_model_scale_2026-06-07.png`, 선형 스케일 버전은 `docs/assets/tb2_score_vs_model_scale_linear_2026-06-07.png`, 이전 piecewise 버전은 `docs/assets/tb2_score_vs_model_scale_piecewise_2026-06-07.png`, v2는 `docs/assets/tb2_score_vs_model_scale_piecewise_v2_2026-06-07.png`, v3는 `docs/assets/tb2_score_vs_model_scale_piecewise_v3_2026-06-07.png`, v4는 `docs/assets/tb2_score_vs_model_scale_piecewise_v4_2026-06-07.png`, v5는 `docs/assets/tb2_score_vs_model_scale_piecewise_v5_2026-06-07.png`에 보존했다. `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`는 8.3B-A1B 규모로 Score `52.30`을 기록해 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`과 `deepseek-ai/DeepSeek-V4-Pro` valid-only 기능적 동등 보정 Score `48.19`보다 높다. `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`도 1.4B dense 규모에서 Score `45.90`으로 `Qwen/Qwen3.5-397B-A17B-FP8`, `GLM-5.1`, `MiniMaxAI/MiniMax-M2.7`, `deepseek-ai/DeepSeek-V4-Flash`보다 높아, 이 TB2-lite terminal replay에서는 원시 모델 크기보다 terminal/tool SFT 데이터 적합도와 출력 포맷 적합도가 훨씬 크게 작동한다.
+- LFM2.5 ECHO RLVR runbook(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
+- LFM2.5 SFT/RLVR 비교 분석(KO): [`docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md`](docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md)
+- 전체 연구 노트와 시각화는 README 하단 참고 섹션에 둔다.
 
 ## 진행 중: LFM2.5 ECHO RLVR GPU6 평가
 
@@ -82,7 +30,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `244`
+- RLVR 평가 완료 개수: `283`
 
 ## 전체 순위
 
@@ -207,7 +155,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 전체 순위 반영 메모:
 
 - 완료된 Native Gemma 4 결과 16개, 요청 외부 모델 완료분 18개, Qwen3.5 대형 FP8 완료분 2개, Qwen3.5-2B fast-continue fullconv 평가 1개, GLM-5.1 API 평가 1개, LFM2.5-8B-A1B ToolBench Full SFT 1epoch/2epoch 평가 2개, KoHRM-Text stage4d base/LoRA full 303-step 평가 8개, KoHRM-Text full SFT 4개를 이 표에 반영했다.
-- 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`, Score `52.30`이다. 2epoch Score `50.48`보다 `+1.82`, `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`보다 `+2.33`, `Zyphra/ZAYA1-74B-preview` Score `48.15`보다 `+4.15`, 기존 학습 모델 1위 `gemma-4-26B-A4B-it SFT 2epoch` Score `39.56`보다 `+12.74` 높다.
+- 현재 전체 1위는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch + ECHO RLVR LoRA checkpoint-610`, Score `54.05`이다. SFT 1Epoch 단독 Score `52.30`보다 `+1.75`, 2epoch Score `50.48`보다 `+3.57`, `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`보다 `+4.08` 높다. raw clean-start ECHO RLVR은 checkpoint-1100 Score `44.84`까지 상승해 raw LFM2.5 README 기준점 `36.53`보다 `+8.31` 높지만, 아직 SFT 1Epoch 단독보다는 `-7.46` 낮다.
 - `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`는 Score `45.90`으로 KoHRM 계열 최고점으로 유지한다. Epoch1 Score `38.56`보다 `+7.34`, Qwen fast-continue fullconv Score `44.79`보다 `+1.11` 높고, LFM2.5 ToolBench SFT 2epoch Score `50.48`보다는 `-4.58` 낮다. Epoch3는 Score `43.57`로 Epoch2보다 `-2.33` 낮아 current best로 올리지 않는다. 8-shard Epoch2 평가 wall time은 가장 느린 shard 기준 `3285.1s`, 약 `54분 45초`다.
 - `KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3`는 Score `43.57`로 완료됐다. Cmd F1 `0.4357`, Precision `0.4703`, Recall `0.5003`, First Cmd `45.5%`, Valid JSON `61.7%`, 303/303 step이다. Epoch2 Score `45.90`보다 `-2.33` 낮아 KoHRM current best는 Epoch2로 유지한다.
 - `Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch`는 Score `44.79`로 Qwen 계열 최고점이다. 기존 `Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` Score `39.52`보다 `+5.27` 높고, GLM-5.1 API Score `41.68`보다도 `+3.11` 높다. 같은 결과 JSON의 legacy `next_action_score`는 `41.64`이며, 전체 순위 기준에는 쓰지 않는다.
