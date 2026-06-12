@@ -37,6 +37,40 @@ Score = 100 * avg_command_f1
 
 터미널 에이전트에서는 `first_cmd_exact_pct`가 중요하다. 첫 `ls`, `cat`, `pytest`, `python`, `grep` 방향이 틀리면 후속 command F1도 같이 무너진다. 다만 README 순위는 오직 `Score = 100 * avg_command_f1`로 통일한다.
 
+중요한 한계:
+
+이 벤치마크는 완벽한 터미널 에이전트 벤치가 아니다. 현재 README 점수는 실제 Docker 기반 TerminalBench-2.0 pass@1이 아니라, 빠른 반복 실험을 위한 `TB2-lite corrected 303-step replay` proxy 점수다.
+
+이렇게 만든 이유는 현실적인 운영 제약 때문이다.
+
+```text
+1. 현재 환경에서는 Docker/Harbor/Terminus 기반 task 격리를 안정적으로 쓰기 어렵다.
+2. 실제 터미널 task를 매번 완전 실행하면 한 checkpoint 평가가 너무 오래 걸린다.
+3. RLVR 중에는 checkpoint가 25 step마다 나오므로, 느린 full benchmark만으로는 학습 곡선을 따라갈 수 없다.
+4. 그래서 command F1, first command, valid JSON을 빠르게 보는 replay metric을 우선 사용한다.
+```
+
+따라서 이 점수는 “실제 TB2 pass@1”이 아니라 다음을 보는 지표다.
+
+```text
+1. 모델이 터미널 action JSON을 안정적으로 내는가?
+2. 첫 command 방향이 reference와 맞는가?
+3. ls/cat/python/pytest/grep/sed 같은 command sequence를 얼마나 복원하는가?
+4. checkpoint가 좋아지는지 나빠지는지 빠르게 감지할 수 있는가?
+```
+
+반대로 이 proxy는 다음을 충분히 보지 못한다.
+
+```text
+1. 실제 filesystem state가 바뀐 뒤의 장기 복구 능력
+2. Docker 격리 환경에서의 의존성 설치와 상태 유지
+3. unit test를 끝까지 통과시키는 실제 task success
+4. reference command와 다르지만 같은 문제를 푸는 대체 풀이
+5. 긴 multi-turn 탐색에서의 timeout/latency tradeoff
+```
+
+그래서 README 순위는 checkpoint sweep과 개발 방향 판단에는 유용하지만, 논문식 최종 성능 주장으로 쓰면 안 된다. 최종 성능은 Docker/Harbor/Terminus 계열의 실제 실행 benchmark에서 다시 검증해야 한다.
+
 ## 2. ECHO 논문 기준
 
 참고 논문:

@@ -14,6 +14,8 @@
 - 결과 디렉터리: `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm`
 - GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/results/glm51_api/`
 
+주의: 이 README의 점수는 실제 Docker 기반 TerminalBench-2.0 pass@1이 아니라, 빠른 반복 실험을 위한 `TB2-lite corrected 303-step replay` proxy 점수다. 도커를 쓰지 못하는 현재 환경에서 실제 터미널 task를 매번 완전 격리 실행하면 너무 느리고 불안정하므로, command F1/first command/JSON validity 중심으로 빠르게 비교한다. 따라서 이 표는 모델 간 방향성과 checkpoint sweep용으로 읽어야 하며, 최종 공개 성능은 Docker/Harbor/Terminus 계열의 실제 실행 평가로 다시 검증해야 한다.
+
 상세 RLVR 실행/평가/원인 분석은 README 상단에서 제외하고 문서로 분리했다.
 
 - LFM2.5 ECHO RLVR 현재 상태(KO): [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)
