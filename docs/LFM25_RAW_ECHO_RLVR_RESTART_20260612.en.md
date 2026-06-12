@@ -168,6 +168,35 @@ README score remains:
 Score = 100 * avg_command_f1
 ```
 
+## Checkpoint-25 to Checkpoint-200 TB2-lite Results
+
+Updated: 2026-06-12 13:27 UTC.
+
+GPU6 evaluated checkpoint-25 through checkpoint-200 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
+
+| checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
+| ---: | ---: | ---: | ---: | ---: |
+| 25 | `37.89` | `39.00` | `41.6%` | `59.4%` |
+| 50 | `40.34` | `40.90` | `42.2%` | `58.1%` |
+| 75 | `39.19` | `39.22` | `39.3%` | `57.1%` |
+| 100 | `40.34` | `40.81` | `41.9%` | `58.4%` |
+| 125 | `41.01` | `41.67` | `43.2%` | `57.4%` |
+| 150 | `40.43` | `40.39` | `40.3%` | `59.4%` |
+| 175 | `40.02` | `40.19` | `40.6%` | `58.1%` |
+| 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
+
+Current raw-run best is `checkpoint-125` with Score `41.01`.
+
+Interpretation:
+
+- Compared with the raw base rerun Score `39.92`, checkpoint-125 is `+1.09`.
+- Compared with the SFT 1Epoch baseline Score `52.30`, checkpoint-125 is still `-11.29`.
+- Checkpoint-200 falls back to `39.67`, so the first 200 steps do not show a clear aha moment yet.
+- Valid JSON remains in the `57.1%` to `59.7%` band, which confirms that raw terminal JSON/tool formatting is still weak.
+- Verifier reward is still near `0.0`, so this early phase is likely driven more by ECHO observation loss and shaping penalties than by sparse verifier success.
+
+This is not a final negative result. The raw run does recover above raw base at checkpoint-50/100/125, so the terminal-feedback signal is not dead. The decisive checkpoints are still 500, 1000, and 2000.
+
 ## Risks
 
 - Raw model format following is weak, so verifier reward may remain sparse.

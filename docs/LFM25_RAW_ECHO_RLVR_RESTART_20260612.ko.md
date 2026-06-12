@@ -209,6 +209,35 @@ GPU6 평가:
 Score = 100 * avg_command_f1
 ```
 
+## checkpoint-25~200 TB2-lite 평가 결과
+
+업데이트: 2026-06-12 13:27 UTC / 2026-06-12 22:27 KST
+
+GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-200까지 README와 같은 TB2-lite replay 기준으로 평가했다.
+
+| checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
+| ---: | ---: | ---: | ---: | ---: |
+| 25 | `37.89` | `39.00` | `41.6%` | `59.4%` |
+| 50 | `40.34` | `40.90` | `42.2%` | `58.1%` |
+| 75 | `39.19` | `39.22` | `39.3%` | `57.1%` |
+| 100 | `40.34` | `40.81` | `41.9%` | `58.4%` |
+| 125 | `41.01` | `41.67` | `43.2%` | `57.4%` |
+| 150 | `40.43` | `40.39` | `40.3%` | `59.4%` |
+| 175 | `40.02` | `40.19` | `40.6%` | `58.1%` |
+| 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
+
+현재 raw run 최고점은 `checkpoint-125`의 Score `41.01`이다.
+
+해석:
+
+- raw base rerun Score `39.92`와 비교하면 checkpoint-125는 `+1.09` 올랐다.
+- 하지만 SFT 1Epoch baseline Score `52.30`과 비교하면 아직 `-11.29` 낮다.
+- checkpoint-200은 `39.67`로 최고점이 아니므로, 200 step까지는 뚜렷한 아하 모먼트가 아니라 작은 회복/탐색 구간으로 보는 편이 맞다.
+- valid JSON은 `57.1%~59.7%` 범위에 머물러 있어, raw 모델의 terminal JSON/tool format prior가 아직 약하다.
+- verifier reward가 계속 `0.0`에 가까운 구간이어서, 현재는 sparse verifier 성공보다 ECHO observation loss와 format/penalty shaping이 주로 작동하는 것으로 보인다.
+
+그래도 완전히 실패로 보기는 이르다. raw에서 바로 시작했는데 checkpoint-50/100/125가 raw base보다 높게 나왔으므로, terminal feedback 기반 학습 신호가 전혀 없지는 않다. 다만 논문식 아하 모먼트를 보려면 최소 checkpoint-500/1000/2000까지 곡선을 봐야 한다.
+
 ## 현재 리스크
 
 1. raw model은 format prior가 약하다.
