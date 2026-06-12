@@ -13,7 +13,7 @@
 | SFT 2Epoch | raw LFM2.5 | 같은 SFT 2epoch | final / `checkpoint-3084` | `50.48` | 1epoch보다 하락. 과학습/스타일 drift 신호 |
 | SFT+ECHO RLVR | SFT 1Epoch | ECHO-style LoRA GRPO | parent `checkpoint-610` | `54.05` | 현재 전체 1위. SFT 위에서 RLVR이 작게 추가 이득 |
 | SFT+ECHO RLVR continuation | SFT+RLVR parent에서 이어서 | ECHO-style LoRA GRPO | continue `checkpoint-220` | `53.26` | 1위는 아님. final checkpoint보다 best checkpoint 선택 필요 |
-| raw ECHO RLVR | raw LFM2.5 | ECHO-style LoRA GRPO | raw `checkpoint-1225` | `45.32` | raw 기준 `+8.79`, 하지만 SFT 1Epoch보다 `-6.98` |
+| raw ECHO RLVR | raw LFM2.5 | ECHO-style LoRA GRPO | raw `checkpoint-1300` | `45.69` | raw 기준 `+9.16`, 하지만 SFT 1Epoch보다 `-6.61` |
 
 README에는 raw `LiquidAI/LFM2.5-8B-A1B`를 Score `36.53`으로 고정한다. GPU6에서 별도로 나온 raw rerun `39.92`는 동일 시스템의 진단용 재평가로 남기되, leaderboard 기준점은 바꾸지 않는다. 평가 seed, vLLM 세팅, evaluator 세부 버전이 조금만 바뀌어도 replay 점수가 흔들릴 수 있기 때문에, public README 순위에서는 처음 반영한 baseline을 고정하는 편이 비교가 깔끔하다.
 
@@ -186,7 +186,7 @@ reward_success_bonus = 0.0
 terminal observation CE loss가 실제로 raw LFM2.5의 terminal-action 능력을 올리는가?
 ```
 
-현재 답은 “올린다”다. raw baseline `36.53`에서 raw RLVR best `45.32`까지 상승했다. 다만 SFT를 대체할 만큼 강하지는 않다.
+현재 답은 “올린다”다. raw baseline `36.53`에서 raw RLVR best `45.69`까지 상승했다. 다만 SFT를 대체할 만큼 강하다고 결론내리기에는 아직 이르다.
 
 ## 5. SFT 데이터와 전처리
 
@@ -547,6 +547,7 @@ checkpoint-1150: 2026-06-13 07:10 KST
 checkpoint-1175: 2026-06-13 07:24 KST
 checkpoint-1200: 2026-06-13 07:38 KST
 checkpoint-1225: 2026-06-13 07:54 KST
+checkpoint-1300: 2026-06-13 08:36 KST
 ```
 
 25 step당 약 `14분`이다. `2000` step까지는 2026-06-13 07:53 KST 기준 약 `776` step 남았고, 단순 추정으로 약 `7시간 15분` 남았다. verifier/test task가 오래 걸리면 `1~2시간` 더 밀릴 수 있다.
@@ -570,42 +571,45 @@ raw run checkpoint 평가:
 | `1175` | `43.29` | `44.2%` | `63.7%` |
 | `1200` | `44.39` | `45.5%` | `66.7%` |
 | `1225` | `45.32` | `48.2%` | `66.3%` |
+| `1250` | `43.88` | `45.2%` | `65.0%` |
+| `1275` | `43.96` | `43.6%` | `67.0%` |
+| `1300` | `45.69` | `42.9%` | `69.0%` |
 
-현재 평가 완료 기준 최고점은 raw `checkpoint-1225`의 Score `45.32`다.
+현재 평가 완료 기준 최고점은 raw `checkpoint-1300`의 Score `45.69`다.
 
-raw checkpoint-1225 상세:
+raw checkpoint-1300 상세:
 
 | 지표 | 값 |
 | --- | ---: |
-| Score | `45.32` |
-| Cmd F1 | `0.4532` |
-| Precision | `0.5380` |
-| Recall | `0.4588` |
-| First Cmd | `48.2%` |
-| Valid JSON | `66.3%` |
-| Next Action | `46.18` |
-| avg predicted commands | `12.61` |
+| Score | `45.69` |
+| Cmd F1 | `0.4569` |
+| Precision | `0.5434` |
+| Recall | `0.4647` |
+| First Cmd | `42.9%` |
+| Valid JSON | `69.0%` |
+| Next Action | `44.85` |
+| avg predicted commands | `13.36` |
 
 raw baseline과 비교:
 
 | 지표 | raw baseline | raw RLVR best | 차이 |
 | --- | ---: | ---: | ---: |
-| Score | `36.53` | `45.32` | `+8.79` |
-| First Cmd | `39.9%` | `48.2%` | `+8.3%p` |
-| Valid JSON | `59.1%` | `66.3%` | `+7.2%p` |
+| Score | `36.53` | `45.69` | `+9.16` |
+| First Cmd | `39.9%` | `42.9%` | `+3.0%p` |
+| Valid JSON | `59.1%` | `69.0%` | `+9.9%p` |
 
 SFT 1Epoch와 비교:
 
 | 지표 | raw RLVR best | SFT 1Epoch | 차이 |
 | --- | ---: | ---: | ---: |
-| Score | `45.32` | `52.30` | `-6.98` |
-| Precision | `0.5380` | `0.5854` | `-0.0474` |
-| Recall | `0.4588` | `0.5431` | `-0.0843` |
-| Valid JSON | `66.3%` | `76.9%` | `-10.6%p` |
+| Score | `45.69` | `52.30` | `-6.61` |
+| Precision | `0.5434` | `0.5854` | `-0.0420` |
+| Recall | `0.4647` | `0.5431` | `-0.0784` |
+| Valid JSON | `69.0%` | `76.9%` | `-7.9%p` |
 
 ## 12. raw RLVR에서 보이는 학습 신호
 
-현재 raw RLVR은 완전 실패가 아니다. Score는 README 기준 raw `36.53`에서 `45.32`까지 오른다. 특히 First Cmd와 Valid JSON이 같이 오른다.
+현재 raw RLVR은 완전 실패가 아니다. Score는 README 기준 raw `36.53`에서 `45.69`까지 오른다. 특히 Valid JSON과 command precision/recall이 같이 오른다.
 
 이것은 다음을 의미한다.
 
@@ -623,10 +627,10 @@ SFT 1Epoch와 비교:
 ```text
 초반 빠른 적응: 36.53 -> 40점대
 중반 완만한 상승: 41 -> 44점대
-후반 완만한 상승/plateau: 43~45점대 흔들림, 1225에서 45.32 새 고점
+후반 완만한 상승/plateau: 43~45점대 흔들림, 1300에서 45.69 새 고점
 ```
 
-`checkpoint-1100` 이후 `1175`에서 내려왔다가 `1225`에서 다시 새 고점을 만든 것을 보면, raw RLVR은 아직 완전히 정체됐다고 보기는 어렵다. 다만 verifier reward가 계속 `0.0`이라 “성공 trajectory가 터지며 급상승하는 강한 아하 모먼트”라고 보기도 이르다. 현 설정으로는 `45~47` 정도가 현실적인 기대 범위다. 운 좋게 특정 checkpoint가 튀면 `48` 근처도 가능하지만, SFT 1Epoch `52.30`을 바로 넘기는 시나리오는 현재 로그와 verifier reward를 보면 낮다.
+`checkpoint-1100` 이후 `1175`에서 내려왔다가 `1225`, `1300`에서 다시 새 고점을 만든 것을 보면, raw RLVR은 아직 완전히 정체됐다고 보기는 어렵다. 다만 verifier reward가 계속 `0.0`이라 “성공 trajectory가 터지며 급상승하는 강한 아하 모먼트”라고 보기도 이르다. 현 설정으로는 `45~47` 정도가 현실적인 기대 범위지만, 2000 step까지 끝나기 전에는 단정하지 않는다. 7시간 정도 더 지나서 `1500~2000` 구간의 checkpoint sweep을 보면, 진짜 plateau인지 `47~48`까지 열리는지 더 분명해질 것이다.
 
 ## 13. 왜 SFT가 RLVR보다 더 잘 먹히나
 
@@ -785,31 +789,31 @@ raw 모델은 정보 예산이 부족하면 긴 설명이나 잘못된 completio
 
 ## 19. 현재 active run 상태
 
-2026-06-13 08:06 KST 확인 기준:
+2026-06-13 08:36 KST 확인 기준:
 
 | 항목 | 값 |
 | --- | --- |
 | active run | `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k` |
-| train step | `1250` |
-| latest saved checkpoint | `1250` |
+| train step | `1311` |
+| latest saved checkpoint | `1300` |
 | max steps | `2000` |
-| 남은 step | 약 `750` |
-| 예상 남은 시간 | 약 `7시간`, 느린 verifier task 포함 시 `8~9시간` |
-| latest evaluated raw checkpoint | `1225` |
-| latest evaluated score | `45.32` |
-| best evaluated raw checkpoint | `1225` |
-| best raw score | `45.32` |
+| 남은 step | 약 `689` |
+| 예상 남은 시간 | 약 `6.5~8시간` |
+| latest evaluated raw checkpoint | `1300` |
+| latest evaluated score | `45.69` |
+| best evaluated raw checkpoint | `1300` |
+| best raw score | `45.69` |
 
 최근 train log:
 
 ```text
-step=1250
-reward_mean=-0.18250
+step=1311
+reward_mean=-0.17375
 verifier_reward_mean=0.0
-policy_loss_mean=-1.28880
-world_loss_mean=1.10797
+policy_loss_mean=0.01475
+world_loss_mean=1.53942
 action_tokens_mean=786.00
-obs_tokens_mean=183.75
+obs_tokens_mean=177.00
 lr=1e-6
 ```
 
@@ -877,6 +881,30 @@ SFT는 foundation이다.
 RLVR은 이미 형식과 command prior가 잡힌 모델을 더 날카롭게 깎는 도구다.
 raw RLVR은 오를 수 있지만, sparse verifier와 no-Docker 환경에서는 SFT를 바로 이기기 어렵다.
 ```
+
+55점 이상 가능성:
+
+현재 전체 최고는 SFT 1Epoch + ECHO RLVR `checkpoint-610`의 Score `54.05`다. 따라서 `55`점 이상을 가장 현실적으로 노리는 길은 raw RLVR 장기 학습이 아니라, 이미 `52.30`을 찍은 SFT 1Epoch 모델 위에서 RLVR 설정을 더 잘 sweep하는 것이다.
+
+다만 이것도 확정은 아니다. raw RLVR은 `1225`에서 `45.32`, `1300`에서 `45.69`로 다시 새 고점을 만들었다. 즉 현재 run은 완전히 멈춘 곡선이 아니다. `2000` step까지 끝난 뒤 checkpoint-score curve를 다시 봐야 한다.
+
+현재 가설은 다음과 같다.
+
+```text
+raw LFM2.5 + RLVR only:
+  55점 가능성은 낮다.
+  하지만 2000 step 전에는 47~48 진입 가능성을 닫지 않는다.
+
+SFT 1Epoch + RLVR:
+  55점 돌파 가능성이 가장 높다.
+  이미 54.05까지 갔으므로 +0.95만 더 필요하다.
+
+SFT only:
+  큰 도약의 핵심이다.
+  하지만 52.30에서 55를 넘기려면 RLVR, 데이터 재조합, 혹은 짧은 additional SFT가 필요할 가능성이 높다.
+```
+
+따라서 지금은 “SFT가 답이고 RLVR은 의미 없다”가 아니라, “SFT가 가장 큰 기반이고, RLVR은 그 위에서 마지막 점수를 찾는 방법”으로 보는 것이 맞다. raw RLVR은 ECHO 신호가 실제로 먹히는지 확인하는 실험이고, SFT+RLVR은 leaderboard를 밀어 올리는 실험이다.
 
 따라서 지금까지의 최종 해석은 다음 한 줄이다.
 
