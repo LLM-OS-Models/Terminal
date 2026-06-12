@@ -168,11 +168,11 @@ README score remains:
 Score = 100 * avg_command_f1
 ```
 
-## Checkpoint-25 to Checkpoint-200 TB2-lite Results
+## Checkpoint-25 to Checkpoint-225 TB2-lite Results
 
-Updated: 2026-06-12 13:27 UTC.
+Updated: 2026-06-12 13:45 UTC.
 
-GPU6 evaluated checkpoint-25 through checkpoint-200 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
+GPU6 evaluated checkpoint-25 through checkpoint-225 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
 
 | checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
 | ---: | ---: | ---: | ---: | ---: |
@@ -184,18 +184,19 @@ GPU6 evaluated checkpoint-25 through checkpoint-200 from the current raw clean-s
 | 150 | `40.43` | `40.39` | `40.3%` | `59.4%` |
 | 175 | `40.02` | `40.19` | `40.6%` | `58.1%` |
 | 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
+| 225 | `41.06` | `40.92` | `40.6%` | `57.4%` |
 
-Current raw-run best is `checkpoint-125` with Score `41.01`.
+Current raw-run best is `checkpoint-225` with Score `41.06`.
 
 Interpretation:
 
-- Compared with the raw base rerun Score `39.92`, checkpoint-125 is `+1.09`.
-- Compared with the SFT 1Epoch baseline Score `52.30`, checkpoint-125 is still `-11.29`.
-- Checkpoint-200 falls back to `39.67`, so the first 200 steps do not show a clear aha moment yet.
+- Compared with the raw base rerun Score `39.92`, checkpoint-225 is `+1.14`.
+- Compared with the SFT 1Epoch baseline Score `52.30`, checkpoint-225 is still `-11.24`.
+- Checkpoint-225 barely beats checkpoint-125, but the first 225 steps still look like a small recovery/search phase rather than a clear aha moment.
 - Valid JSON remains in the `57.1%` to `59.7%` band, which confirms that raw terminal JSON/tool formatting is still weak.
 - Verifier reward is still near `0.0`, so this early phase is likely driven more by ECHO observation loss and shaping penalties than by sparse verifier success.
 
-This is not a final negative result. The raw run does recover above raw base at checkpoint-50/100/125, so the terminal-feedback signal is not dead. The decisive checkpoints are still 500, 1000, and 2000.
+This is not a final negative result. The raw run does recover above raw base at checkpoint-50/100/125/225, so the terminal-feedback signal is not dead. The decisive checkpoints are still 500, 1000, and 2000.
 
 ## Risks
 

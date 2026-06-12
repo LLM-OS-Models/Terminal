@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR GPU6 평가 노트
 
-업데이트: 2026-06-12 13:27 UTC / 2026-06-12 22:27 KST
+업데이트: 2026-06-12 13:45 UTC / 2026-06-12 22:45 KST
 
 상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 현재 활성 run 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 따로 정리한다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
 
@@ -26,7 +26,7 @@
 - parent ECHO RLVR standalone `checkpoint-1880`: Score `50.05`
 - parentrun sweep best so far: `checkpoint-610`, Score `54.05`
 - continuation sweep best so far: `checkpoint-220`, Score `53.26`
-- raw clean-start run best so far: `checkpoint-125`, Score `41.01`
+- raw clean-start run best so far: `checkpoint-225`, Score `41.06`
 
 ## 현재 결론
 
@@ -38,7 +38,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 현재 GPU6 sweep 상태:
 
-- 평가 완료 JSON: `242`개
+- 평가 완료 JSON: `243`개
 - 현재 best: parentrun `checkpoint-610`, Score `54.05`
 - GPU6 watcher는 `parentrun`, `continuation`, `turbo`, `raw` checkpoint 디렉터리를 모두 보도록 수정했다.
 - README 점수 계산 버그를 수정했다. 점수는 `next_action_score`가 아니라 `100 * avg_command_f1`이다.
@@ -56,7 +56,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 ## Raw Clean-Start Results
 
-이번 raw clean-start run은 SFT 1Epoch adapter 없이 순수 `LiquidAI/LFM2.5-8B-A1B`에서 시작했다. 200 step까지는 raw base보다 약간 오른 checkpoint가 있지만, SFT 1Epoch baseline과는 아직 큰 차이가 있다.
+이번 raw clean-start run은 SFT 1Epoch adapter 없이 순수 `LiquidAI/LFM2.5-8B-A1B`에서 시작했다. 225 step까지는 raw base보다 약간 오른 checkpoint가 있지만, SFT 1Epoch baseline과는 아직 큰 차이가 있다.
 
 | Checkpoint | Score | next_action_score | First Cmd | Valid JSON | Note |
 | ---: | ---: | ---: | ---: | ---: | --- |
@@ -65,12 +65,13 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 | raw 50 | 40.34 | 40.90 | 42.2% | 58.1% | above raw base |
 | raw 75 | 39.19 | 39.22 | 39.3% | 57.1% | below raw base |
 | raw 100 | 40.34 | 40.81 | 41.9% | 58.4% | above raw base |
-| raw 125 | 41.01 | 41.67 | 43.2% | 57.4% | current raw best |
+| raw 125 | 41.01 | 41.67 | 43.2% | 57.4% | previous raw best |
 | raw 150 | 40.43 | 40.39 | 40.3% | 59.4% | above raw base |
 | raw 175 | 40.02 | 40.19 | 40.6% | 58.1% | roughly flat |
 | raw 200 | 39.67 | 39.95 | 40.6% | 59.7% | not best |
+| raw 225 | 41.06 | 40.92 | 40.6% | 57.4% | current raw best |
 
-해석: checkpoint-125가 raw base 대비 `+1.09`이므로 terminal feedback 신호가 완전히 죽은 것은 아니다. 다만 200 step까지는 `41.01`이 한계라서 아직 아하 모먼트로 볼 수 없다. 500/1000/2000 step 곡선을 계속 봐야 한다.
+해석: checkpoint-225가 raw base 대비 `+1.14`이므로 terminal feedback 신호가 완전히 죽은 것은 아니다. 다만 225 step까지는 `41.06`이 한계라서 아직 아하 모먼트로 볼 수 없다. 500/1000/2000 step 곡선을 계속 봐야 한다.
 
 ## Checkpoint Results
 

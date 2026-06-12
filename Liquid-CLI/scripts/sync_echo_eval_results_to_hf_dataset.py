@@ -52,7 +52,12 @@ def read_score(path: Path) -> dict:
     return {
         "file": path.name,
         "model_short": data.get("model_short") or path.stem,
-        "score": aggregate.get("next_action_score"),
+        "score": (
+            100.0 * aggregate["avg_command_f1"]
+            if isinstance(aggregate.get("avg_command_f1"), int | float)
+            else None
+        ),
+        "next_action_score": aggregate.get("next_action_score"),
         "avg_command_f1": aggregate.get("avg_command_f1"),
         "first_cmd_exact_pct": aggregate.get("first_cmd_exact_pct"),
         "valid_json_pct": aggregate.get("valid_json_pct"),

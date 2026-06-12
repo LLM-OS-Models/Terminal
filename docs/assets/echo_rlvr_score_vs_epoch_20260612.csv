@@ -236,3 +236,4 @@ raw_clean_start,125,125,0.6666666666666666,41.01,41.67,43.2,57.4,,,,lfm25-echo-r
 raw_clean_start,150,150,0.8,40.43,40.39,40.3,59.4,,,,lfm25-echo-raw-lfm25-checkpoint-150.json
 raw_clean_start,175,175,0.9333333333333333,40.02,40.19,40.6,58.1,,,,lfm25-echo-raw-lfm25-checkpoint-175.json
 raw_clean_start,200,200,1.0666666666666667,39.67,39.95,40.6,59.7,,,,lfm25-echo-raw-lfm25-checkpoint-200.json
+raw_clean_start,225,225,1.2,41.06,40.92,40.6,57.4,,,,lfm25-echo-raw-lfm25-checkpoint-225.json
