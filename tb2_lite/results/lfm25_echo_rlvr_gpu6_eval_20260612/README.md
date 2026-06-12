@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR GPU6 TB2-lite Evaluation
 
-Updated: `2026-06-12 02:36:42 UTC`
+Updated: `2026-06-12 02:39:05 UTC`
 
 This directory tracks TB2-lite full replay evaluations for ECHO-style RLVR LoRA checkpoints.
 
@@ -36,33 +36,34 @@ Current best in this comparison: `lfm25-echo-rlvr-continue-checkpoint-250` Score
 | 24 | `lfm25-echo-rlvr-continue-checkpoint-120` | 51.21 | 0.5109 | 51.5% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-120.json` |
 | 25 | `lfm25-echo-rlvr-continue-checkpoint-150` | 51.16 | 0.5187 | 49.5% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-150.json` |
 | 26 | `lfm25-echo-rlvr-parentrun-checkpoint-10` | 51.14 | 0.5154 | 50.2% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-10.json` |
-| 27 | `lfm25-echo-rlvr-continue-checkpoint-450` | 51.13 | 0.5072 | 52.1% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-450.json` |
-| 28 | `lfm25-echo-rlvr-continue-checkpoint-540` | 51.12 | 0.5152 | 50.2% | 76.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-540.json` |
-| 29 | `lfm25-echo-rlvr-continue-checkpoint-580` | 51.12 | 0.5182 | 49.5% | 77.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-580.json` |
-| 30 | `lfm25-echo-rlvr-continue-checkpoint-600` | 51.04 | 0.5085 | 51.5% | 74.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-600.json` |
-| 31 | `lfm25-echo-rlvr-continue-checkpoint-70` | 50.95 | 0.5187 | 48.8% | 77.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-70.json` |
-| 32 | `lfm25-echo-rlvr-continue-checkpoint-170` | 50.84 | 0.5111 | 50.2% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-170.json` |
-| 33 | `lfm25-echo-rlvr-parentrun-checkpoint-1810` | 50.84 | 0.5155 | 49.2% | 73.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1810.json` |
-| 34 | `lfm25-echo-rlvr-continue-checkpoint-130` | 50.77 | 0.5187 | 48.2% | 78.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-130.json` |
-| 35 | `lfm25-echo-rlvr-parentrun-checkpoint-1850` | 50.74 | 0.5157 | 48.8% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1850.json` |
-| 36 | `lfm25-echo-rlvr-continue-checkpoint-200` | 50.73 | 0.5169 | 48.5% | 75.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-200.json` |
-| 37 | `lfm25-echo-rlvr-continue-checkpoint-620` | 50.68 | 0.5162 | 48.5% | 75.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-620.json` |
-| 38 | `lfm25-echo-rlvr-parentrun-checkpoint-1870` | 50.67 | 0.5130 | 49.2% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1870.json` |
-| 39 | `lfm25-echo-rlvr-parentrun-checkpoint-1790` | 50.64 | 0.5168 | 48.2% | 75.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1790.json` |
-| 40 | `lfm25-echo-rlvr-continue-checkpoint-350` | 50.60 | 0.5094 | 49.8% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-350.json` |
-| 41 | `LFM2.5-8B-A1B Terminal ToolBench Full SFT 2Epoch` | 50.48 | 0.5048 | 49.2% | 74.9% | `tb2_lite/results/20260605T_all_idle_eval/LFM2.5-8B-A1B-terminal-toolbench-full-2epoch-final.json` |
-| 42 | `lfm25-echo-rlvr-continue-checkpoint-10` | 50.46 | 0.5075 | 49.8% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-10.json` |
-| 43 | `lfm25-echo-rlvr-continue-checkpoint-570` | 50.44 | 0.5097 | 49.2% | 75.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-570.json` |
-| 44 | `lfm25-echo-rlvr-parentrun-checkpoint-1800` | 50.37 | 0.5087 | 49.2% | 78.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1800.json` |
-| 45 | `lfm25-echo-rlvr-parentrun-checkpoint-1860` | 50.24 | 0.5068 | 49.2% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1860.json` |
-| 46 | `lfm25-echo-rlvr-parentrun-checkpoint-1820` | 50.22 | 0.5053 | 49.5% | 77.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1820.json` |
-| 47 | `lfm25-echo-rlvr-parent-checkpoint-1880` | 50.05 | 0.5114 | 47.5% | 74.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parent-checkpoint-1880.json` |
-| 48 | `lfm25-echo-rlvr-parentrun-checkpoint-1840` | 49.99 | 0.5020 | 49.5% | 74.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1840.json` |
-| 49 | `lfm25-echo-rlvr-continue-checkpoint-590` | 49.95 | 0.5015 | 49.5% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-590.json` |
-| 50 | `lfm25-echo-rlvr-continue-checkpoint-610` | 49.93 | 0.5012 | 49.5% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-610.json` |
-| 51 | `lfm25-echo-rlvr-continue-checkpoint-300` | 49.87 | 0.5058 | 48.2% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-300.json` |
-| 52 | `lfm25-echo-rlvr-continue-checkpoint-630` | 49.85 | 0.5086 | 47.5% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-630.json` |
-| 53 | `lfm25-echo-rlvr-continue-checkpoint-550` | 49.38 | 0.4946 | 49.2% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-550.json` |
-| 54 | `LiquidAI/LFM2.5-8B-A1B Base` | 36.53 | 0.3653 | 39.9% | 59.1% | `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm/liquid_lfm25_8b_a1b_base.json` |
+| 27 | `lfm25-echo-rlvr-parentrun-checkpoint-30` | 51.14 | 0.5155 | 50.2% | 75.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-30.json` |
+| 28 | `lfm25-echo-rlvr-continue-checkpoint-450` | 51.13 | 0.5072 | 52.1% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-450.json` |
+| 29 | `lfm25-echo-rlvr-continue-checkpoint-540` | 51.12 | 0.5152 | 50.2% | 76.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-540.json` |
+| 30 | `lfm25-echo-rlvr-continue-checkpoint-580` | 51.12 | 0.5182 | 49.5% | 77.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-580.json` |
+| 31 | `lfm25-echo-rlvr-continue-checkpoint-600` | 51.04 | 0.5085 | 51.5% | 74.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-600.json` |
+| 32 | `lfm25-echo-rlvr-continue-checkpoint-70` | 50.95 | 0.5187 | 48.8% | 77.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-70.json` |
+| 33 | `lfm25-echo-rlvr-continue-checkpoint-170` | 50.84 | 0.5111 | 50.2% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-170.json` |
+| 34 | `lfm25-echo-rlvr-parentrun-checkpoint-1810` | 50.84 | 0.5155 | 49.2% | 73.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1810.json` |
+| 35 | `lfm25-echo-rlvr-continue-checkpoint-130` | 50.77 | 0.5187 | 48.2% | 78.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-130.json` |
+| 36 | `lfm25-echo-rlvr-parentrun-checkpoint-1850` | 50.74 | 0.5157 | 48.8% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1850.json` |
+| 37 | `lfm25-echo-rlvr-continue-checkpoint-200` | 50.73 | 0.5169 | 48.5% | 75.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-200.json` |
+| 38 | `lfm25-echo-rlvr-continue-checkpoint-620` | 50.68 | 0.5162 | 48.5% | 75.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-620.json` |
+| 39 | `lfm25-echo-rlvr-parentrun-checkpoint-1870` | 50.67 | 0.5130 | 49.2% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1870.json` |
+| 40 | `lfm25-echo-rlvr-parentrun-checkpoint-1790` | 50.64 | 0.5168 | 48.2% | 75.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1790.json` |
+| 41 | `lfm25-echo-rlvr-continue-checkpoint-350` | 50.60 | 0.5094 | 49.8% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-350.json` |
+| 42 | `LFM2.5-8B-A1B Terminal ToolBench Full SFT 2Epoch` | 50.48 | 0.5048 | 49.2% | 74.9% | `tb2_lite/results/20260605T_all_idle_eval/LFM2.5-8B-A1B-terminal-toolbench-full-2epoch-final.json` |
+| 43 | `lfm25-echo-rlvr-continue-checkpoint-10` | 50.46 | 0.5075 | 49.8% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-10.json` |
+| 44 | `lfm25-echo-rlvr-continue-checkpoint-570` | 50.44 | 0.5097 | 49.2% | 75.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-570.json` |
+| 45 | `lfm25-echo-rlvr-parentrun-checkpoint-1800` | 50.37 | 0.5087 | 49.2% | 78.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1800.json` |
+| 46 | `lfm25-echo-rlvr-parentrun-checkpoint-1860` | 50.24 | 0.5068 | 49.2% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1860.json` |
+| 47 | `lfm25-echo-rlvr-parentrun-checkpoint-1820` | 50.22 | 0.5053 | 49.5% | 77.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1820.json` |
+| 48 | `lfm25-echo-rlvr-parent-checkpoint-1880` | 50.05 | 0.5114 | 47.5% | 74.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parent-checkpoint-1880.json` |
+| 49 | `lfm25-echo-rlvr-parentrun-checkpoint-1840` | 49.99 | 0.5020 | 49.5% | 74.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1840.json` |
+| 50 | `lfm25-echo-rlvr-continue-checkpoint-590` | 49.95 | 0.5015 | 49.5% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-590.json` |
+| 51 | `lfm25-echo-rlvr-continue-checkpoint-610` | 49.93 | 0.5012 | 49.5% | 75.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-610.json` |
+| 52 | `lfm25-echo-rlvr-continue-checkpoint-300` | 49.87 | 0.5058 | 48.2% | 76.2% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-300.json` |
+| 53 | `lfm25-echo-rlvr-continue-checkpoint-630` | 49.85 | 0.5086 | 47.5% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-630.json` |
+| 54 | `lfm25-echo-rlvr-continue-checkpoint-550` | 49.38 | 0.4946 | 49.2% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-550.json` |
+| 55 | `LiquidAI/LFM2.5-8B-A1B Base` | 36.53 | 0.3653 | 39.9% | 59.1% | `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm/liquid_lfm25_8b_a1b_base.json` |
 
 Note: the GPU6 watcher evaluates stride checkpoints plus the most recent checkpoints as they appear.
