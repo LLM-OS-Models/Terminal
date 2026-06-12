@@ -13,7 +13,7 @@
 | SFT 2Epoch | raw LFM2.5 | 같은 SFT 2epoch | final / `checkpoint-3084` | `50.48` | 1epoch보다 하락. 과학습/스타일 drift 신호 |
 | SFT+ECHO RLVR | SFT 1Epoch | ECHO-style LoRA GRPO | parent `checkpoint-610` | `54.05` | 현재 전체 1위. SFT 위에서 RLVR이 작게 추가 이득 |
 | SFT+ECHO RLVR continuation | SFT+RLVR parent에서 이어서 | ECHO-style LoRA GRPO | continue `checkpoint-220` | `53.26` | 1위는 아님. final checkpoint보다 best checkpoint 선택 필요 |
-| raw ECHO RLVR | raw LFM2.5 | ECHO-style LoRA GRPO | raw `checkpoint-1100` | `44.84` | raw 기준 `+8.31`, 하지만 SFT 1Epoch보다 `-7.46` |
+| raw ECHO RLVR | raw LFM2.5 | ECHO-style LoRA GRPO | raw `checkpoint-1225` | `45.32` | raw 기준 `+8.79`, 하지만 SFT 1Epoch보다 `-6.98` |
 
 README에는 raw `LiquidAI/LFM2.5-8B-A1B`를 Score `36.53`으로 고정한다. GPU6에서 별도로 나온 raw rerun `39.92`는 동일 시스템의 진단용 재평가로 남기되, leaderboard 기준점은 바꾸지 않는다. 평가 seed, vLLM 세팅, evaluator 세부 버전이 조금만 바뀌어도 replay 점수가 흔들릴 수 있기 때문에, public README 순위에서는 처음 반영한 baseline을 고정하는 편이 비교가 깔끔하다.
 
@@ -152,7 +152,7 @@ reward_success_bonus = 0.0
 terminal observation CE loss가 실제로 raw LFM2.5의 terminal-action 능력을 올리는가?
 ```
 
-현재 답은 “올린다”다. raw baseline `36.53`에서 raw RLVR best `44.84`까지 상승했다. 다만 SFT를 대체할 만큼 강하지는 않다.
+현재 답은 “올린다”다. raw baseline `36.53`에서 raw RLVR best `45.32`까지 상승했다. 다만 SFT를 대체할 만큼 강하지는 않다.
 
 ## 5. SFT 데이터와 전처리
 
@@ -484,7 +484,7 @@ checkpoint-1125: 2026-06-13 06:56 KST
 checkpoint-1150: 2026-06-13 07:10 KST
 checkpoint-1175: 2026-06-13 07:24 KST
 checkpoint-1200: 2026-06-13 07:38 KST
-checkpoint-1225: 저장 완료
+checkpoint-1225: 2026-06-13 07:54 KST
 ```
 
 25 step당 약 `14분`이다. `2000` step까지는 2026-06-13 07:53 KST 기준 약 `776` step 남았고, 단순 추정으로 약 `7시간 15분` 남았다. verifier/test task가 오래 걸리면 `1~2시간` 더 밀릴 수 있다.
@@ -507,42 +507,43 @@ raw run checkpoint 평가:
 | `1100` | `44.84` | `45.9%` | `66.3%` |
 | `1175` | `43.29` | `44.2%` | `63.7%` |
 | `1200` | `44.39` | `45.5%` | `66.7%` |
+| `1225` | `45.32` | `48.2%` | `66.3%` |
 
-현재 평가 완료 기준 최고점은 raw `checkpoint-1100`의 Score `44.84`다.
+현재 평가 완료 기준 최고점은 raw `checkpoint-1225`의 Score `45.32`다.
 
-raw checkpoint-1100 상세:
+raw checkpoint-1225 상세:
 
 | 지표 | 값 |
 | --- | ---: |
-| Score | `44.84` |
-| Cmd F1 | `0.4484` |
-| Precision | `0.5287` |
-| Recall | `0.4562` |
-| First Cmd | `45.9%` |
+| Score | `45.32` |
+| Cmd F1 | `0.4532` |
+| Precision | `0.5380` |
+| Recall | `0.4588` |
+| First Cmd | `48.2%` |
 | Valid JSON | `66.3%` |
-| Next Action | `45.16` |
-| avg predicted commands | `12.91` |
+| Next Action | `46.18` |
+| avg predicted commands | `12.61` |
 
 raw baseline과 비교:
 
 | 지표 | raw baseline | raw RLVR best | 차이 |
 | --- | ---: | ---: | ---: |
-| Score | `36.53` | `44.84` | `+8.31` |
-| First Cmd | `39.9%` | `45.9%` | `+6.0%p` |
+| Score | `36.53` | `45.32` | `+8.79` |
+| First Cmd | `39.9%` | `48.2%` | `+8.3%p` |
 | Valid JSON | `59.1%` | `66.3%` | `+7.2%p` |
 
 SFT 1Epoch와 비교:
 
 | 지표 | raw RLVR best | SFT 1Epoch | 차이 |
 | --- | ---: | ---: | ---: |
-| Score | `44.84` | `52.30` | `-7.46` |
-| Precision | `0.5287` | `0.5854` | `-0.0567` |
-| Recall | `0.4562` | `0.5431` | `-0.0869` |
+| Score | `45.32` | `52.30` | `-6.98` |
+| Precision | `0.5380` | `0.5854` | `-0.0474` |
+| Recall | `0.4588` | `0.5431` | `-0.0843` |
 | Valid JSON | `66.3%` | `76.9%` | `-10.6%p` |
 
 ## 12. raw RLVR에서 보이는 학습 신호
 
-현재 raw RLVR은 완전 실패가 아니다. Score는 README 기준 raw `36.53`에서 `44.84`까지 오른다. 특히 First Cmd와 Valid JSON이 같이 오른다.
+현재 raw RLVR은 완전 실패가 아니다. Score는 README 기준 raw `36.53`에서 `45.32`까지 오른다. 특히 First Cmd와 Valid JSON이 같이 오른다.
 
 이것은 다음을 의미한다.
 
@@ -560,10 +561,10 @@ SFT 1Epoch와 비교:
 ```text
 초반 빠른 적응: 36.53 -> 40점대
 중반 완만한 상승: 41 -> 44점대
-후반 plateau: 43~45점대 흔들림
+후반 완만한 상승/plateau: 43~45점대 흔들림, 1225에서 45.32 새 고점
 ```
 
-`checkpoint-1100` 이후 `1175`, `1200`이 다시 내려온 것을 보면, “계속 학습하면 무조건 50점대 돌파”라고 보기는 어렵다. 현 설정으로는 `45~47` 정도가 현실적인 기대 범위다. 운 좋게 특정 checkpoint가 튀면 `48` 근처도 가능하지만, SFT 1Epoch `52.30`을 바로 넘기는 시나리오는 현재 로그와 verifier reward를 보면 낮다.
+`checkpoint-1100` 이후 `1175`에서 내려왔다가 `1225`에서 다시 새 고점을 만든 것을 보면, raw RLVR은 아직 완전히 정체됐다고 보기는 어렵다. 다만 verifier reward가 계속 `0.0`이라 “성공 trajectory가 터지며 급상승하는 강한 아하 모먼트”라고 보기도 이르다. 현 설정으로는 `45~47` 정도가 현실적인 기대 범위다. 운 좋게 특정 checkpoint가 튀면 `48` 근처도 가능하지만, SFT 1Epoch `52.30`을 바로 넘기는 시나리오는 현재 로그와 verifier reward를 보면 낮다.
 
 ## 13. 왜 SFT가 RLVR보다 더 잘 먹히나
 
@@ -639,7 +640,7 @@ RLVR은 supervised epoch처럼 매 checkpoint가 단조 상승하지 않는다.
 6. 평가 metric은 offline replay command F1이고, 학습 reward는 live sandbox verifier 기반이다.
 ```
 
-따라서 RLVR 결과는 반드시 checkpoint sweep으로 봐야 한다. 현재도 parent run은 `checkpoint-610`이 best이고, raw run은 아직 `checkpoint-1100`이 best다. final checkpoint를 대표 모델로 삼으면 점수를 놓칠 수 있다.
+따라서 RLVR 결과는 반드시 checkpoint sweep으로 봐야 한다. 현재도 parent run은 `checkpoint-610`이 best이고, raw run은 `checkpoint-1225`가 새 best다. final checkpoint를 대표 모델로 삼으면 점수를 놓칠 수 있다.
 
 ## 16. 도커 없는 RLVR의 한계
 
@@ -692,7 +693,7 @@ task -> action -> terminal observation -> verifier
 3. 동시에 SFT는 JSON action, 중단 타이밍, 검증 습관 같은 절차 지식은 실제로 주입했다.
 4. SFT 2Epoch의 50.48점은 더 많은 SFT가 항상 좋은 것은 아님을 보여준다.
 5. SFT+RLVR의 54.05점은 RLVR이 이미 좋은 action manifold 위에서 가장 효율적임을 보여준다.
-6. raw RLVR의 44.84점은 ECHO-style interaction learning이 작동하지만, SFT warmup 없이 곧장 50점대를 넘기기는 어렵다는 증거다.
+6. raw RLVR의 45.32점은 ECHO-style interaction learning이 작동하지만, SFT warmup 없이 곧장 50점대를 넘기기는 어렵다는 증거다.
 ```
 
 즉 SFT와 RLVR은 경쟁 관계라기보다 역할이 다르다. SFT는 “답안지 양식과 행동 prior”를 맞추고, RLVR은 “터미널 피드백과 verifier를 통해 그 행동을 다듬는” 쪽에 가깝다.
@@ -722,31 +723,31 @@ raw 모델은 정보 예산이 부족하면 긴 설명이나 잘못된 completio
 
 ## 19. 현재 active run 상태
 
-2026-06-13 07:53 KST 확인 기준:
+2026-06-13 08:06 KST 확인 기준:
 
 | 항목 | 값 |
 | --- | --- |
 | active run | `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k` |
-| train step | `1224` |
-| latest saved checkpoint | `1225` |
+| train step | `1250` |
+| latest saved checkpoint | `1250` |
 | max steps | `2000` |
-| 남은 step | 약 `776` |
-| 예상 남은 시간 | 약 `7시간 15분`, 느린 verifier task 포함 시 `8~9시간` |
-| latest evaluated raw checkpoint | `1200` |
-| latest evaluated score | `44.39` |
-| best evaluated raw checkpoint | `1100` |
-| best raw score | `44.84` |
+| 남은 step | 약 `750` |
+| 예상 남은 시간 | 약 `7시간`, 느린 verifier task 포함 시 `8~9시간` |
+| latest evaluated raw checkpoint | `1225` |
+| latest evaluated score | `45.32` |
+| best evaluated raw checkpoint | `1225` |
+| best raw score | `45.32` |
 
 최근 train log:
 
 ```text
-step=1224
-reward_mean=-0.19375
+step=1250
+reward_mean=-0.18250
 verifier_reward_mean=0.0
-policy_loss_mean=0.19313
-world_loss_mean=1.00053
-action_tokens_mean=785.75
-obs_tokens_mean=212.25
+policy_loss_mean=-1.28880
+world_loss_mean=1.10797
+action_tokens_mean=786.00
+obs_tokens_mean=183.75
 lr=1e-6
 ```
 
@@ -886,7 +887,7 @@ tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-ch
 raw RLVR best result:
 
 ```text
-tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1100.json
+tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1225.json
 ```
 
 raw active run log:
