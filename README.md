@@ -47,6 +47,16 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 위 그림은 x축을 **총 파라미터 수 기반 piecewise 시각 스케일**로 두고, 1.4B/8.3B 튜닝 모델은 왼쪽 작은 클러스터로 묶으며 18~230B 구간은 더 넓히고 754B~1.6T 구간은 압축했다. v6에서는 52.30 점수 박스를 텍스트 실측 bbox 기준으로 유지하고, LFM2.5 설명 박스를 KoHRM 1.4B 설명처럼 점수 박스 바로 아래에 붙였다. 기존 로그 스케일 버전은 `docs/assets/tb2_score_vs_model_scale_2026-06-07.png`, 선형 스케일 버전은 `docs/assets/tb2_score_vs_model_scale_linear_2026-06-07.png`, 이전 piecewise 버전은 `docs/assets/tb2_score_vs_model_scale_piecewise_2026-06-07.png`, v2는 `docs/assets/tb2_score_vs_model_scale_piecewise_v2_2026-06-07.png`, v3는 `docs/assets/tb2_score_vs_model_scale_piecewise_v3_2026-06-07.png`, v4는 `docs/assets/tb2_score_vs_model_scale_piecewise_v4_2026-06-07.png`, v5는 `docs/assets/tb2_score_vs_model_scale_piecewise_v5_2026-06-07.png`에 보존했다. `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`는 8.3B-A1B 규모로 Score `52.30`을 기록해 `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` Score `49.97`과 `deepseek-ai/DeepSeek-V4-Pro` valid-only 기능적 동등 보정 Score `48.19`보다 높다. `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2`도 1.4B dense 규모에서 Score `45.90`으로 `Qwen/Qwen3.5-397B-A17B-FP8`, `GLM-5.1`, `MiniMaxAI/MiniMax-M2.7`, `deepseek-ai/DeepSeek-V4-Flash`보다 높아, 이 TB2-lite terminal replay에서는 원시 모델 크기보다 terminal/tool SFT 데이터 적합도와 출력 포맷 적합도가 훨씬 크게 작동한다.
 
+## 진행 중: LFM2.5 ECHO RLVR GPU6 평가
+
+2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다. 결과 디렉터리는 `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`다.
+
+- 현재 비교 최고점: `LFM2.5-8B-A1B Terminal ToolBench Full SFT 1Epoch` Score `52.30`
+- RLVR 평가 완료 개수: `6`
+- 기준점: SFT 1Epoch Score `52.30`, SFT 2Epoch Score `50.48`, LFM2.5 base Score `36.53`
+- GPU6 watcher 정책: `EVAL_STRIDE=50` 단위 checkpoint와 최신 checkpoint를 지속 평가한다.
+- RLVR checkpoint가 SFT 1Epoch `52.30`을 넘는지 여부는 full eval 완료 후 판단한다.
+
 ## 전체 순위
 
 | 순위 | 모델(HF 저장소명) | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |
