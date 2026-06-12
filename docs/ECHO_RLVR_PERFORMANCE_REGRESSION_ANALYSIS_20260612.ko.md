@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 성능 하락 분석
 
-업데이트: 2026-06-12 06:12 UTC / 2026-06-12 15:12 KST
+업데이트: 2026-06-12 10:20 UTC / 2026-06-12 19:20 KST
 
 관련 문서:
 
@@ -47,7 +47,8 @@ RLVR 평가 현황:
 - 현재 best checkpoint: parentrun `checkpoint-610`
 - 현재 best Score: `54.05`
 - SFT 1Epoch `52.30` 대비 best gain: `+1.75`
-- 새 paper-aligned HF on-policy run: first checkpoint pending
+- vLLM turbo early run: checkpoint-5/10 평가 완료, baseline 아래
+- vLLM turbo2 save50 run: checkpoint-15 adapter에서 이어서 학습 중, checkpoint-50 대기
 
 현재 README 기준 RLVR 상위권:
 
@@ -62,6 +63,15 @@ RLVR 평가 현황:
 | parentrun `checkpoint-760` | `53.23` | `52.02` | `49.2%` | `76.6%` | - | - | - |
 
 즉 최고점만 보면 RLVR은 올랐다. SFT 1Epoch 대비 최고 `+1.75`점이다. 하지만 평균적으로는 SFT baseline보다 낮다. 이 차이가 핵심이다.
+
+새 vLLM turbo early checkpoint는 아직 좋지 않다.
+
+| checkpoint | Score | next_action_score | 해석 |
+| --- | ---: | ---: | --- |
+| turbo `checkpoint-5` | `51.89` | `51.08` | SFT 1Epoch 대비 `-0.41` |
+| turbo `checkpoint-10` | `51.11` | `50.24` | SFT 1Epoch 대비 `-1.19` |
+
+이 결과 때문에 `save_steps=5`를 유지할 이유는 낮아졌다. early checkpoint를 촘촘히 보존하는 장점보다, checkpoint write/HF sync/eval queue가 학습 throughput을 깎는 단점이 더 크다. 현재는 turbo `checkpoint-15`에서 이어받아 `save_steps=50`으로 전환했다.
 
 ## 왜 오른 checkpoint도 있나
 
@@ -199,6 +209,28 @@ LoRA adapter id/name을 vLLM request에 싣는 코드가 없다. 즉 vLLM rollou
 4. 또는 step 단위 on-policy는 포기하더라도 checkpoint 단위 policy iteration으로 명확히 분리한다. 예: fixed policy rollout -> adapter update -> vLLM adapter reload -> next rollout.
 
 이 문제를 해결하지 않고 2일 더 돌리면, GPU 시간은 쓰지만 RL 신호가 policy에 정확히 물리지 않을 가능성이 크다.
+
+다만 이번 turbo run에서는 사용자의 요구대로 vLLM을 우선한다. 이유는 다음이다.
+
+- HF generate는 on-policy에 가깝지만 너무 느려서 실험 cycle이 막힌다.
+- vLLM 4 replica는 terminal rollout 생성 병목을 크게 낮춘다.
+- 현재 목표는 ECHO objective가 들어간 live terminal trajectory와 checkpoint를 충분히 쌓고, GPU6에서 score-vs-step을 보는 것이다.
+
+따라서 현재 운영 방침은 `vLLM 0-3 + train 4-5 + eval 6`을 유지하되, 저장/업로드/평가 주기를 줄여 순수 학습 시간을 최대화하는 것이다. checkpoint-50 이후에도 점수가 계속 내려가면 다음 실험은 vLLM LoRA reload 또는 checkpoint-level policy iteration으로 바꿔야 한다.
+
+## save_steps=5가 느렸던 이유
+
+`save_steps=5`는 초반 관찰에는 좋았다. 실제로 `checkpoint-5`, `checkpoint-10`, `checkpoint-15`를 빠르게 얻었고 GPU6으로 즉시 평가할 수 있었다. 하지만 장기 run에는 좋지 않았다.
+
+반복되는 오버헤드는 다음이다.
+
+- LoRA checkpoint write
+- adapter HF sync 후보 증가
+- rollout dataset sync 대상 증가
+- GPU6 평가 queue 증가
+- 파일시스템 metadata write 증가
+
+터미널 RLVR은 이미 terminal subprocess, verifier, trace write가 병목이다. 여기에 checkpoint를 5 step마다 끼우면 GPU가 계산을 못 해서 노는 시간이 늘어난다. 그래서 현재 long run은 `save_steps=50`으로 바꿨다. 이 설정은 중간 checkpoint granularity를 잃는 대신 50 step 단위로 더 깨끗한 score-vs-step 곡선을 본다.
 
 ## no-docker local sandbox의 한계
 

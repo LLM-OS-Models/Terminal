@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-12 09:50 UTC / 2026-06-12 18:50 KST
+업데이트: 2026-06-12 10:20 UTC / 2026-06-12 19:20 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
@@ -10,18 +10,21 @@
 
 가장 중요한 변경은 속도다. 논문/GitHub 기본값에 가까운 `num_generations=16`, `max_turns=16`, `max_new_tokens=2048` 설정은 첫 optimizer step만 15분 이상 걸렸다. 실험 사이클이 너무 느려서 중단했고, ECHO objective는 유지하되 rollout 길이를 줄인 turbo run으로 전환했다.
 
+추가로 `save_steps=5`도 장기 학습에는 과했다. checkpoint 저장, HF adapter sync, rollout dataset sync, GPU6 평가 후보 생성이 너무 자주 끼어들어 학습 throughput을 갉아먹었다. 그래서 `run_20260612T095008Z...`의 `checkpoint-15` 어댑터를 안전 지점으로 잡고, 새 run은 `save_steps=50`으로 다시 시작했다.
+
 현재 run은 엄밀히 말해 ECHO/SkyRL 원본의 weight-sync vLLM 구조와 완전히 동일하지 않다. vLLM replica는 SFT base를 빠르게 생성하고, train rank는 LoRA policy를 업데이트한다. 따라서 paper-identical reproduction이 아니라, no-Docker local 환경에서 ECHO observation loss와 terminal verifier RLVR을 빠르게 실험하기 위한 engineering run이다.
 
 ## 활성 학습 run
 
-- Run ID: `run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005`
+- Run ID: `run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005`
 - Base model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005`
-- Trace dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/traces`
-- Sandbox root: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/sandboxes`
+- Resume adapter: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/checkpoint-15`
+- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005`
+- Trace dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005/traces`
+- Sandbox root: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005/sandboxes`
 - GPUs: vLLM rollout `0,1,2,3`, train `4,5`, eval `6`, excluded `7`
 - Backend: `--rollout-backend vllm_http`
-- Save interval: every `5` train steps
+- Save interval: every `50` train steps
 - Wall-time target: `24` hours
 
 ## 학습 설정
@@ -64,11 +67,12 @@ ECHO 방식의 핵심은 verifier RL loss에 더해 터미널 observation token�
 
 - 이전 paper-aligned slow run: `num_generations=16`, `max_turns=16`, `max_new_tokens=2048`, 첫 step까지 15분 이상.
 - 중간 fast run: `num_generations=8`, `max_turns=8`, `max_new_tokens=768`, 첫 step까지 약 4분대.
-- 현재 turbo run: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, 첫 checkpoint를 `step 5`에 저장하도록 설정.
+- 이전 turbo run: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, `save_steps=5`, `checkpoint-5/10/15` 저장.
+- 현재 turbo2 run: 이전 turbo run `checkpoint-15`에서 어댑터만 이어받고 optimizer state는 새로 시작. `save_steps=50`으로 저장 빈도를 줄여 장기 학습 throughput을 우선한다.
 
 실패 예시에는 정답 파일의 공백 포맷 mismatch, `task_complete=true`를 너무 빨리 내서 명령이 실행되지 않은 케이스, unsafe command pattern 차단이 포함된다. 이 실패 궤적이 바로 ECHO-style terminal observation/world-model loss에 넣어야 하는 핵심 신호다.
 
-rollout 중 GPU util이 낮게 보일 수 있다. 이유는 8B LoRA backward보다 terminal subprocess 실행, verifier, filesystem trace write가 병목이기 때문이다. vLLM은 생성 구간에서 GPU `0-3`을 burst로 쓰고, train GPU `4-5`는 loss/backward 시점에 사용률이 튄다.
+rollout 중 GPU util이 낮게 보일 수 있다. 이유는 8B LoRA backward보다 terminal subprocess 실행, verifier, filesystem trace write가 병목이기 때문이다. vLLM은 생성 구간에서 GPU `0-3`을 burst로 쓰고, train GPU `4-5`는 loss/backward 시점에 사용률이 튄다. 따라서 GPU util이 항상 100%가 아니더라도 run이 죽은 것은 아니다. 다만 저장/동기화/평가를 너무 자주 걸면 이 CPU/IO 병목에 추가 오버헤드가 붙기 때문에 장기 run에서는 sparse checkpoint가 맞다.
 
 ## GPU6 평가 상태
 
@@ -97,6 +101,15 @@ Score = 100 * avg_command_f1
 - LiquidAI raw base: `36.53`
 
 따라서 현재까지는 RLVR best checkpoint가 SFT 1Epoch 대비 `+1.75`점 높다. 다만 final checkpoint가 아니라 중간 checkpoint 선택이 중요하다.
+
+새 turbo run의 초기 checkpoint는 아직 baseline을 넘지 못했다.
+
+| run/checkpoint | Score | 해석 |
+| --- | ---: | --- |
+| `run_20260612T095008Z.../checkpoint-5` | `51.89` | SFT 1Epoch `52.30`보다 `-0.41` |
+| `run_20260612T095008Z.../checkpoint-10` | `51.11` | SFT 1Epoch보다 `-1.19` |
+
+이 숫자는 "RLVR이 무조건 실패"라는 결론은 아니다. 5~10 step은 너무 이른 구간이고, 이전 parent run에서도 최고점은 중간 checkpoint 선택에서 나왔다. 다만 초반부터 무작정 오른다는 신호도 아니므로, 현재 run은 50 step 단위로 sparse 평가하면서 score-vs-step 곡선을 다시 봐야 한다.
 
 ## GPU6 watcher 수정
 
@@ -139,8 +152,8 @@ task/context -> trace/actions -> answer/artifact -> verifier/reward/environment 
 
 ## 남은 일
 
-- GPU6 watcher가 turbo run checkpoint도 자동 평가하도록 run spec을 갱신한다.
-- 첫 checkpoint가 저장되면 HF adapter repo와 rollout dataset repo 업로드 여부를 확인한다.
+- 현재 turbo2 run의 `checkpoint-50`이 저장되면 GPU6에서 README 기준으로 평가한다.
+- HF adapter repo와 rollout dataset repo 업로드는 유지하되, sync 주기는 rollout `1800s`, adapter `3600s`로 낮춰 학습 병목을 줄인다.
 - GPU6 평가 결과가 추가될 때마다 최고 Score 기준 README와 평가 문서를 갱신한다.
 - 충분히 checkpoint가 쌓이면 score-vs-step 그래프를 다시 생성한다.
 - official ECHO 내부 parquet 데이터가 공개되어 있는지 계속 확인하되, 현재는 로컬 공개 데이터 기반으로 명확히 구분해 기록한다.

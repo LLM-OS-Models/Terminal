@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 06:12 UTC`, vLLM turbo checkpoint-5/10 및 save50 재시작 반영: `2026-06-12 10:20 UTC`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -21,20 +21,20 @@
 2026-06-12 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 ECHO-style terminal RLVR을 계속 실험 중이다. 이전 paper-aligned HF/on-policy run은 full-vocab log-softmax OOM과 매우 느린 rollout 때문에 중단했고, 현재는 vLLM 4개 replica와 train 2GPU를 분리한 빠른 실험 런으로 전환했다. 현재 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 정리하고, 기존 run과 이번 run 차이는 [`docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md`](docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md)에 따로 분리했다.
 
 - Base/SFT model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Resume adapter: none. SFT 1Epoch base에서 clean-start RLVR
-- Latest active run: `run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005`
-- Latest active run status: vLLM rollout + ECHO observation loss training in progress, first checkpoint pending
+- Resume adapter: `run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/checkpoint-15`
+- Latest active run: `run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005`
+- Latest active run status: vLLM rollout + ECHO observation loss training in progress, restarted from checkpoint-15 with slower checkpoint cadence
 - vLLM rollout GPUs: `0,1,2,3`
 - Training GPUs: `4,5`
 - Evaluation GPU: `6`
 - Excluded GPU: `7`
 - Sandbox mode: Docker 없이 local workspace sandbox, `/app`/`/tests` rewrite 및 host-sensitive command 차단 적용
 - Objective: verifier RLVR + ECHO-style terminal observation world-model loss
-- Active fast config: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, `save_steps=5`, `world_model_coeff=0.05`
-- Save interval: every 5 train steps
+- Active fast config: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, `save_steps=50`, `world_model_coeff=0.05`
+- Save interval: every 50 train steps. The earlier `save_steps=5` run produced useful early checkpoints but added too much checkpoint/HF-sync/eval overhead for long training.
 - Current observed best RLVR checkpoint: parentrun `checkpoint-610`, TB2-lite replay Score `54.05`
 - Current observed best continuation checkpoint: continuation `checkpoint-220`, TB2-lite replay Score `53.26`
-- New active run checkpoints: pending. GPU6 should evaluate them after they appear.
+- New active run checkpoints: pending. GPU6 should evaluate sparse checkpoints after they appear, starting with checkpoint-50.
 - GPU6 sweep: evaluating parent/continuation checkpoints and available new checkpoints
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
 - Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
@@ -47,7 +47,9 @@
 | --- | --- | ---: | --- |
 | 기존 parent run best | `lfm25-echo-rlvr-parentrun-checkpoint-610` | `54.05` | SFT 1Epoch `52.30` 대비 `+1.75`, 현재 전체 1위 |
 | 기존 continuation run best | `lfm25-echo-rlvr-continue-checkpoint-220` | `53.26` | SFT 1Epoch 대비 `+0.96` |
-| 이번 vLLM turbo active run | `run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005` | N/A | 학습 진행 중, 첫 checkpoint/eval 대기 |
+| 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-5` | `51.89` | SFT 1Epoch baseline `52.30`보다 낮음. 너무 이른 checkpoint라 참고용 |
+| 이전 vLLM turbo early checkpoint | `run_20260612T095008Z.../checkpoint-10` | `51.11` | baseline보다 낮음. 초반 RLVR이 곧바로 좋아진다는 증거는 아직 없음 |
+| 이번 vLLM turbo save50 active run | `run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005` | N/A | checkpoint-15에서 이어받아 학습 진행 중, checkpoint-50/eval 대기 |
 
 점수 기준:
 
@@ -73,7 +75,7 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `227`
+- RLVR 평가 완료 개수: `230`
 
 ## 전체 순위
 
