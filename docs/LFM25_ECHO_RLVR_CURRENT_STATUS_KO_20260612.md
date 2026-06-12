@@ -1,40 +1,42 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-12 06:12 UTC / 2026-06-12 15:12 KST
+업데이트: 2026-06-12 09:50 UTC / 2026-06-12 18:50 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
 ## 현재 결론
 
-학습은 계속 진행 중이다. GPU `0-5`는 새 paper-aligned HF on-policy run에 붙어 있고, GPU `6`은 TB2-lite replay 평가 전용으로 계속 사용한다. GPU `7`은 이 작업에서 제외한다.
+학습은 계속 진행 중이다. GPU `0-3`은 vLLM rollout replica, GPU `4-5`는 LoRA/GRPO 학습, GPU `6`은 TB2-lite replay 평가 전용으로 사용한다. GPU `7`은 이 작업에서 제외한다.
 
-가장 중요한 변경은 이전 continuation run의 가장 큰 기술 리스크였던 vLLM rollout-policy 동기화 문제를 피했다는 점이다. 새 run은 vLLM 서버가 고정 SFT base를 생성하고 LoRA train rank가 따로 업데이트되는 구조가 아니라, 학습 중인 HF policy가 직접 rollout을 생성한다. 속도는 느리지만 on-policy 성격이 더 강하다.
+가장 중요한 변경은 속도다. 논문/GitHub 기본값에 가까운 `num_generations=16`, `max_turns=16`, `max_new_tokens=2048` 설정은 첫 optimizer step만 15분 이상 걸렸다. 실험 사이클이 너무 느려서 중단했고, ECHO objective는 유지하되 rollout 길이를 줄인 turbo run으로 전환했다.
+
+현재 run은 엄밀히 말해 ECHO/SkyRL 원본의 weight-sync vLLM 구조와 완전히 동일하지 않다. vLLM replica는 SFT base를 빠르게 생성하고, train rank는 LoRA policy를 업데이트한다. 따라서 paper-identical reproduction이 아니라, no-Docker local 환경에서 ECHO observation loss와 terminal verifier RLVR을 빠르게 실험하기 위한 engineering run이다.
 
 ## 활성 학습 run
 
-- Run ID: `run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`
+- Run ID: `run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005`
 - Base model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_r32_run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`
-- Trace dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs/traces`
-- Sandbox root: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs/sandboxes`
-- GPUs: train `0,1,2,3,4,5`, eval `6`, excluded `7`
-- Backend: `--rollout-backend hf`
-- Save interval: every `10` train steps
-- Wall-time target: `47.5` hours
+- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005`
+- Trace dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/traces`
+- Sandbox root: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/sandboxes`
+- GPUs: vLLM rollout `0,1,2,3`, train `4,5`, eval `6`, excluded `7`
+- Backend: `--rollout-backend vllm_http`
+- Save interval: every `5` train steps
+- Wall-time target: `24` hours
 
 ## 학습 설정
 
 - LoRA rank: `32`
 - Trainable parameters: `12,867,584`
 - World-model coefficient: `0.05`
-- Learning rate: `1e-7`
-- Global rollouts per step: `24` (`6 ranks * 1 prompt/rank * 4 generations`)
-- Max turns: `16`
-- Max new tokens: `2048`
+- Learning rate: `1e-6`
+- Global rollouts per step: `8` (`2 ranks * 1 prompt/rank * 4 generations`)
+- Max turns: `6`
+- Max new tokens: `512`
 - Max sequence length: `32768`
-- Max terminal output chars: `50000`
-- Command timeout: `20s`
-- Verifier timeout: `120s`
+- Max terminal output chars: `12000`
+- Command timeout: `10s`
+- Verifier timeout: `45s`
 
 ECHO 방식의 핵심은 verifier RL loss에 더해 터미널 observation token에도 CE loss를 거는 것이다. 즉 모델이 명령을 맞히는 것만 보지 않고, `stdout/stderr`, `ls`, `cat`, 에러 메시지 같은 터미널 피드백을 내부 world model로 예측하도록 학습시킨다.
 
@@ -56,16 +58,17 @@ ECHO 방식의 핵심은 verifier RL loss에 더해 터미널 observation token�
 
 ## 현재 학습 진행
 
-첫 rollout trace가 생성됐다. 현재 확인 시점에는 `rank4`, `rank5` trace가 기록되어 있으며 총 `8`개 rollout이 기록됐다. 모델은 `/workspace`를 대상으로 `ls`, `cat`, `mkdir`, `sort` 등을 호출했고, local sandbox path로 rewrite된 명령의 `stdout/stderr`, exit code, duration, verifier 결과가 저장됐다.
+현재 turbo run은 모델 로딩, DDP wrap, optimizer 준비를 마치고 rollout trace를 기록하기 시작했다. 모델은 `/workspace`를 대상으로 `ls`, `cat`, `mkdir`, `sort` 등을 호출하고, local sandbox path로 rewrite된 명령의 `stdout/stderr`, exit code, duration, verifier 결과를 저장한다.
 
 관측된 초기 rollout 예시는 다음과 같다.
 
-- `rank4`: 4 rollout, verifier success 1, fail 3, avg reward 0.2375
-- `rank5`: 4 rollout, verifier success 4, fail 0, avg reward 1.1375
+- 이전 paper-aligned slow run: `num_generations=16`, `max_turns=16`, `max_new_tokens=2048`, 첫 step까지 15분 이상.
+- 중간 fast run: `num_generations=8`, `max_turns=8`, `max_new_tokens=768`, 첫 step까지 약 4분대.
+- 현재 turbo run: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, 첫 checkpoint를 `step 5`에 저장하도록 설정.
 
 실패 예시에는 정답 파일의 공백 포맷 mismatch, `task_complete=true`를 너무 빨리 내서 명령이 실행되지 않은 케이스, unsafe command pattern 차단이 포함된다. 이 실패 궤적이 바로 ECHO-style terminal observation/world-model loss에 넣어야 하는 핵심 신호다.
 
-아직 첫 optimizer step 이전 구간에서는 GPU util이 낮게 보일 수 있다. 이유는 8B LoRA 학습 자체보다 HF generation, 터미널 subprocess 실행, verifier, trace write가 병목이기 때문이다. VRAM을 꽉 채우는 것이 목적이 아니라, 학습 policy가 직접 terminal rollout을 만들고 그 observation을 loss에 넣는 것이 현재 우선순위다.
+rollout 중 GPU util이 낮게 보일 수 있다. 이유는 8B LoRA backward보다 terminal subprocess 실행, verifier, filesystem trace write가 병목이기 때문이다. vLLM은 생성 구간에서 GPU `0-3`을 burst로 쓰고, train GPU `4-5`는 loss/backward 시점에 사용률이 튄다.
 
 ## GPU6 평가 상태
 
@@ -102,7 +105,7 @@ Score = 100 * avg_command_f1
 1. README 점수 계산을 `next_action_score`가 아니라 `100 * avg_command_f1`로 고쳤다.
 2. `EVAL_RUN_SPECS`를 추가해 하나의 GPU6 watcher가 parent run, continuation run, 새 paper-aligned run을 모두 평가할 수 있게 했다.
 
-기존 watcher는 교체했고, 현재 GPU6 watcher는 parent run, continuation run, 새 paper-aligned run checkpoint를 모두 감시한다. 새 run의 첫 checkpoint가 저장되면 같은 TB2-lite replay 기준으로 자동 평가 대상에 들어간다.
+기존 watcher는 parent run과 continuation run을 계속 평가 중이다. 현재 turbo run의 checkpoint가 저장되면 같은 TB2-lite replay 기준으로 평가 대상에 추가해야 한다.
 
 ## 2026-06-12 06:12 UTC 안정화 메모
 
@@ -114,7 +117,7 @@ Score = 100 * avg_command_f1
 - `--no-ddp-broadcast-buffers`
 - rollout 수집 이후 optimizer 진입 전 `dist.barrier()`
 
-현재 활성 run은 이 패치를 적용한 `run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`다. 첫 step에서는 일부 rank가 긴 rollout을 끝내느라 GPU util이 낮게 보일 수 있지만, trace에는 실제 terminal stdout/stderr, blocked command, verifier result가 기록되고 있다.
+이후 `loss_chunk_tokens` 기반 chunked CE 패치를 넣어 full-vocab `log_softmax` OOM을 피했다. 새 vLLM run은 이 패치를 적용해 `--loss-chunk-tokens 256`으로 실행한다.
 
 ## A Primer in Post-Training Reasoning Data에서 가져갈 해석
 
@@ -136,7 +139,7 @@ task/context -> trace/actions -> answer/artifact -> verifier/reward/environment 
 
 ## 남은 일
 
-- GPU6 watcher 재시작 후 새 paper-aligned checkpoint도 자동 평가되는지 확인한다.
+- GPU6 watcher가 turbo run checkpoint도 자동 평가하도록 run spec을 갱신한다.
 - 첫 checkpoint가 저장되면 HF adapter repo와 rollout dataset repo 업로드 여부를 확인한다.
 - GPU6 평가 결과가 추가될 때마다 최고 Score 기준 README와 평가 문서를 갱신한다.
 - 충분히 checkpoint가 쌓이면 score-vs-step 그래프를 다시 생성한다.

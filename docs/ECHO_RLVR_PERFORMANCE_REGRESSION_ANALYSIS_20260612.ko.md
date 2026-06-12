@@ -228,11 +228,11 @@ world_loss = -(token_logp * obs_next).sum() / obs_tokens
 loss = policy_coeff * policy_loss + world_model_coeff * world_loss
 ```
 
-현재 `world_model_coeff=0.03`이다.
+현재 active turbo run의 `world_model_coeff=0.05`다.
 
 즉 "터미널 피드백을 다음 context로만 읽고 버리는 vanilla GRPO"가 아니라, terminal output token 자체도 loss에 들어간다. 다만 논문 원본과 다른 점은 SkyRL/FSDP/Harbor/weight sync 조합이 아니라, local no-docker trainer와 고정 vLLM server 조합이라는 것이다.
 
-새 paper-aligned run에서는 `world_model_coeff=0.05`, `num_generations=4`, `max_turns=16`, `max_new_tokens=2048`, `max_terminal_output_chars=50000`, `verifier_timeout=120`로 ECHO config에 더 가깝게 맞췄다. 다만 official ECHO 내부 parquet 데이터와 Harbor/Docker 환경은 아직 로컬에 없으므로 완전 동일 재현은 아니다.
+새 turbo run에서는 `world_model_coeff=0.05`, `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, `max_terminal_output_chars=12000`, `verifier_timeout=45`로 빠른 실험 사이클에 맞췄다. 직전 paper-aligned slow run의 `num_generations=16`, `max_turns=16`, `max_new_tokens=2048`은 첫 step만 15분 이상 걸려 중단했다. official ECHO 내부 parquet 데이터와 Harbor/Docker 환경은 아직 로컬에 없으므로 완전 동일 재현은 아니다.
 
 ## A Primer in Post-Training Reasoning Data 관점
 
@@ -281,8 +281,11 @@ ECHO-style RLVR은 일부 checkpoint와 일부 영역에서는 SFT baseline을 �
    - 후보: `0.0`, `0.01`, `0.03`, `0.05`
    - 현재 `0.03`은 일부 late/code 영역에 도움을 주지만 전체 imitation에는 과할 수 있다.
 
-5. GRPO group size를 키운다.
-   - 현재 `num_generations=2`
+5. GRPO group size와 rollout 길이를 분리해 튜닝한다.
+   - paper-like: `num_generations=16`, `max_turns=16`, `max_new_tokens=2048`은 재현성은 높지만 너무 느리다.
+   - fast: `num_generations=8`, `max_turns=8`, `max_new_tokens=768`은 첫 step 약 4분대로 줄었다.
+   - turbo: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`는 checkpoint/eval 사이클을 빠르게 보기 위한 현재 설정이다.
+   - 성능 곡선이 보이면 다시 `num_generations=8` 이상으로 올려 안정성을 확인한다.
    - 가능하면 `4` 또는 `8`로 올려 reward variance를 줄인다.
 
 6. LR을 더 낮춘다.

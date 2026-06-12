@@ -158,6 +158,12 @@ def parse_args() -> argparse.Namespace:
         help="Fallback policy advantage when num_generations=1 or group reward std is zero.",
     )
     parser.add_argument("--entropy-coeff", type=float, default=0.0)
+    parser.add_argument(
+        "--loss-chunk-tokens",
+        type=int,
+        default=256,
+        help="Token chunk size for label CE. Avoids materializing full-sequence full-vocab log_softmax.",
+    )
     parser.add_argument("--reward-scale", type=float, default=1.0)
     parser.add_argument("--reward-success-bonus", type=float, default=0.0)
     parser.add_argument("--format-penalty", type=float, default=0.05)
@@ -561,20 +567,32 @@ def trajectory_loss(
     out = model(input_ids=ids[:, :-1], use_cache=False)
     logits = out.logits
     labels = ids[:, 1:]
-    log_probs = F.log_softmax(logits.float(), dim=-1)
-    token_logp = log_probs.gather(-1, labels.unsqueeze(-1)).squeeze(-1)
+    flat_logits = logits.reshape(-1, logits.shape[-1])
+    flat_labels = labels.reshape(-1)
+    chunk_tokens = max(1, int(args.loss_chunk_tokens))
+    nll_chunks: list[torch.Tensor] = []
+    entropy_chunks: list[torch.Tensor] = []
+    for start in range(0, flat_labels.numel(), chunk_tokens):
+        end = min(start + chunk_tokens, flat_labels.numel())
+        chunk_logits = flat_logits[start:end].float()
+        chunk_labels = flat_labels[start:end]
+        nll_chunks.append(F.cross_entropy(chunk_logits, chunk_labels, reduction="none"))
+        if args.entropy_coeff:
+            chunk_log_probs = F.log_softmax(chunk_logits, dim=-1)
+            chunk_probs = chunk_log_probs.exp()
+            entropy_chunks.append(-(chunk_probs * chunk_log_probs).sum(dim=-1))
+    token_nll = torch.cat(nll_chunks, dim=0).view_as(labels)
     action_next = action_mask[:, 1:]
     obs_next = obs_mask[:, 1:]
     action_tokens = action_next.sum().clamp_min(1.0)
     obs_tokens = obs_next.sum().clamp_min(1.0)
 
     adv = torch.tensor(float(advantage), device=device)
-    policy_loss = -(token_logp * action_next).sum() / action_tokens * adv
-    world_loss = -(token_logp * obs_next).sum() / obs_tokens
+    policy_loss = (token_nll * action_next).sum() / action_tokens * adv
+    world_loss = (token_nll * obs_next).sum() / obs_tokens
     loss = args.policy_coeff * policy_loss + args.world_model_coeff * world_loss
     if args.entropy_coeff:
-        probs = log_probs.exp()
-        entropy = -(probs * log_probs).sum(dim=-1)
+        entropy = torch.cat(entropy_chunks, dim=0).view_as(labels)
         loss = loss - args.entropy_coeff * (entropy * action_next).sum() / action_tokens
     return loss, {
         "policy_loss": float(policy_loss.detach().cpu().item()),
