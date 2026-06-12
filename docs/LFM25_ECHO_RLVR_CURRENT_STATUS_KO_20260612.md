@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-12 10:25 UTC / 2026-06-12 19:25 KST
+업데이트: 2026-06-12 10:40 UTC / 2026-06-12 19:40 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
@@ -98,7 +98,15 @@ Score = 100 * avg_command_f1
 
 - SFT 1Epoch baseline: `52.30`
 - SFT 2Epoch: `50.48`
-- LiquidAI raw base: `36.53`
+- LiquidAI raw base rerun: `39.92` (`lfm25-raw-base-no-sft-rerun-20260612`)
+
+raw base rerun은 순수 `LiquidAI/LFM2.5-8B-A1B`를 같은 GPU6 TB2-lite replay 조건에서 다시 돌린 값이다. 따라서 현재 비교에서는 다음처럼 보면 된다.
+
+| 모델/조건 | Score | SFT 1Epoch 대비 |
+| --- | ---: | ---: |
+| pure `LiquidAI/LFM2.5-8B-A1B` raw base rerun | `39.92` | `-12.38` |
+| Terminal ToolBench SFT 1Epoch, no RLVR | `52.30` | 기준 |
+| 기존 RLVR best parent `checkpoint-610` | `54.05` | `+1.75` |
 
 따라서 현재까지는 RLVR best checkpoint가 SFT 1Epoch 대비 `+1.75`점 높다. 다만 final checkpoint가 아니라 중간 checkpoint 선택이 중요하다.
 

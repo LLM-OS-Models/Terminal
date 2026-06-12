@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 성능 하락 분석
 
-업데이트: 2026-06-12 10:25 UTC / 2026-06-12 19:25 KST
+업데이트: 2026-06-12 10:40 UTC / 2026-06-12 19:40 KST
 
 관련 문서:
 
@@ -39,7 +39,7 @@ next_action_score = 100 * (0.7 * avg_command_f1 + 0.3 * first_cmd_exact_pct / 10
 
 - SFT 1Epoch baseline: Score `52.30`
 - SFT 2Epoch: Score `50.48`
-- LiquidAI raw base: Score `36.53`
+- LiquidAI raw base rerun: Score `39.92`
 
 RLVR 평가 현황:
 
@@ -127,11 +127,11 @@ TB2-lite replay는 정답 command와 모델 command의 token F1을 본다. live 
 
 현재 base는 그냥 raw LFM2.5가 아니다.
 
-- raw `LiquidAI/LFM2.5-8B-A1B`: Score `36.53`
+- raw `LiquidAI/LFM2.5-8B-A1B` rerun: Score `39.92`
 - Terminal ToolBench Full SFT 1Epoch: Score `52.30`
 - Terminal ToolBench Full SFT 2Epoch: Score `50.48`
 
-1Epoch SFT가 이미 `+15.77`점을 만든 상태다. 게다가 2Epoch는 1Epoch보다 낮다. 이건 이 모델이 이미 TB2-lite command distribution에 강하게 맞춰져 있고, 추가 학습이 항상 이득이 아니라는 직접 증거다.
+1Epoch SFT가 raw rerun 대비 이미 `+12.38`점을 만든 상태다. 게다가 2Epoch는 1Epoch보다 낮다. 이건 이 모델이 이미 TB2-lite command distribution에 강하게 맞춰져 있고, 추가 학습이 항상 이득이 아니라는 직접 증거다.
 
 따라서 "SFT가 많이 된 모델은 RL하기 부적합하다"가 정확한 결론은 아니다. 더 정확히는 다음이다.
 
