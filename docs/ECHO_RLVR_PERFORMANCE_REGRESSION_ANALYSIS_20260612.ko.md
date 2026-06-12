@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 성능 하락 분석
 
-업데이트: 2026-06-12 05:27 UTC / 2026-06-12 14:27 KST
+업데이트: 2026-06-12 06:12 UTC / 2026-06-12 15:12 KST
 
 관련 문서:
 
@@ -43,25 +43,25 @@ next_action_score = 100 * (0.7 * avg_command_f1 + 0.3 * first_cmd_exact_pct / 10
 
 RLVR 평가 현황:
 
-- 평가 완료 checkpoint: `122`개
-- 현재 best checkpoint: parentrun `checkpoint-650`
-- 현재 best Score: `53.65`
-- SFT 1Epoch `52.30` 대비 best gain: `+1.35`
+- 평가 완료 checkpoint: `141`개
+- 현재 best checkpoint: parentrun `checkpoint-610`
+- 현재 best Score: `54.05`
+- SFT 1Epoch `52.30` 대비 best gain: `+1.75`
 - 새 paper-aligned HF on-policy run: first checkpoint pending
 
 현재 README 기준 RLVR 상위권:
 
 | checkpoint | Score | next_action_score | First Cmd | Valid JSON | early F1 | mid F1 | late F1 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| parentrun `checkpoint-610` | `54.05` | `54.18` | `54.5%` | `77.9%` | `60.76` | `52.24` | `50.17` |
+| parentrun `checkpoint-490` | `53.76` | `53.17` | `51.8%` | `77.2%` | - | - | - |
 | parentrun `checkpoint-650` | `53.65` | `52.91` | `51.2%` | `76.2%` | `61.54` | `50.04` | `50.60` |
 | parentrun `checkpoint-230` | `53.43` | `52.76` | `51.2%` | `77.9%` | `63.97` | `51.21` | `46.72` |
+| parentrun `checkpoint-440` | `53.32` | `53.16` | `52.8%` | `75.2%` | - | - | - |
 | continuation `checkpoint-220` | `53.26` | `52.34` | `50.2%` | `77.2%` | `63.68` | `51.72` | `45.96` |
 | parentrun `checkpoint-760` | `53.23` | `52.02` | `49.2%` | `76.6%` | - | - | - |
-| parentrun `checkpoint-900` | `53.07` | `52.60` | `51.5%` | `76.2%` | - | - | - |
-| continuation `checkpoint-250` | `53.05` | `52.88` | `52.5%` | `74.9%` | `60.49` | `53.30` | `46.49` |
-| parentrun `checkpoint-710` | `53.02` | `52.26` | `50.5%` | `76.2%` | `61.13` | `49.36` | `49.82` |
 
-즉 최고점만 보면 RLVR은 올랐다. SFT 1Epoch 대비 최고 `+1.35`점이다. 하지만 평균적으로는 SFT baseline보다 낮다. 이 차이가 핵심이다.
+즉 최고점만 보면 RLVR은 올랐다. SFT 1Epoch 대비 최고 `+1.75`점이다. 하지만 평균적으로는 SFT baseline보다 낮다. 이 차이가 핵심이다.
 
 ## 왜 오른 checkpoint도 있나
 
@@ -304,6 +304,6 @@ ECHO-style RLVR은 일부 checkpoint와 일부 영역에서는 SFT baseline을 �
 
 ## 운영 판단
 
-현재 checkpoint 중 README 기준 최고는 parentrun `checkpoint-650` Score `53.65`다. 이 checkpoint는 전체 리더보드에 올릴 후보가 될 수 있다. 다만 TB2 최종/전체 평가 전에는 "확정 1위"로 적지 않는다.
+현재 checkpoint 중 README 기준 최고는 parentrun `checkpoint-610` Score `54.05`다. 이 checkpoint는 전체 리더보드에 올릴 후보가 될 수 있다. 다만 TB2 최종/전체 평가 전에는 "확정 1위"로 적지 않는다.
 
 현재 active continuation은 계속 돌릴 수 있지만, 그대로 2일 더 돌리는 것보다 vLLM LoRA sync 문제를 해결한 run을 새로 시작하는 것이 더 효율적이다. 지금 구조에서는 오래 돌릴수록 좋아진다는 보장이 약하다.

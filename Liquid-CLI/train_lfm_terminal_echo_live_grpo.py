@@ -30,6 +30,7 @@ import urllib.request
 import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
@@ -169,24 +170,37 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sft-adapter-path", default="")
     parser.add_argument("--attn-implementation", default="sdpa")
     parser.add_argument("--gradient-checkpointing", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument(
+        "--dist-timeout-minutes",
+        type=int,
+        default=360,
+        help="DDP/NCCL timeout. Live terminal rollouts can have large rank-to-rank latency skew.",
+    )
+    parser.add_argument(
+        "--ddp-broadcast-buffers",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Whether DDP should broadcast buffers before forward. Disabled by default for long live rollouts.",
+    )
     parser.add_argument("--keep-sandboxes", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--smoke-test-env", action="store_true")
     return parser.parse_args()
 
 
-def setup_distributed() -> tuple[int, int, int]:
+def setup_distributed(args: argparse.Namespace) -> tuple[int, int, int]:
     world_size = int(os.environ.get("WORLD_SIZE", "1"))
     rank = int(os.environ.get("RANK", "0"))
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
     if torch.cuda.is_available():
         torch.cuda.set_device(local_rank)
     if world_size > 1 and not dist.is_initialized():
+        timeout = timedelta(minutes=max(1, int(args.dist_timeout_minutes)))
         init_method = os.environ.get("DIST_INIT_METHOD", "")
         if init_method:
-            dist.init_process_group("nccl", init_method=init_method, rank=rank, world_size=world_size)
+            dist.init_process_group("nccl", init_method=init_method, rank=rank, world_size=world_size, timeout=timeout)
         else:
-            dist.init_process_group("nccl")
+            dist.init_process_group("nccl", timeout=timeout)
     return rank, local_rank, world_size
 
 
@@ -655,7 +669,7 @@ def log_event(rank: int, event: str, **payload: Any) -> None:
 def main() -> None:
     args = parse_args()
     wall_start = time.monotonic()
-    rank, local_rank, world_size = setup_distributed()
+    rank, local_rank, world_size = setup_distributed(args)
     set_base_globals(args)
     device = torch.device("cuda", local_rank) if torch.cuda.is_available() else torch.device("cpu")
     random.seed(args.seed + rank)
@@ -731,8 +745,14 @@ def main() -> None:
         if candidate is not None and not hasattr(candidate, "warnings_issued"):
             candidate.warnings_issued = {}
     if world_size > 1:
-        log_event(rank, "ddp_wrap_start", world_size=world_size)
-        model = DDP(model, device_ids=[local_rank], output_device=local_rank, find_unused_parameters=False)
+        log_event(rank, "ddp_wrap_start", world_size=world_size, broadcast_buffers=args.ddp_broadcast_buffers)
+        model = DDP(
+            model,
+            device_ids=[local_rank],
+            output_device=local_rank,
+            find_unused_parameters=False,
+            broadcast_buffers=args.ddp_broadcast_buffers,
+        )
         log_event(rank, "ddp_wrap_done")
 
     trainable = [p for p in model.parameters() if p.requires_grad]
@@ -792,6 +812,12 @@ def main() -> None:
                 traj.trace["group_reward_mean"] = mean
                 traj.trace["group_reward_std"] = std
                 all_trajs.append(traj)
+
+        # Live terminal rollouts are intentionally heterogeneous: one rank can
+        # hit a long verifier timeout while another quickly reaches the training
+        # forward pass. Align ranks before DDP collectives so fast ranks do not
+        # trip the NCCL watchdog while slow ranks are still executing commands.
+        barrier()
 
         model.train()
         step_loss_value = 0.0

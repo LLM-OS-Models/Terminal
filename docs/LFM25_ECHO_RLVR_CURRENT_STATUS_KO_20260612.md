@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-12 05:27 UTC / 2026-06-12 14:27 KST
+업데이트: 2026-06-12 06:12 UTC / 2026-06-12 15:12 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
@@ -12,11 +12,11 @@
 
 ## 활성 학습 run
 
-- Run ID: `run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005`
+- Run ID: `run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`
 - Base model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_r32_run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005`
-- Trace dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005/traces`
-- Sandbox root: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005/sandboxes`
+- Output dir: `/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_r32_run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`
+- Trace dir: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs/traces`
+- Sandbox root: `/home/work/.data/liquid_cli_sft/live_terminal_echo_vllm/run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs/sandboxes`
 - GPUs: train `0,1,2,3,4,5`, eval `6`, excluded `7`
 - Backend: `--rollout-backend hf`
 - Save interval: every `10` train steps
@@ -81,11 +81,11 @@ Score = 100 * avg_command_f1
 
 | rank | checkpoint | Score | next_action_score | First Cmd | Valid JSON |
 | ---: | --- | ---: | ---: | ---: | ---: |
-| 1 | `lfm25-echo-rlvr-parentrun-checkpoint-650` | `53.65` | `52.91` | `51.2%` | `76.2%` |
-| 2 | `lfm25-echo-rlvr-parentrun-checkpoint-230` | `53.43` | `52.76` | `51.2%` | `77.9%` |
-| 3 | `lfm25-echo-rlvr-continue-checkpoint-220` | `53.26` | `52.34` | `50.2%` | `77.2%` |
-| 4 | `lfm25-echo-rlvr-parentrun-checkpoint-760` | `53.23` | `52.02` | `49.2%` | `76.6%` |
-| 5 | `lfm25-echo-rlvr-parentrun-checkpoint-900` | `53.07` | `52.60` | `51.5%` | `76.2%` |
+| 1 | `lfm25-echo-rlvr-parentrun-checkpoint-610` | `54.05` | `54.18` | `54.5%` | `77.9%` |
+| 2 | `lfm25-echo-rlvr-parentrun-checkpoint-490` | `53.76` | `53.17` | `51.8%` | `77.2%` |
+| 3 | `lfm25-echo-rlvr-parentrun-checkpoint-650` | `53.65` | `52.91` | `51.2%` | `76.2%` |
+| 4 | `lfm25-echo-rlvr-parentrun-checkpoint-230` | `53.43` | `52.76` | `51.2%` | `77.9%` |
+| 5 | `lfm25-echo-rlvr-parentrun-checkpoint-440` | `53.32` | `53.16` | `52.8%` | `75.2%` |
 
 비교 기준:
 
@@ -93,7 +93,7 @@ Score = 100 * avg_command_f1
 - SFT 2Epoch: `50.48`
 - LiquidAI raw base: `36.53`
 
-따라서 현재까지는 RLVR best checkpoint가 SFT 1Epoch 대비 `+1.35`점 높다. 다만 final checkpoint가 아니라 중간 checkpoint 선택이 중요하다.
+따라서 현재까지는 RLVR best checkpoint가 SFT 1Epoch 대비 `+1.75`점 높다. 다만 final checkpoint가 아니라 중간 checkpoint 선택이 중요하다.
 
 ## GPU6 watcher 수정
 
@@ -103,6 +103,18 @@ Score = 100 * avg_command_f1
 2. `EVAL_RUN_SPECS`를 추가해 하나의 GPU6 watcher가 parent run, continuation run, 새 paper-aligned run을 모두 평가할 수 있게 했다.
 
 기존 watcher는 교체했고, 현재 GPU6 watcher는 parent run, continuation run, 새 paper-aligned run checkpoint를 모두 감시한다. 새 run의 첫 checkpoint가 저장되면 같은 TB2-lite replay 기준으로 자동 평가 대상에 들어간다.
+
+## 2026-06-12 06:12 UTC 안정화 메모
+
+이전 새 run `run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005`는 첫 optimizer step 전에 NCCL broadcast timeout으로 종료됐다. 원인은 Docker 부재 자체가 아니라, live terminal rollout에서 rank별 소요 시간이 크게 벌어진 상태에서 빠른 rank가 먼저 DDP collective로 들어간 rank skew였다.
+
+이를 막기 위해 `Liquid-CLI/train_lfm_terminal_echo_live_grpo.py`에 다음 안정화 패치를 넣었다.
+
+- `--dist-timeout-minutes 360`
+- `--no-ddp-broadcast-buffers`
+- rollout 수집 이후 optimizer 진입 전 `dist.barrier()`
+
+현재 활성 run은 이 패치를 적용한 `run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`다. 첫 step에서는 일부 rank가 긴 rollout을 끝내느라 GPU util이 낮게 보일 수 있지만, trace에는 실제 terminal stdout/stderr, blocked command, verifier result가 기록되고 있다.
 
 ## A Primer in Post-Training Reasoning Data에서 가져갈 해석
 

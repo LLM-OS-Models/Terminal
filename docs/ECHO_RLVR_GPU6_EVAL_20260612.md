@@ -1,13 +1,13 @@
 # LFM2.5 ECHO RLVR GPU6 평가 노트
 
-업데이트: 2026-06-12 05:27 UTC / 2026-06-12 14:27 KST
+업데이트: 2026-06-12 06:12 UTC / 2026-06-12 15:12 KST
 
 상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 현재 활성 run 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 따로 정리한다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
 
 ## 평가 설정
 
 - Base model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Active training run: `run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005`
+- Active training run: `run_20260612T054816Z_echo_paper_aligned_sft1_ddpbarrier_hf6_g4_wm005_2k_fixargs`
 - Evaluated checkpoint pools: parent run, continuation run, and new paper-aligned run as checkpoints appear
 - Evaluation GPU: `6`
 - Evaluation set: `tb2_lite/data/replay_full.jsonl`
@@ -22,13 +22,13 @@
 - SFT 2Epoch: Score `50.48`
 - LiquidAI base: Score `36.53`
 - parent ECHO RLVR standalone `checkpoint-1880`: Score `50.05`
-- parentrun sweep best so far: `checkpoint-650`, Score `53.65`
+- parentrun sweep best so far: `checkpoint-610`, Score `54.05`
 - continuation sweep best so far: `checkpoint-220`, Score `53.26`
 - new paper-aligned run: pending first saved checkpoint
 
 ## 현재 결론
 
-RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현재 최고는 parentrun `checkpoint-650`이며, Score `53.65`로 SFT 1Epoch baseline `52.30`을 `+1.35` 넘겼다.
+RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현재 최고는 parentrun `checkpoint-610`이며, Score `54.05`로 SFT 1Epoch baseline `52.30`을 `+1.75` 넘겼다.
 
 하지만 long-run aha moment는 아직 확인되지 않았다. 여러 checkpoint가 SFT baseline을 넘지만, 최신/final checkpoint가 자동으로 최고가 되는 흐름은 아니다. 따라서 이 run은 final checkpoint보다 best checkpoint selection이 중요하다.
 
@@ -36,8 +36,8 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 현재 GPU6 sweep 상태:
 
-- 평가 완료 JSON: `122`개
-- 현재 best: parentrun `checkpoint-650`, Score `53.65`
+- 평가 완료 JSON: `141`개
+- 현재 best: parentrun `checkpoint-610`, Score `54.05`
 - GPU6 watcher는 `parentrun`, `continuation`, `paperhf` checkpoint 디렉터리를 모두 보도록 수정했다.
 - README 점수 계산 버그를 수정했다. 점수는 `next_action_score`가 아니라 `100 * avg_command_f1`이다.
 
@@ -45,11 +45,11 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 | Rank | Checkpoint | Score | next_action_score | First Cmd | Valid JSON |
 | ---: | --- | ---: | ---: | ---: | ---: |
-| 1 | `lfm25-echo-rlvr-parentrun-checkpoint-650` | `53.65` | `52.91` | `51.2%` | `76.2%` |
-| 2 | `lfm25-echo-rlvr-parentrun-checkpoint-230` | `53.43` | `52.76` | `51.2%` | `77.9%` |
-| 3 | `lfm25-echo-rlvr-continue-checkpoint-220` | `53.26` | `52.34` | `50.2%` | `77.2%` |
-| 4 | `lfm25-echo-rlvr-parentrun-checkpoint-760` | `53.23` | `52.02` | `49.2%` | `76.6%` |
-| 5 | `lfm25-echo-rlvr-parentrun-checkpoint-900` | `53.07` | `52.60` | `51.5%` | `76.2%` |
+| 1 | `lfm25-echo-rlvr-parentrun-checkpoint-610` | `54.05` | `54.18` | `54.5%` | `77.9%` |
+| 2 | `lfm25-echo-rlvr-parentrun-checkpoint-490` | `53.76` | `53.17` | `51.8%` | `77.2%` |
+| 3 | `lfm25-echo-rlvr-parentrun-checkpoint-650` | `53.65` | `52.91` | `51.2%` | `76.2%` |
+| 4 | `lfm25-echo-rlvr-parentrun-checkpoint-230` | `53.43` | `52.76` | `51.2%` | `77.9%` |
+| 5 | `lfm25-echo-rlvr-parentrun-checkpoint-440` | `53.32` | `53.16` | `52.8%` | `75.2%` |
 
 ## Checkpoint Results
 
@@ -74,7 +74,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 | 170 | 50.84 | 0.5111 | 50.2% | 75.2% | early |
 | 180 | 51.86 | 0.5176 | 52.1% | 76.9% | early |
 | 200 | 50.73 | 0.5169 | 48.5% | 75.6% | lower |
-| 250 | 52.88 | 0.5305 | 52.5% | 74.9% | current best |
+| 250 | 52.88 | 0.5305 | 52.5% | 74.9% | continuation best |
 | 300 | 49.87 | 0.5058 | 48.2% | 76.2% | regression |
 | 350 | 50.60 | 0.5094 | 49.8% | 76.6% | lower |
 | 400 | 51.47 | 0.5218 | 49.8% | 77.6% | partial recovery |
@@ -87,7 +87,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 | 580 | 51.12 | 0.5182 | 49.5% | 77.2% | lower |
 | 590 | 49.95 | 0.5015 | 49.5% | 74.3% | lower |
 | 600 | 51.04 | 0.5085 | 51.5% | 74.9% | lower |
-| 610 | 49.93 | 0.5012 | 49.5% | 75.2% | lower |
+| parentrun 610 | 54.05 | 0.5405 | 54.5% | 77.9% | current best |
 | 620 | 50.68 | 0.5162 | 48.5% | 75.6% | lower |
 | 630 | 49.85 | 0.5086 | 47.5% | 76.6% | latest checked |
 | parent standalone 1880 | 50.05 | 0.5114 | 47.5% | 74.9% | previous-run adapter |
