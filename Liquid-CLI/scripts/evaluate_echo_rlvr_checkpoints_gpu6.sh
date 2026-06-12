@@ -154,6 +154,7 @@ run_eval() {
   fi
   echo "[$(date -Is)] eval_start short=$short adapter=$adapter" | tee -a "$LOG_FILE"
   env -u PYTHONPATH \
+    PYTHONNOUSERSITE=1 \
     LD_LIBRARY_PATH="$VLLM_LD_LIBRARY_PATH" \
     CUDA_VISIBLE_DEVICES="$GPU" \
     "$VLLM_ENV/bin/python" tb2_lite/scripts/replay_eval.py \

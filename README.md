@@ -13,28 +13,30 @@
 - LFM2.5 ECHO RLVR 실행/평가 종합 기록(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
 - LFM2.5 ECHO RLVR runbook(EN): [`docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md)
 - LFM2.5 ECHO RLVR 현재 상태(KO): [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)
+- LFM2.5 raw ECHO RLVR 재시작 기록(KO): [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md`](docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md)
+- LFM2.5 raw ECHO RLVR restart log(EN): [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.en.md`](docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.en.md)
 - LFM2.5 ECHO RLVR GPU6 평가 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - LFM2.5 ECHO RLVR 기존 run vs 이번 paper-aligned run 비교: [`docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md`](docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md)
 
 ## 상태: LFM2.5 ECHO Terminal RLVR
 
-2026-06-12 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 ECHO-style terminal RLVR을 계속 실험 중이다. 이전 paper-aligned HF/on-policy run은 full-vocab log-softmax OOM과 매우 느린 rollout 때문에 중단했고, 현재는 vLLM 4개 replica와 train 2GPU를 분리한 빠른 실험 런으로 전환했다. 현재 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 정리하고, 기존 run과 이번 run 차이는 [`docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md`](docs/ECHO_RLVR_RUN_COMPARISON_20260612.ko.md)에 따로 분리했다.
+2026-06-12 UTC 기준으로 ECHO-style terminal RLVR을 계속 실험 중이다. SFT 1Epoch 기반 continuation run은 score drift 해석이 어려워 일단 멈췄고, 현재는 순수 raw `LiquidAI/LFM2.5-8B-A1B`에서 새 LoRA adapter를 붙이는 clean-start RLVR run으로 전환했다. raw 재시작의 원인, vLLM 안정화, 데이터 구성, 초기 step 로그는 [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md`](docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md)에 정리했다.
 
-- Base/SFT model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Resume adapter: `run_20260612T095008Z_echo_turbo_sft1_vllm4_train2_g4_t6_tok512_wm005/checkpoint-15`
-- Latest active run: `run_20260612T101316Z_echo_turbo2_sft1_vllm4_train2_g4_t6_tok512_save50_wm005`
-- Latest active run status: vLLM rollout + ECHO observation loss training in progress, restarted from checkpoint-15 with slower checkpoint cadence
+- Active base model: `LiquidAI/LFM2.5-8B-A1B`
+- Resume adapter: none
+- Latest active run: `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k`
+- Latest active run status: raw LFM2.5 clean-start LoRA RLVR in progress, vLLM rollout + ECHO observation loss, checkpoint every 25 steps
 - vLLM rollout GPUs: `0,1,2,3`
 - Training GPUs: `4,5`
 - Evaluation GPU: `6`
 - Excluded GPU: `7`
 - Sandbox mode: Docker 없이 local workspace sandbox, `/app`/`/tests` rewrite 및 host-sensitive command 차단 적용
 - Objective: verifier RLVR + ECHO-style terminal observation world-model loss
-- Active fast config: `num_generations=4`, `max_turns=6`, `max_new_tokens=512`, `save_steps=50`, `world_model_coeff=0.05`
-- Save interval: every 50 train steps. The earlier `save_steps=5` run produced useful early checkpoints but added too much checkpoint/HF-sync/eval overhead for long training.
+- Active fast raw config: `num_generations=4`, `max_turns=4`, `max_new_tokens=256`, `save_steps=25`, `world_model_coeff=0.05`
+- Save interval: every 25 train steps. The first raw attempt with `max_turns=6`, `max_new_tokens=512` was stopped before checkpoint because action outputs were too long and step time was too slow.
 - Current observed best RLVR checkpoint: parentrun `checkpoint-610`, TB2-lite replay Score `54.05`
 - Current observed best continuation checkpoint: continuation `checkpoint-220`, TB2-lite replay Score `53.26`
-- New active run checkpoints: pending. GPU6 should evaluate sparse checkpoints after they appear, starting with checkpoint-50.
+- New active raw run checkpoints: pending. GPU6 should evaluate checkpoints after they appear, starting with checkpoint-25.
 - GPU6 sweep: evaluating parent/continuation checkpoints and available new checkpoints
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
 - Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`

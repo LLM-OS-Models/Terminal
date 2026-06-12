@@ -13,10 +13,11 @@ GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
 TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-1}"
 
 VENV_SITE="$VLLM_ENV/lib/python3.12/site-packages"
-VLLM_LD_LIBRARY_PATH="$VENV_SITE/torch/lib:$VENV_SITE/nvidia/cuda_runtime/lib:$VENV_SITE/nvidia/cublas/lib:$VENV_SITE/nvidia/cudnn/lib:$VENV_SITE/nvidia/nccl/lib:${LD_LIBRARY_PATH:-}"
+VLLM_LD_LIBRARY_PATH="$VENV_SITE/torch/lib:$VENV_SITE/nvidia/cuda_runtime/lib:$VENV_SITE/nvidia/cu13/lib:$VENV_SITE/nvidia/cublas/lib:$VENV_SITE/nvidia/cudnn/lib:$VENV_SITE/nvidia/nccl/lib:$VENV_SITE/nvidia/cusparselt/lib:$VENV_SITE/nvidia/nvshmem/lib:/usr/local/cuda/compat/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}"
 
 cd "$ROOT_DIR"
 exec env -u PYTHONPATH \
+  PYTHONNOUSERSITE=1 \
   LD_LIBRARY_PATH="$VLLM_LD_LIBRARY_PATH" \
   CUDA_VISIBLE_DEVICES="$VLLM_GPUS" \
   "$VLLM_ENV/bin/python" -m vllm.entrypoints.openai.api_server \

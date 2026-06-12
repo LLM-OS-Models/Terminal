@@ -6,6 +6,7 @@ TRAIN_ENV="${TRAIN_ENV:-$ROOT_DIR/.liquid-sft-env}"
 MODEL_PATH="${MODEL_PATH:-LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch}"
 SFT_ADAPTER_PATH="${SFT_ADAPTER_PATH:-}"
 VLLM_BASE_URL="${VLLM_BASE_URL:-http://127.0.0.1:8123/v1}"
+VLLM_SERVED_MODEL="${VLLM_SERVED_MODEL:-$MODEL_PATH}"
 TRAIN_GPUS="${TRAIN_GPUS:-4,5}"
 NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
 MAX_STEPS="${MAX_STEPS:-100}"
@@ -55,7 +56,7 @@ TRAIN_ARGS=(
   --sandbox-root "$SANDBOX_ROOT"
   --rollout-backend vllm_http
   --vllm-base-url "$VLLM_BASE_URL"
-  --vllm-served-model "$MODEL_PATH"
+  --vllm-served-model "$VLLM_SERVED_MODEL"
   --max-steps "$MAX_STEPS"
   --max-wall-time-hours "$MAX_WALL_TIME_HOURS"
   --prompts-per-rank "$PROMPTS_PER_RANK"
@@ -115,6 +116,7 @@ fi
 
 COMMON_ENV=(
   -u PYTHONPATH
+  PYTHONNOUSERSITE=1
   CUDA_VISIBLE_DEVICES="$TRAIN_GPUS"
   PYTORCH_CUDA_ALLOC_CONF="${PYTORCH_CUDA_ALLOC_CONF:-expandable_segments:True}"
   LD_LIBRARY_PATH="$TORCH_LIB${NVIDIA_LIBS:+:$NVIDIA_LIBS}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"

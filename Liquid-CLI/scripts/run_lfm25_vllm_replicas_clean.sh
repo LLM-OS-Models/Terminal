@@ -16,7 +16,7 @@ READY_TIMEOUT_SEC="${READY_TIMEOUT_SEC:-300}"
 START_STAGGER_SEC="${START_STAGGER_SEC:-0}"
 
 VENV_SITE="$VLLM_ENV/lib/python3.12/site-packages"
-VLLM_LD_LIBRARY_PATH="$VENV_SITE/torch/lib:$VENV_SITE/nvidia/cuda_runtime/lib:$VENV_SITE/nvidia/cublas/lib:$VENV_SITE/nvidia/cudnn/lib:$VENV_SITE/nvidia/nccl/lib:${LD_LIBRARY_PATH:-}"
+VLLM_LD_LIBRARY_PATH="$VENV_SITE/torch/lib:$VENV_SITE/nvidia/cuda_runtime/lib:$VENV_SITE/nvidia/cu13/lib:$VENV_SITE/nvidia/cublas/lib:$VENV_SITE/nvidia/cudnn/lib:$VENV_SITE/nvidia/nccl/lib:$VENV_SITE/nvidia/cusparselt/lib:$VENV_SITE/nvidia/nvshmem/lib:/usr/local/cuda/compat/lib:/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}"
 
 cd "$ROOT_DIR"
 mkdir -p "$LOG_DIR"
@@ -38,6 +38,7 @@ for i in "${!GPUS[@]}"; do
   url="http://$HOST:$port/v1"
   URLS+=("$url")
   env -u PYTHONPATH \
+    PYTHONNOUSERSITE=1 \
     LD_LIBRARY_PATH="$VLLM_LD_LIBRARY_PATH" \
     CUDA_VISIBLE_DEVICES="$gpu" \
     "$VLLM_ENV/bin/python" -m vllm.entrypoints.openai.api_server \

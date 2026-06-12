@@ -192,6 +192,7 @@ run_eval() {
   wait_for_gpu_eval_idle
   log "eval_start short=$short adapter=$adapter"
   env -u PYTHONPATH \
+    PYTHONNOUSERSITE=1 \
     LD_LIBRARY_PATH="$VLLM_LD_LIBRARY_PATH" \
     CUDA_VISIBLE_DEVICES="$GPU" \
     "$VLLM_ENV/bin/python" tb2_lite/scripts/replay_eval.py \
