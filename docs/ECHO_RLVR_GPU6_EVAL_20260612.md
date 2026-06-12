@@ -1,13 +1,14 @@
 # LFM2.5 ECHO RLVR GPU6 평가 노트
 
-업데이트: 2026-06-12 02:34 UTC / 2026-06-12 11:34 KST
+업데이트: 2026-06-12 05:27 UTC / 2026-06-12 14:27 KST
 
-상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
+상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 현재 활성 run 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 따로 정리한다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
 
 ## 평가 설정
 
 - Base model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Active run: `run_20260611T094438Z_echo_public1500_continue_from_1880_vllm4_train2`
+- Active training run: `run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005`
+- Evaluated checkpoint pools: parent run, continuation run, and new paper-aligned run as checkpoints appear
 - Evaluation GPU: `6`
 - Evaluation set: `tb2_lite/data/replay_full.jsonl`
 - Evaluation size: 303 replay steps
@@ -21,23 +22,34 @@
 - SFT 2Epoch: Score `50.48`
 - LiquidAI base: Score `36.53`
 - parent ECHO RLVR standalone `checkpoint-1880`: Score `50.05`
-- parentrun sweep `checkpoint-10`: Score `51.14`
-- parentrun sweep `checkpoint-1830`: Score `51.94`
-- parentrun sweep `checkpoint-1880`: Score `51.86`
+- parentrun sweep best so far: `checkpoint-650`, Score `53.65`
+- continuation sweep best so far: `checkpoint-220`, Score `53.26`
+- new paper-aligned run: pending first saved checkpoint
 
 ## 현재 결론
 
-RLVR이 완전히 무의미하다는 결론은 아니다. continuation `checkpoint-250`이 Score `52.88`로 SFT 1Epoch baseline `52.30`을 `+0.58` 넘겼다.
+RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현재 최고는 parentrun `checkpoint-650`이며, Score `53.65`로 SFT 1Epoch baseline `52.30`을 `+1.35` 넘겼다.
 
-하지만 long-run aha moment는 아직 확인되지 않았다. `checkpoint-630`은 Score `49.85`로 내려갔고, 300 이후 checkpoint들은 대체로 49-51점대에서 흔들린다. 따라서 이 run은 final checkpoint보다 best checkpoint selection이 중요하다.
+하지만 long-run aha moment는 아직 확인되지 않았다. 여러 checkpoint가 SFT baseline을 넘지만, 최신/final checkpoint가 자동으로 최고가 되는 흐름은 아니다. 따라서 이 run은 final checkpoint보다 best checkpoint selection이 중요하다.
 
-중요: `parentrun checkpoint-N`과 `continue checkpoint-M`은 서로 다른 축이다. 현재 continuation run은 parent `checkpoint-1880`에서 이어서 시작했으므로, continuation `checkpoint-250`은 대략 누적 `2130` step 지점이다. 이전 parent run의 중간 checkpoint가 더 좋았을 수 있으므로, GPU6 watcher가 parent run `checkpoint-10, 20, 30, ... 1880` 전체를 처음부터 평가한다. `checkpoint-50` 같은 초반부도 포함한다.
+중요: `parentrun checkpoint-N`, `continue checkpoint-M`, `paperhf checkpoint-K`는 서로 다른 축이다. continuation run은 parent `checkpoint-1880`에서 이어서 시작했으므로, continuation `checkpoint-250`은 대략 누적 `2130` step 지점이다. 새 paper-aligned run은 SFT 1Epoch base에서 adapter 없이 새로 시작한 별도 run이다.
 
-현재 GPU6 sweep 진행률:
+현재 GPU6 sweep 상태:
 
-- continuation run: 저장 checkpoint `67`개 중 평가 완료 `38`개, 남은 `29`개
-- parent run: 저장 checkpoint `188`개 중 평가 완료 `11`개, 남은 `177`개
-- 현재 parent `checkpoint-20` 평가 중
+- 평가 완료 JSON: `122`개
+- 현재 best: parentrun `checkpoint-650`, Score `53.65`
+- GPU6 watcher는 `parentrun`, `continuation`, `paperhf` checkpoint 디렉터리를 모두 보도록 수정했다.
+- README 점수 계산 버그를 수정했다. 점수는 `next_action_score`가 아니라 `100 * avg_command_f1`이다.
+
+## Latest Top Results
+
+| Rank | Checkpoint | Score | next_action_score | First Cmd | Valid JSON |
+| ---: | --- | ---: | ---: | ---: | ---: |
+| 1 | `lfm25-echo-rlvr-parentrun-checkpoint-650` | `53.65` | `52.91` | `51.2%` | `76.2%` |
+| 2 | `lfm25-echo-rlvr-parentrun-checkpoint-230` | `53.43` | `52.76` | `51.2%` | `77.9%` |
+| 3 | `lfm25-echo-rlvr-continue-checkpoint-220` | `53.26` | `52.34` | `50.2%` | `77.2%` |
+| 4 | `lfm25-echo-rlvr-parentrun-checkpoint-760` | `53.23` | `52.02` | `49.2%` | `76.6%` |
+| 5 | `lfm25-echo-rlvr-parentrun-checkpoint-900` | `53.07` | `52.60` | `51.5%` | `76.2%` |
 
 ## Checkpoint Results
 

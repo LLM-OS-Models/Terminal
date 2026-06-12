@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-650 결과 반영: `2026-06-12 05:27 UTC`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -12,30 +12,30 @@
 - No-Docker ECHO RLVR sandbox 안정화: [`Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md`](Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md)
 - LFM2.5 ECHO RLVR 실행/평가 종합 기록(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
 - LFM2.5 ECHO RLVR runbook(EN): [`docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md)
+- LFM2.5 ECHO RLVR 현재 상태(KO): [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)
 - LFM2.5 ECHO RLVR GPU6 평가 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 
 ## 진행 중: LFM2.5 ECHO Terminal RLVR
 
-2026-06-12 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 이어서 ECHO-style terminal RLVR을 진행 중이다. 상세한 실행/평가/데이터/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리한다.
+2026-06-12 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 ECHO-style terminal RLVR을 진행 중이다. 현재 활성 run과 GPU6 평가 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 정리하고, 상세한 실행/평가/데이터/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 보존한다.
 
 - Base/SFT model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Resume adapter: previous ECHO RLVR `checkpoint-1880`
-- Active run: `run_20260611T094438Z_echo_public1500_continue_from_1880_vllm4_train2`
-- vLLM serving GPUs: `0,1,2,3`
-- Training GPUs: `4,5`
+- Resume adapter: none. SFT 1Epoch base에서 새 paper-aligned run 시작
+- Active run: `run_20260612T045755Z_echo_paper_aligned_clean_sft1_hf6_g4_wm005`
+- Training GPUs: `0,1,2,3,4,5`
 - Evaluation GPU: `6`
 - Excluded GPU: `7`
 - Sandbox mode: Docker 없이 local workspace sandbox, `/app`/`/tests` rewrite 및 host-sensitive command 차단 적용
 - Objective: verifier RLVR + ECHO-style terminal observation world-model loss
 - Save interval: every 10 train steps
-- Current observed best RLVR checkpoint: continuation `checkpoint-250`, TB2-lite replay Score `52.88`
-- Current observed latest evaluated continuation checkpoint: `checkpoint-630`, TB2-lite replay Score `49.85`
-- Current saved continuation checkpoint: `checkpoint-670`
-- Parent-run sweep: evaluating previous run checkpoints `10,20,30,...,1880` from the beginning on GPU 6
+- Current observed best RLVR checkpoint: parentrun `checkpoint-650`, TB2-lite replay Score `53.65`
+- Current observed best continuation checkpoint: continuation `checkpoint-220`, TB2-lite replay Score `53.26`
+- New paper-aligned run checkpoints: pending first saved checkpoint
+- GPU6 sweep: evaluating parent run, continuation run, and new paper-aligned run checkpoints as they appear
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
 - Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
 
-주의: 이 run은 아직 TB2 최종평가 전이다. TB2-lite replay 기준으로는 continuation `checkpoint-250`이 SFT 1Epoch baseline `52.30`을 넘었지만, 최신 평가 완료 checkpoint는 하락해 long-run aha moment는 아직 확인되지 않았다. 또한 이전 parent run의 중간 checkpoint가 더 좋았을 가능성이 있어, GPU6에서 parent `checkpoint-10`부터 `checkpoint-1880`까지 전수 평가 중이다. 따라서 아래 전체 순위표에는 final checkpoint가 아니라 best checkpoint가 충분히 검증된 뒤 반영한다.
+주의: RLVR best checkpoint는 SFT 1Epoch baseline `52.30`을 넘었지만, final checkpoint가 자동으로 최고점이 되는 패턴은 아직 아니다. 이전 vLLM continuation run은 rollout policy 동기화 리스크가 있었고, 새 run은 이를 피하기 위해 HF on-policy backend로 다시 시작했다. 아래 전체 순위표에는 README와 같은 TB2-lite replay 기준에서 현재 확인된 best LoRA checkpoint를 별도 항목으로 반영한다.
 
 점수 기준:
 
@@ -60,16 +60,17 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
-- 현재 비교 최고점: `lfm25-echo-rlvr-continue-checkpoint-250` Score `52.88`
-- RLVR 평가 완료 개수: `52`
+- 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-650` Score `53.65`
+- RLVR 평가 완료 개수: `122`
 
 ## 전체 순위
 
 | 순위 | 모델(HF 저장소명) | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |
-| 1 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` | 52.30 | 0.5230 | 0.5854 | 0.5431 | 49.5% | 76.9% | chat_template | 0.087 | 44.7 |
-| 2 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
-| 3 | `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` | 49.97 | 0.4997 | 0.6191 | 0.4785 | 49.2% | 81.5% | chat_template | 26.688 | 542.9 |
+| 1 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch + ECHO RLVR LoRA checkpoint-650` | 53.65 | 0.5365 | 0.5957 | 0.5561 | 51.2% | 76.2% | chat_template+LoRA | 0.112 | 60.8 |
+| 2 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` | 52.30 | 0.5230 | 0.5854 | 0.5431 | 49.5% | 76.9% | chat_template | 0.087 | 44.7 |
+| 3 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
+| 4 | `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` | 49.97 | 0.4997 | 0.6191 | 0.4785 | 49.2% | 81.5% | chat_template | 26.688 | 542.9 |
 | ~4 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
 | 4 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
 | 5 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2` | 45.90 | 0.4590 | 0.5031 | 0.5098 | 44.9% | 68.3% | kohrm-local-prefixlm-export | 10.842 | 10.9 |

@@ -9,6 +9,7 @@ CONT_OUTPUT_DIR="${CONT_OUTPUT_DIR:-/home/work/.data/liquid_cli_sft/models/LFM2.
 EVAL_PATH="${EVAL_PATH:-tb2_lite/data/replay_full.jsonl}"
 RESULTS_DIR="${RESULTS_DIR:-tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612}"
 SHORT_PREFIX="${SHORT_PREFIX:-lfm25-echo-rlvr-continue-checkpoint-}"
+EVAL_RUN_SPECS="${EVAL_RUN_SPECS:-}"
 GPU="${GPU:-6}"
 VLLM_ENV="${VLLM_ENV:-$ROOT_DIR/.vllm-lfm-cu12}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
@@ -111,8 +112,9 @@ for p in sorted(results_dir.glob("*.json")):
     rows.append(
         {
             "name": d.get("model_short") or d.get("model") or p.stem,
-            "score": float(agg.get("next_action_score", 0.0)),
+            "score": 100.0 * float(agg.get("avg_command_f1", 0.0)),
             "cmd_f1": float(agg.get("avg_command_f1", 0.0)),
+            "next_action_score": float(agg.get("next_action_score", 0.0)),
             "first_cmd": f'{agg.get("first_cmd_exact_pct", 0.0)}%',
             "valid_json": f'{agg.get("valid_json_pct", 0.0)}%',
             "path": str(p),
@@ -221,7 +223,7 @@ run_eval() {
 
 list_candidate_checkpoints() {
   "$VLLM_ENV/bin/python" - \
-    "$CONT_OUTPUT_DIR" \
+    "$1" \
     "$EVAL_STRIDE" \
     "$EVAL_RECENT" \
     "$EVAL_EARLY_UNTIL" \
@@ -287,16 +289,39 @@ for step, path in iterator:
 PY
 }
 
-log "watch_start gpu=$GPU cont_dir=$CONT_OUTPUT_DIR short_prefix=$SHORT_PREFIX eval_all=$EVAL_ALL order=$EVAL_ORDER stride=$EVAL_STRIDE recent=$EVAL_RECENT early=${EVAL_EARLY_STRIDE}<=${EVAL_EARLY_UNTIL} focus=${EVAL_FOCUS_START}-${EVAL_FOCUS_END}/${EVAL_FOCUS_STRIDE}"
+emit_run_specs() {
+  if [[ -n "$EVAL_RUN_SPECS" ]]; then
+    "$VLLM_ENV/bin/python" - "$EVAL_RUN_SPECS" <<'PY'
+import sys
+
+spec = sys.argv[1]
+for raw in spec.split(";"):
+    raw = raw.strip()
+    if not raw:
+        continue
+    if "=" not in raw:
+        raise SystemExit(f"invalid EVAL_RUN_SPECS item: {raw!r}; expected prefix=/path")
+    prefix, path = raw.split("=", 1)
+    print(f"{prefix}\t{path}")
+PY
+  else
+    printf '%s\t%s\n' "$SHORT_PREFIX" "$CONT_OUTPUT_DIR"
+  fi
+}
+
+log "watch_start gpu=$GPU cont_dir=$CONT_OUTPUT_DIR short_prefix=$SHORT_PREFIX eval_run_specs=${EVAL_RUN_SPECS:-<default>} eval_all=$EVAL_ALL order=$EVAL_ORDER stride=$EVAL_STRIDE recent=$EVAL_RECENT early=${EVAL_EARLY_STRIDE}<=${EVAL_EARLY_UNTIL} focus=${EVAL_FOCUS_START}-${EVAL_FOCUS_END}/${EVAL_FOCUS_STRIDE}"
 wait_for_existing_eval
 wait_for_gpu_eval_idle
 write_readme
 
 while true; do
-  while IFS=$'\t' read -r step adapter; do
-    [[ -n "$step" && -n "$adapter" ]] || continue
-    run_eval "$adapter" "${SHORT_PREFIX}${step}"
-  done < <(list_candidate_checkpoints)
+  while IFS=$'\t' read -r prefix run_dir; do
+    [[ -n "$prefix" && -n "$run_dir" ]] || continue
+    while IFS=$'\t' read -r step adapter; do
+      [[ -n "$step" && -n "$adapter" ]] || continue
+      run_eval "$adapter" "${prefix}${step}"
+    done < <(list_candidate_checkpoints "$run_dir")
+  done < <(emit_run_specs)
   write_readme
   log "watch_sleep seconds=$POLL_SECONDS"
   sleep "$POLL_SECONDS"
