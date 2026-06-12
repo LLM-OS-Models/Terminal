@@ -8,6 +8,7 @@ BASE_MODEL="${BASE_MODEL:-LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SF
 CONT_OUTPUT_DIR="${CONT_OUTPUT_DIR:-/home/work/.data/liquid_cli_sft/models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch__echo_live_grpo_vllm_r32_run_20260611T094438Z_echo_public1500_continue_from_1880_vllm4_train2}"
 EVAL_PATH="${EVAL_PATH:-tb2_lite/data/replay_full.jsonl}"
 RESULTS_DIR="${RESULTS_DIR:-tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612}"
+SHORT_PREFIX="${SHORT_PREFIX:-lfm25-echo-rlvr-continue-checkpoint-}"
 GPU="${GPU:-6}"
 VLLM_ENV="${VLLM_ENV:-$ROOT_DIR/.vllm-lfm-cu12}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
@@ -15,8 +16,15 @@ MAX_TOKENS="${MAX_TOKENS:-1024}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.90}"
 MAX_NUM_BATCHED_TOKENS="${MAX_NUM_BATCHED_TOKENS:-16384}"
 POLL_SECONDS="${POLL_SECONDS:-300}"
-EVAL_STRIDE="${EVAL_STRIDE:-50}"
+EVAL_STRIDE="${EVAL_STRIDE:-10}"
 EVAL_RECENT="${EVAL_RECENT:-5}"
+EVAL_EARLY_UNTIL="${EVAL_EARLY_UNTIL:-150}"
+EVAL_EARLY_STRIDE="${EVAL_EARLY_STRIDE:-10}"
+EVAL_FOCUS_START="${EVAL_FOCUS_START:-200}"
+EVAL_FOCUS_END="${EVAL_FOCUS_END:-300}"
+EVAL_FOCUS_STRIDE="${EVAL_FOCUS_STRIDE:-10}"
+EVAL_ALL="${EVAL_ALL:-0}"
+EVAL_ORDER="${EVAL_ORDER:-latest_first}"
 WAIT_PID_FILE="${WAIT_PID_FILE:-/home/work/.data/liquid_cli_sft/eval_pids/echo_gpu6_eval.pid}"
 
 mkdir -p "$RESULTS_DIR/logs" /home/work/.data/liquid_cli_sft/eval_pids
@@ -43,6 +51,13 @@ wait_for_existing_eval() {
   while kill -0 "$pid" 2>/dev/null; do
     log "waiting_for_existing_gpu${GPU}_eval pid=$pid"
     sleep 60
+  done
+}
+
+wait_for_gpu_eval_idle() {
+  while pgrep -af "tb2_lite/scripts/replay_eval.py" | awk -v gpu="$GPU" '$0 ~ "--gpu " gpu {print $1}' | grep -q .; do
+    log "waiting_for_gpu${GPU}_replay_eval_to_finish"
+    sleep 30
   done
 }
 
@@ -139,13 +154,12 @@ section = "\n".join(
     [
         section_title,
         "",
-        f"2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다. 결과 디렉터리는 `{results_dir}`다.",
+        "2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다.",
         "",
+        f"- 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)",
+        f"- 결과 디렉터리: `{results_dir}`",
         f"- 현재 비교 최고점: `{best['name'] if best else 'pending'}` Score `{best['score']:.2f}`" if best else "- 현재 비교 최고점: pending",
         f"- RLVR 평가 완료 개수: `{len(rows)}`",
-        "- 기준점: SFT 1Epoch Score `52.30`, SFT 2Epoch Score `50.48`, LFM2.5 base Score `36.53`",
-        "- GPU6 watcher 정책: `EVAL_STRIDE=50` 단위 checkpoint와 최신 checkpoint를 지속 평가한다.",
-        "- RLVR checkpoint가 SFT 1Epoch `52.30`을 넘는지 여부는 full eval 완료 후 판단한다.",
         "",
     ]
 )
@@ -173,6 +187,7 @@ run_eval() {
     log "skip_existing short=$short"
     return
   fi
+  wait_for_gpu_eval_idle
   log "eval_start short=$short adapter=$adapter"
   env -u PYTHONPATH \
     LD_LIBRARY_PATH="$VLLM_LD_LIBRARY_PATH" \
@@ -205,13 +220,30 @@ run_eval() {
 }
 
 list_candidate_checkpoints() {
-  "$VLLM_ENV/bin/python" - "$CONT_OUTPUT_DIR" "$EVAL_STRIDE" "$EVAL_RECENT" <<'PY'
+  "$VLLM_ENV/bin/python" - \
+    "$CONT_OUTPUT_DIR" \
+    "$EVAL_STRIDE" \
+    "$EVAL_RECENT" \
+    "$EVAL_EARLY_UNTIL" \
+    "$EVAL_EARLY_STRIDE" \
+    "$EVAL_FOCUS_START" \
+    "$EVAL_FOCUS_END" \
+    "$EVAL_FOCUS_STRIDE" \
+    "$EVAL_ALL" \
+    "$EVAL_ORDER" <<'PY'
 import pathlib
 import sys
 
 root = pathlib.Path(sys.argv[1])
 stride = int(sys.argv[2])
 recent = int(sys.argv[3])
+early_until = int(sys.argv[4])
+early_stride = int(sys.argv[5])
+focus_start = int(sys.argv[6])
+focus_end = int(sys.argv[7])
+focus_stride = int(sys.argv[8])
+eval_all = str(sys.argv[9]).lower() in {"1", "true", "yes", "on", "all"}
+eval_order = str(sys.argv[10]).lower()
 
 items = []
 for path in root.glob("checkpoint-*"):
@@ -222,23 +254,48 @@ for path in root.glob("checkpoint-*"):
     items.append((step, path))
 items.sort()
 
-selected = {step: path for step, path in items if step % stride == 0}
-for step, path in items[-recent:]:
-    selected[step] = path
+if eval_all:
+    selected = {step: path for step, path in items}
+else:
+    selected = {step: path for step, path in items if step % stride == 0}
+    for step, path in items:
+        if step <= early_until and step % early_stride == 0:
+            selected[step] = path
+        if focus_start <= step <= focus_end and step % focus_stride == 0:
+            selected[step] = path
+recent_steps = []
+if recent > 0:
+    for step, path in items[-recent:]:
+        if not eval_all:
+            selected[step] = path
+        recent_steps.append(step)
 
-for step, path in sorted(selected.items()):
+seen = set()
+if eval_order in {"latest_first", "recent_first", "desc"}:
+    for step in reversed(recent_steps):
+        path = selected[step]
+        seen.add(step)
+        print(f"{step}\t{path}")
+if eval_order in {"desc", "descending"}:
+    iterator = sorted(selected.items(), reverse=True)
+else:
+    iterator = sorted(selected.items())
+for step, path in iterator:
+    if step in seen:
+        continue
     print(f"{step}\t{path}")
 PY
 }
 
-log "watch_start gpu=$GPU cont_dir=$CONT_OUTPUT_DIR stride=$EVAL_STRIDE recent=$EVAL_RECENT"
+log "watch_start gpu=$GPU cont_dir=$CONT_OUTPUT_DIR short_prefix=$SHORT_PREFIX eval_all=$EVAL_ALL order=$EVAL_ORDER stride=$EVAL_STRIDE recent=$EVAL_RECENT early=${EVAL_EARLY_STRIDE}<=${EVAL_EARLY_UNTIL} focus=${EVAL_FOCUS_START}-${EVAL_FOCUS_END}/${EVAL_FOCUS_STRIDE}"
 wait_for_existing_eval
+wait_for_gpu_eval_idle
 write_readme
 
 while true; do
   while IFS=$'\t' read -r step adapter; do
     [[ -n "$step" && -n "$adapter" ]] || continue
-    run_eval "$adapter" "lfm25-echo-rlvr-continue-checkpoint-${step}"
+    run_eval "$adapter" "${SHORT_PREFIX}${step}"
   done < <(list_candidate_checkpoints)
   write_readme
   log "watch_sleep seconds=$POLL_SECONDS"

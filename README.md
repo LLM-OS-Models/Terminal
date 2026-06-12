@@ -10,25 +10,32 @@
 - KoHRM/HRM 사용법과 JSON contract 연구: [`docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md`](docs/KOHRM_HRM_USAGE_RESEARCH_2026-06-06.md)
 - Harness-1 -> LFM2.5 LoRA SFT/RL 계획: [`docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md`](docs/HARNESS1_LFM25_TRAINING_PLAN_2026-06-06.md)
 - No-Docker ECHO RLVR sandbox 안정화: [`Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md`](Liquid-CLI/docs/no_docker_terminal_rlvr_sandbox_stabilization_20260609.md)
+- LFM2.5 ECHO RLVR 실행/평가 종합 기록(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
+- LFM2.5 ECHO RLVR runbook(EN): [`docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_EN_20260612.md)
+- LFM2.5 ECHO RLVR GPU6 평가 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 
 ## 진행 중: LFM2.5 ECHO Terminal RLVR
 
-2026-06-09 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 이어서 ECHO-style terminal RLVR을 진행 중이다.
+2026-06-12 UTC 기준으로 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`에서 이어서 ECHO-style terminal RLVR을 진행 중이다. 상세한 실행/평가/데이터/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리한다.
 
 - Base/SFT model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
-- Resume adapter: `run_20260608T040917Z_stable_split_vllm4_train2_p1_g2_rw4_save10/checkpoint-820`
-- Active run: `run_20260609T000050Z_patched_sandbox_resume820_vllm4_train2_setsid`
+- Resume adapter: previous ECHO RLVR `checkpoint-1880`
+- Active run: `run_20260611T094438Z_echo_public1500_continue_from_1880_vllm4_train2`
 - vLLM serving GPUs: `0,1,2,3`
 - Training GPUs: `4,5`
-- Excluded GPUs: `6,7`
+- Evaluation GPU: `6`
+- Excluded GPU: `7`
 - Sandbox mode: Docker 없이 local workspace sandbox, `/app`/`/tests` rewrite 및 host-sensitive command 차단 적용
 - Objective: verifier RLVR + ECHO-style terminal observation world-model loss
 - Save interval: every 10 train steps
-- First patched checkpoint: `checkpoint-10`
+- Current observed best RLVR checkpoint: continuation `checkpoint-250`, TB2-lite replay Score `52.88`
+- Current observed latest evaluated continuation checkpoint: `checkpoint-630`, TB2-lite replay Score `49.85`
+- Current saved continuation checkpoint: `checkpoint-670`
+- Parent-run sweep: evaluating previous run checkpoints `10,20,30,...,1880` from the beginning on GPU 6
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
 - Adapter checkpoint repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
 
-주의: 이 run은 아직 TB2 최종평가 전이다. 따라서 아래 전체 순위표에는 반영하지 않는다. 순위표 갱신은 충분한 RLVR step을 누적한 뒤 TB2/TB2-lite 평가 결과가 나온 시점에 진행한다.
+주의: 이 run은 아직 TB2 최종평가 전이다. TB2-lite replay 기준으로는 continuation `checkpoint-250`이 SFT 1Epoch baseline `52.30`을 넘었지만, 최신 평가 완료 checkpoint는 하락해 long-run aha moment는 아직 확인되지 않았다. 또한 이전 parent run의 중간 checkpoint가 더 좋았을 가능성이 있어, GPU6에서 parent `checkpoint-10`부터 `checkpoint-1880`까지 전수 평가 중이다. 따라서 아래 전체 순위표에는 final checkpoint가 아니라 best checkpoint가 충분히 검증된 뒤 반영한다.
 
 점수 기준:
 
@@ -49,13 +56,12 @@ GLM-5.1 API 결과: `/home/work/.projects/LLM-OS-Models/Terminal/tb2_lite/result
 
 ## 진행 중: LFM2.5 ECHO RLVR GPU6 평가
 
-2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다. 결과 디렉터리는 `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`다.
+2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다.
 
+- 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
+- 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-continue-checkpoint-250` Score `52.88`
-- RLVR 평가 완료 개수: `12`
-- 기준점: SFT 1Epoch Score `52.30`, SFT 2Epoch Score `50.48`, LFM2.5 base Score `36.53`
-- GPU6 watcher 정책: `EVAL_STRIDE=50` 단위 checkpoint와 최신 checkpoint를 지속 평가한다.
-- RLVR checkpoint가 SFT 1Epoch `52.30`을 넘는지 여부는 full eval 완료 후 판단한다.
+- RLVR 평가 완료 개수: `50`
 
 ## 전체 순위
 

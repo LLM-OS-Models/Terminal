@@ -1,0 +1,88 @@
+# LFM2.5 ECHO RLVR GPU6 평가 노트
+
+업데이트: 2026-06-12 02:34 UTC / 2026-06-12 11:34 KST
+
+상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
+
+## 평가 설정
+
+- Base model: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
+- Active run: `run_20260611T094438Z_echo_public1500_continue_from_1880_vllm4_train2`
+- Evaluation GPU: `6`
+- Evaluation set: `tb2_lite/data/replay_full.jsonl`
+- Evaluation size: 303 replay steps
+- Score: `100 * avg_command_f1`
+- Result directory: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
+- HF dataset sync path: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts/eval/tb2_lite_gpu6/lfm25_echo_rlvr_gpu6_eval_20260612`
+
+## 현재 비교 기준
+
+- SFT 1Epoch: Score `52.30`
+- SFT 2Epoch: Score `50.48`
+- LiquidAI base: Score `36.53`
+- parent ECHO RLVR standalone `checkpoint-1880`: Score `50.05`
+- parentrun sweep `checkpoint-10`: Score `51.14`
+- parentrun sweep `checkpoint-1830`: Score `51.94`
+- parentrun sweep `checkpoint-1880`: Score `51.86`
+
+## 현재 결론
+
+RLVR이 완전히 무의미하다는 결론은 아니다. continuation `checkpoint-250`이 Score `52.88`로 SFT 1Epoch baseline `52.30`을 `+0.58` 넘겼다.
+
+하지만 long-run aha moment는 아직 확인되지 않았다. `checkpoint-630`은 Score `49.85`로 내려갔고, 300 이후 checkpoint들은 대체로 49-51점대에서 흔들린다. 따라서 이 run은 final checkpoint보다 best checkpoint selection이 중요하다.
+
+중요: `parentrun checkpoint-N`과 `continue checkpoint-M`은 서로 다른 축이다. 현재 continuation run은 parent `checkpoint-1880`에서 이어서 시작했으므로, continuation `checkpoint-250`은 대략 누적 `2130` step 지점이다. 이전 parent run의 중간 checkpoint가 더 좋았을 수 있으므로, GPU6 watcher가 parent run `checkpoint-10, 20, 30, ... 1880` 전체를 처음부터 평가한다. `checkpoint-50` 같은 초반부도 포함한다.
+
+현재 GPU6 sweep 진행률:
+
+- continuation run: 저장 checkpoint `67`개 중 평가 완료 `38`개, 남은 `29`개
+- parent run: 저장 checkpoint `188`개 중 평가 완료 `11`개, 남은 `177`개
+- 현재 parent `checkpoint-20` 평가 중
+
+## Checkpoint Results
+
+| Checkpoint | Score | Cmd F1 | First Cmd | Valid JSON | Note |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 10 | 50.46 | 0.5075 | 49.8% | 76.2% | early |
+| 20 | 51.78 | 0.5276 | 49.5% | 77.6% | early high |
+| 30 | 51.36 | 0.5203 | 49.8% | 76.6% | early |
+| 40 | 51.61 | 0.5209 | 50.5% | 77.2% | early |
+| 50 | 51.59 | 0.5163 | 51.5% | 76.2% | early |
+| 60 | 51.44 | 0.5214 | 49.8% | 76.9% | early |
+| 70 | 50.95 | 0.5187 | 48.8% | 77.9% | early |
+| 80 | 51.78 | 0.5276 | 49.5% | 76.6% | early high |
+| 90 | 51.49 | 0.5162 | 51.2% | 74.6% | early |
+| 100 | 52.02 | 0.5156 | 53.1% | 77.6% | near baseline |
+| 110 | 51.52 | 0.5238 | 49.5% | 75.6% | early |
+| 120 | 51.21 | 0.5109 | 51.5% | 75.2% | early |
+| 130 | 50.77 | 0.5187 | 48.2% | 78.2% | early |
+| 140 | 51.48 | 0.5177 | 50.8% | 76.9% | early |
+| 150 | 51.16 | 0.5187 | 49.5% | 76.6% | early |
+| 160 | 51.30 | 0.5237 | 48.8% | 76.9% | early |
+| 170 | 50.84 | 0.5111 | 50.2% | 75.2% | early |
+| 180 | 51.86 | 0.5176 | 52.1% | 76.9% | early |
+| 200 | 50.73 | 0.5169 | 48.5% | 75.6% | lower |
+| 250 | 52.88 | 0.5305 | 52.5% | 74.9% | current best |
+| 300 | 49.87 | 0.5058 | 48.2% | 76.2% | regression |
+| 350 | 50.60 | 0.5094 | 49.8% | 76.6% | lower |
+| 400 | 51.47 | 0.5218 | 49.8% | 77.6% | partial recovery |
+| 450 | 51.13 | 0.5072 | 52.1% | 76.2% | lower |
+| 500 | 51.41 | 0.5150 | 51.2% | 75.6% | lower |
+| 540 | 51.12 | 0.5152 | 50.2% | 76.9% | latest-window sample |
+| 550 | 49.38 | 0.4946 | 49.2% | 74.3% | low point |
+| 560 | 51.55 | 0.5243 | 49.5% | 76.9% | partial recovery |
+| 570 | 50.44 | 0.5097 | 49.2% | 75.9% | lower |
+| 580 | 51.12 | 0.5182 | 49.5% | 77.2% | lower |
+| 590 | 49.95 | 0.5015 | 49.5% | 74.3% | lower |
+| 600 | 51.04 | 0.5085 | 51.5% | 74.9% | lower |
+| 610 | 49.93 | 0.5012 | 49.5% | 75.2% | lower |
+| 620 | 50.68 | 0.5162 | 48.5% | 75.6% | lower |
+| 630 | 49.85 | 0.5086 | 47.5% | 76.6% | latest checked |
+| parent standalone 1880 | 50.05 | 0.5114 | 47.5% | 74.9% | previous-run adapter |
+| parentrun 10 | 51.14 | 0.5154 | 50.2% | 76.6% | parent sweep start |
+| parentrun 1830 | 51.94 | 0.5269 | 50.2% | 76.9% | parent late |
+| parentrun 1880 | 51.86 | 0.5215 | 51.2% | 76.9% | parent final prefix |
+
+## 남은 평가
+
+GPU6 watcher는 10-step dense checkpoint와 최신 checkpoint를 계속 평가한다. 새 JSON은 `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`에 저장되고, 15분 간격으로 HF dataset eval path에 sync된다. 현재는 parent run의 초반부터 전수 스윕하는 단계다.
