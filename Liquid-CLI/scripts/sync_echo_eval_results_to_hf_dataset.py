@@ -86,8 +86,8 @@ def stage_results(results_dir: Path, stage_root: Path, repo_id: str, path_in_rep
 
     readme = results_dir / "README.md"
     if readme.exists():
-        shutil.copy2(readme, stage_dir / "README.md")
-        copied.append("README.md")
+        shutil.copy2(readme, stage_dir / "SOURCE_README.md")
+        copied.append("SOURCE_README.md")
 
     best = None
     numeric_scores = [row for row in scores if isinstance(row.get("score"), int | float)]
@@ -113,9 +113,8 @@ def stage_results(results_dir: Path, stage_root: Path, repo_id: str, path_in_rep
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    if not (stage_dir / "README.md").exists():
-        (stage_dir / "README.md").write_text(
-            f"""---
+    (stage_dir / "README.md").write_text(
+        f"""---
 license: apache-2.0
 task_categories:
 - text-generation
@@ -144,8 +143,8 @@ The TB2-lite score is a fast proxy based on corrected 303-step replay metrics,
 not the official Docker-isolated TerminalBench score. It is intended for
 checkpoint selection and regression tracking during RLVR.
 """,
-            encoding="utf-8",
-        )
+        encoding="utf-8",
+    )
     return stage_dir, manifest
 
 
