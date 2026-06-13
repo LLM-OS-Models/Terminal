@@ -258,6 +258,15 @@ def main() -> None:
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--save-every", type=int, default=0)
     parser.add_argument("--allow-raw-fallback", action="store_true")
+    parser.add_argument(
+        "--manual-prompt-tokenize",
+        action="store_true",
+        help=(
+            "Tokenize prompts with llama.cpp and pass token ids to Llama(). "
+            "This avoids llama-cpp-python adding an extra BOS token when the "
+            "HF chat template already emitted one."
+        ),
+    )
     parser.add_argument("--skip-if-exists", action="store_true")
     parser.add_argument("--verbose-llama", action="store_true")
     args = parser.parse_args()
@@ -295,8 +304,17 @@ def main() -> None:
     gen_start = time.time()
     per_step: list[dict[str, Any]] = []
     for idx, (row, prompt) in enumerate(zip(rows, prompts), start=1):
+        completion_prompt: str | list[int]
+        if args.manual_prompt_tokenize:
+            completion_prompt = llm.tokenize(
+                prompt.encode("utf-8"),
+                add_bos=False,
+                special=True,
+            )
+        else:
+            completion_prompt = prompt
         generation = llm(
-            prompt,
+            completion_prompt,
             max_tokens=args.max_tokens,
             temperature=args.temperature,
             top_p=args.top_p,

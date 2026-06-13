@@ -23,6 +23,7 @@
 - LFM2.5 ECHO RLVR GPU6 평가 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - LFM2.5 ECHO RLVR runbook(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
 - LFM2.5 SFT/RLVR 비교 분석(KO): [`docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md`](docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md)
+- LFM2.5 SFT 1Epoch GGUF CPU 평가 기록(KO): [`docs/LFM25_GGUF_CPU_EVAL_20260613.ko.md`](docs/LFM25_GGUF_CPU_EVAL_20260613.ko.md)
 - 전체 연구 노트와 시각화는 README 하단 참고 섹션에 둔다.
 
 ## 진행 중: LFM2.5 ECHO RLVR GPU6 평가
@@ -32,7 +33,7 @@
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `286`
+- RLVR 평가 완료 개수: `287`
 
 ## 전체 순위
 
