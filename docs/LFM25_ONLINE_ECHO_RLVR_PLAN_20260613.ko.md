@@ -473,7 +473,109 @@ RL은 길게 돌린다고 항상 좋아지지 않는다. 특히 SFT가 이미 �
 
 2026-06-13 11:07 KST 기준 속도는 warmup 포함 약 60~80초/step 범위다. 이 속도가 유지되면 checkpoint-25는 대략 2026-06-13 11:25~11:35 KST 사이에 생성될 가능성이 높다. GPU6 watcher는 checkpoint가 생기면 자동 평가한다.
 
-## 13. 참고 논문
+## 13. checkpoint-25/50 첫 평가와 해석
+
+기준 시각: 2026-06-13 12:05 KST
+
+`checkpoint-25`와 `checkpoint-50`은 GPU 6 watcher가 평가 완료했다.
+
+- 결과 파일:
+  - `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613/lfm25-echo-online-sft1-checkpoint-25.json`
+  - `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613/lfm25-echo-online-sft1-checkpoint-50.json`
+- README 정식 Score 기준: `Score = 100 * avg_command_f1`
+- 주의: 평가 로그에 찍힌 `51.58`은 정식 Score가 아니라 legacy `next_action_score`다.
+
+정식 비교:
+
+| 항목 | SFT 1Epoch baseline | checkpoint-25 | checkpoint-50 |
+| --- | ---: | ---: | ---: |
+| Score (`100 * avg_command_f1`) | `52.30` | `52.17` | `50.62` |
+| SFT 대비 | `0.00` | `-0.13` | `-1.68` |
+| Next Action score | `51.46` | `51.58` | `49.89` |
+| Precision | `0.5854` | `0.5906` | `0.5784` |
+| Recall | `0.5431` | `0.5378` | `0.5214` |
+| First Cmd | `49.5%` | `50.2%` | `48.2%` |
+| Valid JSON | `76.9%` | `75.6%` | `77.9%` |
+
+구간별 F1:
+
+| 구간 | SFT 1Epoch baseline | checkpoint-25 | checkpoint-50 |
+| --- | ---: | ---: | ---: |
+| early | `0.6210` | `0.6236` | `0.5890` |
+| mid | `0.5172` | `0.5230` | `0.5036` |
+| late | `0.4455` | `0.4340` | `0.4383` |
+
+checkpoint-50 기준 주요 하락:
+
+| 도메인 | baseline F1 | checkpoint-50 F1 | 차이 |
+| --- | ---: | ---: | ---: |
+| scientific_computing | `0.6394` | `0.5713` | `-0.0681` |
+| model_training | `0.5176` | `0.4624` | `-0.0552` |
+| debugging | `0.5454` | `0.4992` | `-0.0462` |
+| system_administration | `0.5434` | `0.5039` | `-0.0395` |
+
+checkpoint-50 기준 주요 상승:
+
+| 도메인 | baseline F1 | checkpoint-50 F1 | 차이 |
+| --- | ---: | ---: | ---: |
+| code | `0.1613` | `0.2054` | `+0.0441` |
+| data_processing | `0.4878` | `0.5015` | `+0.0137` |
+| file_operations | `0.5239` | `0.5308` | `+0.0069` |
+| math | `0.4146` | `0.4207` | `+0.0061` |
+
+해석:
+
+`checkpoint-25`와 `checkpoint-50`은 모두 학습 전 SFT 1Epoch baseline보다 낮다. 따라서 초기 평가는 “성능 향상”으로 쓰면 안 된다. 정확히는 “초기 RLVR update가 SFT의 안정적인 command imitation prior를 흔들었고, 아직 verifier/world-model 신호가 README 정식 command-F1 이득으로 전환되지 않았다”가 맞다.
+
+깨진 쪽은 주로 세 가지다.
+
+1. `checkpoint-25`에서는 valid JSON이 `76.9% -> 75.6%`로 내려갔다. 즉 SFT가 잡아둔 출력 계약이 초반 RL update에서 흔들렸다.
+2. `checkpoint-50`에서는 valid JSON은 `77.9%`로 회복했지만 recall이 `0.5431 -> 0.5214`로 크게 내려갔다. 즉 형식은 맞추지만 필요한 command coverage를 놓친다.
+3. `checkpoint-50`에서는 early/mid가 크게 떨어진다. late만의 문제가 아니라 전체 command distribution이 한 번 밀린 상태다.
+
+다만 이전 checkpoint sweep에서도 초반은 흔들리다가 250~600 근처에서 좋아지는 구간이 있었다. 따라서 지금 결론은 “RLVR이 실패했다”가 아니라 “초기 drift가 관측됐고, checkpoint 250~600 구간을 봐야 한다”이다.
+
+앞으로 판단 기준:
+
+- `checkpoint-50~100`: JSON/recall이 더 무너지는지 확인
+- `checkpoint-150~250`: SFT baseline `52.30` 회복 여부 확인
+- `checkpoint-400~600`: 기존 경험처럼 실질 이득이 생기는지 확인
+- `checkpoint-600+`: README 현재 1위 `54.05` 갱신 가능성 확인
+
+## 14. 왜 SFT 이후 RLVR 이득이 기묘하게 작을 수 있는가
+
+현재까지의 관찰은 기묘하지만 일관적이다.
+
+- raw LFM2.5에서 RLVR을 하면 상승 폭은 크다.
+- 하지만 raw RLVR은 SFT 1Epoch 점수에는 못 닿는다.
+- SFT 1Epoch 위에 RLVR을 얹으면 일부 checkpoint에서 오르지만, 평균적으로는 쉽게 흔들린다.
+- SFT 이후 online RLVR 초반도 `checkpoint-25`, `checkpoint-50` 모두 baseline보다 낮다.
+
+이 현상은 “RL이 의미 없다”가 아니라 다음 구조로 해석하는 편이 맞다.
+
+첫째, TB2-lite 정식 Score는 reference command F1이다. SFT는 이 평가 포맷과 매우 가깝다. 모델에게 어떤 JSON 구조로, 어떤 command sequence를, 어떤 스타일로 내야 하는지 직접 가르친다. 따라서 이 벤치마크에서는 SFT가 가장 직접적인 최적화 신호가 된다.
+
+둘째, RLVR reward는 verifier success와 terminal feedback을 본다. 이것은 실제 task 성공에는 더 가까울 수 있지만, README의 command-F1과는 완전히 같은 목표가 아니다. 같은 문제를 다른 shell command로 풀거나, 중간 command를 생략하거나, reference보다 짧게 가면 verifier 관점에서는 괜찮을 수 있어도 command-F1에서는 손해가 난다.
+
+셋째, SFT가 이미 강하면 headroom이 작다. SFT 1Epoch는 raw baseline `36.53`에서 `52.30`까지 `+15.77`을 만든다. 이 정도로 포맷과 command prior가 정렬된 뒤에는 RLVR이 얻을 수 있는 남은 이득이 작다. 작은 reward noise나 KL drift만 있어도 점수가 내려가기 쉽다.
+
+넷째, 작은/중간 체급 모델은 RLVR에서 “새로운 전략을 발견하는 힘”보다 “기존 SFT 분포를 망가뜨리는 힘”이 먼저 나타날 수 있다. 특히 LoRA rank 32, 짧은 horizon, no-Docker proxy verifier 환경에서는 이 현상이 더 쉽게 보인다.
+
+다섯째, SFT는 단순 지식 주입이라고 보기 어렵지만, 완전히 지식 주입이 아니라고도 할 수 없다. 이 작업에서는 pre-training에 있던 shell/code/tool-use 능력을 꺼내는 효과가 1차이고, 반복되는 JSON/action/terminal 절차를 adapter에 저장하는 효과가 2차다. 그래서 SFT가 raw RLVR보다 훨씬 강하게 먹힌다.
+
+현재 가설:
+
+`SFT는 평가 포맷과 행동 분포를 직접 정렬한다. RLVR은 실제 환경 성공과 복구 능력을 보정하지만, SFT 이후에는 headroom이 작고 reward-score mismatch가 커서 checkpoint별로 작은 상승과 큰 drift가 섞인다.`
+
+따라서 다음 실험의 핵심은 RLVR을 더 오래 돌리는 것만이 아니다.
+
+- SFT prior를 보호하는 KL 또는 SFT anchor를 더 강하게 둘 것
+- reward를 README command-F1/coverage와 더 가깝게 만들 것
+- recall 하락을 막기 위해 command coverage reward를 추가할 것
+- late/복구 구간을 위해 `max_turns`와 `max_new_tokens`를 늘린 ablation을 만들 것
+- checkpoint 평균이 아니라 최고 checkpoint selection을 전제로 둘 것
+
+## 15. 참고 논문
 
 - ECHO: Terminal Agents Learn World Models for Free: https://arxiv.org/abs/2605.24517
 - A Primer in Post-Training Reasoning Data: What We Know About How It Works: https://arxiv.org/abs/2606.02113

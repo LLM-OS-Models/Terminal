@@ -37,6 +37,7 @@
 - 데이터: `/home/work/.data/echo_terminal_data/prepared/lfm_live_tasks_mixed.jsonl`, 1,500개
 - 데이터 비율: Endless Terminals 772개 `51.47%`, OpenThoughts-Agent-v1-RL 728개 `48.53%`
 - 저장/평가: checkpoint는 25 step마다 저장하고 GPU 6 watcher가 새 checkpoint를 평가한다.
+- 초기 평가: `checkpoint-25`는 정식 Score `52.17`로 SFT 1Epoch baseline `52.30`보다 `-0.13` 낮고, `checkpoint-50`은 Score `50.62`로 `-1.68` 낮다. 로그의 `51.58` 같은 값은 정식 Score가 아니라 legacy `next_action_score`이므로 순위표 기준으로 쓰지 않는다.
 - 상세 기록: [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
 
 이전 static-vLLM RLVR checkpoint sweep과 GPU6 평가 기록은 별도 문서에 남긴다.
@@ -1338,4 +1339,4 @@ DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613`
 - 현재 비교 최고점: `LFM2.5-8B-A1B Terminal ToolBench Full SFT 1Epoch` Score `52.30`
-- RLVR 평가 완료 개수: `0`
+- RLVR 평가 완료 개수: `2`
