@@ -648,6 +648,20 @@ SFT 1Epoch와 비교:
 환경 피드백 활용: ECHO-style RLVR이 추가로 다듬는다.
 ```
 
+여기서 중요한 해석은 “SFT와 RLVR이 같은 방법인가?”다. 결론은 아니다. 둘은 같은 post-training 계열이고, 둘 다 많은 경우 pre-training 안에 이미 들어 있는 능력을 특정 task/interface에 맞게 끌어낸다. 하지만 gradient가 들어오는 방식은 다르다.
+
+```text
+SFT:
+  demonstration 기반 behavior cloning.
+  매 토큰마다 "이 상황에서는 이렇게 말하고 이렇게 action을 내라"는 고밀도 정답 신호를 준다.
+
+RLVR:
+  verifier reward 기반 action selection optimization.
+  정답 trajectory를 직접 보여주지 않고, 실행 결과/검증 점수로 어떤 선택을 더 밀지 정한다.
+```
+
+따라서 충분한 terminal/tool-use SFT 이후 RLVR 이득이 작아지는 것은 자연스럽다. SFT가 이미 모델을 좋은 terminal-action manifold 위에 올려놓으면, RLVR이 새로 열 수 있는 행동 공간은 줄어든다. 이때 RLVR은 “새 지식 주입”이라기보다 first command, command selection, completion timing을 미세 조정하는 역할에 가까워진다.
+
 SFT가 더 잘 먹히는 이유는 모델 지능 때문이 아니라, 현재 평가가 요구하는 능력 때문이다. TB2-lite replay는 “터미널을 통해 문제를 풀 수 있는가”를 보지만, 점수는 결국 reference command와 모델 command의 overlap을 본다. 즉 다음 능력이 매우 중요하다.
 
 ```text
@@ -759,10 +773,10 @@ task -> action -> terminal observation -> verifier
 3. 동시에 SFT는 JSON action, 중단 타이밍, 검증 습관 같은 절차 지식은 실제로 주입했다.
 4. SFT 2Epoch의 50.48점은 더 많은 SFT가 항상 좋은 것은 아님을 보여준다.
 5. SFT+RLVR의 54.05점은 RLVR이 이미 좋은 action manifold 위에서 가장 효율적임을 보여준다.
-6. raw RLVR의 45.32점은 ECHO-style interaction learning이 작동하지만, SFT warmup 없이 곧장 50점대를 넘기기는 어렵다는 증거다.
+6. raw RLVR의 45.69점은 ECHO-style interaction learning이 작동하지만, SFT warmup 없이 곧장 50점대를 넘기기는 어렵다는 증거다.
 ```
 
-즉 SFT와 RLVR은 경쟁 관계라기보다 역할이 다르다. SFT는 “답안지 양식과 행동 prior”를 맞추고, RLVR은 “터미널 피드백과 verifier를 통해 그 행동을 다듬는” 쪽에 가깝다.
+즉 SFT와 RLVR은 경쟁 관계라기보다 역할이 다르다. SFT는 “답안지 양식과 행동 prior”를 맞추고, RLVR은 “터미널 피드백과 verifier를 통해 그 행동을 다듬는” 쪽에 가깝다. 둘 다 pre-training capability를 표면으로 끌어낸다는 점에서는 비슷하지만, SFT는 고밀도 모범 행동을 복제하고 RLVR은 sparse/structured reward로 선택 분포를 조정한다는 점에서 다르다.
 
 ## 18. Predictable Compression Failures 관점
 
@@ -789,37 +803,38 @@ raw 모델은 정보 예산이 부족하면 긴 설명이나 잘못된 completio
 
 ## 19. 현재 active run 상태
 
-2026-06-13 08:36 KST 확인 기준:
+2026-06-13 09:51 KST 확인 기준:
 
 | 항목 | 값 |
 | --- | --- |
 | active run | `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k` |
-| train step | `1311` |
-| latest saved checkpoint | `1300` |
+| train step | `1433` |
+| latest saved checkpoint | `1425` |
 | max steps | `2000` |
-| 남은 step | 약 `689` |
-| 예상 남은 시간 | 약 `6.5~8시간` |
-| latest evaluated raw checkpoint | `1300` |
-| latest evaluated score | `45.69` |
+| 남은 step | 약 `567` |
+| 예상 남은 시간 | 약 `4.8~5.6시간` |
+| 예상 종료 | 대략 `2026-06-13 14:40~15:30 KST` |
+| latest evaluated raw checkpoint | `1425` |
+| latest evaluated score | `44.68` |
 | best evaluated raw checkpoint | `1300` |
 | best raw score | `45.69` |
 
 최근 train log:
 
 ```text
-step=1311
-reward_mean=-0.17375
+step=1433
+reward_mean=-0.20000
 verifier_reward_mean=0.0
-policy_loss_mean=0.01475
-world_loss_mean=1.53942
-action_tokens_mean=786.00
-obs_tokens_mean=177.00
+policy_loss_mean=-2.32862
+world_loss_mean=0.69099
+action_tokens_mean=1044.00
+obs_tokens_mean=92.00
 lr=1e-6
 ```
 
 해석:
 
-verifier reward가 아직 `0.0`이므로 “문제 해결 성공 trajectory를 강화하는 강한 RL”이라고 보긴 어렵다. 다만 checkpoint 평가 점수가 올랐으므로 ECHO world-model loss와 format shaping이 TB2-lite action 품질을 개선하고 있다.
+verifier reward가 아직 `0.0`이므로 “문제 해결 성공 trajectory를 강화하는 강한 RL”이라고 보긴 어렵다. 다만 checkpoint 평가 점수가 raw baseline보다 올랐으므로 ECHO world-model loss와 format shaping이 TB2-lite action 품질을 개선하고 있다. `checkpoint-1425`는 README 기준 `Score = 100 * avg_command_f1`로 `44.68`, 보조 지표인 `next_action_score`로 `44.15`다. README 정식 순위에는 Cmd F1 기준만 사용한다.
 
 ## 20. Hugging Face 업로드
 
@@ -837,7 +852,7 @@ Raw adapter model repo:
 LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters
 ```
 
-SFT 1Epoch 기반 ECHO RLVR adapter repo와 raw clean-start ECHO RLVR adapter repo는 분리한다. 두 run은 base model이 다르므로 같은 model repo에 checkpoint를 섞으면 나중에 로드/평가/모델 카드 해석이 꼬인다. 2026-06-13 09:22 KST 기준 raw run의 `checkpoint-25`부터 `checkpoint-1375`까지는 새 raw adapter repo에 업로드했다.
+SFT 1Epoch 기반 ECHO RLVR adapter repo와 raw clean-start ECHO RLVR adapter repo는 분리한다. 두 run은 base model이 다르므로 같은 model repo에 checkpoint를 섞으면 나중에 로드/평가/모델 카드 해석이 꼬인다. 2026-06-13 09:55 KST 기준 raw run의 `checkpoint-25`부터 `checkpoint-1425`까지는 새 raw adapter repo에 업로드했다. 이후 sync loop가 `1800s` 간격으로 새 checkpoint를 계속 반영한다.
 
 raw run path:
 
@@ -888,7 +903,7 @@ raw RLVR은 오를 수 있지만, sparse verifier와 no-Docker 환경에서는 S
 
 현재 전체 최고는 SFT 1Epoch + ECHO RLVR `checkpoint-610`의 Score `54.05`다. 따라서 `55`점 이상을 가장 현실적으로 노리는 길은 raw RLVR 장기 학습이 아니라, 이미 `52.30`을 찍은 SFT 1Epoch 모델 위에서 RLVR 설정을 더 잘 sweep하는 것이다.
 
-다만 이것도 확정은 아니다. raw RLVR은 `1225`에서 `45.32`, `1300`에서 `45.69`로 다시 새 고점을 만들었다. 즉 현재 run은 완전히 멈춘 곡선이 아니다. `2000` step까지 끝난 뒤 checkpoint-score curve를 다시 봐야 한다.
+다만 이것도 확정은 아니다. raw RLVR은 `1225`에서 `45.32`, `1300`에서 `45.69`로 다시 새 고점을 만들었고, 이후 `1400`은 `45.08`, `1425`는 `44.68`로 고점 아래에서 흔들리고 있다. 즉 현재 run은 강한 아하 모먼트를 보였다고 보기는 어렵지만, 완전히 무의미한 run도 아니다. `2000` step까지 끝난 뒤 checkpoint-score curve를 다시 봐야 한다.
 
 현재 가설은 다음과 같다.
 
@@ -907,6 +922,18 @@ SFT only:
 ```
 
 따라서 지금은 “SFT가 답이고 RLVR은 의미 없다”가 아니라, “SFT가 가장 큰 기반이고, RLVR은 그 위에서 마지막 점수를 찾는 방법”으로 보는 것이 맞다. raw RLVR은 ECHO 신호가 실제로 먹히는지 확인하는 실험이고, SFT+RLVR은 leaderboard를 밀어 올리는 실험이다.
+
+조금 더 일반화하면 다음과 같다.
+
+```text
+충분한 SFT 이후 RLVR의 추가 이득이 작다면,
+그 이유는 SFT와 RLVR이 완전히 같아서가 아니다.
+
+SFT가 이미 pre-training capability를 좋은 행동 분포로 꺼내 놓았기 때문에,
+RLVR이 추가로 최적화할 여지가 줄어든 것이다.
+```
+
+그래서 지금 가설은 “SFT와 RL은 본질적으로 같은 것”이 아니라, “둘 다 post-training으로 pretrained model의 잠재 능력을 꺼내지만, SFT는 행동 prior를 만들고 RLVR은 그 prior 위에서 선택을 미세 조정한다”에 가깝다.
 
 따라서 지금까지의 최종 해석은 다음 한 줄이다.
 

@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 15:12 KST`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~1375 상세 문서 반영: `2026-06-13 09:22 KST`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 15:12 KST`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~1425 상세 문서 반영: `2026-06-13 09:51 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -33,7 +33,7 @@
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `289`
+- RLVR 평가 완료 개수: `291`
 
 ## 정식 순위 Top 30
 
