@@ -38,7 +38,7 @@
 - 데이터 비율: Endless Terminals 772개 `51.47%`, OpenThoughts-Agent-v1-RL 728개 `48.53%`
 - 저장/평가: checkpoint는 25 step마다 저장하고 GPU 6 watcher가 새 checkpoint를 평가한다.
 - GRPO 구조: prompt당 `num_generations=4`, update당 global rollout 8개를 만들고, 같은 prompt의 4개 reward 그룹 안에서 advantage를 계산한다. 최신 LoRA는 5 optimizer update마다 vLLM 4개 replica에 hot-load되어 다음 rollout에 반영된다.
-- 현재 자동 평가: GPU 6 watcher가 `checkpoint-25~175`까지 7개 checkpoint를 평가했다. 현재 최고는 `checkpoint-125` Score `52.49`로 SFT 1Epoch baseline `52.30` 대비 `+0.19`다. 로그의 `51.58` 같은 값은 정식 Score가 아니라 legacy `next_action_score`이므로 순위표 기준으로 쓰지 않는다.
+- 현재 자동 평가: GPU 6 watcher가 `checkpoint-25~225`까지 9개 checkpoint를 평가했다. 현재 최고는 `checkpoint-125` Score `52.49`로 SFT 1Epoch baseline `52.30` 대비 `+0.19`다. 로그의 `51.58` 같은 값은 정식 Score가 아니라 legacy `next_action_score`이므로 순위표 기준으로 쓰지 않는다.
 - 상세 기록: [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
 
 이전 static-vLLM RLVR checkpoint sweep과 GPU6 평가 기록은 별도 문서에 남긴다.
@@ -1340,4 +1340,4 @@ DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613`
 - 현재 비교 최고점: `lfm25-echo-online-sft1-checkpoint-125` Score `52.49`
-- RLVR 평가 완료 개수: `7`
+- RLVR 평가 완료 개수: `9`
