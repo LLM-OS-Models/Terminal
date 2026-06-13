@@ -24,16 +24,27 @@
 - LFM2.5 ECHO RLVR runbook(KO): [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)
 - LFM2.5 SFT/RLVR 비교 분석(KO): [`docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md`](docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md)
 - LFM2.5 SFT 1Epoch GGUF CPU 평가 기록(KO): [`docs/LFM25_GGUF_CPU_EVAL_20260613.ko.md`](docs/LFM25_GGUF_CPU_EVAL_20260613.ko.md)
+- LFM2.5 Online ECHO RLVR 재시작 계획 및 정정(KO): [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
 - 전체 연구 노트와 시각화는 README 하단 참고 섹션에 둔다.
 
-## 진행 중: LFM2.5 ECHO RLVR GPU6 평가
+## 진행 중: LFM2.5 Online ECHO RLVR
 
-2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다.
+2026-06-13 10:55 KST 기준 SFT 1Epoch 모델에서 online ECHO RLVR을 다시 시작했다. 이전 static-vLLM 실험과 달리 이번 run은 trainer가 최신 LoRA adapter를 주기적으로 저장하고 vLLM replica 4개에 runtime hot-load한다. 즉, 다음 rollout 생성이 업데이트된 policy를 실제로 사용한다.
+
+- Run ID: `run_20260613T014646Z_sft1_online_vllm_lora_sync_g4_t4_sync5_wm005`
+- 기준 모델: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch`
+- GPU 배치: `0,1,2,3` vLLM rollout, `4,5` LoRA RLVR 학습, `6` 중간 평가, `7` 미사용
+- 데이터: `/home/work/.data/echo_terminal_data/prepared/lfm_live_tasks_mixed.jsonl`, 1,500개
+- 데이터 비율: Endless Terminals 772개 `51.47%`, OpenThoughts-Agent-v1-RL 728개 `48.53%`
+- 저장/평가: checkpoint는 25 step마다 저장하고 GPU 6 watcher가 새 checkpoint를 평가한다.
+- 상세 기록: [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
+
+이전 static-vLLM RLVR checkpoint sweep과 GPU6 평가 기록은 별도 문서에 남긴다.
 
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `292`
+- RLVR 평가 완료 개수: `294`
 
 ## 정식 순위 Top 30
 
@@ -1319,3 +1330,12 @@ DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-
 | 공식 inference | **가능** | 느리지만 작동 (~42-83시간 예상) |
 
 **핵심 병목**: DeepSeek-V4 시리즈는 FP4+FP8 혼합 양자화와 커스텀 MLA attention을 사용하여, 범용 추론 엔진(vLLM, SGLang)의 지원이 아직 미흡하다. 특히 flash_mla(H200 전용 CUDA 커널)와 CUDA 13 요구사항이 현재 시스템 환경과 맞지 않아 공식 inference 코드만 유일한 실행 경로다.
+
+## 진행 중: LFM2.5 ECHO RLVR GPU6 평가
+
+2026-06-12 기준 GPU 6번에서 ECHO RLVR LoRA checkpoint TB2-lite 평가를 계속 진행한다.
+
+- 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
+- 결과 디렉터리: `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613`
+- 현재 비교 최고점: `LFM2.5-8B-A1B Terminal ToolBench Full SFT 1Epoch` Score `52.30`
+- RLVR 평가 완료 개수: `0`

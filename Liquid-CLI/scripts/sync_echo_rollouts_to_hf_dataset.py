@@ -92,6 +92,33 @@ def redact_env_file(src: Path, dst: Path) -> None:
     dst.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def parse_env_file(path: Path) -> dict[str, str]:
+    values: dict[str, str] = {}
+    if not path.exists():
+        return values
+    for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[len("export ") :].strip()
+        if "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        if SECRET_KEY_RE.search(key):
+            continue
+        values[key] = value.strip().strip('"').strip("'")
+    return values
+
+
+def first_existing(paths: list[Path]) -> Path:
+    for path in paths:
+        if path.exists():
+            return path
+    return paths[0]
+
+
 def latest_checkpoints(output_dir: Path) -> list[str]:
     if not output_dir.exists():
         return []
@@ -181,25 +208,26 @@ def stage_snapshot(run_dir: Path, output_dir: Path, stage_root: Path, repo_id: s
         trace_files[src.name] = rows
         trace_rows_total += rows
 
-    train_steps = list(iter_json_events(run_dir / "train.log", "train_step"))
+    train_log = first_existing(
+        [
+            run_dir / "train.log",
+            run_dir / "logs" / "train.log",
+            run_dir / "logs" / "train_online.log",
+        ]
+    )
+    train_steps = list(iter_json_events(train_log, "train_step"))
     with (stage_dir / "train_steps.jsonl").open("w", encoding="utf-8") as fh:
         for obj in train_steps:
             fh.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
-    redact_env_file(run_dir / "run.env", stage_dir / "run.env.redacted")
+    env_path = first_existing([run_dir / "run.env", run_dir / "run_env.sh"])
+    redact_env_file(env_path, stage_dir / "run.env.redacted")
     for aux_name in ("checkpoint_eval_candidates.md", "checkpoint_eval_candidates.json"):
         aux_src = run_dir / aux_name
         if aux_src.exists():
             shutil.copy2(aux_src, stage_dir / aux_name)
 
-    run_env = {}
-    env_path = run_dir / "run.env"
-    if env_path.exists():
-        for line in env_path.read_text(encoding="utf-8", errors="replace").splitlines():
-            if "=" in line:
-                key, value = line.split("=", 1)
-                if not SECRET_KEY_RE.search(key):
-                    run_env[key] = value
+    run_env = parse_env_file(env_path)
 
     manifest = {
         "repo_id": repo_id,
@@ -211,6 +239,7 @@ def stage_snapshot(run_dir: Path, output_dir: Path, stage_root: Path, repo_id: s
         "trace_rows_total": trace_rows_total,
         "train_steps_logged": len(train_steps),
         "latest_train_step": train_steps[-1] if train_steps else None,
+        "train_log": str(train_log),
         "checkpoints": latest_checkpoints(output_dir),
         "no_docker": True,
         "vllm_gpus": run_env.get("VLLM_GPUS", "0,1,2,3"),

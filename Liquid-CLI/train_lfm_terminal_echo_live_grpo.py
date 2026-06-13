@@ -148,6 +148,28 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--vllm-served-model", default="")
     parser.add_argument("--vllm-request-timeout", type=float, default=180.0)
     parser.add_argument("--vllm-stop", action="append", default=["<|im_end|>"])
+    parser.add_argument(
+        "--vllm-lora-name",
+        default="",
+        help="If set, generation requests use this LoRA model name. Use with --vllm-lora-sync-steps.",
+    )
+    parser.add_argument(
+        "--vllm-lora-sync-steps",
+        type=int,
+        default=0,
+        help="Save the current trainable LoRA and hot-load it into all vLLM replicas every N steps. 0 disables.",
+    )
+    parser.add_argument(
+        "--vllm-lora-sync-dir",
+        default="",
+        help="Directory for transient LoRA snapshots used by vLLM sync. Defaults to output_dir/vllm_lora_sync.",
+    )
+    parser.add_argument(
+        "--vllm-lora-load-inplace",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Pass load_inplace to vLLM /v1/load_lora_adapter when supported.",
+    )
 
     parser.add_argument("--world-model-coeff", type=float, default=0.05)
     parser.add_argument("--policy-coeff", type=float, default=1.0)
@@ -346,7 +368,7 @@ def generate_assistant_text_vllm_http(
 ) -> str:
     prompt = apply_chat_template_text(tokenizer, messages, add_generation_prompt=True)
     payload: dict[str, Any] = {
-        "model": args.vllm_served_model or args.model_path,
+        "model": args.vllm_lora_name or args.vllm_served_model or args.model_path,
         "prompt": prompt,
         "max_tokens": args.max_new_tokens,
         "temperature": args.temperature,
@@ -377,6 +399,76 @@ def generate_assistant_text_vllm_http(
     if not choices:
         raise RuntimeError(f"vLLM response had no choices: {data}")
     return str(choices[0].get("text") or "").strip()
+
+
+def post_vllm_json(base_url: str, endpoint: str, payload: dict[str, Any], timeout: float) -> tuple[int, str]:
+    request = urllib.request.Request(
+        base_url.rstrip("/") + endpoint,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            return int(response.status), response.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        return int(exc.code), exc.read().decode("utf-8", errors="replace")
+
+
+def sync_lora_to_vllm(
+    model: Any,
+    tokenizer: Any,
+    args: argparse.Namespace,
+    output_dir: Path,
+    step_name: str,
+    rank: int,
+) -> None:
+    if rank != 0:
+        return
+    if args.rollout_backend != "vllm_http" or args.vllm_lora_sync_steps <= 0:
+        return
+    if not args.vllm_lora_name:
+        raise RuntimeError("--vllm-lora-name is required when --vllm-lora-sync-steps > 0")
+
+    sync_root = Path(args.vllm_lora_sync_dir) if args.vllm_lora_sync_dir else output_dir / "vllm_lora_sync"
+    target = sync_root / step_name
+    target.mkdir(parents=True, exist_ok=True)
+    module = model.module if hasattr(model, "module") else model
+    module.save_pretrained(str(target))
+    tokenizer.save_pretrained(str(target))
+
+    urls = [url.strip() for url in args.vllm_base_url.split(",") if url.strip()]
+    loaded: list[dict[str, Any]] = []
+    for base_url in urls:
+        unload_status, unload_body = post_vllm_json(
+            base_url,
+            "/unload_lora_adapter",
+            {"lora_name": args.vllm_lora_name},
+            args.vllm_request_timeout,
+        )
+        load_payload = {
+            "lora_name": args.vllm_lora_name,
+            "lora_path": str(target),
+            "load_inplace": bool(args.vllm_lora_load_inplace),
+        }
+        load_status, load_body = post_vllm_json(
+            base_url,
+            "/load_lora_adapter",
+            load_payload,
+            args.vllm_request_timeout,
+        )
+        loaded.append(
+            {
+                "base_url": base_url,
+                "unload_status": unload_status,
+                "unload_body": unload_body[:500],
+                "load_status": load_status,
+                "load_body": load_body[:500],
+            }
+        )
+        if load_status >= 400:
+            raise RuntimeError(f"vLLM LoRA sync failed for {base_url}: {load_status} {load_body[:2000]}")
+    log_event(rank, "vllm_lora_synced", step_name=step_name, lora_name=args.vllm_lora_name, path=str(target), replicas=loaded)
 
 
 @torch.no_grad()
@@ -799,12 +891,25 @@ def main() -> None:
                     "no_docker": True,
                     "rollout_backend": args.rollout_backend,
                     "vllm_base_url": args.vllm_base_url if args.rollout_backend == "vllm_http" else None,
+                    "vllm_lora_name": args.vllm_lora_name if args.rollout_backend == "vllm_http" else None,
+                    "vllm_lora_sync_steps": args.vllm_lora_sync_steps if args.rollout_backend == "vllm_http" else 0,
                 },
                 ensure_ascii=False,
                 indent=2,
             ),
             flush=True,
         )
+
+    if args.rollout_backend == "vllm_http" and args.vllm_lora_sync_steps > 0:
+        sync_lora_to_vllm(
+            model,
+            tokenizer,
+            args,
+            output_dir,
+            "step_000000",
+            rank,
+        )
+        barrier()
 
     global_update = 0
     for step in range(args.max_steps):
@@ -880,6 +985,21 @@ def main() -> None:
             optimizer.step()
             optimizer.zero_grad(set_to_none=True)
             global_update += 1
+
+            if (
+                args.rollout_backend == "vllm_http"
+                and args.vllm_lora_sync_steps > 0
+                and global_update % args.vllm_lora_sync_steps == 0
+            ):
+                sync_lora_to_vllm(
+                    model,
+                    tokenizer,
+                    args,
+                    output_dir,
+                    f"step_{global_update:06d}",
+                    rank,
+                )
+                barrier()
 
         local_reward_mean = sum(t.reward for t in all_trajs) / max(len(all_trajs), 1)
         global_reward_mean = all_reduce_mean(local_reward_mean, device)

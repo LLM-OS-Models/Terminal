@@ -113,6 +113,39 @@ def stage_results(results_dir: Path, stage_root: Path, repo_id: str, path_in_rep
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    if not (stage_dir / "README.md").exists():
+        (stage_dir / "README.md").write_text(
+            f"""---
+license: apache-2.0
+task_categories:
+- text-generation
+tags:
+- terminal-agent
+- rlvr
+- echo
+- evaluation
+- tb2-lite
+pretty_name: ECHO Terminal RLVR Evaluation Results
+---
+
+# ECHO Terminal RLVR Evaluation Results
+
+This snapshot stores TB2-lite evaluation JSON files for ECHO-style terminal
+RLVR checkpoints.
+
+- Repository: `{repo_id}`
+- Path in repo: `{path_in_repo}`
+- Source directory: `{results_dir}`
+- Synced at UTC: `{manifest["synced_at_utc"]}`
+- Result count: `{manifest["result_count"]}`
+- Current best: `{manifest["best"]}`
+
+The TB2-lite score is a fast proxy based on corrected 303-step replay metrics,
+not the official Docker-isolated TerminalBench score. It is intended for
+checkpoint selection and regression tracking during RLVR.
+""",
+            encoding="utf-8",
+        )
     return stage_dir, manifest
 
 

@@ -7,6 +7,10 @@ MODEL_PATH="${MODEL_PATH:-LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SF
 SFT_ADAPTER_PATH="${SFT_ADAPTER_PATH:-}"
 VLLM_BASE_URL="${VLLM_BASE_URL:-http://127.0.0.1:8123/v1}"
 VLLM_SERVED_MODEL="${VLLM_SERVED_MODEL:-$MODEL_PATH}"
+VLLM_LORA_NAME="${VLLM_LORA_NAME:-}"
+VLLM_LORA_SYNC_STEPS="${VLLM_LORA_SYNC_STEPS:-0}"
+VLLM_LORA_SYNC_DIR="${VLLM_LORA_SYNC_DIR:-}"
+VLLM_LORA_LOAD_INPLACE="${VLLM_LORA_LOAD_INPLACE:-0}"
 TRAIN_GPUS="${TRAIN_GPUS:-4,5}"
 NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
 MAX_STEPS="${MAX_STEPS:-100}"
@@ -57,6 +61,7 @@ TRAIN_ARGS=(
   --rollout-backend vllm_http
   --vllm-base-url "$VLLM_BASE_URL"
   --vllm-served-model "$VLLM_SERVED_MODEL"
+  --vllm-lora-sync-steps "$VLLM_LORA_SYNC_STEPS"
   --max-steps "$MAX_STEPS"
   --max-wall-time-hours "$MAX_WALL_TIME_HOURS"
   --prompts-per-rank "$PROMPTS_PER_RANK"
@@ -80,6 +85,20 @@ TRAIN_ARGS=(
   --logging-steps 1
   "$@"
 )
+
+if [[ -n "$VLLM_LORA_NAME" ]]; then
+  TRAIN_ARGS+=(--vllm-lora-name "$VLLM_LORA_NAME")
+fi
+
+if [[ -n "$VLLM_LORA_SYNC_DIR" ]]; then
+  TRAIN_ARGS+=(--vllm-lora-sync-dir "$VLLM_LORA_SYNC_DIR")
+fi
+
+if [[ "$VLLM_LORA_LOAD_INPLACE" == "1" ]]; then
+  TRAIN_ARGS+=(--vllm-lora-load-inplace)
+else
+  TRAIN_ARGS+=(--no-vllm-lora-load-inplace)
+fi
 
 if [[ "$PREPARED_ONLY" == "1" ]]; then
   TRAIN_ARGS+=(

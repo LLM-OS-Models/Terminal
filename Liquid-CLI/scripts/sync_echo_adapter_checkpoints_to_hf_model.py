@@ -35,6 +35,13 @@ def parse_env_file(path: Path) -> dict[str, str]:
     return values
 
 
+def first_existing(paths: list[Path]) -> Path:
+    for path in paths:
+        if path.exists():
+            return path
+    return paths[0]
+
+
 def get_token(env_file: Path) -> str:
     token = (
         os.environ.get("HF_TOKEN")
@@ -153,7 +160,8 @@ def stage_metadata(stage_dir: Path, repo_id: str, run_dir: Path, output_dir: Pat
     if stage_dir.exists():
         shutil.rmtree(stage_dir)
     stage_dir.mkdir(parents=True, exist_ok=True)
-    run_env = parse_env_file(run_dir / "run.env")
+    env_path = first_existing([run_dir / "run.env", run_dir / "run_env.sh"])
+    run_env = parse_env_file(env_path)
     manifest = {
         "repo_id": repo_id,
         "run_id": run_dir.name,
@@ -166,7 +174,7 @@ def stage_metadata(stage_dir: Path, repo_id: str, run_dir: Path, output_dir: Pat
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    redact_env(run_dir / "run.env", stage_dir / "run.env.redacted")
+    redact_env(env_path, stage_dir / "run.env.redacted")
     (stage_dir / "README.md").write_text(build_readme(repo_id, run_env, manifest), encoding="utf-8")
     return stage_dir
 

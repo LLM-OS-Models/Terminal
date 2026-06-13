@@ -11,6 +11,10 @@ VLLM_GPUS="${VLLM_GPUS:-0,1,2,3}"
 MAX_MODEL_LEN="${MAX_MODEL_LEN:-32768}"
 GPU_MEMORY_UTILIZATION="${GPU_MEMORY_UTILIZATION:-0.88}"
 TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-1}"
+ENABLE_LORA="${ENABLE_LORA:-0}"
+MAX_LORA_RANK="${MAX_LORA_RANK:-32}"
+MAX_LORAS="${MAX_LORAS:-1}"
+MAX_CPU_LORAS="${MAX_CPU_LORAS:-4}"
 LOG_DIR="${LOG_DIR:-/tmp/lfm25_vllm_replicas}"
 READY_TIMEOUT_SEC="${READY_TIMEOUT_SEC:-300}"
 START_STAGGER_SEC="${START_STAGGER_SEC:-0}"
@@ -37,8 +41,18 @@ for i in "${!GPUS[@]}"; do
   port="$((BASE_PORT + i))"
   url="http://$HOST:$port/v1"
   URLS+=("$url")
+  LORA_ARGS=()
+  if [[ "$ENABLE_LORA" == "1" ]]; then
+    LORA_ARGS+=(
+      --enable-lora
+      --max-lora-rank "$MAX_LORA_RANK"
+      --max-loras "$MAX_LORAS"
+      --max-cpu-loras "$MAX_CPU_LORAS"
+    )
+  fi
   env -u PYTHONPATH \
     PYTHONNOUSERSITE=1 \
+    VLLM_ALLOW_RUNTIME_LORA_UPDATING="${VLLM_ALLOW_RUNTIME_LORA_UPDATING:-$ENABLE_LORA}" \
     LD_LIBRARY_PATH="$VLLM_LD_LIBRARY_PATH" \
     CUDA_VISIBLE_DEVICES="$gpu" \
     "$VLLM_ENV/bin/python" -m vllm.entrypoints.openai.api_server \
@@ -52,6 +66,7 @@ for i in "${!GPUS[@]}"; do
       --gpu-memory-utilization "$GPU_MEMORY_UTILIZATION" \
       --tensor-parallel-size "$TENSOR_PARALLEL_SIZE" \
       --enforce-eager \
+      "${LORA_ARGS[@]}" \
       > "$LOG_DIR/vllm_gpu${gpu}_port${port}.log" 2>&1 &
   PIDS+=("$!")
   echo "started gpu=$gpu port=$port pid=${PIDS[-1]}"
