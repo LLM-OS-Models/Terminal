@@ -1,14 +1,14 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-13 00:51 UTC / 2026-06-13 09:51 KST
+업데이트: 2026-06-13 01:10 UTC / 2026-06-13 10:10 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
 주의: 이 문서의 중간 본문에는 2026-06-12 초반 SFT 기반 turbo run 설명이 일부 남아 있다. 현재 active 학습은 순수 raw `LiquidAI/LFM2.5-8B-A1B`에서 다시 시작한 run으로 전환됐다. 최신 active run, raw checkpoint 평가, ECHO 논문과의 차이는 [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md`](LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md)와 [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](ECHO_RLVR_GPU6_EVAL_20260612.md)를 기준으로 본다.
 
-## 2026-06-13 09:51 KST 즉시 업로드/평가 상태
+## 2026-06-13 10:10 KST 즉시 업로드/평가 상태
 
-사용자가 요청한 "일단 된 것들"은 2026-06-13 09:22 KST 기준으로 Hugging Face에 one-shot 수동 sync까지 완료했다. 이후 새 checkpoint와 새 rollout은 loop sync가 주기적으로 다시 반영한다.
+사용자가 요청한 "일단 된 것들"은 2026-06-13 09:22 KST 기준으로 Hugging Face에 one-shot 수동 sync를 수행했고, 2026-06-13 10:09 KST에 raw adapter `checkpoint-1450`과 GPU6 평가 JSON 292개까지 추가 수동 sync했다. 이후 새 checkpoint와 새 rollout은 loop sync가 주기적으로 다시 반영한다.
 
 업로드 대상:
 
@@ -23,9 +23,9 @@ one-shot sync 결과:
 | --- | --- |
 | Rollout traces | `10,920` rows 업로드 완료 |
 | Train steps logged | `1,365`개 로그 반영 |
-| Raw adapter checkpoints | `checkpoint-25`부터 `checkpoint-1425`까지 별도 raw adapter repo에 업로드 완료 |
-| 이번 one-shot 신규 raw adapter | `checkpoint-1400`, `checkpoint-1425`까지 추가 반영 |
-| GPU6 eval results | `291`개 결과 업로드 완료 |
+| Raw adapter checkpoints | `checkpoint-25`부터 `checkpoint-1450`까지 별도 raw adapter repo에 업로드 완료 |
+| 이번 one-shot 신규 raw adapter | `checkpoint-1450` 추가 반영 |
+| GPU6 eval results | `292`개 결과 업로드 완료 |
 | GPU6 eval best so far | `lfm25-echo-rlvr-parentrun-checkpoint-610`, Score `54.05` |
 
 현재 active raw clean-start run:
@@ -36,9 +36,10 @@ one-shot sync 결과:
 - Train GPUs: `4,5`
 - Eval GPU: `6`
 - Excluded GPU: `7`
-- 2026-06-13 09:51 KST 기준 latest evaluated raw checkpoint: `checkpoint-1425`
+- 2026-06-13 10:10 KST 기준 latest evaluated raw checkpoint: `checkpoint-1450`
 - raw adapter upload: 기존 SFT 기반 adapter repo와 섞지 않고 `LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters`로 분리
-- 다음 저장 checkpoint: `checkpoint-1450`
+- latest saved raw checkpoint: `checkpoint-1475`
+- GPU6 평가 대기 raw checkpoint: `checkpoint-1475`
 
 Raw clean-start GPU6 평가 최신 구간:
 
@@ -53,6 +54,7 @@ Raw clean-start GPU6 평가 최신 구간:
 | 1375 | 44.10 | 43.2% | 68.3% | 고점 아래 |
 | 1400 | 45.08 | 43.6% | 68.3% | 일부 회복 |
 | 1425 | 44.68 | 42.9% | 68.3% | 고점 아래 |
+| 1450 | 43.69 | 41.3% | 68.3% | 고점 아래, 최근 하락 |
 
 주의할 점:
 
@@ -61,6 +63,7 @@ Raw clean-start GPU6 평가 최신 구간:
 - 다만 순수 raw base rerun `39.92` 대비로는 raw clean-start RLVR이 `45점대`까지 올라왔으므로, RLVR 자체의 상승 신호는 있다.
 - 충분한 terminal/tool-use SFT 이후 RLVR의 추가 이득이 작아지는 현상은 자연스럽다. 둘 다 pre-training capability를 끌어내는 post-training이지만, SFT는 demonstration 기반 행동 prior를 만들고 RLVR은 verifier reward로 그 prior 위의 선택을 미세 조정한다.
 - terminal feedback/world-model loss를 포함한 rollout traces는 모두 HF dataset에 쌓고 있으므로, 추후 재-RLVR 또는 SFT용 고품질 interaction 데이터로 재사용 가능하다.
+- 2026-06-13 10:10 KST 직전 train log에서는 `step=1467`에서 `verifier_reward_mean=0.125`와 group 내 양성 보상 `1.01`이 한 번 관측됐다. 아직 추세라고 말하기에는 이르지만, 1450 이후 구간에서 sparse verifier reward가 완전히 0만은 아니게 됐다는 점은 다음 checkpoint 평가에서 확인할 가치가 있다.
 
 ## 현재 결론
 

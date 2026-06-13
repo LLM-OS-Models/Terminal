@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR GPU6 평가 노트
 
-업데이트: 2026-06-12 22:31 UTC / 2026-06-13 07:31 KST
+업데이트: 2026-06-13 01:10 UTC / 2026-06-13 10:10 KST
 
 상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 현재 활성 run 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 따로 정리한다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
 
@@ -26,7 +26,7 @@
 - parent ECHO RLVR standalone `checkpoint-1880`: Score `50.05`
 - parentrun sweep best so far: `checkpoint-610`, Score `54.05`
 - continuation sweep best so far: `checkpoint-220`, Score `53.26`
-- raw clean-start run best so far: `checkpoint-1100`, Score `44.84`
+- raw clean-start run best so far: `checkpoint-1300`, Score `45.69`
 
 ## 현재 결론
 
@@ -38,7 +38,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 현재 GPU6 sweep 상태:
 
-- 평가 완료 JSON: `281`개
+- 평가 완료 JSON: `292`개
 - 현재 best: parentrun `checkpoint-610`, Score `54.05`
 - GPU6 watcher는 `parentrun`, `continuation`, `turbo`, `raw` checkpoint 디렉터리를 모두 보도록 수정했다.
 - README 점수 계산 버그를 수정했다. 점수는 `next_action_score`가 아니라 `100 * avg_command_f1`이다.
@@ -56,7 +56,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 ## Raw Clean-Start Results
 
-이번 raw clean-start run은 SFT 1Epoch adapter 없이 순수 `LiquidAI/LFM2.5-8B-A1B`에서 시작했다. 1175 step까지 평가한 현재 기준으로 raw base rerun `39.92`보다 분명히 오른 구간은 있다. 최고점은 checkpoint-1100 Score `44.84`로 raw base 대비 `+4.92`다. 다만 SFT 1Epoch baseline `52.30`에는 아직 `-7.46` 낮고, 최신 checkpoint-1175는 Score `43.29`로 최고점보다 내려왔다.
+이번 raw clean-start run은 SFT 1Epoch adapter 없이 순수 `LiquidAI/LFM2.5-8B-A1B`에서 시작했다. 1450 step까지 평가한 현재 기준으로 raw base rerun `39.92`보다 분명히 오른 구간은 있다. 최고점은 checkpoint-1300 Score `45.69`로 raw base rerun 대비 `+5.77`, README 고정 raw baseline `36.53` 대비 `+9.16`이다. 다만 SFT 1Epoch baseline `52.30`에는 아직 `-6.61` 낮고, 최신 checkpoint-1450은 Score `43.69`로 최고점보다 내려왔다.
 
 | Checkpoint | Score | next_action_score | First Cmd | Valid JSON | Note |
 | ---: | ---: | ---: | ---: | ---: | --- |
@@ -83,12 +83,23 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 | raw 975 | 44.47 | 44.39 | 44.2% | 63.7% | near current raw best |
 | raw 1000 | 42.72 | 43.37 | 44.9% | 65.7% | local drop |
 | raw 1075 | 43.77 | 44.20 | 45.2% | 68.6% | best valid JSON so far |
-| raw 1100 | 44.84 | 45.16 | 45.9% | 66.3% | current raw best |
+| raw 1100 | 44.84 | 45.16 | 45.9% | 66.3% | former raw best |
 | raw 1125 | 43.77 | 43.81 | 43.9% | 64.4% | below raw best |
 | raw 1150 | 44.10 | 43.35 | 41.6% | 65.3% | high but not best |
-| raw 1175 | 43.29 | 43.56 | 44.2% | 63.7% | latest evaluated |
+| raw 1175 | 43.29 | 43.56 | 44.2% | 63.7% | local drop |
+| raw 1200 | 44.39 | 44.92 | 45.5% | 66.7% | recovery |
+| raw 1225 | 45.32 | 46.18 | 48.2% | 66.3% | near raw best |
+| raw 1250 | 43.88 | 44.28 | 45.2% | 65.0% | drop |
+| raw 1275 | 43.96 | 43.85 | 43.6% | 67.0% | flat |
+| raw 1300 | 45.69 | 44.85 | 42.9% | 69.0% | current raw best |
+| raw 1325 | 44.35 | 44.43 | 44.6% | 66.3% | below raw best |
+| raw 1350 | 45.20 | 45.02 | 44.6% | 69.0% | partial recovery |
+| raw 1375 | 44.10 | 43.74 | 42.9% | 69.3% | valid JSON high |
+| raw 1400 | 45.08 | 45.03 | 44.9% | 69.0% | partial recovery |
+| raw 1425 | 44.68 | 44.15 | 42.9% | 68.3% | below raw best |
+| raw 1450 | 43.69 | 42.97 | 41.3% | 68.3% | latest evaluated |
 
-해석: raw clean-start에서도 terminal feedback 신호가 먹히고 있다. 1100 step에서 raw base rerun 대비 `+4.92`까지 올라갔고, first command exact도 `45.9%`까지 오른다. 다만 SFT 1Epoch의 구조화된 출력 습관을 따라잡지는 못했다. 현재 결론은 "ECHO RLVR은 raw 모델도 끌어올리지만, 이 TB2-lite 기준에서는 대량 SFT를 대체하기보다는 SFT 이후 미세 개선에 더 강하다"에 가깝다.
+해석: raw clean-start에서도 terminal feedback 신호가 먹히고 있다. 1300 step에서 README 고정 raw baseline 대비 `+9.16`까지 올라갔고, Valid JSON도 `69.0%`까지 오른다. 다만 SFT 1Epoch의 구조화된 출력 습관을 따라잡지는 못했다. 1300 이후 1450까지는 `43.69~45.20` 사이에서 흔들리고 있어 강한 단조 상승은 아니다. 현재 결론은 "ECHO RLVR은 raw 모델도 끌어올리지만, 이 TB2-lite 기준에서는 대량 SFT를 대체하기보다는 SFT 이후 미세 개선에 더 강하다"에 가깝다.
 
 논문 재현성 주의: 현재 run은 ECHO의 핵심 objective인 action-token policy loss + terminal-observation CE loss를 구현했지만, Microsoft ECHO 논문의 Harbor/Docker/SkyRL/FSDP 재현은 아니다. 원 논문은 8870 train tasks, Docker/Harbor, 최대 16턴, 2048 generated tokens/turn, 8 B200, 500 GRPO steps 설정이다. 현재 run은 no-Docker local sandbox, 1500 prepared tasks, 최대 4턴, 256 generated tokens/turn, LoRA 2GPU 학습 + vLLM 4GPU rollout이다. 그래서 결과 해석은 "ECHO-style local adaptation"으로 해야 한다.
 
@@ -138,4 +149,4 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 ## 남은 평가
 
-GPU6 watcher는 10-step dense checkpoint와 최신 checkpoint를 계속 평가한다. 새 JSON은 `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`에 저장되고, 15분 간격으로 HF dataset eval path에 sync된다. 현재는 parent run의 초반부터 전수 스윕하는 단계다.
+GPU6 watcher는 저장된 checkpoint와 최신 checkpoint를 계속 평가한다. 새 JSON은 `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`에 저장되고, 필요 시 수동 one-shot sync 또는 별도 sync loop로 HF dataset eval path에 반영한다. 2026-06-13 10:09 KST 기준 HF dataset에는 평가 JSON `292`개가 반영되어 있다.

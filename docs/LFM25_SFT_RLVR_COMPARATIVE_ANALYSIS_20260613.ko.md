@@ -548,9 +548,12 @@ checkpoint-1175: 2026-06-13 07:24 KST
 checkpoint-1200: 2026-06-13 07:38 KST
 checkpoint-1225: 2026-06-13 07:54 KST
 checkpoint-1300: 2026-06-13 08:36 KST
+checkpoint-1400: 2026-06-13 09:35 KST
+checkpoint-1425: 2026-06-13 09:50 KST
+checkpoint-1450: 2026-06-13 10:04 KST
 ```
 
-25 step당 약 `14분`이다. `2000` step까지는 2026-06-13 07:53 KST 기준 약 `776` step 남았고, 단순 추정으로 약 `7시간 15분` 남았다. verifier/test task가 오래 걸리면 `1~2시간` 더 밀릴 수 있다.
+25 step당 약 `14~15분`이다. `2000` step까지는 2026-06-13 10:10 KST 기준 약 `533` step 남았고, 단순 추정으로 약 `5시간 0분~5시간 30분` 남았다. verifier/test task가 오래 걸리면 `1시간` 안팎 더 밀릴 수 있다. 현재 예상 종료는 대략 `2026-06-13 15:10~15:40 KST`다.
 
 ## 11. raw ECHO RLVR 점수
 
@@ -574,6 +577,12 @@ raw run checkpoint 평가:
 | `1250` | `43.88` | `45.2%` | `65.0%` |
 | `1275` | `43.96` | `43.6%` | `67.0%` |
 | `1300` | `45.69` | `42.9%` | `69.0%` |
+| `1325` | `44.35` | `44.6%` | `66.3%` |
+| `1350` | `45.20` | `44.6%` | `69.0%` |
+| `1375` | `44.10` | `42.9%` | `69.3%` |
+| `1400` | `45.08` | `44.9%` | `69.0%` |
+| `1425` | `44.68` | `42.9%` | `68.3%` |
+| `1450` | `43.69` | `41.3%` | `68.3%` |
 
 현재 평가 완료 기준 최고점은 raw `checkpoint-1300`의 Score `45.69`다.
 
@@ -630,7 +639,7 @@ SFT 1Epoch와 비교:
 후반 완만한 상승/plateau: 43~45점대 흔들림, 1300에서 45.69 새 고점
 ```
 
-`checkpoint-1100` 이후 `1175`에서 내려왔다가 `1225`, `1300`에서 다시 새 고점을 만든 것을 보면, raw RLVR은 아직 완전히 정체됐다고 보기는 어렵다. 다만 verifier reward가 계속 `0.0`이라 “성공 trajectory가 터지며 급상승하는 강한 아하 모먼트”라고 보기도 이르다. 현 설정으로는 `45~47` 정도가 현실적인 기대 범위지만, 2000 step까지 끝나기 전에는 단정하지 않는다. 7시간 정도 더 지나서 `1500~2000` 구간의 checkpoint sweep을 보면, 진짜 plateau인지 `47~48`까지 열리는지 더 분명해질 것이다.
+`checkpoint-1100` 이후 `1175`에서 내려왔다가 `1225`, `1300`에서 다시 새 고점을 만든 것을 보면, raw RLVR은 아직 완전히 정체됐다고 보기는 어렵다. 다만 `1450`은 `43.69`로 내려왔고, 1300 이후는 `43.69~45.20` 사이에서 흔들린다. 그래서 현 시점에서는 “강한 아하 모먼트”라기보다 “초기 형식/월드모델 적응 후 완만한 plateau”에 더 가깝다. 2026-06-13 10:10 KST 직전 train log에서는 `step=1467`에서 처음으로 group 내 양성 verifier reward `1.01`이 관측됐으므로, 1475 이후 평가에서 이 신호가 실제 점수 상승으로 이어지는지 확인해야 한다. 현 설정으로는 `45~47` 정도가 현실적인 기대 범위지만, 2000 step까지 끝나기 전에는 단정하지 않는다.
 
 ## 13. 왜 SFT가 RLVR보다 더 잘 먹히나
 
@@ -778,7 +787,90 @@ task -> action -> terminal observation -> verifier
 
 즉 SFT와 RLVR은 경쟁 관계라기보다 역할이 다르다. SFT는 “답안지 양식과 행동 prior”를 맞추고, RLVR은 “터미널 피드백과 verifier를 통해 그 행동을 다듬는” 쪽에 가깝다. 둘 다 pre-training capability를 표면으로 끌어낸다는 점에서는 비슷하지만, SFT는 고밀도 모범 행동을 복제하고 RLVR은 sparse/structured reward로 선택 분포를 조정한다는 점에서 다르다.
 
-## 18. Predictable Compression Failures 관점
+## 18. 검색/논문 근거로 본 추가 해석
+
+이번 해석은 다음 1차 자료와 관련 연구를 기준으로 정리한다.
+
+```text
+ECHO: Terminal Agents Learn World Models for Free
+https://arxiv.org/abs/2605.24517
+
+A Primer in Post-Training Reasoning Data
+https://arxiv.org/abs/2606.02113
+
+Quagmires in SFT-RL Post-Training
+https://arxiv.org/abs/2510.01624
+
+Limit of RLVR
+https://limit-of-rlvr.github.io/
+
+Learning What to Learn: Stage-Specific Data Sets for SFT-then-RL in Small Language Model Reasoning
+https://arxiv.org/abs/2606.04466
+
+Terminal-World: Scaling Terminal-Agent Environments via Agent Skills
+https://arxiv.org/html/2605.20876v1
+```
+
+현재 실험을 설명하는 가장 좋은 프레임은 다음이다.
+
+```text
+SFT는 acquisition / interface alignment에 강하다.
+RLVR은 consolidation / selection optimization에 강하다.
+ECHO는 실패 rollout의 terminal observation을 dense world-model signal로 바꿔 reward sparsity를 완화한다.
+```
+
+ECHO 논문은 terminal stdout, stderr, 파일 출력, 에러 로그를 단순 context가 아니라 학습 신호로 본다. 그래서 GRPO action-token loss에 terminal-observation CE loss를 더한다. 이 관점에서 우리 raw run의 `36.53 -> 45.69` 상승은 ECHO-style signal이 실제로 작동한다는 쪽의 증거다. 특히 Valid JSON이 `59.1% -> 69.0%`로 오른 것은 terminal interaction을 예측하는 보조 loss가 형식 안정화에도 영향을 준 것으로 해석할 수 있다.
+
+하지만 같은 ECHO 논문에서도 핵심 성능은 실제 Docker/Harbor terminal task, final-test verifier, 긴 rollout, 충분한 generation budget 위에서 나온다. 우리는 no-Docker local sandbox, `max_turns=4`, `max_new_tokens=256`, LoRA rank 32, shaping reward를 쓴다. 따라서 “ECHO 논문과 같은 방법론의 핵심은 넣었지만, 동일 재현은 아니다”라는 선은 유지해야 한다.
+
+`A Primer in Post-Training Reasoning Data` 관점에서는 optimizer 이름보다 데이터 객체와 검증 계약이 중요하다. 우리 SFT 데이터는 `327,383` rows의 고밀도 terminal/toolcall demonstration이고, raw RLVR 데이터는 sparse verifier와 terminal observation이 묶인 interaction record다. 평가가 command F1/JSON/first command에 크게 의존하는 지금 구조에서는 SFT가 훨씬 직접적인 signal을 준다. 즉 SFT가 더 잘 먹힌 이유는 “RLVR이 무의미해서”가 아니라, 현재 task가 action grammar와 command prior를 강하게 요구하기 때문이다.
+
+`Quagmires in SFT-RL Post-Training`은 높은 SFT 점수가 이후 RLVR 성능을 항상 예측하지 못한다고 보고한다. 특히 SFT를 오래 하거나 쉬운/동질적인 예제에 치우치면 pre-RL 성능은 오르지만, RL에서 탐색할 수 있는 행동 공간이 좁아질 수 있다. 우리도 비슷한 신호를 본다. SFT 1Epoch는 `52.30`으로 강하지만, SFT 2Epoch는 `50.48`로 떨어졌다. 그리고 SFT+RLVR도 final checkpoint가 아니라 parent `checkpoint-610`이 최고점이다. 그래서 “긴 학습이 무조건 좋다”가 아니라 “중간 checkpoint sweep이 필수”다.
+
+`Limit of RLVR` 계열 결과는 RLVR을 “베이스 모델이 이미 갖고 있는 해결 공간 안에서 sampling efficiency를 높이는 것”으로 해석한다. 이 해석은 우리 결과와 잘 맞는다. raw LFM2.5는 이미 `36.53`을 낸다. RLVR은 그 안에 있던 터미널 행동 후보를 더 잘 고르게 만들어 `45.69`까지 올렸지만, SFT가 만든 강한 action prior `52.30`을 아직 넘지는 못했다. 즉 raw RLVR은 새로운 터미널 지식을 대량 주입했다기보다, base distribution 안의 usable behavior를 더 자주 꺼내도록 압축한 쪽에 가깝다.
+
+SLM stage-specific SFT/RL 논문은 작은 모델에서는 SFT와 RL의 역할 분담이 더 중요하다고 본다. SFT는 아직 못 쓰는 skill을 acquire하게 만들고, RL은 모델이 이미 일부 접근 가능한 skill을 consolidate하는 데 적합하다는 해석이다. 이 관점에서 raw LFM2.5 RLVR이 `45점대`에서 흔들리는 것은 이상하지 않다. verifier reward가 대부분 0이면 “일부 접근 가능한 성공 trajectory”가 부족하기 때문이다. 2026-06-13 10:10 KST 직전 `step=1467`에서 양성 verifier reward가 한 번 나온 것은 중요하지만, 아직 충분한 성공 분포가 생겼다고 보기는 어렵다.
+
+Terminal-World 논문도 terminal-agent 성능에서 task environment와 teacher trajectory 품질이 크다는 점을 보여준다. 특히 8B/14B/32B 계열을 함께 학습해 terminal benchmark에서 scale과 데이터 품질의 효과를 확인한다. 이것은 “큰 모델이면 RLVR이 더 잘 먹을 가능성”의 근거가 된다. 큰 모델은 기본 solution support가 넓어서 RLVR이 고를 수 있는 후보가 많고, 같은 verifier budget에서도 성공 trajectory가 나올 확률이 높다. 반대로 작은 모델은 SFT로 action prior를 먼저 만들어줘야 RLVR이 의미 있는 reward contrast를 얻기 쉽다.
+
+현재 결론:
+
+```text
+1. 지금 결과만 보면 SFT가 가장 큰 도약을 만든다.
+2. RLVR은 SFT 이후 작게 더 올릴 수 있다. 현재 전체 최고 54.05가 그 증거다.
+3. raw RLVR도 오른다. 36.53 -> 45.69는 무시할 상승이 아니다.
+4. 하지만 raw RLVR이 SFT를 바로 대체하지는 못한다.
+5. 이유는 verifier sparsity, no-Docker 환경, 짧은 rollout, 작은 LoRA 이동폭, 그리고 이미 강한 SFT prior의 포화 효과가 함께 작용하기 때문이다.
+6. 큰 모델 또는 더 강한 verifier/격리 환경에서는 RLVR 이득이 더 커질 가능성이 있다.
+```
+
+따라서 “SFT와 RL은 결국 같은 것인가?”라는 질문에 대한 답은 다음이다.
+
+```text
+아니다.
+
+둘 다 pre-training 안의 잠재 능력을 꺼내는 post-training이라는 점은 같다.
+하지만 SFT는 정답 행동을 직접 보여주는 고밀도 imitation이고,
+RLVR은 verifier가 승인한 선택을 더 자주 하도록 분포를 조정하는 sparse/structured optimization이다.
+```
+
+실전적으로는 이렇게 가져가는 것이 맞다.
+
+```text
+leaderboard를 올리는 목적:
+  SFT 1Epoch best를 기반으로 RLVR sweep.
+
+ECHO 논문식 가설 검증:
+  raw LFM2.5에서 ECHO RLVR을 끝까지 돌리고, 성공 reward가 생기는 구간을 관찰.
+
+55점 이상을 노리는 다음 실험:
+  SFT 1Epoch + 더 촘촘한 verifier + longer rollout + checkpoint sweep.
+
+큰 모델 실험:
+  14B/32B급에서 짧은 SFT warmup 후 RLVR. raw RLVR보다 성공 trajectory 확률이 높을 가능성이 큼.
+```
+
+## 19. Predictable Compression Failures 관점
 
 참고 논문:
 
@@ -801,42 +893,45 @@ https://arxiv.org/abs/2509.11208
 
 raw 모델은 정보 예산이 부족하면 긴 설명이나 잘못된 completion으로 빠진다. SFT는 그 예산을 줄여준다. “이 벤치에서는 이렇게 action을 내면 된다”는 압축된 행동 prior를 넣어주기 때문이다. ECHO는 terminal observation을 예측하게 해서 world model을 조금 더 잘 만들지만, action prior 자체가 약하면 그 효과가 형식 안정화에 먼저 쓰인다.
 
-## 19. 현재 active run 상태
+## 20. 현재 active run 상태
 
-2026-06-13 09:51 KST 확인 기준:
+2026-06-13 10:10 KST 확인 기준:
 
 | 항목 | 값 |
 | --- | --- |
 | active run | `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k` |
-| train step | `1433` |
-| latest saved checkpoint | `1425` |
+| train step | `1467` |
+| latest saved checkpoint | `1450` |
 | max steps | `2000` |
-| 남은 step | 약 `567` |
-| 예상 남은 시간 | 약 `4.8~5.6시간` |
-| 예상 종료 | 대략 `2026-06-13 14:40~15:30 KST` |
-| latest evaluated raw checkpoint | `1425` |
-| latest evaluated score | `44.68` |
+| 남은 step | 약 `533` |
+| 예상 남은 시간 | 약 `5.0~5.5시간` |
+| 예상 종료 | 대략 `2026-06-13 15:10~15:40 KST` |
+| latest evaluated raw checkpoint | `1450` |
+| latest evaluated score | `43.69` |
+| latest saved raw checkpoint | `1475` |
+| evaluation pending | `1475` |
 | best evaluated raw checkpoint | `1300` |
 | best raw score | `45.69` |
 
 최근 train log:
 
 ```text
-step=1433
-reward_mean=-0.20000
-verifier_reward_mean=0.0
-policy_loss_mean=-2.32862
-world_loss_mean=0.69099
-action_tokens_mean=1044.00
-obs_tokens_mean=92.00
+step=1467
+reward_mean=-0.04875
+verifier_reward_mean=0.125
+local_reward_groups=[[-0.2, -0.2, 1.01, -0.2]]
+policy_loss_mean=-0.92538
+world_loss_mean=1.74727
+action_tokens_mean=689.25
+obs_tokens_mean=245.50
 lr=1e-6
 ```
 
 해석:
 
-verifier reward가 아직 `0.0`이므로 “문제 해결 성공 trajectory를 강화하는 강한 RL”이라고 보긴 어렵다. 다만 checkpoint 평가 점수가 raw baseline보다 올랐으므로 ECHO world-model loss와 format shaping이 TB2-lite action 품질을 개선하고 있다. `checkpoint-1425`는 README 기준 `Score = 100 * avg_command_f1`로 `44.68`, 보조 지표인 `next_action_score`로 `44.15`다. README 정식 순위에는 Cmd F1 기준만 사용한다.
+1450 평가까지는 강한 상승세가 아니라 고점 아래 흔들림이다. 다만 1467스텝에서 group 내 양성 verifier reward `1.01`이 한 번 관측됐으므로, 이후 `1475`, `1500` checkpoint 평가가 중요하다. 지금 단계에서 “문제 해결 성공 trajectory가 본격적으로 터졌다”고 말하기에는 이르지만, verifier reward가 완전히 0만 반복되던 구간과는 다르다. `checkpoint-1450`은 README 기준 `Score = 100 * avg_command_f1`로 `43.69`, 보조 지표인 `next_action_score`로 `42.97`다. README 정식 순위에는 Cmd F1 기준만 사용한다.
 
-## 20. Hugging Face 업로드
+## 21. Hugging Face 업로드
 
 현재 sync 프로세스가 돌고 있다.
 
@@ -852,7 +947,7 @@ Raw adapter model repo:
 LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters
 ```
 
-SFT 1Epoch 기반 ECHO RLVR adapter repo와 raw clean-start ECHO RLVR adapter repo는 분리한다. 두 run은 base model이 다르므로 같은 model repo에 checkpoint를 섞으면 나중에 로드/평가/모델 카드 해석이 꼬인다. 2026-06-13 09:55 KST 기준 raw run의 `checkpoint-25`부터 `checkpoint-1425`까지는 새 raw adapter repo에 업로드했다. 이후 sync loop가 `1800s` 간격으로 새 checkpoint를 계속 반영한다.
+SFT 1Epoch 기반 ECHO RLVR adapter repo와 raw clean-start ECHO RLVR adapter repo는 분리한다. 두 run은 base model이 다르므로 같은 model repo에 checkpoint를 섞으면 나중에 로드/평가/모델 카드 해석이 꼬인다. 2026-06-13 10:09 KST 기준 raw run의 `checkpoint-25`부터 `checkpoint-1450`까지는 새 raw adapter repo에 업로드했고, GPU6 평가 JSON은 `292`개까지 HF dataset에 반영했다. 이후 sync loop가 `1800s` 간격으로 새 checkpoint와 rollout을 계속 반영한다.
 
 raw run path:
 
@@ -868,7 +963,7 @@ sync interval:
 
 이 rollout 데이터는 나중에 RLVR 재학습, 실패 trajectory SFT, verifier 개선, DPO/IPO류 preference construction에 쓸 수 있다. 성공 trajectory뿐 아니라 실패 trajectory와 에러 로그도 중요하다. ECHO의 핵심은 실패 rollout에도 terminal feedback이 들어 있다는 점이다.
 
-## 21. 다음 액션
+## 22. 다음 액션
 
 현재 우선순위:
 
@@ -941,7 +1036,7 @@ RLVR이 추가로 최적화할 여지가 줄어든 것이다.
 LFM2.5에서는 full terminal/toolcall SFT가 가장 큰 도약을 만들고, ECHO-style RLVR은 그 위에서 first-command와 command selection을 더 다듬어 현재 최고점 54.05를 만든다.
 ```
 
-## 22. 관련 파일 위치
+## 23. 관련 파일 위치
 
 README:
 
