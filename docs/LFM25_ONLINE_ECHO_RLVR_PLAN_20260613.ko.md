@@ -32,6 +32,10 @@
 - 계획 길이: 최대 2,000 steps. future run은 wall-time cap 없이 `MAX_STEPS=2000`으로 종료한다.
 - 현재 active run 주의: launch arg에 `--max-wall-time-hours 36`이 들어가 있어 2,000 step 전에 멈출 수 있다. 실행 중인 프로세스의 arg는 in-place로 바꿀 수 없으므로, full 2,000 step이 필요하면 마지막 checkpoint에서 no-wall continuation run으로 이어간다.
 
+실행 명령, GPU 배치, step time 조절 변수, 평가 watcher, Hugging Face sync 명령은 별도 runbook에 정리한다.
+
+- [`LFM2.5 Online ECHO RLVR 실행 Runbook`](LFM25_ONLINE_ECHO_RLVR_RUNBOOK_20260613.ko.md)
+
 ## 2. 이전 static-vLLM 실험의 문제
 
 이전 raw LFM2.5 실험은 다음 방식이었다.
@@ -749,6 +753,61 @@ GPU 6 watcher는 계속 정상 동작 중이다. 2026-06-13 18:04 KST 기준 `ch
 - `checkpoint-350`은 late F1 `0.4648`로 baseline보다 높지만, early/mid가 낮아 전체 Score는 `51.33`이다.
 - 따라서 아직 “아하 모먼트”는 보이지 않는다. 현재 현상은 baseline 근처에서 late recovery는 조금 좋아지고 command coverage가 흔들리는 상태다.
 - 다음 핵심 구간은 `checkpoint-400~600`이다. 이전 static sweep에서는 이 근처에서 일부 회복이 있었으므로, 아직 장기 결론은 보류한다.
+
+## 13.3 2026-06-13 20:52 KST checkpoint-425 상승
+
+20:52 KST 기준 학습과 평가가 모두 살아 있다.
+
+학습 상태:
+
+- latest train step: `503`
+- 저장된 checkpoint: `25~500`, 25 step 간격
+- 최신 vLLM LoRA hot-load: `step_000500`, 4개 replica 모두 unload/load `200`
+- GPU 0~3: vLLM rollout 서버, 각 약 130GB VRAM 점유
+- GPU 4~5: trainer rank 2개, 각 약 26~27GB VRAM 점유
+- GPU 6: 평가 vLLM, 약 131GB VRAM 점유
+- GPU 7: 미사용
+
+GPU 6 자동 평가는 `checkpoint-25~475`까지 19개 완료했다. `checkpoint-500`은 평가 queue에 들어갔거나 진행 중인 상태다.
+
+최신 평가 요약:
+
+| checkpoint | Score | SFT 1Epoch 대비 | Precision | Recall | First Cmd | Valid JSON |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| SFT 1Epoch | `52.30` | `0.00` | `0.5854` | `0.5431` | `49.5%` | `76.9%` |
+| 300 | `51.45` | `-0.85` | `0.5802` | `0.5319` | `50.2%` | `75.9%` |
+| 325 | `52.04` | `-0.26` | `0.5934` | `0.5350` | `52.1%` | `77.2%` |
+| 350 | `51.33` | `-0.97` | `0.5795` | `0.5348` | `49.5%` | `76.6%` |
+| 375 | `51.52` | `-0.78` | `0.5768` | `0.5390` | `48.8%` | `74.9%` |
+| 400 | `51.11` | `-1.19` | `0.5793` | `0.5286` | `49.8%` | `74.9%` |
+| 425 | `53.58` | `+1.28` | `0.5969` | `0.5478` | `49.2%` | `77.2%` |
+| 450 | `52.07` | `-0.23` | `0.5812` | `0.5395` | `49.5%` | `77.2%` |
+| 475 | `52.10` | `-0.20` | `0.5950` | `0.5326` | `49.8%` | `79.9%` |
+
+중요한 변화:
+
+- `checkpoint-425`가 Score `53.58`로 SFT 1Epoch baseline `52.30`을 `+1.28` 넘겼다.
+- 이는 현재 online run의 첫 번째 의미 있는 상승이다.
+- Precision `0.5969`, Recall `0.5478`, Valid JSON `77.2%`가 모두 baseline보다 높다.
+- 즉 `checkpoint-425`는 단순한 first-command/format만 좋아진 것이 아니라 command F1 자체가 오른 checkpoint다.
+
+아직 조심해야 할 점:
+
+- `checkpoint-450`, `475`는 각각 `52.07`, `52.10`으로 다시 baseline 근처 또는 아래다.
+- 따라서 `425` 하나만 보고 “RLVR이 안정적으로 좋아졌다”고 말하면 안 된다.
+- 현재 표현은 “400~600 구간에서 상승 spike가 관측됐고, 후속 checkpoint로 재현성을 확인 중”이 가장 정확하다.
+- 전체 1위 `checkpoint-610` Score `54.05`까지는 아직 `0.47` 남았다.
+
+해석:
+
+이 결과는 이전 가설을 조금 수정한다. SFT 이후 RLVR이 항상 무의미한 것은 아니다. 다만 이 모델과 현재 no-Docker verifier/proxy 평가에서는 이득이 단조롭게 쌓이지 않고 checkpoint별 spike로 나타난다. 따라서 평균 마지막 checkpoint보다 checkpoint selection이 훨씬 중요하다.
+
+다음 판단 기준:
+
+- `checkpoint-500~600`에서 `53+` 점수가 다시 나오는지 확인
+- `checkpoint-610`의 historical best `54.05`를 넘는지 확인
+- 425의 상승이 특정 task subset 편향인지 source-group별로 분해
+- 상승 checkpoint의 rollout traces를 HF dataset에 보존해 추후 SFT/RLVR 재사용 후보로 표시
 
 ## 14. 왜 SFT 이후 RLVR 이득이 기묘하게 작을 수 있는가
 

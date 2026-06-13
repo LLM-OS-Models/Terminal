@@ -25,6 +25,7 @@
 - LFM2.5 SFT/RLVR 비교 분석(KO): [`docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md`](docs/LFM25_SFT_RLVR_COMPARATIVE_ANALYSIS_20260613.ko.md)
 - LFM2.5 SFT 1Epoch GGUF CPU 평가 기록(KO): [`docs/LFM25_GGUF_CPU_EVAL_20260613.ko.md`](docs/LFM25_GGUF_CPU_EVAL_20260613.ko.md)
 - LFM2.5 Online ECHO RLVR 재시작 계획 및 정정(KO): [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
+- LFM2.5 Online ECHO RLVR 실행 Runbook(KO): [`docs/LFM25_ONLINE_ECHO_RLVR_RUNBOOK_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_RUNBOOK_20260613.ko.md)
 - 전체 연구 노트와 시각화는 README 하단 참고 섹션에 둔다.
 
 ## 진행 중: LFM2.5 Online ECHO RLVR
@@ -39,8 +40,8 @@
 - 저장/평가: checkpoint는 25 step마다 저장하고 GPU 6 watcher가 새 checkpoint를 평가한다.
 - GRPO 구조: prompt당 `num_generations=4`, update당 global rollout 8개를 만들고, 같은 prompt의 4개 reward 그룹 안에서 advantage를 계산한다. 최신 LoRA는 5 optimizer update마다 vLLM 4개 replica에 hot-load되어 다음 rollout에 반영된다.
 - 운영 정정: future online RLVR run은 wall-time cap 없이 `MAX_STEPS=2000`으로 종료한다. 현재 active run은 launch arg에 `--max-wall-time-hours 36`이 들어간 상태라 2,000 step 전에 멈출 수 있고, full 2,000 step이 필요하면 마지막 checkpoint에서 no-wall continuation run으로 이어간다.
-- 현재 자동 평가: GPU 6 watcher가 `checkpoint-25~350`까지 14개 checkpoint를 평가했다. 현재 최고는 `checkpoint-125` Score `52.49`로 SFT 1Epoch baseline `52.30` 대비 `+0.19`다. 로그의 `51.58` 같은 값은 정식 Score가 아니라 legacy `next_action_score`이므로 순위표 기준으로 쓰지 않는다.
-- 현재 해석: 이 결과는 강한 SFT 이후 small/low-active 모델의 RLVR 이득이 크지 않을 수 있음을 보여준다. 14개 checkpoint 중 baseline을 넘은 것은 2개뿐이고, 최고 이득도 `+0.19`라서 아직은 “성능 향상”보다 “baseline 근처 회복/미세 조정”에 가깝다.
+- 현재 자동 평가: GPU 6 watcher가 `checkpoint-25~475`까지 19개 checkpoint를 평가했다. 현재 최고는 `checkpoint-425` Score `53.58`로 SFT 1Epoch baseline `52.30` 대비 `+1.28`다. 로그의 `51.58` 같은 값은 정식 Score가 아니라 legacy `next_action_score`이므로 순위표 기준으로 쓰지 않는다.
+- 현재 해석: `checkpoint-425`에서 처음으로 의미 있는 online RLVR 상승이 나왔다. 다만 `450`, `475`는 다시 `52.1` 근처라 아직 단조 상승이나 안정적 개선은 아니다. 현재는 “아하 모먼트 확정”이 아니라 “400~600 구간에서 상승 spike가 관측됐고, 후속 checkpoint로 재현성을 확인해야 하는 상태”다.
 - 상세 기록: [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
 
 이전 static-vLLM RLVR checkpoint sweep과 GPU6 평가 기록은 별도 문서에 남긴다.
@@ -1341,5 +1342,5 @@ DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-
 
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613`
-- 현재 비교 최고점: `lfm25-echo-online-sft1-checkpoint-125` Score `52.49`
-- RLVR 평가 완료 개수: `14`
+- 현재 비교 최고점: `lfm25-echo-online-sft1-checkpoint-425` Score `53.58`
+- RLVR 평가 완료 개수: `20`
