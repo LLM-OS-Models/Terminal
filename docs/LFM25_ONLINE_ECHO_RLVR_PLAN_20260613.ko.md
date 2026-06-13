@@ -777,7 +777,76 @@ Qwen3.5-9B와 비교하면 다른 결과가 나올 가능성이 있다.
 
 따라서 LFM2.5-8B-A1B 실험은 실패가 아니라 active-small model에서 SFT와 RLVR의 역할 차이를 보여주는 실험으로 봐야 한다.
 
-## 16. 참고 논문 및 자료
+## 16. 강한 SFT 이후 RLVR은 warm-up이어야 하는가
+
+이번 실험에서 가장 중요한 해석 중 하나는 다음 문장이다.
+
+> Also, for small models, it doesn't seem like there is a significant performance advantage to performing RLVR after extensive SFT. The benefits appear substantial only when making things like speed or formatting slightly more efficient. Is it better to do just a little bit of SFT, just as a warm-up? Is that not necessarily the case if the model is big?
+
+현재 LFM2.5-8B-A1B online run은 이 질문을 꽤 강하게 지지한다.
+
+관측:
+
+- SFT 1Epoch baseline: Score `52.30`
+- Online RLVR 평가 checkpoint: `25~225`, 총 9개
+- baseline을 넘은 checkpoint: 2개 (`75`, `125`)
+- 현재 최고: `checkpoint-125`, Score `52.49`
+- 최고 이득: `+0.19`
+- 나머지 checkpoint는 baseline 아래
+- `checkpoint-50`, `100`, `200`, `225`는 의미 있게 낮다.
+
+즉 현재까지는 “강한 SFT 이후 RLVR이 큰 점수 상승을 만든다”라고 말할 수 없다. 더 정확히는 “SFT가 만든 성능 근처를 흔들며, 일부 checkpoint에서 아주 작은 이득을 낸다”에 가깝다.
+
+왜 이런가:
+
+1. SFT가 평가 포맷과 너무 직접적으로 맞아 있다.
+
+   TB2-lite 정식 Score는 `100 * avg_command_f1`이다. 즉 reference command sequence와 얼마나 비슷한지를 본다. SFT는 바로 이 command format, JSON schema, command distribution을 직접 모방시킨다. 따라서 SFT는 이 벤치마크에 매우 강한 직접 최적화 신호다.
+
+2. RLVR reward는 command-F1과 같은 목표가 아니다.
+
+   RLVR은 verifier reward, command bonus, terminal output/world-model CE를 본다. 실제로 task를 해결하는 방향으로는 맞을 수 있지만, reference command F1과는 다르다. 같은 문제를 다른 command로 풀거나, 중간 command를 생략하거나, 더 짧게 해결하면 verifier 관점에서는 괜찮아도 README Score는 내려갈 수 있다.
+
+3. small/low-active 모델은 강한 SFT 뒤 탐색 여지가 작다.
+
+   LFM2.5-8B-A1B는 total `8.3B`지만 active는 `1.5B`다. 강한 SFT가 이미 쉬운 이득을 가져가면, RLVR이 움직일 수 있는 행동 공간이 좁다. 작은 모델은 SFT로 생긴 안정적인 imitation prior를 조금만 흔들어도 JSON, recall, command coverage가 바로 깨질 수 있다.
+
+4. RLVR의 이득은 큰 행동 발견보다 미세 조정에 가까울 수 있다.
+
+   현재 결과에서 RLVR이 완전히 무효는 아니다. `checkpoint-125`는 baseline을 `+0.19` 넘고, 일부 checkpoint는 late F1이 오른다. 하지만 이것은 큰 성능 점프라기보다 복구 행동, 후반 command 선택, precision/recall 균형, 포맷 안정성 같은 작은 축의 보정에 가깝다.
+
+현재 가설:
+
+- small / low-active model에서는 extensive SFT 이후 RLVR의 큰 이득을 기대하기 어렵다.
+- 이런 모델에는 light/medium SFT를 warm-up으로 쓰고, RLVR이 탐색할 행동 공간을 남기는 편이 더 나을 수 있다.
+- 반대로 큰 dense model은 SFT를 많이 해도 행동 다양성과 잠재 탐색 공간이 더 남아 있을 수 있다.
+- 따라서 큰 모델에서는 strong SFT 후 RLVR도 여전히 효과가 날 가능성이 있다.
+- 하지만 이것도 reward quality, KL/SFT anchor, data diversity, evaluator fidelity에 강하게 좌우된다.
+
+실험 설계로 바꾸면 다음 비교가 필요하다.
+
+1. `LFM2.5-A1B raw -> RLVR`
+   - headroom이 커서 상승 폭은 보이지만 SFT baseline에는 못 닿을 가능성.
+
+2. `LFM2.5-A1B light SFT -> RLVR`
+   - 현재 strong SFT보다 RLVR headroom이 더 클지 확인.
+
+3. `LFM2.5-A1B strong SFT -> RLVR`
+   - 현재 실험. baseline 근처에서 흔들리고 작은 이득만 관측.
+
+4. `Qwen3.5-9B light/medium SFT -> RLVR`
+   - 다음으로 가장 중요한 비교 후보.
+
+5. `Qwen3.5-9B strong SFT -> RLVR`
+   - 큰 모델에서는 strong SFT 뒤에도 RLVR이 먹히는지 확인.
+
+현재 실무 결론:
+
+`작은 모델에서는 SFT가 본 게임이고, RLVR은 후처리/미세 조정에 가깝다. 큰 모델에서는 RLVR이 더 본격적인 정책 개선 도구가 될 수 있지만, 그 경우에도 SFT를 얼마나 먹일지와 reward를 무엇에 맞출지가 핵심이다.`
+
+이 결론은 아직 최종 결론이 아니다. `checkpoint-250~600`에서 더 큰 상승이 나오는지 봐야 한다. 다만 `checkpoint-25~225`까지의 현재 관측은 이 가설을 강하게 지지한다.
+
+## 17. 참고 논문 및 자료
 
 - ECHO: Terminal Agents Learn World Models for Free: https://arxiv.org/abs/2605.24517
 - A Primer in Post-Training Reasoning Data: What We Know About How It Works: https://arxiv.org/abs/2606.02113
