@@ -1,6 +1,7 @@
 # LFM2.5 Terminal SFT 1Epoch GGUF CPU 평가 기록
 
 작성 시각: 2026-06-13 09:03 KST
+최근 업데이트: 2026-06-13 09:11 KST
 
 이 문서는 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch-GGUF`의 4-bit GGUF를 GPU 없이 CPU 환경에서 검증한 기록이다.
 
@@ -134,6 +135,60 @@ CUDA_VISIBLE_DEVICES="" HF_HUB_DISABLE_PROGRESS_BARS=1 PYTHONUNBUFFERED=1 \
 
 예상 완료: 2026-06-13 11:25~12:00 KST.
 
+2026-06-13 09:08 KST 상태:
+
+- 프로세스 PID: `4053741`
+- CPU only 확인: `CUDA_VISIBLE_DEVICES=""`, `--n-gpu-layers 0`, `--no-offload-kqv`
+- CPU 사용률: 약 57~60 logical cores
+- RSS: 약 10.9~11.5GiB
+- `save-every`: 10 step
+- 아직 10-step 저장 지점 전이라 full JSON은 없음
+- 로그 파일: `tb2_lite/results/20260613T_lfm25_sft1_gguf_q4km_cpu_eval/lfm25-sft1-gguf-q4km-cpu-full-manualtok-ctx32768.log`
+- 결과 파일 예정: `tb2_lite/results/20260613T_lfm25_sft1_gguf_q4km_cpu_eval/lfm25-sft1-gguf-q4km-cpu-full-manualtok-ctx32768.json`
+
+운용 메모:
+
+- 이 CPU full 평가는 GPU 학습/평가와 완전히 분리한다.
+- 중간 결과는 10 step마다 JSON이 갱신되므로, 결과 파일이 생긴 뒤 `generated_steps`, `avg_sec_per_step`, `next_action_score`를 읽어 추정 완료 시간을 다시 갱신한다.
+- 10-step smoke score `54.00`은 표본이 작아 순위에 쓰지 않는다. README 순위에는 반드시 full 303-step 결과만 반영한다.
+
+2026-06-13 09:11 KST 상태:
+
+- 프로세스 PID: `4053741`
+- elapsed: 약 `9분`
+- CPU 사용률: 약 `63` logical cores
+- RSS: 약 `11.5GiB`
+- 중간 JSON 저장: 생성됨
+- 현재 중간 저장 step: `10 / 303`
+- `complete`: `false`
+- 중간 10-step `avg_command_f1`: `0.5143`
+- 중간 10-step 보조 `next_action_score`: `54.00`
+- 중간 속도: `31.364s/step`
+
+이 10-step 중간 값은 앞의 smoke와 같은 표본 크기라 순위에 쓰지 않는다. full 303-step 완료 결과만 README와 GGUF 모델 카드에 반영한다.
+
+현재 속도 기준 남은 시간은 약 `2시간 33분`이다. 실제 긴 prompt 구간이 뒤쪽에 많으면 완료 시각은 2026-06-13 `11:45~12:15 KST`로 보는 것이 안전하다.
+
+## 병렬 GPU6 RLVR 평가 상태
+
+GGUF CPU full 평가와 별개로 GPU6 watcher는 계속 켜져 있다.
+
+- watcher PID: `1708903`
+- HF eval sync PID: `1871212`
+- 평가 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
+- 2026-06-13 09:07 KST watcher 로그: 기존 900~1350 checkpoint를 모두 `skip_existing`으로 확인한 뒤 `watch_sleep seconds=60`
+- 즉, 신규 checkpoint가 저장되면 다음 polling cycle에서 자동 평가 대상이 된다.
+
+최근 raw clean-start ECHO RLVR 평가:
+
+| Checkpoint | Score | First Cmd | Valid JSON | 해석 |
+| ---: | ---: | ---: | ---: | --- |
+| 1300 | 45.69 | 42.9% | 69.0% | 현재 raw RLVR 최고 |
+| 1325 | 44.35 | 44.6% | 66.3% | 직전 대비 하락 |
+| 1350 | 45.20 | 44.6% | 69.0% | 일부 회복, 1300보다는 낮음 |
+
+현재 학습은 2026-06-13 09:08 KST 기준 step 1358까지 진행 중이다. 다음 저장 지점은 checkpoint-1375다. GPU6 watcher가 살아 있으므로 1375 저장 후 자동 평가가 이어져야 한다.
+
 ## 해석 기준
 
 최종 full 결과가 나오면 다음과 같이 비교한다.
@@ -157,4 +212,3 @@ full 결과 이후 GGUF 모델 카드에 다음을 반영한다.
 - `llama-cpp-python==0.3.20`에서는 GGUF 내 chat template의 `{% generation %}` 태그로 로드 오류가 날 수 있음
 - raw completion 방식 또는 최신 llama.cpp/llama-cpp-python 사용을 권장
 - TB2-lite full CPU 결과가 나오면 Score와 sec/step을 명시
-

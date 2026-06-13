@@ -1,8 +1,61 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-12 10:40 UTC / 2026-06-12 19:40 KST
+업데이트: 2026-06-13 00:11 UTC / 2026-06-13 09:11 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
+
+주의: 이 문서의 중간 본문에는 2026-06-12 초반 SFT 기반 turbo run 설명이 일부 남아 있다. 현재 active 학습은 순수 raw `LiquidAI/LFM2.5-8B-A1B`에서 다시 시작한 run으로 전환됐다. 최신 active run, raw checkpoint 평가, ECHO 논문과의 차이는 [`docs/LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md`](LFM25_RAW_ECHO_RLVR_RESTART_20260612.ko.md)와 [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](ECHO_RLVR_GPU6_EVAL_20260612.md)를 기준으로 본다.
+
+## 2026-06-13 09:11 KST 즉시 업로드 상태
+
+사용자가 요청한 "일단 된 것들"은 2026-06-13 09:11 KST 기준으로 Hugging Face에 one-shot 수동 sync까지 완료했다. 기존 loop sync 프로세스도 살아 있으므로 이후 새 checkpoint와 새 rollout은 주기적으로 다시 반영된다.
+
+업로드 대상:
+
+- Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
+- Adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
+- Eval result path: `eval/tb2_lite_gpu6/lfm25_echo_rlvr_gpu6_eval_20260612`
+
+one-shot sync 결과:
+
+| 항목 | 상태 |
+| --- | --- |
+| Rollout traces | `10,920` rows 업로드 완료 |
+| Train steps logged | `1,365`개 로그 반영 |
+| Adapter checkpoints | `checkpoint-25`부터 `checkpoint-1350`까지 업로드 완료 |
+| 이번 one-shot 신규 adapter | `checkpoint-1325`, `checkpoint-1350` |
+| GPU6 eval results | `288`개 결과 업로드 완료 |
+| GPU6 eval best so far | `lfm25-echo-rlvr-parentrun-checkpoint-610`, Score `54.05` |
+
+현재 active raw clean-start run:
+
+- Run ID: `run_20260612T113238Z_echo_raw_lfm25_vllm4_train2_g4_t4_tok256_save25_wm005_2k`
+- Base model: `LiquidAI/LFM2.5-8B-A1B`
+- vLLM rollout GPUs: `0,1,2,3`
+- Train GPUs: `4,5`
+- Eval GPU: `6`
+- Excluded GPU: `7`
+- 2026-06-13 09:11 KST 기준 latest train step: `1365`
+- 최신 저장 checkpoint: `checkpoint-1350`
+- 다음 저장 checkpoint: `checkpoint-1375`
+
+Raw clean-start GPU6 평가 최신 구간:
+
+| Checkpoint | Score = 100 * avg_command_f1 | First Cmd | Valid JSON | 비고 |
+| ---: | ---: | ---: | ---: | --- |
+| 1225 | 45.32 | 48.2% | 66.3% | 최근 구간 고점 후보 |
+| 1250 | 43.88 | 45.2% | 65.0% | 하락 |
+| 1275 | 43.96 | 43.6% | 67.0% | 횡보 |
+| 1300 | 45.69 | 42.9% | 69.0% | 현재 raw clean-start 최고 |
+| 1325 | 44.35 | 44.6% | 66.3% | 하락 |
+| 1350 | 45.20 | 44.6% | 69.0% | 일부 회복 |
+
+주의할 점:
+
+- README 순위용 Score는 `next_action_score`가 아니라 `100 * aggregate.avg_command_f1`이다.
+- 현재 raw clean-start RLVR은 `SFT 1Epoch + RLVR` 최고점인 `54.05`에는 아직 못 미친다.
+- 다만 순수 raw base rerun `39.92` 대비로는 raw clean-start RLVR이 `45점대`까지 올라왔으므로, RLVR 자체의 상승 신호는 있다.
+- terminal feedback/world-model loss를 포함한 rollout traces는 모두 HF dataset에 쌓고 있으므로, 추후 재-RLVR 또는 SFT용 고품질 interaction 데이터로 재사용 가능하다.
 
 ## 현재 결론
 
