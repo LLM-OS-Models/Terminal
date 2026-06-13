@@ -288,6 +288,104 @@ vLLM replica 실행 스크립트에는 다음 옵션을 추가했다.
 - `MAX_CPU_LORAS=4`
 - `VLLM_ALLOW_RUNTIME_LORA_UPDATING=1`
 
+## 4.1 현재 GRPO가 실제로 도는 방식
+
+현재 run은 prompt 하나당 4개 후보 trajectory를 만든다. 설정값은 다음이다.
+
+- `prompts_per_rank=1`
+- `num_generations=4`
+- trainer world size: 2 ranks (`GPU 4,5`)
+- global rollout 수: `2 ranks * 1 prompt/rank * 4 generations = 8 trajectories/update`
+- vLLM replica: 4개 (`GPU 0,1,2,3`)
+- `rollout_workers=8`
+
+즉 한 optimizer update에서 전체적으로 2개 prompt가 선택되고, 각 prompt마다 4개씩 다른 seed로 terminal trajectory를 만든다. 각 trajectory는 assistant command, terminal output, verifier result를 포함한다.
+
+코드 흐름은 다음과 같다.
+
+1. `select_rows()`가 rank별 prompt를 고른다.
+2. `rollout_group()`이 `args.num_generations`만큼 seed를 만들어 4개 rollout을 생성한다.
+3. vLLM backend에서는 `ThreadPoolExecutor`를 써서 이 4개 generation을 병렬 요청한다.
+4. `rollout_one()`은 각 generation마다 실제 terminal command를 실행하고 observation/reward를 기록한다.
+5. 같은 prompt에서 나온 4개 reward의 mean/std를 계산한다.
+6. 각 trajectory advantage는 `(reward - group_mean) / group_std`다.
+7. std가 0이면 advantage는 기본적으로 0이 된다. 이 경우 policy loss 신호는 사라지고 world-model CE만 남는다.
+8. `trajectory_loss()`가 action token에는 advantage-weighted policy loss를, terminal observation token에는 world-model CE loss를 계산한다.
+9. 8개 trajectory loss를 합산/스케일해서 LoRA trainable parameter에 backward한다.
+10. optimizer step 이후 LoRA가 업데이트된다.
+11. `vllm_lora_sync_steps=5`마다 최신 LoRA를 저장하고 vLLM 4개 replica에 reload한다.
+
+중요한 점:
+
+이 구현은 전통적 의미의 GRPO와 같은 “동일 prompt에서 여러 completion을 만들고, 그룹 내부 reward 상대값으로 advantage를 잡는 방식”이다. 현재 그룹 크기는 4다. 논문/일반 GRPO 레시피에서 8개 이상을 쓰는 경우도 많지만, 여기서는 terminal execution 비용과 vLLM 병렬 처리량을 고려해 4개로 둔 상태다.
+
+그룹 크기 4의 장점:
+
+- terminal command 실행 비용이 너무 커지지 않는다.
+- vLLM 4 replica와 잘 맞는다.
+- checkpoint를 빠르게 찍을 수 있다.
+
+그룹 크기 4의 단점:
+
+- reward variance 추정이 거칠다.
+- 4개가 모두 실패하거나 비슷한 reward를 받으면 std가 0에 가까워져 policy gradient가 약해진다.
+- 좋은/나쁜 trajectory 구분이 불안정해서 SFT prior를 흔드는 update가 생길 수 있다.
+
+현재 로그의 `local_reward_groups`는 이 4개 reward 그룹을 그대로 보여준다. 예를 들어 한 prompt에서 `[1.01, 0.06, -0.13, -0.06]`처럼 갈라지면 GRPO 신호가 생긴다. 반대로 `[-0.2, -0.2, -0.2, -0.2]`처럼 모두 같으면 relative advantage가 사실상 사라진다.
+
+## 4.2 “학습한 모델로 다시 추론하나?”에 대한 정확한 답
+
+답은 “그렇다. 단, 매 step이 아니라 5 optimizer update마다 반영한다”이다.
+
+이전 static-vLLM 실험은 다음 문제가 있었다.
+
+- vLLM은 계속 base/SFT model만 serving했다.
+- trainer LoRA는 업데이트됐지만 rollout generation에는 반영되지 않았다.
+- 따라서 학습된 policy가 다음 trajectory를 만들지 못했다.
+
+현재 online run은 다르다.
+
+- 시작 직후 trainer가 현재 LoRA를 `step_000000`으로 저장한다.
+- vLLM 4개 replica가 `lfm25-sft1-online`이라는 LoRA adapter name으로 이를 load한다.
+- generation request는 `model=lfm25-sft1-online`을 사용한다.
+- optimizer가 LoRA를 업데이트한다.
+- `global_update % 5 == 0`이면 최신 LoRA를 다시 저장한다.
+- vLLM 4개 replica에 `/unload_lora_adapter`, `/load_lora_adapter`를 호출한다.
+- 다음 rollout부터 업데이트된 LoRA policy가 쓰인다.
+
+로그로 확인된 sync:
+
+- `step_000000`
+- `step_000005`
+- `step_000010`
+- `step_000015`
+- `step_000020`
+- `step_000025`
+- `step_000030`
+- `step_000035`
+- `step_000040`
+- `step_000045`
+
+따라서 현재 방식은 완전히 static한 offline rollout 학습이 아니다. 최신 policy가 일정 주기로 rollout engine에 반영된다. 다만 full weight sync가 아니라 LoRA adapter hot-load라서, 엄밀히는 “LoRA-online GRPO”라고 쓰는 것이 가장 정확하다.
+
+주의할 점:
+
+- sync 주기 5 step 사이에서는 vLLM이 직전 sync adapter를 사용한다.
+- 즉 step 26~29에서 trainer는 더 최신 LoRA를 가지고 있지만, vLLM rollout은 step 25 sync adapter를 사용한다.
+- 이 지연은 완전한 per-step on-policy보다 약간 stale하다.
+- 하지만 이전 static-vLLM처럼 수백/수천 step 내내 rollout policy가 고정되는 문제는 아니다.
+
+현재 문서 표기:
+
+정확한 표현:
+`Online ECHO-style GRPO/RLVR with LoRA hot-load every 5 optimizer updates`
+
+더 엄밀한 표현:
+`slightly stale on-policy LoRA GRPO, sync interval 5`
+
+피해야 할 표현:
+`fully synchronous per-step full-parameter GRPO`
+
 ## 5. 왜 4 vLLM + 2 train + 1 eval인가
 
 이 구성은 현재 장비에서 가장 현실적인 절충이다.
