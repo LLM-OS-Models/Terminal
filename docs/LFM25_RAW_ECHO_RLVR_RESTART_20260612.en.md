@@ -1,6 +1,6 @@
 # LFM2.5 Raw ECHO RLVR Restart Log
 
-Updated: 2026-06-12 11:38 UTC
+Updated: 2026-06-12 22:31 UTC
 
 This note tracks the clean restart from the raw `LiquidAI/LFM2.5-8B-A1B` base model. It is separate from the earlier SFT-based RLVR runs.
 
@@ -151,9 +151,11 @@ Interpretation:
 Hugging Face sync:
 
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
-- Adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
+- Adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters`
 - Path prefix: `raw-lfm25/{run_id}`
 - Sync interval: `1800s`
+
+Note: the raw clean-start run has a different base from the SFT-1Epoch ECHO RLVR run. Its adapters are therefore kept in a separate model repo instead of being mixed into `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`. As of 2026-06-13 09:22 KST, checkpoints `25` through `1375` have been uploaded to the raw adapter repo.
 
 GPU6 evaluation:
 
@@ -168,11 +170,11 @@ README score remains:
 Score = 100 * avg_command_f1
 ```
 
-## Checkpoint-25 to Checkpoint-250 TB2-lite Results
+## Checkpoint-25 to Checkpoint-1175 TB2-lite Results
 
-Updated: 2026-06-12 13:56 UTC.
+Updated: 2026-06-12 22:31 UTC.
 
-GPU6 evaluated checkpoint-25 through checkpoint-250 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
+GPU6 evaluated checkpoint-25 through checkpoint-1175 from the current raw clean-start run using the same TB2-lite replay score used by the root README.
 
 | checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
 | ---: | ---: | ---: | ---: | ---: |
@@ -186,18 +188,53 @@ GPU6 evaluated checkpoint-25 through checkpoint-250 from the current raw clean-s
 | 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
 | 225 | `41.06` | `40.92` | `40.6%` | `57.4%` |
 | 250 | `39.95` | `40.84` | `42.9%` | `59.1%` |
+| 300 | `41.52` | `41.72` | `42.2%` | `59.1%` |
+| 325 | `42.08` | `42.12` | `42.2%` | `59.4%` |
+| 425 | `41.93` | `42.31` | `43.2%` | `61.1%` |
+| 475 | `43.41` | `43.77` | `44.6%` | `59.7%` |
+| 550 | `43.46` | `43.38` | `43.2%` | `64.7%` |
+| 700 | `42.73` | `42.57` | `42.2%` | `63.7%` |
+| 800 | `43.94` | `43.42` | `42.2%` | `61.7%` |
+| 900 | `43.78` | `43.73` | `43.6%` | `60.7%` |
+| 925 | `43.83` | `43.46` | `42.6%` | `64.7%` |
+| 975 | `44.47` | `44.39` | `44.2%` | `63.7%` |
+| 1000 | `42.72` | `43.37` | `44.9%` | `65.7%` |
+| 1075 | `43.77` | `44.20` | `45.2%` | `68.6%` |
+| 1100 | `44.84` | `45.16` | `45.9%` | `66.3%` |
+| 1125 | `43.77` | `43.81` | `43.9%` | `64.4%` |
+| 1150 | `44.10` | `43.35` | `41.6%` | `65.3%` |
+| 1175 | `43.29` | `43.56` | `44.2%` | `63.7%` |
 
-Current raw-run best is `checkpoint-225` with Score `41.06`.
+Current raw-run best is `checkpoint-1100` with Score `44.84`.
 
 Interpretation:
 
-- Compared with the raw base rerun Score `39.92`, checkpoint-225 is `+1.14`.
-- Compared with the SFT 1Epoch baseline Score `52.30`, checkpoint-225 is still `-11.24`.
-- Checkpoint-225 barely beats checkpoint-125, but checkpoint-250 falls back to `39.95`. The first 250 steps still look like a small recovery/search phase rather than a clear aha moment.
-- Valid JSON remains in the `57.1%` to `59.7%` band, which confirms that raw terminal JSON/tool formatting is still weak.
+- Compared with the raw base rerun Score `39.92`, checkpoint-1100 is `+4.92`.
+- Compared with the SFT 1Epoch baseline Score `52.30`, checkpoint-1100 is still `-7.46`.
+- Checkpoint-975 (`44.47`), checkpoint-1100 (`44.84`), and checkpoint-1150 (`44.10`) show real improvement over the raw base. Checkpoint-1175 falls back to `43.29`, so this is not yet a monotonic aha-moment curve.
+- Valid JSON improves from the high-50s/low-60s into the mid/high-60s at some later checkpoints, but it is still below the SFT 1Epoch baseline.
 - Verifier reward is still near `0.0`, so this early phase is likely driven more by ECHO observation loss and shaping penalties than by sparse verifier success.
 
-This is not a final negative result. The raw run does recover above raw base at checkpoint-50/100/125/225, so the terminal-feedback signal is not dead. The decisive checkpoints are still 500, 1000, and 2000.
+This is not a negative result. The raw run reaches `+4.92` over the raw rerun, so the terminal-feedback signal is working. The current TB2-lite interpretation is that raw ECHO RLVR improves a base model, but SFT warmup followed by RLVR is still much stronger for this benchmark.
+
+## Alignment With the ECHO Paper
+
+Same core idea:
+
+- The model executes terminal commands and receives stdout/stderr/exit-code observations.
+- Action tokens receive reward-driven policy loss.
+- Terminal-observation tokens receive auxiliary CE world-model loss.
+- Terminal output is used as a training target rather than just next-turn context.
+
+Important differences:
+
+- The paper uses Harbor/Docker task backends. This run uses a local no-Docker workspace sandbox.
+- The paper trains on 8870 tasks and holds out 100 validation tasks. This run uses 1500 prepared public terminal tasks.
+- The paper uses up to 16 turns, 2048 generated tokens per turn, and a 16k context. This run uses up to 4 turns and 256 generated tokens per turn for speed and stability.
+- The paper trains for 500 GRPO steps on 8 B200 GPUs. This run uses 4 vLLM rollout GPUs plus 2 LoRA training GPUs.
+- The paper implementation routes world-model masks through SkyRL/FSDP hooks. This implementation builds observation masks directly in `Liquid-CLI/train_lfm_terminal_echo_live_grpo.py` and adds the CE loss with `world_model_coeff=0.05`.
+
+So this is an ECHO paper-aligned local adaptation, not an exact reproduction. The main weak points are the lack of Harbor/Docker isolation and the short 4-turn/256-token rollout budget, both of which can reduce long-horizon terminal recovery learning.
 
 ## Risks
 

@@ -1,6 +1,6 @@
 # Terminal 모델 평가 리포트
 
-생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 15:12 KST`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~1300 상세 문서 반영: `2026-06-13 08:36 KST`)
+생성 시각: `2026-05-15T04:39:36+00:00` (Step-3.5-Flash, LLaDA2.1-flash 결과 반영: `2026-05-16`, HRM-Text-1B 결과 반영: `2026-05-23`, LFM2.5-8B-A1B 결과 반영: `2026-06-05`, KoHRM stage4d LoRA/full SFT 결과 반영: `2026-06-06`, Qwen3.5-2B fast-continue fullconv 결과 반영: `2026-06-06`, Gemma4-12B/Mellum2-12B 평가 반영: `2026-06-06`, KoHRM LFM25 Epoch2 결과 반영: `2026-06-06 15:28 KST`, KoHRM LFM25 Epoch3 결과 반영: `2026-06-06 20:15 KST`, NVIDIA Nemotron-3 Ultra 550B GGUF 결과 반영: `2026-06-07 05:45 KST`, LFM2.5 ECHO RLVR checkpoint-610 결과 반영: `2026-06-12 15:12 KST`, raw LFM2.5 clean-start ECHO RLVR checkpoint-25~1375 상세 문서 반영: `2026-06-13 09:22 KST`)
 
 이 문서는 corrected 303-step TB2-lite 평가 JSON을 다시 읽어서 정리한 루트 평가 리포트다.
 기존 프로젝트 개요 README는 `PROJECT_OVERVIEW_2026-05-02.md`로 이동했다.
@@ -33,9 +33,11 @@
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612`
 - 현재 비교 최고점: `lfm25-echo-rlvr-parentrun-checkpoint-610` Score `54.05`
-- RLVR 평가 완료 개수: `288`
+- RLVR 평가 완료 개수: `289`
 
-## 전체 순위
+## 정식 순위 Top 30
+
+정식 순위에는 `TB2-lite corrected 303-step full replay`를 끝까지 완료한 결과만 넣는다. `Score`는 항상 `100 * avg_command_f1`이다. `next_action_score`, 부분 shard, smoke, 10-step 중간 저장, 기능적 동등 보정값은 정식 순위에서 제외한다.
 
 | 순위 | 모델(HF 저장소명) | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |
@@ -43,117 +45,47 @@
 | 2 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` | 52.30 | 0.5230 | 0.5854 | 0.5431 | 49.5% | 76.9% | chat_template | 0.087 | 44.7 |
 | 3 | `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-2Epoch` | 50.48 | 0.5048 | 0.5695 | 0.5296 | 49.2% | 74.9% | chat_template | 0.092 | 76.7 |
 | 4 | `unsloth/NVIDIA-Nemotron-3-Ultra-550B-A55B-GGUF:UD-Q4_K_M` | 49.97 | 0.4997 | 0.6191 | 0.4785 | 49.2% | 81.5% | chat_template | 26.688 | 542.9 |
-| ~4 | `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | 0.4819* | — | — | — | — | valid step 기능적 동등 분석 | — | — |
-| 4 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
-| 5 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2` | 45.90 | 0.4590 | 0.5031 | 0.5098 | 44.9% | 68.3% | kohrm-local-prefixlm-export | 10.842 | 10.9 |
-| 6 | `LLM-OS-Models/Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch` | 44.79 | 0.4479 | 0.5266 | 0.4701 | 34.3% | 83.2% | chat_template | 0.079 | 15.5 |
-| 7 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3` | 43.57 | 0.4357 | 0.4703 | 0.5003 | 45.5% | 61.7% | kohrm-local-prefixlm-export-nocompile | 11.156 | 2.9 |
-| ~4 | `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | 0.4246* | — | — | — | — | 기능적 동등 분석 | — | — |
-| 4 | **`GLM-5.1 (z.ai API)`** | **41.68** | **0.4168** | **0.5377** | **0.4007** | **24.1%** | **90.1%** | **anthropic-api** | **3.298** | **-** |
-| ~5 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 공식, 162/303)` | 40.29* | 0.4029* | 0.5752 | 0.4112 | 45.1% | 44.7% | deepseek_official_mp8_chat_t0_m4096 | 689.3 | 15.0 |
-| 5 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 39.56 | 0.3956 | 0.4702 | 0.4808 | 40.6% | 17.2% | gemma4_native | 6.820 | 43.8 |
-| 6 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` | 39.52 | 0.3952 | 0.5082 | 0.4101 | 33.0% | 82.2% | chat_template | 0.081 | 97.1 |
-| 7 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch1` | 38.56 | 0.3856 | 0.4262 | 0.4341 | 37.0% | 55.1% | kohrm-local-prefixlm-export | 8.314 | 7.0 |
-| 7 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-1Epoch-FullFT-SameCount` | 38.52 | 0.3852 | 0.4988 | 0.4056 | 32.7% | 83.2% | chat_template | 0.080 | 130.1 |
-| 8 | `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-2Epoch-FullFT-2BData` | 38.26 | 0.3826 | 0.4620 | 0.3905 | 28.4% | 64.4% | chat_template | 0.293 | 377.3 |
-| 9 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 38.12 | 0.3812 | 0.4405 | 0.4787 | 42.6% | 13.5% | gemma4_native | 6.854 | 38.8 |
-| 10 | `Qwen/Qwen3.5-9B` | 38.10 | 0.3810 | 0.4921 | 0.3527 | 20.8% | 78.2% | chat_template | 0.268 | 123.8 |
-| 11 | `nvidia/Nemotron-Terminal-32B` | 38.09 | 0.3809 | 0.5058 | 0.3827 | 40.3% | 58.7% | chat_template | 0.819 | 154.9 |
-| 12 | `Qwen/Qwen3.5-397B-A17B-FP8` | 37.81 | 0.3781 | 0.5107 | 0.3443 | 21.5% | 86.1% | chat_template | 0.860 | 826.5 |
-| 13 | `nvidia/Nemotron-Terminal-14B` | 37.70 | 0.3770 | 0.4688 | 0.3849 | 40.6% | 57.1% | chat_template | 0.360 | 98.8 |
-| 14 | `Qwen/Qwen3.5-122B-A10B-FP8` | 37.28 | 0.3728 | 0.5155 | 0.3408 | 20.5% | 84.2% | chat_template | 0.655 | 746.9 |
-| 15 | `DavidAU/Qwen3.6-40B-Claude-4.6-Opus-Deckard-Heretic-Uncensored-Thinking-NEO-CODE-Di-IMatrix-MAX-GGUF:Q4_K_M` | 37.09 | 0.3709 | 0.5010 | 0.3558 | 20.8% | 83.8% | chat_template | 14.422 | 141.5 |
-| 16 | `LiquidAI/LFM2.5-8B-A1B` | 36.53 | 0.3653 | 0.4812 | 0.3685 | 39.9% | 59.1% | chat_template | 0.097 | 103.4 |
-| 17 | `Qwen/Qwen3.5-35B-A3B-FP8` | 36.44 | 0.3644 | 0.5086 | 0.3317 | 23.1% | 77.6% | chat_template | 0.200 | 222.8 |
-| 18 | `Qwen/Qwen3.5-35B-A3B` | 36.41 | 0.3641 | 0.5068 | 0.3330 | 22.1% | 78.2% | chat_template | 0.228 | 363.1 |
-| 19 | `Qwen/Qwen3.5-27B` | 36.30 | 0.3630 | 0.4985 | 0.3343 | 22.1% | 74.9% | chat_template | 0.893 | 102.6 |
-| 20 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 36.29 | 0.3629 | 0.4813 | 0.3460 | 17.5% | 80.5% | chat_template | 5.577 | - |
-| 21 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-2Epoch-FullFT-2BData` | 36.25 | 0.3625 | 0.4797 | 0.3723 | 26.1% | 61.7% | chat_template | 0.205 | 207.3 |
-| 22 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-1Epoch-FullFT-2BData` | 36.05 | 0.3605 | 0.4601 | 0.3690 | 28.1% | 59.4% | chat_template | 0.206 | 158.5 |
-| 23 | `nvidia/Nemotron-Terminal-8B` | 35.80 | 0.3580 | 0.4649 | 0.3592 | 35.3% | 54.5% | chat_template | 0.273 | 95.7 |
-| 24 | `Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled` | 35.68 | 0.3568 | 0.4822 | 0.3313 | 22.8% | 74.6% | chat_template | 0.904 | 203.7 |
-| 25 | `LLM-OS-Models/Ouro-2.6B-Thinking-Terminal-SFT` | 35.61 | 0.3561 | 0.4586 | 0.3647 | 25.1% | 61.1% | chat_template | 3.358 | 135.3 |
-| 26 | `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-1Epoch-FullFT-2BData` | 35.60 | 0.3560 | 0.4537 | 0.3752 | 26.7% | 62.7% | chat_template | 0.291 | 179.0 |
-| 27 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-1Epoch` | 35.55 | 0.3555 | 0.4650 | 0.3776 | 27.4% | 65.3% | gemma4_native | 3.924 | 41.4 |
-| 28 | `DavidAU/Qwen3.6-27B-Heretic-Uncensored-FINETUNE-NEO-CODE-Di-IMatrix-MAX-GGUF:Q4_K_M` | 35.47 | 0.3547 | 0.4756 | 0.3397 | 17.8% | 78.9% | chat_template | 9.964 | 6.6 |
-| 29 | `Jackrong/Qwopus3.6-35B-A3B-v1-GGUF:Q4_K_M` | 35.45 | 0.3545 | 0.4929 | 0.3287 | 18.5% | 81.2% | chat_template | 4.835 | 5.7 |
-| 30 | `Qwen/Qwen3.5-4B` | 35.42 | 0.3542 | 0.4836 | 0.3292 | 17.8% | 75.6% | chat_template | 0.185 | 120.0 |
-| 31 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=1024, 175/303)` | 35.40 | 0.3540 | 0.4872 | 0.3336 | 29.7% | 52.6% | deepseek_official_mp8_chat_t0 | 376.0 | 15.0 |
-| 32 | `Qwen/Qwen3.5-2B` | 35.10 | 0.3510 | 0.4944 | 0.3220 | 18.2% | 81.8% | chat_template | 0.077 | 112.8 |
-| 33 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 34.98 | 0.3498 | 0.4737 | 0.3576 | 30.4% | 35.0% | gemma4_native | 0.277 | 53.2 |
-| 34 | `LLM-OS-Models/gemma-4-E4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 34.42 | 0.3442 | 0.4823 | 0.3397 | 27.1% | 45.5% | gemma4_native | 0.360 | 93.6 |
-| 35 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-TemplateMasked` | 33.46 | 0.3346 | 0.4363 | 0.3549 | 31.7% | 65.0% | chat_template | 0.177 | 220.0 |
-| 36 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-TemplateMasked` | 33.35 | 0.3335 | 0.4242 | 0.3590 | 26.1% | 66.3% | chat_template | 0.180 | 198.6 |
-| ~37 | `deepseek-ai/DeepSeek-V4-Pro (chat t=0.3, m=4096, 86/303)` | ~33* | 0.33* | — | — | — | 59.3% | deepseek_official_mp8_chat_t03_m4096 | 814.0 | 15.0 |
-| 37 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 32.85 | 0.3285 | 0.4194 | 0.3336 | 31.0% | 55.4% | chat_template | 0.150 | 32.9 |
-| 38 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 32.77 | 0.3277 | 0.3953 | 0.3541 | 18.2% | 24.8% | chat_template | 0.348 | 300.9 |
-| 39 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-Native-Liquid-2Epoch` | 32.57 | 0.3257 | 0.4417 | 0.3396 | 30.7% | 61.7% | gemma4_native | 4.036 | 43.2 |
-| 40 | `Qwen/Qwen3.6-27B` | 32.56 | 0.3256 | 0.4346 | 0.3149 | 15.8% | 73.9% | chat_template | 0.889 | 178.2 |
-| 41 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 32.41 | 0.3241 | 0.4327 | 0.3220 | 29.4% | 56.8% | chat_template | 0.126 | 36.6 |
-| 42 | `MiniMaxAI/MiniMax-M2.7` | 32.29 | 0.3229 | 0.4492 | 0.2940 | 13.5% | 70.6% | chat_template | 0.445 | 642.9 |
-| 43 | `deepseek-ai/DeepSeek-V4-Flash` | 32.22 | 0.3222 | 0.4511 | 0.3037 | 24.4% | 44.2% | deepseek_official_mp4 | 178.033 | 15.6 |
-| 44 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 31.86 | 0.3186 | 0.4102 | 0.3321 | 30.0% | 55.8% | chat_template | 0.151 | 33.0 |
-| 45 | `LLM-OS-Models/Ouro-1.4B-Thinking-Terminal-SFT` | 31.74 | 0.3174 | 0.4062 | 0.3410 | 24.8% | 63.7% | chat_template | 1.698 | 92.4 |
-| 46 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-Top2-Terminal-Tool-Merge-Epoch1` | 31.59 | 0.3159 | 0.3859 | 0.3415 | 24.8% | 73.3% | kohrm-local-prefixlm-export | 7.5 | 7.3 |
-| 47 | `LLM-OS-Models/LFM2-8B-A1B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.126 | 35.7 |
-| 48 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-7GPU` | 31.02 | 0.3102 | 0.4063 | 0.3201 | 29.0% | 54.8% | chat_template | 0.128 | 131.5 |
-| 49 | `Qwen/Qwen3.6-35B-A3B-FP8` | 30.57 | 0.3057 | 0.4248 | 0.2873 | 14.5% | 75.2% | chat_template | 0.203 | 181.9 |
-| 50 | `Qwen/Qwen3.6-35B-A3B` | 30.28 | 0.3028 | 0.4093 | 0.2879 | 14.2% | 73.3% | chat_template | 0.234 | 360.2 |
-| 51 | `LLM-OS-Models/Ouro-2.6B-Terminal-SFT` | 29.58 | 0.2958 | 0.3624 | 0.3156 | 22.8% | 29.4% | chat_template | 5.154 | 332.6 |
-| 52 | `KoHRM-Text-1.4B-stage4d + terminal-tool-core-r64 LoRA` | 29.11 | 0.2911 | 0.3988 | 0.2768 | 22.1% | 63.4% | kohrm-local-lora-prefixlm | 17.217 | 23.2 |
-| 53 | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-2Epoch` | 28.96 | 0.2896 | 0.3829 | 0.3254 | 24.4% | 26.4% | gemma4_native | 5.950 | 43.2 |
-| 54 | `KoHRM-Text-1.4B-stage4d + terminal-comp-jsonfix-r64 LoRA` | 28.80 | 0.2880 | 0.3834 | 0.2878 | 24.4% | 66.7% | kohrm-local-lora-prefixlm | 17.564 | 23.4 |
-| 55 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout-8GPU` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.085 | 49.9 |
-| 56 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-LiquidCLI-TemplateHoldout` | 28.64 | 0.2864 | 0.3775 | 0.2904 | 29.0% | 50.5% | chat_template | 0.086 | 25.4 |
-| 57 | `google/gemma-4-12B-it` | 28.58 | 0.2858 | 0.3512 | 0.3324 | 17.5% | 23.4% | gemma4text_fallback | 9.163 | 166.1 |
-| 57 | `google/gemma-4-26B-A4B-it` | 28.51 | 0.2851 | 0.4057 | 0.2643 | 14.2% | 71.9% | chat_template | 0.277 | 747.8 |
-| 58 | `KoHRM-Text-1.4B-stage4d + comp-terminal-80m LoRA` | 28.44 | 0.2844 | 0.3718 | 0.2803 | 22.8% | 67.3% | kohrm-local-lora-prefixlm | 17.004 | 20.1 |
-| 59 | `LLM-OS-Models/Ouro-1.4B-terminal-sft` | 28.30 | 0.2830 | 0.3520 | 0.3141 | 22.4% | 27.1% | chat_template | 2.344 | 83.1 |
-| 60 | `gyung/LFM2-8B-Terminal-SFT-Unsloth` | 28.23 | 0.2823 | 0.3817 | 0.2851 | 27.1% | 53.8% | chat_template | 0.124 | 36.0 |
-| 61 | `Jiunsong/supergemma4-26b-uncensored-gguf-v2:Q4_K_M` | 28.21 | 0.2821 | 0.4135 | 0.2506 | 14.5% | 53.8% | gemma4_native | 5.688 | 7.5 |
-| 62 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-1Epoch-LiquidCLI-TemplateHoldout` | 28.10 | 0.2810 | 0.3615 | 0.2941 | 29.4% | 50.5% | chat_template | 0.085 | 25.4 |
-| 63 | `LLM-OS-Models/LFM2-8B-Terminal-SFT-2Epoch-Unsloth` | 27.33 | 0.2733 | 0.3526 | 0.2872 | 24.1% | 62.0% | chat_template | 0.124 | 267.1 |
-| 64 | `LLM-OS-Models/LFM2-2.6B-Terminal-SFT-2Epoch-Unsloth` | 27.31 | 0.2731 | 0.3643 | 0.2804 | 21.8% | 62.0% | chat_template | 0.147 | 69.7 |
-| 65 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 27.28 | 0.2728 | 0.3389 | 0.3062 | 10.2% | 13.9% | chat_template | 0.379 | 269.7 |
-| 66 | `KoHRM-Text-1.4B-stage4d + terminal-tool-jsonfix-r32 LoRA` | 27.15 | 0.2715 | 0.3831 | 0.2574 | 20.8% | 64.4% | kohrm-local-lora-prefixlm | 16.990 | 23.1 |
-| 67 | `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66 | 0.2666 | 0.3733 | 0.2366 | 23.5% | 31.0% | deepseek_official_mp8 | 441.6 | 15.0 |
-| 68 | `google/gemma-4-31B-it` | 26.33 | 0.2633 | 0.3513 | 0.2571 | 10.9% | 67.3% | chat_template | 1.362 | 845.5 |
-| 69 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 26.27 | 0.2627 | 0.3581 | 0.2681 | 16.8% | 58.1% | chat_template | 0.179 | 227.6 |
-| 70 | `KoHRM-Text-1.4B-stage4d + behavior-jsonfix-r32 LoRA` | 26.23 | 0.2623 | 0.3807 | 0.2507 | 21.1% | 71.0% | kohrm-local-lora-prefixlm | 15.954 | 22.3 |
-| 71 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-1Epoch` | 25.70 | 0.2570 | 0.3615 | 0.2717 | 15.2% | 34.3% | gemma4_native | 0.325 | 51.8 |
-| 72 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-Native-Liquid-2Epoch` | 24.92 | 0.2492 | 0.3667 | 0.2447 | 11.6% | 34.0% | gemma4_native | 0.317 | 51.8 |
-| 73 | `LLM-OS-Models/LFM2-24B-A2B-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 24.74 | 0.2474 | 0.3390 | 0.2456 | 12.5% | 56.1% | chat_template | 0.178 | 228.6 |
-| 74 | `KoHRM-Text-1.4B-stage4d + behavior-core-r64 LoRA` | 24.68 | 0.2468 | 0.3409 | 0.2405 | 21.8% | 64.4% | kohrm-local-lora-prefixlm | 16.974 | 23.0 |
-| 75 | `LLM-OS-Models/LFM2.5-1.2B-Terminal-SFT-2Epoch-Unsloth` | 22.45 | 0.2245 | 0.3097 | 0.2314 | 18.8% | 47.2% | chat_template | 0.083 | 57.2 |
-| 76 | `LLM-OS-Models/gemma-4-31B-Terminal-SFT-Native-Liquid-1Epoch` | 21.08 | 0.2108 | 0.2886 | 0.2422 | 11.2% | 21.1% | gemma4_native | 5.650 | 44.7 |
-| 77 | `Zyphra/ZAYA1-8B` | 20.61 | 0.2061 | 0.2844 | 0.2117 | 17.5% | 35.3% | chat_template | 2.339 | 598.3 |
-| 78 | `inclusionAI/LLaDA2.1-flash` | 20.07 | 0.2007 | 0.3150 | 0.1819 | 11.2% | 28.7% | sglang_llada_suffix | 2.502 | - |
-| 79 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-2Epoch` | 19.52 | 0.1952 | 0.2626 | 0.2091 | 15.5% | 25.7% | gemma4_native | 7.116 | 36.0 |
-| 80 | `google/gemma-4-E4B-it` | 19.36 | 0.1936 | 0.3184 | 0.1822 | 11.6% | 54.8% | chat_template | 0.205 | 175.8 |
-| 81 | `JetBrains/Mellum2-12B-A2.5B-Thinking` | 18.96 | 0.1896 | 0.2682 | 0.2023 | 15.5% | 35.3% | chat_template | 4.536 | 138.4 |
-| 82 | `stepfun-ai/Step-3.5-Flash` | 18.80 | 0.1880 | 0.2710 | 0.1790 | 13.9% | 27.4% | step3p5_vllm_bf16 | 5.368 | - |
-| 83 | `LLM-OS-Models/gemma-4-26B-A4B-Terminal-SFT-Native-Liquid-1Epoch` | 18.66 | 0.1866 | 0.2370 | 0.2152 | 14.5% | 25.1% | gemma4_native | 7.020 | 45.3 |
-| 84 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-2Epoch` | 18.47 | 0.1847 | 0.2514 | 0.1980 | 16.8% | 17.2% | gemma4_native | 0.302 | 52.6 |
-| 85 | `google/gemma-4-E2B-it` | 17.40 | 0.1740 | 0.2918 | 0.1613 | 7.3% | 57.1% | chat_template | 0.148 | 139.6 |
-| 86 | `LiquidAI/LFM2-2.6B` | 17.06 | 0.1706 | 0.2229 | 0.2160 | 12.9% | 29.4% | chat_template | 0.152 | 55.0 |
-| 87 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-2Epoch` | 16.22 | 0.1622 | 0.2747 | 0.1678 | 15.2% | 16.2% | gemma4_native | 0.289 | 73.4 |
-| 88 | `ByteDance/Ouro-1.4B` | 15.06 | 0.1506 | 0.1988 | 0.1625 | 8.9% | 37.3% | chat_template | 1.946 | 74.8 |
-| 89 | `LiquidAI/LFM2.5-1.2B-Instruct` | 14.46 | 0.1446 | 0.2374 | 0.1526 | 10.6% | 60.1% | chat_template | 0.056 | 39.8 |
-| 90 | `LLM-OS-Models/gemma-4-E4B-Terminal-SFT-Native-Liquid-1Epoch` | 12.80 | 0.1280 | 0.1792 | 0.1364 | 10.2% | 14.2% | gemma4_native | 0.383 | 93.8 |
-| 91 | `ByteDance/Ouro-1.4B-Thinking` | 12.69 | 0.1269 | 0.2026 | 0.1299 | 9.2% | 26.7% | chat_template | 2.115 | 65.9 |
-| 92 | `KoHRM-Text-1.4B-stage4d direct` | 11.48 | 0.1148 | 0.1995 | 0.0961 | 5.9% | 38.9% | kohrm-local-prefixlm | 14.001 | 13.0 |
-| 93 | `LLM-OS-Models/gemma-4-E2B-Terminal-SFT-Native-Liquid-1Epoch` | 11.35 | 0.1135 | 0.1767 | 0.1191 | 6.6% | 7.3% | gemma4_native | 0.219 | 45.3 |
-| 94 | `LiquidAI/LFM2-24B-A2B` | 10.87 | 0.1087 | 0.1466 | 0.1163 | 5.3% | 54.5% | chat_template | 0.165 | 236.2 |
-| 95 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 10.67 | 0.1067 | 0.1507 | 0.1067 | 4.0% | 5.9% | chat_template | 0.185 | 65.7 |
-| 96 | `KoHRM-Text-1.4B-stage4d synth,cot` | 10.36 | 0.1036 | 0.1696 | 0.0878 | 4.0% | 36.0% | kohrm-local-prefixlm | 14.406 | 12.0 |
-| 97 | `LiquidAI/LFM2-8B-A1B` | 10.04 | 0.1004 | 0.1405 | 0.1223 | 5.9% | 27.4% | chat_template | 0.124 | 61.9 |
-| 98 | `LLM-OS-Models/gemma-4-E2B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 9.22 | 0.0922 | 0.1249 | 0.1023 | 3.3% | 5.9% | chat_template | 0.184 | 67.5 |
-| 99 | `ByteDance/Ouro-2.6B` | 6.46 | 0.0646 | 0.0976 | 0.0692 | 5.0% | 16.5% | chat_template | 4.607 | 99.6 |
-| 100 | `sapientinc/HRM-Text-1B` | 0.40 | 0.0040 | 0.0057 | 0.0040 | 1.3% | 4.3% | hrm_text_prefixlm | 3.976 | 4.4 |
-| 101 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-1Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.774 | 300.1 |
-| 102 | `LLM-OS-Models/gemma-4-31B-it-Terminal-SFT-2Epoch-HF-FSDP-2BData` | 0.00 | 0.0000 | 0.0000 | 0.0000 | 0.0% | 0.0% | chat_template | 1.770 | 300.1 |
+| 5 | `Zyphra/ZAYA1-74B-preview` | 48.15 | 0.4815 | 0.6196 | 0.5017 | 51.8% | 74.6% | chat_template | 4.151 | 1192.6 |
+| 6 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch2` | 45.90 | 0.4590 | 0.5031 | 0.5098 | 44.9% | 68.3% | kohrm-local-prefixlm-export | 10.842 | 10.9 |
+| 7 | `LiquidAI/LFM2.5-8B-A1B + Raw ECHO RLVR LoRA checkpoint-1300` | 45.69 | 0.4569 | 0.5434 | 0.4647 | 42.9% | 69.0% | chat_template+LoRA | 0.115 | 58.5 |
+| 8 | `LLM-OS-Models/Qwen3.5-2B-Terminal-ToolCall-FullConv-FastContinue-1Epoch` | 44.79 | 0.4479 | 0.5266 | 0.4701 | 34.3% | 83.2% | chat_template | 0.079 | 15.5 |
+| 9 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch3` | 43.57 | 0.4357 | 0.4703 | 0.5003 | 45.5% | 61.7% | kohrm-local-prefixlm-export-nocompile | 11.156 | 2.9 |
+| 10 | `GLM-5.1 (z.ai API)` | 41.68 | 0.4168 | 0.5377 | 0.4007 | 24.1% | 90.1% | anthropic-api | 3.298 | - |
+| 11 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-2Epoch` | 39.56 | 0.3956 | 0.4702 | 0.4808 | 40.6% | 17.2% | gemma4_native | 6.820 | 43.8 |
+| 12 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-2Epoch-FullFT-SameCount` | 39.52 | 0.3952 | 0.5082 | 0.4101 | 33.0% | 82.2% | chat_template | 0.081 | 97.1 |
+| 13 | `LLM-OS-Models/KoHRM-Text-1.4B-FullSFT-LFM25-Terminal-ToolBench-Epoch1` | 38.56 | 0.3856 | 0.4262 | 0.4341 | 37.0% | 55.1% | kohrm-local-prefixlm-export | 8.314 | 7.0 |
+| 14 | `LLM-OS-Models/Qwen3.5-2B-Terminal-SFT-1Epoch-FullFT-SameCount` | 38.52 | 0.3852 | 0.4988 | 0.4056 | 32.7% | 83.2% | chat_template | 0.080 | 130.1 |
+| 15 | `LLM-OS-Models/Qwen3.5-9B-Terminal-SFT-2Epoch-FullFT-2BData` | 38.26 | 0.3826 | 0.4620 | 0.3905 | 28.4% | 64.4% | chat_template | 0.293 | 377.3 |
+| 16 | `LLM-OS-Models/gemma-4-26B-A4B-it-Terminal-SFT-Native-Liquid-1Epoch` | 38.12 | 0.3812 | 0.4405 | 0.4787 | 42.6% | 13.5% | gemma4_native | 6.854 | 38.8 |
+| 17 | `Qwen/Qwen3.5-9B` | 38.10 | 0.3810 | 0.4921 | 0.3527 | 20.8% | 78.2% | chat_template | 0.268 | 123.8 |
+| 18 | `nvidia/Nemotron-Terminal-32B` | 38.09 | 0.3809 | 0.5058 | 0.3827 | 40.3% | 58.7% | chat_template | 0.819 | 154.9 |
+| 19 | `Qwen/Qwen3.5-397B-A17B-FP8` | 37.81 | 0.3781 | 0.5107 | 0.3443 | 21.5% | 86.1% | chat_template | 0.860 | 826.5 |
+| 20 | `nvidia/Nemotron-Terminal-14B` | 37.70 | 0.3770 | 0.4688 | 0.3849 | 40.6% | 57.1% | chat_template | 0.360 | 98.8 |
+| 21 | `Qwen/Qwen3.5-122B-A10B-FP8` | 37.28 | 0.3728 | 0.5155 | 0.3408 | 20.5% | 84.2% | chat_template | 0.655 | 746.9 |
+| 22 | `DavidAU/Qwen3.6-40B-Claude-4.6-Opus-Deckard-Heretic-Uncensored-Thinking-NEO-CODE-Di-IMatrix-MAX-GGUF:Q4_K_M` | 37.09 | 0.3709 | 0.5010 | 0.3558 | 20.8% | 83.8% | chat_template | 14.422 | 141.5 |
+| 23 | `LiquidAI/LFM2.5-8B-A1B` | 36.53 | 0.3653 | 0.4812 | 0.3685 | 39.9% | 59.1% | chat_template | 0.097 | 103.4 |
+| 24 | `Qwen/Qwen3.5-35B-A3B-FP8` | 36.44 | 0.3644 | 0.5086 | 0.3317 | 23.1% | 77.6% | chat_template | 0.200 | 222.8 |
+| 25 | `Qwen/Qwen3.5-35B-A3B` | 36.41 | 0.3641 | 0.5068 | 0.3330 | 22.1% | 78.2% | chat_template | 0.228 | 363.1 |
+| 26 | `Qwen/Qwen3.5-27B` | 36.30 | 0.3630 | 0.4985 | 0.3343 | 22.1% | 74.9% | chat_template | 0.893 | 102.6 |
+| 27 | `unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL` | 36.29 | 0.3629 | 0.4813 | 0.3460 | 17.5% | 80.5% | chat_template | 5.577 | - |
+| 28 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-2Epoch-FullFT-2BData` | 36.25 | 0.3625 | 0.4797 | 0.3723 | 26.1% | 61.7% | chat_template | 0.205 | 207.3 |
+| 29 | `LLM-OS-Models/Qwen3.5-4B-Terminal-SFT-1Epoch-FullFT-2BData` | 36.05 | 0.3605 | 0.4601 | 0.3690 | 28.1% | 59.4% | chat_template | 0.206 | 158.5 |
+| 30 | `nvidia/Nemotron-Terminal-8B` | 35.80 | 0.3580 | 0.4649 | 0.3592 | 35.3% | 54.5% | chat_template | 0.273 | 95.7 |
 
+## 참고용 부분/보정 결과
 
+아래 값은 실험 해석에는 유용하지만 정식 순위에는 넣지 않는다. 완료 step 수가 부족하거나, 기능적 동등 보정/valid-only 보정/중간 저장/스모크 결과이기 때문이다.
+
+| 항목 | Score | 이유 |
+| --- | ---: | --- |
+| `deepseek-ai/DeepSeek-V4-Pro (Valid-only 기능적 동등 보정, 162/303)` | 48.19* | valid step만 대상으로 한 기능적 동등 보정값 |
+| `deepseek-ai/DeepSeek-V4-Pro (기능적 동등 보정, 162/303)` | 42.46* | full replay가 아닌 보정 분석값 |
+| `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=4096, 162/303)` | 40.29* | 162/303 부분 완료 |
+| `deepseek-ai/DeepSeek-V4-Pro (chat t=0.0, m=1024, 175/303)` | 35.40* | 175/303 부분 완료 |
+| `deepseek-ai/DeepSeek-V4-Pro (chat t=0.3, m=4096, 86/303)` | ~33* | 86/303 부분 완료 |
+| `deepseek-ai/DeepSeek-V4-Pro (thinking t=1.0, 301/303)` | 26.66* | 301/303 부분 완료라 정식 순위 제외 |
+| `LFM2.5 SFT1 GGUF Q4_K_M CPU full eval` | 진행 중 | 현재 중간 저장 `10/303`; 완료 전 순위 제외 |
+| `LLaDA2.1 flash smoke` | 74.07* | smoke/부분 평가라 정식 순위 제외 |
 
 전체 순위 반영 메모:
 

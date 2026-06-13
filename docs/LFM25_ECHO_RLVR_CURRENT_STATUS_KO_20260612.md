@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR 현재 상태 노트
 
-업데이트: 2026-06-13 00:11 UTC / 2026-06-13 09:11 KST
+업데이트: 2026-06-13 00:22 UTC / 2026-06-13 09:22 KST
 
 이 문서는 현재 진행 중인 `LFM2.5-8B-A1B-Terminal-ToolBench-Full-SFT-1Epoch` ECHO-style terminal RLVR 작업의 상태, 데이터, 평가 기준, 남은 리스크를 짧게 정리한다.
 
@@ -8,12 +8,13 @@
 
 ## 2026-06-13 09:11 KST 즉시 업로드 상태
 
-사용자가 요청한 "일단 된 것들"은 2026-06-13 09:11 KST 기준으로 Hugging Face에 one-shot 수동 sync까지 완료했다. 기존 loop sync 프로세스도 살아 있으므로 이후 새 checkpoint와 새 rollout은 주기적으로 다시 반영된다.
+사용자가 요청한 "일단 된 것들"은 2026-06-13 09:22 KST 기준으로 Hugging Face에 one-shot 수동 sync까지 완료했다. 이후 새 checkpoint와 새 rollout은 loop sync가 주기적으로 다시 반영한다.
 
 업로드 대상:
 
 - Rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
-- Adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
+- SFT 기반 ECHO RLVR adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
+- Raw clean-start ECHO RLVR adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters`
 - Eval result path: `eval/tb2_lite_gpu6/lfm25_echo_rlvr_gpu6_eval_20260612`
 
 one-shot sync 결과:
@@ -22,9 +23,9 @@ one-shot sync 결과:
 | --- | --- |
 | Rollout traces | `10,920` rows 업로드 완료 |
 | Train steps logged | `1,365`개 로그 반영 |
-| Adapter checkpoints | `checkpoint-25`부터 `checkpoint-1350`까지 업로드 완료 |
-| 이번 one-shot 신규 adapter | `checkpoint-1325`, `checkpoint-1350` |
-| GPU6 eval results | `288`개 결과 업로드 완료 |
+| Raw adapter checkpoints | `checkpoint-25`부터 `checkpoint-1375`까지 별도 raw adapter repo에 업로드 완료 |
+| 이번 one-shot 신규 raw adapter | `checkpoint-25`~`checkpoint-1375` 전체를 새 repo로 분리 업로드 |
+| GPU6 eval results | `289`개 결과 업로드 완료 |
 | GPU6 eval best so far | `lfm25-echo-rlvr-parentrun-checkpoint-610`, Score `54.05` |
 
 현재 active raw clean-start run:
@@ -35,9 +36,9 @@ one-shot sync 결과:
 - Train GPUs: `4,5`
 - Eval GPU: `6`
 - Excluded GPU: `7`
-- 2026-06-13 09:11 KST 기준 latest train step: `1365`
-- 최신 저장 checkpoint: `checkpoint-1350`
-- 다음 저장 checkpoint: `checkpoint-1375`
+- 2026-06-13 09:22 KST 기준 latest uploaded raw checkpoint: `checkpoint-1375`
+- raw adapter upload: 기존 SFT 기반 adapter repo와 섞지 않고 `LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters`로 분리
+- 다음 저장 checkpoint: `checkpoint-1400`
 
 Raw clean-start GPU6 평가 최신 구간:
 

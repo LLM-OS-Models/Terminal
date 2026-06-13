@@ -831,11 +831,13 @@ Rollout dataset repo:
 LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts
 ```
 
-Adapter model repo:
+Raw adapter model repo:
 
 ```text
-LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters
+LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters
 ```
+
+SFT 1Epoch 기반 ECHO RLVR adapter repo와 raw clean-start ECHO RLVR adapter repo는 분리한다. 두 run은 base model이 다르므로 같은 model repo에 checkpoint를 섞으면 나중에 로드/평가/모델 카드 해석이 꼬인다. 2026-06-13 09:22 KST 기준 raw run의 `checkpoint-25`부터 `checkpoint-1375`까지는 새 raw adapter repo에 업로드했다.
 
 raw run path:
 

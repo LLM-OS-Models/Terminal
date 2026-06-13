@@ -1,6 +1,6 @@
 # LFM2.5 raw ECHO RLVR 재시작 기록
 
-업데이트: 2026-06-12 11:38 UTC / 2026-06-12 20:38 KST
+업데이트: 2026-06-12 22:31 UTC / 2026-06-13 07:31 KST
 
 이 문서는 `LiquidAI/LFM2.5-8B-A1B` 순수 raw base에서 ECHO-style terminal RLVR을 다시 시작한 기록이다. 이전 SFT 기반 RLVR 실험과 구분하기 위해 별도 문서로 분리한다.
 
@@ -165,7 +165,7 @@ Output dir:
 
 ## 초기 관측
 
-현재 active raw run은 step `0-5`까지 정상 진행됐다.
+현재 active raw run은 1175 step까지 checkpoint 평가가 끝났고, 학습은 계속 진행 중이다.
 
 초기 로그 요약:
 
@@ -191,9 +191,11 @@ Output dir:
 HF sync:
 
 - rollout dataset repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-Rollouts`
-- adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`
+- adapter model repo: `LLM-OS-Models/LFM2.5-8B-A1B-Raw-ECHO-RLVR-GRPO-Adapters`
 - path-in-repo prefix: `raw-lfm25/{run_id}`
 - sync interval: `1800s`
+
+주의: raw clean-start run은 SFT 1Epoch 기반 ECHO RLVR run과 base가 다르다. 그래서 adapter도 기존 `LLM-OS-Models/LFM2.5-8B-A1B-Terminal-ECHO-RLVR-GRPO-Adapters`에 섞지 않고 별도 repo로 분리한다. 2026-06-13 09:22 KST 기준 `checkpoint-25`부터 `checkpoint-1375`까지 새 raw adapter repo에 업로드했다.
 
 GPU6 평가:
 
@@ -209,11 +211,11 @@ GPU6 평가:
 Score = 100 * avg_command_f1
 ```
 
-## checkpoint-25~250 TB2-lite 평가 결과
+## checkpoint-25~1175 TB2-lite 평가 결과
 
-업데이트: 2026-06-12 13:56 UTC / 2026-06-12 22:56 KST
+업데이트: 2026-06-12 22:31 UTC / 2026-06-13 07:31 KST
 
-GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-250까지 README와 같은 TB2-lite replay 기준으로 평가했다.
+GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-1175까지 README와 같은 TB2-lite replay 기준으로 평가했다.
 
 | checkpoint | README Score | next_action_score | first_cmd_exact | valid_json |
 | ---: | ---: | ---: | ---: | ---: |
@@ -227,18 +229,52 @@ GPU6 watcher가 current raw clean-start run의 checkpoint-25부터 checkpoint-25
 | 200 | `39.67` | `39.95` | `40.6%` | `59.7%` |
 | 225 | `41.06` | `40.92` | `40.6%` | `57.4%` |
 | 250 | `39.95` | `40.84` | `42.9%` | `59.1%` |
+| 300 | `41.52` | `41.72` | `42.2%` | `59.1%` |
+| 325 | `42.08` | `42.12` | `42.2%` | `59.4%` |
+| 425 | `41.93` | `42.31` | `43.2%` | `61.1%` |
+| 475 | `43.41` | `43.77` | `44.6%` | `59.7%` |
+| 550 | `43.46` | `43.38` | `43.2%` | `64.7%` |
+| 700 | `42.73` | `42.57` | `42.2%` | `63.7%` |
+| 800 | `43.94` | `43.42` | `42.2%` | `61.7%` |
+| 900 | `43.78` | `43.73` | `43.6%` | `60.7%` |
+| 925 | `43.83` | `43.46` | `42.6%` | `64.7%` |
+| 975 | `44.47` | `44.39` | `44.2%` | `63.7%` |
+| 1000 | `42.72` | `43.37` | `44.9%` | `65.7%` |
+| 1075 | `43.77` | `44.20` | `45.2%` | `68.6%` |
+| 1100 | `44.84` | `45.16` | `45.9%` | `66.3%` |
+| 1125 | `43.77` | `43.81` | `43.9%` | `64.4%` |
+| 1150 | `44.10` | `43.35` | `41.6%` | `65.3%` |
+| 1175 | `43.29` | `43.56` | `44.2%` | `63.7%` |
 
-현재 raw run 최고점은 `checkpoint-225`의 Score `41.06`이다.
+현재 raw run 최고점은 `checkpoint-1100`의 Score `44.84`이다.
 
 해석:
 
-- raw base rerun Score `39.92`와 비교하면 checkpoint-225는 `+1.14` 올랐다.
-- 하지만 SFT 1Epoch baseline Score `52.30`과 비교하면 아직 `-11.24` 낮다.
-- checkpoint-225가 checkpoint-125를 아주 조금 넘겼지만, checkpoint-250은 다시 `39.95`로 내려왔다. 250 step까지는 뚜렷한 아하 모먼트가 아니라 작은 회복/탐색 구간으로 보는 편이 맞다.
-- valid JSON은 `57.1%~59.7%` 범위에 머물러 있어, raw 모델의 terminal JSON/tool format prior가 아직 약하다.
+- raw base rerun Score `39.92`와 비교하면 checkpoint-1100은 `+4.92` 올랐다.
+- 하지만 SFT 1Epoch baseline Score `52.30`과 비교하면 아직 `-7.46` 낮다.
+- checkpoint-975 `44.47`, checkpoint-1100 `44.84`, checkpoint-1150 `44.10`처럼 상승 구간은 확실히 있다. 다만 checkpoint-1175가 `43.29`로 내려와서 장기 단조 상승이나 뚜렷한 아하 모먼트라고 보기는 아직 이르다.
+- valid JSON은 초반 `57~60%`대에서 후반 `63~68%`까지 올라오는 구간이 있다. raw 모델의 terminal JSON/tool format prior가 조금 잡히고 있지만, SFT 1Epoch의 `76.9%` 수준에는 아직 못 닿는다.
 - verifier reward가 계속 `0.0`에 가까운 구간이어서, 현재는 sparse verifier 성공보다 ECHO observation loss와 format/penalty shaping이 주로 작동하는 것으로 보인다.
 
-그래도 완전히 실패로 보기는 이르다. raw에서 바로 시작했는데 checkpoint-50/100/125/225가 raw base보다 높게 나왔으므로, terminal feedback 기반 학습 신호가 전혀 없지는 않다. 다만 논문식 아하 모먼트를 보려면 최소 checkpoint-500/1000/2000까지 곡선을 봐야 한다.
+그래도 완전히 실패로 보기는 어렵다. raw에서 바로 시작했는데 checkpoint-1100이 raw base보다 `+4.92` 높게 나왔으므로, terminal feedback 기반 학습 신호는 실제로 있다. 다만 현재 TB2-lite replay 기준 결론은 "raw ECHO RLVR만으로 SFT를 대체"가 아니라, "raw도 개선하지만 SFT warmup 이후 RLVR이 훨씬 강하다"에 가깝다.
+
+## ECHO 논문과 같은 점 / 다른 점
+
+같은 점:
+
+- terminal command를 실제 실행하고 stdout/stderr/exit code를 다음 turn observation으로 넣는다.
+- action token에는 reward 기반 policy loss를 걸고, terminal observation token에는 CE world-model loss를 건다.
+- terminal output을 단순 context로만 버리지 않고 학습 target으로 쓰는 ECHO 핵심 objective를 따른다.
+
+다른 점:
+
+- 논문은 Harbor/Docker task backend를 쓴다. 현재 run은 Docker 없이 local workspace sandbox를 쓴다.
+- 논문은 8870 train tasks, 100 held-out val tasks를 쓴다. 현재 run은 공개 데이터에서 만든 1500 prepared tasks를 쓴다.
+- 논문은 최대 16턴, turn당 최대 2048 generated tokens, 16k context다. 현재 run은 속도와 안정성을 위해 최대 4턴, turn당 256 generated tokens, 32k max sequence로 제한했다.
+- 논문은 8 B200 GPU에서 500 GRPO steps를 full training stack으로 돈다. 현재 run은 vLLM rollout 4GPU + LoRA 학습 2GPU 구조다.
+- 논문 코드는 SkyRL/FSDP hook으로 world-model mask를 통과시킨다. 현재 구현은 `Liquid-CLI/train_lfm_terminal_echo_live_grpo.py` 안에서 observation mask를 직접 만들고 `world_model_coeff=0.05`로 loss에 더한다.
+
+따라서 이 run은 "ECHO paper-aligned local adaptation"이지 "ECHO paper exact reproduction"은 아니다. 아쉬운 지점은 Docker/Harbor가 없어서 task state와 verifier 환경이 논문처럼 완전히 격리/표준화되지 않는다는 점, 그리고 4턴/256토큰 제한 때문에 긴 복구형 terminal 행동을 학습하기 어렵다는 점이다.
 
 ## 현재 리스크
 
