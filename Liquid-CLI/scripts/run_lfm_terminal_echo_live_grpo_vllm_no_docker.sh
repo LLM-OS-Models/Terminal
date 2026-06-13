@@ -14,6 +14,8 @@ VLLM_LORA_LOAD_INPLACE="${VLLM_LORA_LOAD_INPLACE:-0}"
 TRAIN_GPUS="${TRAIN_GPUS:-4,5}"
 NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
 MAX_STEPS="${MAX_STEPS:-100}"
+# Keep disabled by default. Long RLVR runs should normally stop by MAX_STEPS,
+# not by wall-time, so checkpoint sweeps can reach the intended step budget.
 MAX_WALL_TIME_HOURS="${MAX_WALL_TIME_HOURS:-0}"
 PROMPTS_PER_RANK="${PROMPTS_PER_RANK:-1}"
 NUM_GENERATIONS="${NUM_GENERATIONS:-2}"

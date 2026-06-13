@@ -29,7 +29,8 @@
 - vLLM LoRA generation model name: `lfm25-sft1-online`
 - LoRA sync interval: 5 optimizer updates
 - checkpoint 저장 주기: 25 updates
-- 계획 길이: 최대 2,000 steps 또는 36시간
+- 계획 길이: 최대 2,000 steps. future run은 wall-time cap 없이 `MAX_STEPS=2000`으로 종료한다.
+- 현재 active run 주의: launch arg에 `--max-wall-time-hours 36`이 들어가 있어 2,000 step 전에 멈출 수 있다. 실행 중인 프로세스의 arg는 in-place로 바꿀 수 없으므로, full 2,000 step이 필요하면 마지막 checkpoint에서 no-wall continuation run으로 이어간다.
 
 ## 2. 이전 static-vLLM 실험의 문제
 
@@ -557,7 +558,14 @@ GPU 배치:
 
 ## 12. 예상 완료 시간
 
-초기 5 step은 vLLM warmup, LoRA sync, terminal execution variance가 섞여 있어 step time 추정이 흔들린다. 보수적으로 보면 2,000 steps 전체는 24~36시간 범위로 잡는다. 따라서 현재 run의 hard stop은 2026-06-14 22:55 KST 근처다.
+초기 5 step은 vLLM warmup, LoRA sync, terminal execution variance가 섞여 있어 step time 추정이 흔들린다. 보수적으로 보면 2,000 steps 전체는 24~40시간 범위로 잡는다. 다만 현재 active run은 launch arg에 `--max-wall-time-hours 36`이 들어간 상태라, 이 제한이 먼저 걸리면 2026-06-14 22:46~22:55 KST 근처에서 멈출 수 있다.
+
+운영 정정:
+
+- 다음 online RLVR run부터는 `MAX_WALL_TIME_HOURS=0`을 기본으로 둔다.
+- 종료 기준은 wall-clock이 아니라 `MAX_STEPS=2000`이다.
+- 2,000 step은 데이터 1,500개, update당 prompt 2개 기준 약 `2.67 epochs`다.
+- 현재 active run을 지금 재시작하면 optimizer state 연속성이 깨지므로, 학습은 유지하고 hard stop이 걸릴 경우 마지막 adapter checkpoint에서 no-wall continuation으로 이어간다.
 
 실제 운영에서는 다음 기준을 쓴다.
 
@@ -651,7 +659,8 @@ GPU 6 watcher는 정상 동작 중이다. 2026-06-13 15:25 KST 기준 `checkpoin
 - 다음 checkpoint: `250`
 - GPU 배치: `0~3` vLLM, `4~5` trainer, `6` eval watcher, `7` 미사용
 - 평균 속도: 약 `71~74초/step`
-- 종료 예상: 36시간 wall-time 제한이 먼저 걸리면 2026-06-14 22:46~22:55 KST, 예상 종료 step은 대략 `1750~1820`
+- 종료 예상: 현재 active run은 36시간 wall-time 제한이 먼저 걸리면 2026-06-14 22:46~22:55 KST, 예상 종료 step은 대략 `1750~1820`
+- 운영 정정: future run은 wall-time cap을 두지 않고 `MAX_STEPS=2000`까지 간다. 이 경우 현재 속도 기준 종료는 2026-06-15 02:35~03:40 KST 범위로 잡는다.
 
 평가 결과:
 
