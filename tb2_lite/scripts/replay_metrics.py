@@ -37,20 +37,51 @@ def flatten_keystrokes(commands: list[dict]) -> list[str]:
     return units
 
 
+def _split_command_text(value: str) -> list[str]:
+    pieces = [
+        piece.strip()
+        for piece in value.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+        if piece.strip()
+    ]
+    return pieces
+
+
+def _decode_json_string(value: str) -> str:
+    try:
+        return bytes(value, "utf-8").decode("unicode_escape")
+    except Exception:
+        return value
+
+
+def _payload_commands(payload: dict) -> list[str]:
+    commands: list[str] = []
+    raw_commands = payload.get("commands", [])
+    if isinstance(raw_commands, list):
+        commands.extend(flatten_keystrokes([cmd for cmd in raw_commands if isinstance(cmd, dict)]))
+
+    args = payload.get("arguments") if isinstance(payload.get("arguments"), dict) else payload.get("args")
+    if not isinstance(args, dict):
+        args = {}
+
+    for candidate in (
+        payload.get("keystrokes"),
+        payload.get("command"),
+        payload.get("cmd"),
+        args.get("keystrokes"),
+        args.get("command"),
+        args.get("cmd"),
+    ):
+        if isinstance(candidate, str) and candidate.strip():
+            commands.extend(_split_command_text(candidate))
+    return commands
+
+
 def fallback_commands(text: str) -> list[str]:
     commands: list[str] = []
-    for match in re.findall(r'"keystrokes"\s*:\s*"((?:[^"\\]|\\.)*)"', text):
-        try:
-            decoded = bytes(match, "utf-8").decode("unicode_escape")
-        except Exception:
-            decoded = match
-        pieces = [
-            piece.strip()
-            for piece in decoded.replace("\r\n", "\n").replace("\r", "\n").split("\n")
-            if piece.strip()
-        ]
-        if pieces:
-            commands.extend(pieces)
+    for key in ("keystrokes", "command", "cmd"):
+        pattern = rf'"{key}"\s*:\s*"((?:[^"\\]|\\.)*)'
+        for match in re.findall(pattern, text):
+            commands.extend(_split_command_text(_decode_json_string(match)))
     return commands
 
 
@@ -129,9 +160,7 @@ def parse_prediction(text: str) -> dict:
     valid_json = payload is not None
 
     if payload is not None:
-        raw_commands = payload.get("commands", [])
-        if isinstance(raw_commands, list):
-            commands = flatten_keystrokes([cmd for cmd in raw_commands if isinstance(cmd, dict)])
+        commands = _payload_commands(payload)
         task_complete = payload.get("task_complete") if isinstance(payload.get("task_complete"), bool) else None
         has_analysis = bool(payload.get("analysis"))
         has_plan = bool(payload.get("plan"))

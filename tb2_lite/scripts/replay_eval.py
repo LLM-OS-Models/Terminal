@@ -217,6 +217,13 @@ def build_llm(args: argparse.Namespace) -> tuple[LLM, dict]:
         kwargs["enforce_eager"] = True
     if engine_accepts_kwarg("enable_prefix_caching") and args.enable_prefix_caching:
         kwargs["enable_prefix_caching"] = True
+    if args.lora_path:
+        if engine_accepts_kwarg("enable_lora"):
+            kwargs["enable_lora"] = True
+        if engine_accepts_kwarg("max_loras"):
+            kwargs["max_loras"] = 1
+        if engine_accepts_kwarg("max_lora_rank"):
+            kwargs["max_lora_rank"] = args.max_lora_rank
     if engine_accepts_kwarg("enable_chunked_prefill") and args.disable_chunked_prefill:
         kwargs["enable_chunked_prefill"] = False
     if engine_accepts_kwarg("async_scheduling") and args.disable_async_scheduling:
@@ -278,6 +285,10 @@ def main() -> None:
     parser.add_argument("--shard-count", type=int, default=1)
     parser.add_argument("--allow-raw-fallback", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
+    parser.add_argument("--lora-path", default="")
+    parser.add_argument("--lora-name", default="adapter")
+    parser.add_argument("--lora-id", type=int, default=1)
+    parser.add_argument("--max-lora-rank", type=int, default=32)
     args = parser.parse_args()
 
     eval_path = Path(args.eval_path)
@@ -327,8 +338,19 @@ def main() -> None:
         sampling_kwargs["min_p"] = args.min_p
     sampling = SamplingParams(**sampling_kwargs)
 
+    lora_request = None
+    if args.lora_path:
+        from vllm.lora.request import LoRARequest
+
+        lora_request = LoRARequest(args.lora_name, args.lora_id, args.lora_path)
+
     gen_start = time.time()
-    outputs = llm.generate(prompts, sampling_params=sampling, use_tqdm=True)
+    outputs = llm.generate(
+        prompts,
+        sampling_params=sampling,
+        use_tqdm=True,
+        lora_request=lora_request,
+    )
     gen_time = round(time.time() - gen_start, 1)
 
     per_step: list[dict] = []
@@ -371,7 +393,8 @@ def main() -> None:
     result = {
         "model": args.model_short or args.model,
         "model_path": args.model,
-        "lora_path": None,
+        "lora_path": args.lora_path or None,
+        "lora_name": args.lora_name if args.lora_path else None,
         "model_short": model_short,
         "gpu": str(args.gpu),
         "eval_path": str(eval_path),
@@ -418,6 +441,9 @@ def main() -> None:
             "disable_chunked_prefill": args.disable_chunked_prefill,
             "disable_async_scheduling": args.disable_async_scheduling,
             "keep_chunked_mm_input": args.keep_chunked_mm_input,
+            "lora_path": args.lora_path,
+            "lora_name": args.lora_name,
+            "lora_id": args.lora_id,
             "llm_kwargs": llm_kwargs,
         },
         "prompt_template": prompt_meta,

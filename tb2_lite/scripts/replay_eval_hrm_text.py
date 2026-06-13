@@ -77,6 +77,66 @@ def flatten_messages(row: dict[str, Any]) -> str:
     return "\n\n".join(parts).rstrip()
 
 
+def prepare_local_hrm_prompts(
+    ckpt: Any,
+    rows: list[dict[str, Any]],
+    args: argparse.Namespace,
+) -> tuple[list[str], dict[str, Any]]:
+    tokenizer = ckpt.tokenizer
+    max_prompt_tokens = args.max_model_len - args.max_tokens
+    if max_prompt_tokens <= 0:
+        raise ValueError(
+            "--max-model-len must be larger than --max-tokens for local HRM evaluation"
+        )
+
+    empty_prompt_tokens = ckpt.tokenize_prompt(args.condition, "")
+    available_body = max_prompt_tokens - int(empty_prompt_tokens.size)
+    if available_body <= 0:
+        raise ValueError(
+            "HRM condition/wrapper leaves no room for prompt body: "
+            f"max_model_len={args.max_model_len} max_tokens={args.max_tokens}"
+        )
+
+    marker_ids = tokenizer(TRUNCATION_MARKER, add_special_tokens=False).input_ids
+    marker_len = len(marker_ids)
+    prepared: list[str] = []
+    body_lengths: list[int] = []
+    kept_lengths: list[int] = []
+    truncated = 0
+
+    for row in rows:
+        body = flatten_messages(row)
+        body_ids = tokenizer(body, add_special_tokens=False).input_ids
+        body_lengths.append(len(body_ids))
+        if len(body_ids) <= available_body:
+            prepared.append(body)
+            kept_lengths.append(len(body_ids))
+            continue
+
+        truncated += 1
+        available_without_marker = max(available_body - marker_len, 1)
+        if available_without_marker < args.head_tokens + args.min_tail_tokens:
+            keep_head = max(available_without_marker // 2, 1)
+        else:
+            keep_head = min(args.head_tokens, available_without_marker - 1)
+        keep_tail = max(available_without_marker - keep_head, 1)
+        trimmed_ids = body_ids[:keep_head] + marker_ids + body_ids[-keep_tail:]
+        prepared.append(tokenizer.decode(trimmed_ids, skip_special_tokens=False))
+        kept_lengths.append(keep_head + keep_tail)
+
+    total = max(len(rows), 1)
+    return prepared, {
+        "local_prompt_budget_tokens": max_prompt_tokens,
+        "local_wrapper_tokens": int(empty_prompt_tokens.size),
+        "local_available_body_tokens": available_body,
+        "local_truncated_prompts": truncated,
+        "local_truncated_pct": round(truncated / total * 100.0, 1),
+        "local_max_body_tokens_original": max(body_lengths or [0]),
+        "local_avg_body_tokens_original": round(sum(body_lengths) / total, 1),
+        "local_avg_body_tokens_kept": round(sum(kept_lengths) / total, 1),
+    }
+
+
 def encode_prompt(
     tokenizer: Any,
     body: str,
@@ -166,6 +226,15 @@ def score_predictions(rows: list[dict[str, Any]], predictions: list[str]) -> lis
     return per_step
 
 
+def score_completed_predictions(
+    rows: list[dict[str, Any]],
+    predictions: list[str],
+    completed_indices: set[int],
+) -> list[dict[str, Any]]:
+    ordered = sorted(completed_indices)
+    return score_predictions([rows[idx] for idx in ordered], [predictions[idx] for idx in ordered])
+
+
 def build_result(
     args: argparse.Namespace,
     rows: list[dict[str, Any]],
@@ -181,6 +250,7 @@ def build_result(
     return {
         "model": args.model_short or args.model,
         "model_path": args.model,
+        "lora_path": str(args.lora_path) if getattr(args, "lora_path", None) else None,
         "model_short": model_short,
         "gpu": args.gpu,
         "visible_cuda_devices": os.environ.get("CUDA_VISIBLE_DEVICES", ""),
@@ -213,6 +283,213 @@ def build_result(
     }
 
 
+def resolve_lora_adapter(lora_path: Path, tag: str) -> tuple[Path, Path | None, str]:
+    if lora_path.is_file():
+        return lora_path, None, lora_path.stem.removeprefix("lora_")
+    if not tag:
+        latest = lora_path / "latest_lora.txt"
+        tag = latest.read_text(encoding="utf-8").strip() if latest.exists() else "epoch_1"
+    adapter = lora_path / f"lora_{tag}.pt"
+    info = lora_path / f"lora_{tag}_info.json"
+    if not adapter.exists():
+        raise FileNotFoundError(f"LoRA adapter not found: {adapter}")
+    return adapter, info if info.exists() else None, tag
+
+
+def run_local_lora_eval(
+    args: argparse.Namespace,
+    rows: list[dict[str, Any]],
+    total_input_steps: int,
+    out_path: Path,
+) -> None:
+    hrm_root = Path(args.hrm_text_root).resolve()
+    if str(hrm_root) not in sys.path:
+        sys.path.insert(0, str(hrm_root))
+
+    from simple_inference_engine import inference_generate, inference_load_checkpoint
+    from models.lora import inject_lora, load_lora_adapter
+
+    adapter_path, info_path, tag = resolve_lora_adapter(Path(args.lora_path), args.lora_tag)
+    info: dict[str, Any] = {}
+    if info_path is not None:
+        info = json.loads(info_path.read_text(encoding="utf-8"))
+    lora_cfg = info.get("lora", {})
+
+    load_start = time.time()
+    ckpt = inference_load_checkpoint(
+        ckpt_path=args.model,
+        ckpt_epoch=args.ckpt_epoch,
+        ckpt_step=args.ckpt_step,
+        ckpt_use_ema=args.ckpt_use_ema,
+        device="cuda",
+    )
+    matched_modules = inject_lora(
+        ckpt.model,
+        target_suffixes=lora_cfg.get("target_suffixes", ["gqkv_proj", "o_proj", "gate_up_proj", "down_proj", "lm_head"]),
+        rank=int(lora_cfg.get("rank", 16)),
+        alpha=float(lora_cfg.get("alpha", 32.0)),
+        dropout=0.0,
+    )
+    load_stats = load_lora_adapter(ckpt.model, adapter_path)
+    ckpt.model.eval()
+    load_time = time.time() - load_start
+
+    prompt_meta = {
+        "template_status": "hrm_text_prefixlm_local_lora",
+        "rank_eligible": True,
+        "condition": args.condition,
+        "lora_tag": tag,
+        "lora_adapter_path": str(adapter_path),
+        "lora_info_path": str(info_path) if info_path else None,
+        "lora_load_stats": load_stats,
+        "matched_lora_modules": len(matched_modules),
+        "max_model_len": args.max_model_len,
+        "max_tokens": args.max_tokens,
+        "batch_size": args.batch_size,
+    }
+
+    gen_start = time.time()
+    predictions = [""] * len(rows)
+    completed_indices: set[int] = set()
+    prompts, trim_meta = prepare_local_hrm_prompts(ckpt, rows, args)
+    prompt_meta.update(trim_meta)
+    iterator = ((idx, (args.condition, prompt)) for idx, prompt in enumerate(prompts))
+    for done, (idx, generated_text) in enumerate(
+        inference_generate(
+            ckpt,
+            iterator,
+            max_tokens=args.max_model_len,
+            max_generation=args.max_tokens,
+            batch_size=args.batch_size,
+            temp=args.temperature,
+        ),
+        start=1,
+    ):
+        predictions[idx] = generated_text
+        completed_indices.add(idx)
+        if done % args.progress_every == 0 or done == len(rows):
+            elapsed = time.time() - gen_start
+            rate = done / elapsed if elapsed > 0 else 0.0
+            print(f"[{done}/{len(rows)}] elapsed={elapsed:.1f}s rate={rate:.4f}/s", flush=True)
+        if args.save_every and (done % args.save_every == 0 or done == len(rows)):
+            partial_per_step = score_completed_predictions(rows, predictions, completed_indices)
+            partial_result = build_result(
+                args=args,
+                rows=rows,
+                total_input_steps=total_input_steps,
+                per_step=partial_per_step,
+                load_time=load_time,
+                gen_time=time.time() - gen_start,
+                prompt_meta=prompt_meta,
+                complete=done == len(rows),
+            )
+            out_path.write_text(json.dumps(partial_result, ensure_ascii=False, indent=2))
+
+    gen_time = time.time() - gen_start
+    per_step = score_predictions(rows, predictions)
+    result = build_result(
+        args=args,
+        rows=rows,
+        total_input_steps=total_input_steps,
+        per_step=per_step,
+        load_time=load_time,
+        gen_time=gen_time,
+        prompt_meta=prompt_meta,
+        complete=True,
+    )
+    result["backend"] = "kohrm-local-lora-prefixlm"
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    score = round(100.0 * result["aggregate"]["avg_command_f1"], 2)
+    print(json.dumps({"output_path": str(out_path), "score": score}, ensure_ascii=False))
+
+
+def run_local_hrm_eval(
+    args: argparse.Namespace,
+    rows: list[dict[str, Any]],
+    total_input_steps: int,
+    out_path: Path,
+) -> None:
+    hrm_root = Path(args.hrm_text_root).resolve()
+    if str(hrm_root) not in sys.path:
+        sys.path.insert(0, str(hrm_root))
+
+    from simple_inference_engine import inference_generate, inference_load_checkpoint
+
+    load_start = time.time()
+    ckpt = inference_load_checkpoint(
+        ckpt_path=args.model,
+        ckpt_epoch=args.ckpt_epoch,
+        ckpt_step=args.ckpt_step,
+        ckpt_use_ema=args.ckpt_use_ema,
+        device="cuda",
+    )
+    ckpt.model.eval()
+    load_time = time.time() - load_start
+
+    prompt_meta = {
+        "template_status": "hrm_text_prefixlm_local_checkpoint",
+        "rank_eligible": True,
+        "condition": args.condition,
+        "max_model_len": args.max_model_len,
+        "max_tokens": args.max_tokens,
+        "batch_size": args.batch_size,
+    }
+
+    gen_start = time.time()
+    predictions = [""] * len(rows)
+    completed_indices: set[int] = set()
+    prompts, trim_meta = prepare_local_hrm_prompts(ckpt, rows, args)
+    prompt_meta.update(trim_meta)
+    iterator = ((idx, (args.condition, prompt)) for idx, prompt in enumerate(prompts))
+    for done, (idx, generated_text) in enumerate(
+        inference_generate(
+            ckpt,
+            iterator,
+            max_tokens=args.max_model_len,
+            max_generation=args.max_tokens,
+            batch_size=args.batch_size,
+            temp=args.temperature,
+        ),
+        start=1,
+    ):
+        predictions[idx] = generated_text
+        completed_indices.add(idx)
+        if done % args.progress_every == 0 or done == len(rows):
+            elapsed = time.time() - gen_start
+            rate = done / elapsed if elapsed > 0 else 0.0
+            print(f"[{done}/{len(rows)}] elapsed={elapsed:.1f}s rate={rate:.4f}/s", flush=True)
+        if args.save_every and (done % args.save_every == 0 or done == len(rows)):
+            partial_per_step = score_completed_predictions(rows, predictions, completed_indices)
+            partial_result = build_result(
+                args=args,
+                rows=rows,
+                total_input_steps=total_input_steps,
+                per_step=partial_per_step,
+                load_time=load_time,
+                gen_time=time.time() - gen_start,
+                prompt_meta=prompt_meta,
+                complete=done == len(rows),
+            )
+            out_path.write_text(json.dumps(partial_result, ensure_ascii=False, indent=2))
+
+    gen_time = time.time() - gen_start
+    per_step = score_predictions(rows, predictions)
+    result = build_result(
+        args=args,
+        rows=rows,
+        total_input_steps=total_input_steps,
+        per_step=per_step,
+        load_time=load_time,
+        gen_time=gen_time,
+        prompt_meta=prompt_meta,
+        complete=True,
+    )
+    result["backend"] = "kohrm-local-prefixlm"
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    score = round(100.0 * result["aggregate"]["avg_command_f1"], 2)
+    print(json.dumps({"output_path": str(out_path), "score": score}, ensure_ascii=False))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="sapientinc/HRM-Text-1B")
@@ -238,6 +515,15 @@ def main() -> None:
     parser.add_argument("--shard-index", type=int, default=0)
     parser.add_argument("--progress-every", type=int, default=10)
     parser.add_argument("--save-every", type=int, default=10)
+    parser.add_argument("--lora-path", type=Path, default=None)
+    parser.add_argument("--lora-tag", default="")
+    parser.add_argument("--hrm-text-root", type=Path, default=Path("HRM-Text"))
+    parser.add_argument("--local-hrm-checkpoint", action="store_true")
+    parser.add_argument("--local-hrm-export", action="store_true")
+    parser.add_argument("--base-ckpt-path", default="")
+    parser.add_argument("--ckpt-epoch", type=int, default=None)
+    parser.add_argument("--ckpt-step", type=int, default=None)
+    parser.add_argument("--ckpt-use-ema", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--skip-if-exists", action="store_true")
     args = parser.parse_args()
 
@@ -268,6 +554,95 @@ def main() -> None:
         args.num_shards,
         args.shard_index,
     )
+    if args.lora_path is not None:
+        run_local_lora_eval(args, rows, total_input_steps, out_path)
+        return
+    if args.local_hrm_export:
+        hrm_root = Path(args.hrm_text_root).resolve()
+        if str(hrm_root) not in sys.path:
+            sys.path.insert(0, str(hrm_root))
+        from simple_inference_engine import inference_generate, inference_load_hf_export
+
+        if not args.base_ckpt_path:
+            raise ValueError("--base-ckpt-path is required with --local-hrm-export")
+        load_start = time.time()
+        ckpt = inference_load_hf_export(
+            export_path=args.model,
+            base_ckpt_path=args.base_ckpt_path,
+            device="cuda",
+        )
+        ckpt.model.eval()
+        load_time = time.time() - load_start
+        print(f"Export model loaded in {load_time:.1f}s from {args.model}", flush=True)
+
+        prompt_meta = {
+            "template_status": "hrm_text_prefixlm_local_hf_export",
+            "rank_eligible": True,
+            "condition": args.condition,
+            "max_model_len": args.max_model_len,
+            "max_tokens": args.max_tokens,
+            "batch_size": args.batch_size,
+            "base_ckpt_path": args.base_ckpt_path,
+        }
+        gen_start = time.time()
+        predictions = [""] * len(rows)
+        completed_indices: set[int] = set()
+        prompts, trim_meta = prepare_local_hrm_prompts(ckpt, rows, args)
+        prompt_meta.update(trim_meta)
+        iterator = ((idx, (args.condition, prompt)) for idx, prompt in enumerate(prompts))
+        for done, (idx, generated_text) in enumerate(
+            inference_generate(
+                ckpt,
+                iterator,
+                max_tokens=args.max_model_len,
+                max_generation=args.max_tokens,
+                batch_size=args.batch_size,
+                temp=args.temperature,
+            ),
+            start=1,
+        ):
+            predictions[idx] = generated_text
+            completed_indices.add(idx)
+            if done % args.progress_every == 0 or done == len(rows):
+                elapsed = time.time() - gen_start
+                rate = done / elapsed if elapsed > 0 else 0.0
+                print(f"[{done}/{len(rows)}] elapsed={elapsed:.1f}s rate={rate:.4f}/s", flush=True)
+            if args.save_every and (done % args.save_every == 0 or done == len(rows)):
+                partial_per_step = score_completed_predictions(rows, predictions, completed_indices)
+                partial_result = build_result(
+                    args=args,
+                    rows=rows,
+                    total_input_steps=total_input_steps,
+                    per_step=partial_per_step,
+                    load_time=load_time,
+                    gen_time=time.time() - gen_start,
+                    prompt_meta=prompt_meta,
+                    complete=done == len(rows),
+                )
+                partial_result["backend"] = "kohrm-local-hf-export-prefixlm"
+                out_path.write_text(json.dumps(partial_result, ensure_ascii=False, indent=2))
+
+        gen_time = time.time() - gen_start
+        per_step = score_predictions(rows, predictions)
+        result = build_result(
+            args=args,
+            rows=rows,
+            total_input_steps=total_input_steps,
+            per_step=per_step,
+            load_time=load_time,
+            gen_time=gen_time,
+            prompt_meta=prompt_meta,
+            complete=True,
+        )
+        result["backend"] = "kohrm-local-hf-export-prefixlm"
+        out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+        score = round(100.0 * result["aggregate"]["avg_command_f1"], 2)
+        print(json.dumps({"output_path": str(out_path), "score": score}, ensure_ascii=False))
+        return
+    if args.local_hrm_checkpoint:
+        run_local_hrm_eval(args, rows, total_input_steps, out_path)
+        return
+
     load_start = time.time()
     tokenizer = AutoTokenizer.from_pretrained(args.model)
     if tokenizer.pad_token is None:

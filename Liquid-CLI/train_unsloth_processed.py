@@ -86,6 +86,50 @@ def _normalize_content(content):
     return json.dumps(content, ensure_ascii=False)
 
 
+def _normalize_tool_calls(tool_calls):
+    if not tool_calls:
+        return None
+    if isinstance(tool_calls, str):
+        tool_calls = tool_calls.strip()
+        if not tool_calls:
+            return None
+        try:
+            tool_calls = json.loads(tool_calls)
+        except json.JSONDecodeError:
+            return None
+    if not isinstance(tool_calls, list):
+        return None
+
+    normalized = []
+    for tool_call in tool_calls:
+        if not isinstance(tool_call, dict):
+            continue
+        function = tool_call.get("function")
+        if not isinstance(function, dict):
+            continue
+        name = function.get("name")
+        arguments = function.get("arguments", {})
+        if not name:
+            continue
+        if isinstance(arguments, str):
+            try:
+                arguments = json.loads(arguments)
+            except json.JSONDecodeError:
+                arguments = {"input": arguments}
+        if not isinstance(arguments, dict):
+            arguments = {"input": arguments}
+        normalized.append(
+            {
+                "type": tool_call.get("type", "function"),
+                "function": {
+                    "name": str(name),
+                    "arguments": arguments,
+                },
+            }
+        )
+    return normalized or None
+
+
 def normalize_messages(messages):
     if not isinstance(messages, list) or not messages:
         return None
@@ -115,12 +159,15 @@ def normalize_messages(messages):
         role = message.get("role")
         if role not in {"system", "user", "assistant", "tool"}:
             continue
-        normalized.append(
-            {
-                "role": role,
-                "content": _normalize_content(message.get("content", "")),
-            }
-        )
+        row = {
+            "role": role,
+            "content": _normalize_content(message.get("content", "")),
+        }
+        if role == "assistant":
+            tool_calls = _normalize_tool_calls(message.get("tool_calls"))
+            if tool_calls:
+                row["tool_calls"] = tool_calls
+        normalized.append(row)
 
     return normalized
 

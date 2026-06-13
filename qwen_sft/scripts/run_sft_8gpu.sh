@@ -167,6 +167,7 @@ torchrun --standalone --nproc_per_node "$NPROC_PER_NODE" \
   --learning-rate "$LEARNING_RATE" \
   --num-train-epochs "$NUM_TRAIN_EPOCHS" \
   --save-strategy "$SAVE_STRATEGY" \
+  --save-steps "${SAVE_STEPS:-100}" \
   --logging-steps "$LOGGING_STEPS" \
   --warmup-ratio "$WARMUP_RATIO" \
   --lora-r "${LORA_R:-16}" \

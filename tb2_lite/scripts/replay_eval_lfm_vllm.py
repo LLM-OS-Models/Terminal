@@ -29,12 +29,19 @@ from prompt_builder import build_prompt, sanitize_name
 from replay_metrics import aggregate_scores, parse_prediction, score_commands, step_bucket
 
 
-def load_rows(path: Path, limit: int | None = None) -> list[dict[str, Any]]:
+def load_rows(
+    path: Path,
+    limit: int | None = None,
+    shard_index: int = 0,
+    shard_count: int = 1,
+) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     with path.open() as handle:
-        for line in handle:
+        for row_idx, line in enumerate(handle):
             line = line.strip()
             if not line:
+                continue
+            if shard_count > 1 and row_idx % shard_count != shard_index:
                 continue
             rows.append(json.loads(line))
             if limit is not None and len(rows) >= limit:
@@ -130,10 +137,16 @@ def main() -> None:
     parser.add_argument("--repetition-penalty", type=float, default=1.0)
     parser.add_argument("--min-p", type=float, default=0.0)
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
     parser.add_argument("--allow-raw-fallback", action="store_true")
     parser.add_argument("--enforce-eager", action="store_true")
     parser.add_argument("--skip-if-exists", action="store_true")
     args = parser.parse_args()
+    if args.shard_count < 1:
+        raise ValueError("--shard-count must be >= 1")
+    if not 0 <= args.shard_index < args.shard_count:
+        raise ValueError("--shard-index must be in [0, shard_count)")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -143,7 +156,8 @@ def main() -> None:
         print(json.dumps({"output_path": str(out_path), "skipped": True}, ensure_ascii=False))
         return
 
-    rows = load_rows(Path(args.eval_path), args.limit)
+    total_input_steps = sum(1 for line in Path(args.eval_path).open() if line.strip())
+    rows = load_rows(Path(args.eval_path), args.limit, args.shard_index, args.shard_count)
     if not rows:
         raise RuntimeError(f"no eval rows loaded from {args.eval_path}")
 
@@ -213,6 +227,11 @@ def main() -> None:
         "load_time_sec": load_time,
         "gen_time_sec": gen_time,
         "avg_sec_per_step": round(gen_time / max(len(rows), 1), 3),
+        "complete": args.shard_count == 1 and args.limit is None and len(per_step) == total_input_steps,
+        "generated_steps": len(per_step),
+        "total_input_steps": total_input_steps,
+        "shard_index": args.shard_index,
+        "shard_count": args.shard_count,
         "sampling": {
             "temperature": args.temperature,
             "top_p": args.top_p,

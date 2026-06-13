@@ -78,8 +78,19 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def parse_target_modules(value: str) -> str | list[str]:
+    value = value.strip()
+    if value == "all-linear":
+        return value
+    if value.startswith("regex:"):
+        return value.removeprefix("regex:")
+    modules = [module.strip() for module in value.split(",") if module.strip()]
+    return modules if len(modules) > 1 else value
+
+
 def main() -> None:
     args = parse_args()
+    target_modules = parse_target_modules(args.target_modules)
     local_rank = int(os.environ.get("LOCAL_RANK", "0"))
     world_size = int(os.environ.get("WORLD_SIZE", "1"))
     torch.cuda.set_device(local_rank)
@@ -173,7 +184,7 @@ def main() -> None:
     model = FastLanguageModel.get_peft_model(
         model,
         r=args.lora_rank,
-        target_modules=args.target_modules,
+        target_modules=target_modules,
         lora_alpha=args.lora_alpha or args.lora_rank * 2,
         lora_dropout=args.lora_dropout,
         bias="none",
@@ -210,7 +221,7 @@ def main() -> None:
                     "dataset_rows": len(dataset),
                     "lora_rank": args.lora_rank,
                     "lora_alpha": args.lora_alpha or args.lora_rank * 2,
-                    "target_modules": args.target_modules,
+                    "target_modules": target_modules,
                     "push_to_hub": args.push_to_hub,
                 },
                 ensure_ascii=False,
@@ -238,7 +249,7 @@ def main() -> None:
         optim="adamw_8bit",
         report_to="none",
         gradient_checkpointing=True,
-        ddp_find_unused_parameters=False if world_size > 1 else None,
+        ddp_find_unused_parameters=True if world_size > 1 else None,
         dataset_num_proc=args.dataset_num_proc,
         dataset_kwargs={"skip_prepare_dataset": True} if use_train_ready_cache else None,
         dataloader_num_workers=min(8, os.cpu_count() or 1),

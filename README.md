@@ -1343,4 +1343,4 @@ DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613`
 - 현재 비교 최고점: `lfm25-echo-online-sft1-checkpoint-425` Score `53.58`
-- RLVR 평가 완료 개수: `20`
+- RLVR 평가 완료 개수: `36`

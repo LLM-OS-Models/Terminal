@@ -32,10 +32,17 @@ def processed_dataset_ready(processed_path: Path) -> bool:
     )
 
 
-def wait_for_processed_dataset(processed_path: Path, *, timeout_seconds: int = 3600) -> None:
+def wait_for_processed_dataset(
+    processed_path: Path,
+    *,
+    expected_meta: dict | None = None,
+    timeout_seconds: int = 3600,
+) -> None:
     start = time.time()
     while time.time() - start < timeout_seconds:
-        if processed_dataset_ready(processed_path):
+        if processed_dataset_ready(processed_path) and (
+            expected_meta is None or processed_meta_matches(processed_path, expected_meta)
+        ):
             return
         time.sleep(2)
     raise TimeoutError(f"Timed out waiting for processed dataset at {processed_path}")
@@ -81,7 +88,31 @@ def prepare_processed_dataset(
             num_proc=num_proc,
             desc="exclude_eval_holdout",
         )
-    dataset = standardize_data_formats(raw_dataset)
+
+    if "conversations" in raw_dataset.column_names:
+        # Some prepared terminal/tool-call datasets already use role/content
+        # conversations but keep auxiliary fields such as tool_calls.  Unsloth's
+        # generic standardizer asserts on those extra keys, so normalize only the
+        # fields the chat template actually consumes.
+        def normalize_conversations(example):
+            normalized = []
+            for message in example["conversations"]:
+                role = message.get("role") or message.get("from")
+                content = message.get("content") or message.get("value") or ""
+                if role == "human":
+                    role = "user"
+                elif role == "gpt":
+                    role = "assistant"
+                normalized.append({"role": role, "content": content})
+            return {"conversations": normalized}
+
+        dataset = raw_dataset.map(
+            normalize_conversations,
+            num_proc=num_proc,
+            desc="normalize_role_content_conversations",
+        )
+    else:
+        dataset = standardize_data_formats(raw_dataset)
 
     if conversation_mode == "turn_pairs":
         turn_examples: list[dict[str, list[dict[str, str]]]] = []
@@ -230,16 +261,16 @@ def main() -> None:
         os.environ["UNSLOTH_RETURN_LOGITS"] = "1"
 
     processed_path = Path(args.processed_data_path)
+    holdout_keys = load_holdout_keys(args.holdout_path)
+    expected_meta = {
+        "source_mode": "raw_conversations_template_text",
+        "raw_data_path": args.data_path,
+        "model_path": args.model_path,
+        "conversation_mode": args.conversation_mode,
+        "holdout_path": args.holdout_path,
+        "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
+    }
     if local_rank == 0:
-        holdout_keys = load_holdout_keys(args.holdout_path)
-        expected_meta = {
-            "source_mode": "raw_conversations_template_text",
-            "raw_data_path": args.data_path,
-            "model_path": args.model_path,
-            "conversation_mode": args.conversation_mode,
-            "holdout_path": args.holdout_path,
-            "holdout_hash": stable_hash(json.dumps(sorted(holdout_keys))),
-        }
         if args.overwrite_processed_data and processed_path.exists():
             shutil.rmtree(processed_path, ignore_errors=True)
         if processed_dataset_ready(processed_path) and not processed_meta_matches(processed_path, expected_meta):
@@ -259,7 +290,7 @@ def main() -> None:
         )
 
     if local_rank != 0:
-        wait_for_processed_dataset(processed_path)
+        wait_for_processed_dataset(processed_path, expected_meta=expected_meta)
 
     if distributed:
         torch.distributed.barrier()
