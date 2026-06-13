@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR GPU6 평가 노트
 
-업데이트: 2026-06-12 13:56 UTC / 2026-06-12 22:56 KST
+업데이트: 2026-06-12 22:31 UTC / 2026-06-13 07:31 KST
 
 상세한 실행/데이터/학습 방법/해석은 [`docs/LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md`](LFM25_ECHO_RLVR_RUNBOOK_KO_20260612.md)에 정리했다. 현재 활성 run 상태는 [`docs/LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md`](LFM25_ECHO_RLVR_CURRENT_STATUS_KO_20260612.md)에 따로 정리한다. 이 문서는 GPU6 TB2-lite replay 평가 결과만 짧게 추적한다.
 
@@ -26,7 +26,7 @@
 - parent ECHO RLVR standalone `checkpoint-1880`: Score `50.05`
 - parentrun sweep best so far: `checkpoint-610`, Score `54.05`
 - continuation sweep best so far: `checkpoint-220`, Score `53.26`
-- raw clean-start run best so far: `checkpoint-225`, Score `41.06`
+- raw clean-start run best so far: `checkpoint-1100`, Score `44.84`
 
 ## 현재 결론
 
@@ -38,7 +38,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 현재 GPU6 sweep 상태:
 
-- 평가 완료 JSON: `244`개
+- 평가 완료 JSON: `281`개
 - 현재 best: parentrun `checkpoint-610`, Score `54.05`
 - GPU6 watcher는 `parentrun`, `continuation`, `turbo`, `raw` checkpoint 디렉터리를 모두 보도록 수정했다.
 - README 점수 계산 버그를 수정했다. 점수는 `next_action_score`가 아니라 `100 * avg_command_f1`이다.
@@ -56,7 +56,7 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 
 ## Raw Clean-Start Results
 
-이번 raw clean-start run은 SFT 1Epoch adapter 없이 순수 `LiquidAI/LFM2.5-8B-A1B`에서 시작했다. 250 step까지는 raw base보다 약간 오른 checkpoint가 있지만, SFT 1Epoch baseline과는 아직 큰 차이가 있다.
+이번 raw clean-start run은 SFT 1Epoch adapter 없이 순수 `LiquidAI/LFM2.5-8B-A1B`에서 시작했다. 1175 step까지 평가한 현재 기준으로 raw base rerun `39.92`보다 분명히 오른 구간은 있다. 최고점은 checkpoint-1100 Score `44.84`로 raw base 대비 `+4.92`다. 다만 SFT 1Epoch baseline `52.30`에는 아직 `-7.46` 낮고, 최신 checkpoint-1175는 Score `43.29`로 최고점보다 내려왔다.
 
 | Checkpoint | Score | next_action_score | First Cmd | Valid JSON | Note |
 | ---: | ---: | ---: | ---: | ---: | --- |
@@ -69,10 +69,28 @@ RLVR이 완전히 무의미하다는 결론은 아니다. GPU6 sweep 기준 현�
 | raw 150 | 40.43 | 40.39 | 40.3% | 59.4% | above raw base |
 | raw 175 | 40.02 | 40.19 | 40.6% | 58.1% | roughly flat |
 | raw 200 | 39.67 | 39.95 | 40.6% | 59.7% | not best |
-| raw 225 | 41.06 | 40.92 | 40.6% | 57.4% | current raw best |
+| raw 225 | 41.06 | 40.92 | 40.6% | 57.4% | early raw best |
 | raw 250 | 39.95 | 40.84 | 42.9% | 59.1% | falls back near raw base |
+| raw 300 | 41.52 | 41.72 | 42.2% | 59.1% | above raw base |
+| raw 325 | 42.08 | 42.12 | 42.2% | 59.4% | new raw best |
+| raw 425 | 41.93 | 42.31 | 43.2% | 61.1% | above raw base |
+| raw 475 | 43.41 | 43.77 | 44.6% | 59.7% | clear jump |
+| raw 550 | 43.46 | 43.38 | 43.2% | 64.7% | valid JSON improves |
+| raw 700 | 42.73 | 42.57 | 42.2% | 63.7% | stable above base |
+| raw 800 | 43.94 | 43.42 | 42.2% | 61.7% | high raw checkpoint |
+| raw 900 | 43.78 | 43.73 | 43.6% | 60.7% | high raw checkpoint |
+| raw 925 | 43.83 | 43.46 | 42.6% | 64.7% | high raw checkpoint |
+| raw 975 | 44.47 | 44.39 | 44.2% | 63.7% | near current raw best |
+| raw 1000 | 42.72 | 43.37 | 44.9% | 65.7% | local drop |
+| raw 1075 | 43.77 | 44.20 | 45.2% | 68.6% | best valid JSON so far |
+| raw 1100 | 44.84 | 45.16 | 45.9% | 66.3% | current raw best |
+| raw 1125 | 43.77 | 43.81 | 43.9% | 64.4% | below raw best |
+| raw 1150 | 44.10 | 43.35 | 41.6% | 65.3% | high but not best |
+| raw 1175 | 43.29 | 43.56 | 44.2% | 63.7% | latest evaluated |
 
-해석: checkpoint-225가 raw base 대비 `+1.14`이므로 terminal feedback 신호가 완전히 죽은 것은 아니다. 다만 checkpoint-250은 `39.95`로 다시 raw base 근처라서 아직 아하 모먼트로 볼 수 없다. 500/1000/2000 step 곡선을 계속 봐야 한다.
+해석: raw clean-start에서도 terminal feedback 신호가 먹히고 있다. 1100 step에서 raw base rerun 대비 `+4.92`까지 올라갔고, first command exact도 `45.9%`까지 오른다. 다만 SFT 1Epoch의 구조화된 출력 습관을 따라잡지는 못했다. 현재 결론은 "ECHO RLVR은 raw 모델도 끌어올리지만, 이 TB2-lite 기준에서는 대량 SFT를 대체하기보다는 SFT 이후 미세 개선에 더 강하다"에 가깝다.
+
+논문 재현성 주의: 현재 run은 ECHO의 핵심 objective인 action-token policy loss + terminal-observation CE loss를 구현했지만, Microsoft ECHO 논문의 Harbor/Docker/SkyRL/FSDP 재현은 아니다. 원 논문은 8870 train tasks, Docker/Harbor, 최대 16턴, 2048 generated tokens/turn, 8 B200, 500 GRPO steps 설정이다. 현재 run은 no-Docker local sandbox, 1500 prepared tasks, 최대 4턴, 256 generated tokens/turn, LoRA 2GPU 학습 + vLLM 4GPU rollout이다. 그래서 결과 해석은 "ECHO-style local adaptation"으로 해야 한다.
 
 ## Checkpoint Results
 

@@ -1,6 +1,6 @@
 # LFM2.5 ECHO RLVR GPU6 TB2-lite Evaluation
 
-Updated: `2026-06-12 10:38:25 UTC`
+Updated: `2026-06-13 00:06:31 UTC`
 
 This directory tracks TB2-lite full replay evaluations for ECHO-style RLVR LoRA checkpoints.
 
@@ -245,7 +245,61 @@ Current best in this comparison: `lfm25-echo-rlvr-parentrun-checkpoint-610` Scor
 | 233 | `lfm25-echo-rlvr-parentrun-checkpoint-1350` | 49.59 | 0.4959 | 48.5% | 76.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1350.json` |
 | 234 | `lfm25-echo-rlvr-continue-checkpoint-550` | 49.46 | 0.4946 | 49.2% | 74.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-continue-checkpoint-550.json` |
 | 235 | `lfm25-echo-rlvr-parentrun-checkpoint-1330` | 49.28 | 0.4928 | 48.5% | 73.9% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-rlvr-parentrun-checkpoint-1330.json` |
-| 236 | `lfm25-raw-base-no-sft-rerun-20260612` | 39.92 | 0.3992 | 41.9% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-raw-base-no-sft-rerun-20260612.json` |
-| 237 | `LiquidAI/LFM2.5-8B-A1B Base` | 36.53 | 0.3653 | 39.9% | 59.1% | `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm/liquid_lfm25_8b_a1b_base.json` |
+| 236 | `lfm25-echo-raw-lfm25-checkpoint-1300` | 45.69 | 0.4569 | 42.9% | 69.0% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1300.json` |
+| 237 | `lfm25-echo-raw-lfm25-checkpoint-1225` | 45.32 | 0.4532 | 48.2% | 66.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1225.json` |
+| 238 | `lfm25-echo-raw-lfm25-checkpoint-1350` | 45.20 | 0.4520 | 44.6% | 69.0% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1350.json` |
+| 239 | `lfm25-echo-raw-lfm25-checkpoint-1100` | 44.84 | 0.4484 | 45.9% | 66.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1100.json` |
+| 240 | `lfm25-echo-raw-lfm25-checkpoint-975` | 44.47 | 0.4447 | 44.2% | 63.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-975.json` |
+| 241 | `lfm25-echo-raw-lfm25-checkpoint-1200` | 44.39 | 0.4439 | 45.5% | 66.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1200.json` |
+| 242 | `lfm25-echo-raw-lfm25-checkpoint-1325` | 44.35 | 0.4435 | 44.6% | 66.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1325.json` |
+| 243 | `lfm25-echo-raw-lfm25-checkpoint-1150` | 44.10 | 0.4410 | 41.6% | 65.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1150.json` |
+| 244 | `lfm25-echo-raw-lfm25-checkpoint-1275` | 43.96 | 0.4396 | 43.6% | 67.0% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1275.json` |
+| 245 | `lfm25-echo-raw-lfm25-checkpoint-800` | 43.94 | 0.4394 | 42.2% | 61.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-800.json` |
+| 246 | `lfm25-echo-raw-lfm25-checkpoint-1250` | 43.88 | 0.4388 | 45.2% | 65.0% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1250.json` |
+| 247 | `lfm25-echo-raw-lfm25-checkpoint-925` | 43.83 | 0.4383 | 42.6% | 64.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-925.json` |
+| 248 | `lfm25-echo-raw-lfm25-checkpoint-900` | 43.78 | 0.4378 | 43.6% | 60.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-900.json` |
+| 249 | `lfm25-echo-raw-lfm25-checkpoint-1075` | 43.77 | 0.4377 | 45.2% | 68.6% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1075.json` |
+| 250 | `lfm25-echo-raw-lfm25-checkpoint-1125` | 43.77 | 0.4377 | 43.9% | 64.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1125.json` |
+| 251 | `lfm25-echo-raw-lfm25-checkpoint-550` | 43.46 | 0.4346 | 43.2% | 64.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-550.json` |
+| 252 | `lfm25-echo-raw-lfm25-checkpoint-475` | 43.41 | 0.4341 | 44.6% | 59.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-475.json` |
+| 253 | `lfm25-echo-raw-lfm25-checkpoint-1175` | 43.29 | 0.4329 | 44.2% | 63.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1175.json` |
+| 254 | `lfm25-echo-raw-lfm25-checkpoint-700` | 42.73 | 0.4273 | 42.2% | 63.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-700.json` |
+| 255 | `lfm25-echo-raw-lfm25-checkpoint-1000` | 42.72 | 0.4272 | 44.9% | 65.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1000.json` |
+| 256 | `lfm25-echo-raw-lfm25-checkpoint-1025` | 42.65 | 0.4265 | 42.6% | 62.0% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1025.json` |
+| 257 | `lfm25-echo-raw-lfm25-checkpoint-650` | 42.16 | 0.4216 | 41.9% | 60.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-650.json` |
+| 258 | `lfm25-echo-raw-lfm25-checkpoint-625` | 42.15 | 0.4215 | 40.9% | 61.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-625.json` |
+| 259 | `lfm25-echo-raw-lfm25-checkpoint-325` | 42.08 | 0.4208 | 42.2% | 59.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-325.json` |
+| 260 | `lfm25-echo-raw-lfm25-checkpoint-1050` | 41.99 | 0.4199 | 41.9% | 65.3% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-1050.json` |
+| 261 | `lfm25-echo-raw-lfm25-checkpoint-425` | 41.93 | 0.4193 | 43.2% | 61.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-425.json` |
+| 262 | `lfm25-echo-raw-lfm25-checkpoint-875` | 41.84 | 0.4184 | 41.3% | 61.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-875.json` |
+| 263 | `lfm25-echo-raw-lfm25-checkpoint-850` | 41.82 | 0.4182 | 42.9% | 61.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-850.json` |
+| 264 | `lfm25-echo-raw-lfm25-checkpoint-950` | 41.63 | 0.4163 | 43.2% | 61.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-950.json` |
+| 265 | `lfm25-echo-raw-lfm25-checkpoint-825` | 41.61 | 0.4161 | 41.6% | 60.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-825.json` |
+| 266 | `lfm25-echo-raw-lfm25-checkpoint-300` | 41.52 | 0.4152 | 42.2% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-300.json` |
+| 267 | `lfm25-echo-raw-lfm25-checkpoint-500` | 41.39 | 0.4139 | 45.5% | 61.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-500.json` |
+| 268 | `lfm25-echo-raw-lfm25-checkpoint-725` | 41.29 | 0.4129 | 42.6% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-725.json` |
+| 269 | `lfm25-echo-raw-lfm25-checkpoint-600` | 41.12 | 0.4112 | 40.9% | 58.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-600.json` |
+| 270 | `lfm25-echo-raw-lfm25-checkpoint-225` | 41.06 | 0.4106 | 40.6% | 57.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-225.json` |
+| 271 | `lfm25-echo-raw-lfm25-checkpoint-350` | 41.04 | 0.4104 | 42.6% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-350.json` |
+| 272 | `lfm25-echo-raw-lfm25-checkpoint-125` | 41.01 | 0.4101 | 43.2% | 57.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-125.json` |
+| 273 | `lfm25-echo-raw-lfm25-checkpoint-575` | 40.94 | 0.4094 | 42.6% | 57.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-575.json` |
+| 274 | `lfm25-echo-raw-lfm25-checkpoint-775` | 40.78 | 0.4078 | 39.3% | 64.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-775.json` |
+| 275 | `lfm25-echo-raw-lfm25-checkpoint-675` | 40.54 | 0.4054 | 39.6% | 60.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-675.json` |
+| 276 | `lfm25-echo-raw-lfm25-checkpoint-750` | 40.54 | 0.4054 | 43.2% | 60.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-750.json` |
+| 277 | `lfm25-echo-raw-lfm25-checkpoint-525` | 40.49 | 0.4049 | 40.3% | 57.8% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-525.json` |
+| 278 | `lfm25-echo-raw-lfm25-checkpoint-150` | 40.43 | 0.4043 | 40.3% | 59.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-150.json` |
+| 279 | `lfm25-echo-raw-lfm25-checkpoint-100` | 40.34 | 0.4034 | 41.9% | 58.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-100.json` |
+| 280 | `lfm25-echo-raw-lfm25-checkpoint-50` | 40.34 | 0.4034 | 42.2% | 58.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-50.json` |
+| 281 | `lfm25-echo-raw-lfm25-checkpoint-175` | 40.02 | 0.4002 | 40.6% | 58.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-175.json` |
+| 282 | `lfm25-echo-raw-lfm25-checkpoint-450` | 39.98 | 0.3998 | 42.9% | 58.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-450.json` |
+| 283 | `lfm25-echo-raw-lfm25-checkpoint-250` | 39.95 | 0.3995 | 42.9% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-250.json` |
+| 284 | `lfm25-raw-base-no-sft-rerun-20260612` | 39.92 | 0.3992 | 41.9% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-raw-base-no-sft-rerun-20260612.json` |
+| 285 | `lfm25-echo-raw-lfm25-checkpoint-375` | 39.88 | 0.3988 | 42.2% | 59.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-375.json` |
+| 286 | `lfm25-echo-raw-lfm25-checkpoint-200` | 39.67 | 0.3967 | 40.6% | 59.7% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-200.json` |
+| 287 | `lfm25-echo-raw-lfm25-checkpoint-400` | 39.44 | 0.3944 | 39.6% | 59.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-400.json` |
+| 288 | `lfm25-echo-raw-lfm25-checkpoint-75` | 39.19 | 0.3919 | 39.3% | 57.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-75.json` |
+| 289 | `lfm25-echo-raw-lfm25-checkpoint-275` | 39.16 | 0.3916 | 41.9% | 61.1% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-275.json` |
+| 290 | `lfm25-echo-raw-lfm25-checkpoint-25` | 37.89 | 0.3789 | 41.6% | 59.4% | `tb2_lite/results/lfm25_echo_rlvr_gpu6_eval_20260612/lfm25-echo-raw-lfm25-checkpoint-25.json` |
+| 291 | `LiquidAI/LFM2.5-8B-A1B Base` | 36.53 | 0.3653 | 39.9% | 59.1% | `/home/work/.data/tb2_lite_eval/corrected_readme_models_vllm/liquid_lfm25_8b_a1b_base.json` |
 
 Note: the GPU6 watcher evaluates stride checkpoints plus the most recent checkpoints as they appear.
