@@ -114,6 +114,151 @@ ECHO 논문에서 중요한 문장은 다음과 같이 요약할 수 있다.
 
 따라서 이 run은 “ECHO 논문의 목적 함수와 online rollout 원칙을 우리 인프라에 맞게 이식한 실험”이지, 논문 환경의 완전 재현은 아니다.
 
+## 3.1 no-Docker 환경에서 무엇이 빠지고, 무엇은 살아 있는가
+
+이번 run은 online RLVR이 맞다. 다만 논문 환경을 1:1로 재현한 것은 아니다. 정확히 쓰면 다음이다.
+
+`no-Docker local-subprocess online ECHO RLVR with vLLM LoRA hot-load`
+
+즉, 학습된 LoRA policy가 주기적으로 vLLM에 다시 올라가고, 그 policy가 다음 rollout을 만든다. 이 점에서 이전 static-vLLM 실험과 다르다. 하지만 Docker/Harbor/Terminus 같은 강한 터미널 격리는 빠져 있다.
+
+Docker가 없어서 빠지는 것:
+
+- 컨테이너 단위 파일시스템 snapshot/rollback이 없다.
+- cgroup 기반 CPU/memory/process/network 격리가 없다.
+- 공식 TerminalBench처럼 task별 Docker image를 그대로 띄우지 못한다.
+- apt/system package 설치, systemd/service 조작, background daemon 실험은 안전하게 허용하기 어렵다.
+- 임의의 untrusted command를 완전히 자유롭게 실행할 수 없다.
+- Harbor/Terminus 환경에서 제공하는 official terminal state와 완전히 같은 상태를 보장하지 못한다.
+- 따라서 공식 TerminalBench pass@1 재현이 아니라, TB2-lite corrected replay proxy 및 local verifier 기반의 중간 신호로 봐야 한다.
+
+그래도 살아 있는 것:
+
+- 모델이 직접 shell command를 생성한다.
+- 생성된 command가 실제 `bash -lc`로 실행된다.
+- stdout, stderr, exit code, timeout, blocked reason이 실제 terminal feedback으로 돌아온다.
+- 그 feedback이 다음 turn context로 들어간다.
+- 동시에 observation token mask가 잡혀서 ECHO식 world-model CE loss에도 들어간다.
+- task의 `tests/test.sh` verifier가 실행되고, exit code 또는 `logs/verifier/reward.txt`로 reward가 계산된다.
+
+따라서 “터미널 출력을 읽고 다음 행동을 바꾸는 학습”과 “터미널 출력을 예측하도록 loss를 거는 ECHO 핵심 아이디어”는 유지된다. 빠지는 것은 강한 sandbox fidelity와 official benchmark isolation이다.
+
+## 3.2 실제 터미널 피드백 경로
+
+현재 코드 기준 실제 흐름은 다음과 같다.
+
+1. vLLM rollout server가 assistant 응답을 생성한다.
+2. `base.parse_commands()`가 응답에서 shell command를 파싱한다.
+3. `run_commands_in_sandbox()`가 command를 sandbox 내부 경로로 rewrite한다.
+4. `base.run_subprocess()`가 `bash -lc <command>`를 실행한다.
+5. 실행 결과로 stdout/stderr/exit_code/timeout/blocked가 모인다.
+6. `format_observation()`이 이를 `TERMINAL OUTPUT` 텍스트로 만든다.
+7. `append_message_with_mask(..., mask_kind="observation")`가 observation token에 `obs_mask=1`을 붙인다.
+8. 다음 turn에서 모델은 이 terminal output을 보고 다시 command를 생성한다.
+9. trajectory가 끝나면 `base.run_verifier()`가 `tests/test.sh`를 실행해 reward를 준다.
+10. `trajectory_loss()`가 action token에는 GRPO policy loss를, observation token에는 world-model CE loss를 건다.
+
+loss 쪽 핵심은 이 부분이다.
+
+- action token: `action_mask`로 잡히며 reward advantage가 걸린 policy loss 대상
+- terminal observation token: `obs_mask`로 잡히며 terminal stdout/stderr/error를 맞히는 world-model loss 대상
+- 최종 loss: `policy_coeff * policy_loss + world_model_coeff * world_loss`
+- 현재 `world_model_coeff=0.05`
+
+이게 ECHO 논문에서 말하는 “버려지던 terminal output을 공짜 world-model supervision으로 쓴다”는 부분이다. 표준 GRPO는 terminal output을 다음 context로만 쓰고 loss에는 거의 쓰지 않는다. 지금 코드는 terminal output token에도 CE loss를 걸기 때문에, 모델이 “명령을 치면 환경이 어떻게 반응하는지”를 조금씩 배우게 된다.
+
+## 3.3 no-Docker sandbox의 실제 실행 환경
+
+각 task는 임시 sandbox 아래에 펼쳐진다.
+
+- sandbox root: run별 `sandboxes/` 하위
+- workspace: `<sandbox>/workspace`
+- output: `<sandbox>/output`
+- logs: `<sandbox>/logs`
+- tests: `<sandbox>/tests`
+
+`setup_sandbox()`는 task archive 또는 task directory를 읽고, environment seed 파일과 tests를 workspace/tests로 복사한다. Dockerfile이 있더라도 Docker를 실행하지 않는다. 대신 안전한 일부 seed 작업만 파싱한다.
+
+허용하는 Dockerfile seed subset:
+
+- 간단한 heredoc 파일 생성
+- `mkdir -p`
+- `rm -f`
+
+실행하지 않는 것:
+
+- Dockerfile `RUN` 전체 실행
+- package manager 기반 시스템 설치
+- service/daemon 시작
+- network/system-level mutation
+
+명령 실행 시에는 다음 안전장치를 둔다.
+
+- `/workspace`, `/output`, `/logs`, `/tmp` 등 알려진 경로를 sandbox 내부 경로로 rewrite한다.
+- `HOME`, `TMPDIR`, `XDG_CACHE_HOME`, `PIP_CACHE_DIR` 등을 sandbox 내부로 돌린다.
+- `CUDA_VISIBLE_DEVICES`와 `NVIDIA_VISIBLE_DEVICES`를 비운다.
+- `nvidia-smi`, `nvcc`, `torch.cuda`, `/dev/nvidia` 계열 GPU probe를 차단한다.
+- `sudo`, `su`, `systemctl`, `service`, `mount`, `tmux`, `screen`, `nohup`, `setsid`, `kill`, `pkill`, `ssh`, `scp`, `rsync`, `nc`, `telnet` 등을 차단한다.
+- timeout이 나면 process group을 종료한다.
+
+이 방식은 Docker만큼 강하지 않다. 하지만 공유 서버에서 학습 프로세스와 vLLM 서버를 망가뜨리지 않고 terminal feedback을 얻기 위한 현실적인 절충이다.
+
+## 3.4 online이라고 부를 수 있는 정확한 이유
+
+이 run이 이전 실험과 가장 크게 다른 점은 rollout model이 더 이상 고정되어 있지 않다는 점이다.
+
+현재 vLLM generation request는 다음 model 이름을 쓴다.
+
+`lfm25-sft1-online`
+
+이 이름은 base model이 아니라 runtime-loaded LoRA adapter 이름이다. trainer는 optimizer update 이후 5 step마다 다음 작업을 한다.
+
+1. 현재 LoRA adapter를 `vllm_lora_sync/step_000XXX`에 저장한다.
+2. vLLM 4개 replica에 `/v1/unload_lora_adapter`를 호출한다.
+3. 같은 replica에 `/v1/load_lora_adapter`를 호출한다.
+4. 다음 rollout request는 업데이트된 `lfm25-sft1-online` adapter로 생성된다.
+
+실제 로그에서도 다음 sync가 모두 성공했다.
+
+- `step_000000`: 4개 replica load status 200
+- `step_000005`: 4개 replica unload/load status 200
+- `step_000010`: 4개 replica unload/load status 200
+- `step_000020`: 4개 replica unload/load status 200
+
+따라서 “학습되고 변한 policy가 다음 rollout을 만든다”는 조건은 충족한다. 다만 full parameter weight sync가 아니라 LoRA adapter hot-load sync라는 점은 명시해야 한다.
+
+## 3.5 논문과 아직 다른 제약
+
+ECHO 논문과 비교한 현재 제약은 다음과 같다.
+
+- 논문: Docker/Harbor 기반 terminal task 격리
+- 현재: local subprocess + path rewrite + command blocklist
+
+- 논문: SkyRL/FSDP/vLLM 기반 weight synchronization
+- 현재: LoRA adapter 저장 후 vLLM runtime hot-load
+
+- 논문: 최대 16 turns, turn당 최대 2,048 generated tokens
+- 현재: 빠른 반복을 위해 최대 4 turns, 256 tokens
+
+- 논문: 8 B200, 500 GRPO steps 중심 실험
+- 현재: GPU 0~3 vLLM, GPU 4~5 LoRA trainer, GPU 6 eval watcher
+
+- 논문: curated/generated terminal tasks 8,770 train tasks
+- 현재: 1,500 mixed tasks (`endless_terminals` 51.47%, `openthoughts_agent_v1_rl` 48.53%)
+
+- 논문: official TerminalBench류 평가
+- 현재: 빠른 중간 판단용 TB2-lite corrected replay proxy
+
+그래서 문서/README에는 반드시 다음처럼 표기한다.
+
+정확한 표현:
+`Online ECHO-style RLVR, no-Docker local-subprocess variant`
+
+부정확한 표현:
+`ECHO paper reproduction`
+
+성능이 오르면 “ECHO식 terminal observation loss와 online LoRA rollout sync가 우리 no-Docker 환경에서도 유효한 신호를 줬다”고 해석한다. 성능이 안 오르면 “ECHO가 틀렸다”가 아니라, SFT가 이미 강한 모델, 약한 sandbox fidelity, 짧은 horizon, 작은/다른 데이터, proxy eval의 한계까지 같이 봐야 한다.
+
 ## 4. 새 온라인 방식
 
 새 방식은 다음 흐름이다.
