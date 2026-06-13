@@ -575,10 +575,61 @@ checkpoint-50 기준 주요 상승:
 - late/복구 구간을 위해 `max_turns`와 `max_new_tokens`를 늘린 ablation을 만들 것
 - checkpoint 평균이 아니라 최고 checkpoint selection을 전제로 둘 것
 
-## 15. 참고 논문
+## 15. 모델 크기와 active parameter 관점
+
+현재 관찰을 모델 크기 관점에서도 봐야 한다.
+
+LFM2.5-8B-A1B는 이름상 8B 모델이지만, LiquidAI 모델 카드 기준 구조는 `8.3B total / 1.5B active`다. 즉 매 token에서 실제로 활성화되는 용량은 dense 8B라기보다 1.5B active 모델에 가깝다. 이 특성은 on-device/edge 추론에는 매우 유리하지만, 터미널 RLVR처럼 긴 multi-turn feedback을 읽고 정책을 바꾸는 작업에서는 한계가 될 수 있다.
+
+현재까지의 해석:
+
+- SFT는 command format, JSON schema, terminal action style을 직접 모방시키기 때문에 active 1.5B 모델에도 강하게 먹힌다.
+- RLVR은 실패 출력, stderr, verifier reward를 보고 다음 action distribution을 조정해야 한다.
+- 이 과정은 단순 포맷 모방보다 더 많은 working memory, credit assignment, exploration capacity를 요구한다.
+- 그래서 LFM2.5-8B-A1B는 raw에서 RLVR 상승 폭은 보이지만, SFT 1Epoch 수준을 넘는 안정적인 RLVR 이득은 작게 나타날 수 있다.
+
+이것이 “8B인데 왜 RLVR이 크게 안 먹지?”라는 질문의 핵심일 수 있다. total parameter는 8.3B지만 RLVR policy update에서 매 token이 활용하는 active path는 1.5B급이다. 따라서 이 모델은 “SFT로 잘 정렬된 작은 active policy”에는 가깝지만, “긴 터미널 상호작용에서 reward를 통해 새 전략을 발견하는 dense 8B policy”와는 다르게 행동할 수 있다.
+
+Qwen3.5-9B와 비교하면 다른 결과가 나올 가능성이 있다.
+
+- Qwen3.5-9B는 공식 모델 카드에서 vLLM/SGLang/tool-call/agentic usage를 전면 지원한다.
+- Qwen 계열은 GRPO/RLVR 레시피가 공개 연구에서 많이 검증되어 있다.
+- ECHO 논문도 Qwen3-8B와 Qwen3-14B를 사용했고, 14B가 8B보다 훨씬 높은 절대 성능을 보였다.
+- SimpleRL 계열 연구도 Qwen2.5 0.5B/1.5B/7B/14B/32B 전반에서 RL 개선을 보였지만, 절대 성능은 7B 이상에서 더 안정적으로 커진다.
+
+다만 Qwen3.5-9B도 SFT를 너무 강하게 한 뒤 RLVR을 얹으면 비슷한 현상을 보일 수 있다. `Quagmires in SFT-RL Post-Training`이 지적하듯, 높은 SFT 점수가 항상 좋은 post-RL learner를 의미하지 않는다. SFT가 평가 포맷을 너무 잘 맞추면, RLVR은 작은 이득을 얻기 전에 그 포맷 안정성을 먼저 흔들 수 있다.
+
+실험 가설:
+
+1. `LFM2.5-8B-A1B raw -> RLVR`
+   - 상승 폭은 크지만 SFT 1Epoch를 넘기 어렵다.
+
+2. `LFM2.5-8B-A1B SFT1 -> RLVR`
+   - headroom이 작고 초반 drift가 크다.
+   - 좋은 checkpoint selection으로 작은 추가 이득은 가능하다.
+
+3. `Qwen3.5-9B weak/medium SFT -> online ECHO RLVR`
+   - 가장 볼 만한 다음 실험 후보.
+   - SFT로 최소 tool-call format만 잡고, RLVR이 탐색할 공간을 남기는 쪽이 유리할 가능성이 있다.
+
+4. `Qwen3.5-9B strong SFT -> RLVR`
+   - SFT 점수는 좋을 수 있으나, 지금 LFM SFT1처럼 RLVR headroom이 작아질 수 있다.
+
+현재 실무적 결론:
+
+`터미널 에이전트 RLVR에는 dense/effective 7B~14B 이상이 더 안정적인 최소권으로 보인다. 1.5B active 모델도 SFT로는 강하게 만들 수 있지만, RLVR에서 장기 feedback을 정책 개선으로 바꾸는 능력은 제한될 수 있다.`
+
+따라서 LFM2.5-8B-A1B 실험은 실패가 아니라 active-small model에서 SFT와 RLVR의 역할 차이를 보여주는 실험으로 봐야 한다.
+
+## 16. 참고 논문 및 자료
 
 - ECHO: Terminal Agents Learn World Models for Free: https://arxiv.org/abs/2605.24517
 - A Primer in Post-Training Reasoning Data: What We Know About How It Works: https://arxiv.org/abs/2606.02113
+- LFM2.5-8B-A1B model card: https://huggingface.co/LiquidAI/LFM2.5-8B-A1B
+- Qwen3.5-9B model card: https://huggingface.co/Qwen/Qwen3.5-9B
+- Quagmires in SFT-RL Post-Training: https://arxiv.org/html/2510.01624v1
+- RL Squeezes, SFT Expands: https://arxiv.org/html/2509.21128v2
+- SimpleRL reasoning repo: https://github.com/hkust-nlp/simpleRL-reason
 
 ECHO 논문의 핵심은 terminal stdout/stderr/log/file feedback을 단순 context로만 쓰지 않고, 같은 rollout forward pass에서 environment-token CE loss로도 학습한다는 점이다. 논문 초록 기준 Qwen3-8B는 TerminalBench-2.0 pass@1이 2.70%에서 5.17%로, Qwen3-14B는 5.17%에서 10.79%로 올랐다.
 
