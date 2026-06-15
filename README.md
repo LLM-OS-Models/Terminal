@@ -27,6 +27,7 @@
 - LFM2.5 Online ECHO RLVR 재시작 계획 및 정정(KO): [`docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_PLAN_20260613.ko.md)
 - LFM2.5 Online ECHO RLVR 실행 Runbook(KO): [`docs/LFM25_ONLINE_ECHO_RLVR_RUNBOOK_20260613.ko.md`](docs/LFM25_ONLINE_ECHO_RLVR_RUNBOOK_20260613.ko.md)
 - 전체 연구 노트와 시각화는 README 하단 참고 섹션에 둔다.
+- 과거 corrected TB2-lite 303-step baseline 전체 순위(56개): [`docs/TB2_LITE_FULL_REPLAY_ARCHIVE_20260508.md`](docs/TB2_LITE_FULL_REPLAY_ARCHIVE_20260508.md)
 
 ## 진행 중: LFM2.5 Online ECHO RLVR
 
@@ -54,6 +55,8 @@
 ## 정식 순위 Top 30
 
 정식 순위에는 `TB2-lite corrected 303-step full replay`를 끝까지 완료한 결과만 넣는다. `Score`는 항상 `100 * avg_command_f1`이다. `next_action_score`, 부분 shard, smoke, 10-step 중간 저장, 기능적 동등 보정값은 정식 순위에서 제외한다.
+
+이 표는 현재 실험 라인 기준의 **Top 30만 정식 노출**합니다. 정식 56개 전체표가 필요하면 바로 위 `과거 corrected TB2-lite 303-step baseline 전체 순위` 링크로 이동해 비교하세요.
 
 | 순위 | 모델(HF 저장소명) | Score | Cmd F1 | Precision | Recall | First Cmd | Valid JSON | Template | Sec/Step | Load(s) |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: |
@@ -1343,4 +1346,4 @@ DeepSeek-V4-Pro (1.6T params, 49B activated, 384 experts, FP4+FP8 mixed)를 TB2-
 - 상세 기록: [`docs/ECHO_RLVR_GPU6_EVAL_20260612.md`](docs/ECHO_RLVR_GPU6_EVAL_20260612.md)
 - 결과 디렉터리: `tb2_lite/results/lfm25_echo_online_rlvr_gpu6_eval_20260613`
 - 현재 비교 최고점: `lfm25-echo-online-sft1-checkpoint-425` Score `53.58`
-- RLVR 평가 완료 개수: `36`
+- RLVR 평가 완료 개수: `85`
