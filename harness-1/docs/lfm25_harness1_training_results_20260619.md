@@ -11,33 +11,64 @@ This note records the local LFM2.5-8B-A1B Harness-style retrieval experiments ru
 
 ## Best Current Result
 
-The strongest current model is the mixed direct/agentic SFT adapter trained from the previous JSON-RL adapter:
+The strongest direct evidence-curation model is the hardcase high-recall adapter trained from the previous high-recall direct refresh:
 
-`/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_pool_agentic_mixed_from_best_v1/final_lora`
+`/home/work/.data/harness1/models/LFM2.5-8B-A1B__hardcase_highrecall_lora_20260619_v1/final_lora`
 
 Direct evidence-curation evaluation on 120 examples:
 
 | Metric | Value |
 | --- | ---: |
-| Mean total reward | 2.5757 |
-| Mean retrieval reward | 1.9257 |
+| Mean total reward | 2.7999 |
+| Mean retrieval reward | 2.1499 |
 | Strict JSON reward | 0.6500 |
 | Valid JSON rate | 1.0000 |
 | Fallback rate | 0.0000 |
-| Recall | 0.8557 |
-| Precision | 0.9601 |
-| F2 | 0.8666 |
-| All gold found rate | 0.6000 |
-| Mean selected docs | 2.7333 |
-| Mean invalid docs | 0.1333 |
+| Recall | 0.9580 |
+| Precision | 0.9776 |
+| F2 | 0.9583 |
+| All gold found rate | 0.8917 |
+| Mean selected docs | 3.1083 |
+| Mean invalid docs | 0.1167 |
 
 Summary file:
 
-`/home/work/.data/harness1/evals/20260619_lfm25_pool_agentic_mixed_from_best_v1_direct_eval/summary.json`
+`/home/work/.data/harness1/evals/20260619_lfm25_hardcase_highrecall_v1_direct_eval/summary.json`
 
 Predictions:
 
-`/home/work/.data/harness1/evals/20260619_lfm25_pool_agentic_mixed_from_best_v1_direct_eval/predictions.jsonl`
+`/home/work/.data/harness1/evals/20260619_lfm25_hardcase_highrecall_v1_direct_eval/predictions.jsonl`
+
+The strongest current agentic-prompt adapter is:
+
+`/home/work/.data/harness1/models/LFM2.5-8B-A1B__agentic_hardcase_lora_20260619_v1/final_lora`
+
+Agentic candidate-pool evaluation on 120 examples:
+
+| Metric | Value |
+| --- | ---: |
+| Recall | 0.8697 |
+| Precision | 0.9448 |
+| F2 | 0.8653 |
+| All gold found rate | 0.6917 |
+| Mean selected docs | 2.5833 |
+| Valid action rate | 1.0000 |
+| Ended rate | 1.0000 |
+
+Direct JSON evaluation of the same agentic-hardcase adapter:
+
+| Metric | Value |
+| --- | ---: |
+| Mean total reward | 2.7869 |
+| Mean retrieval reward | 2.1369 |
+| Strict JSON reward | 0.6500 |
+| Valid JSON rate | 1.0000 |
+| Recall | 0.9523 |
+| Precision | 0.9736 |
+| F2 | 0.9518 |
+| All gold found rate | 0.8667 |
+
+The agentic-hardcase adapter improves tool-prompt behavior substantially while keeping direct JSON retrieval close to the direct-only best. For pure direct reporting, keep using `LFM2.5-8B-A1B__hardcase_highrecall_lora_20260619_v1`. For agentic-prompt experiments, use `LFM2.5-8B-A1B__agentic_hardcase_lora_20260619_v1`.
 
 ## Result History
 
@@ -49,6 +80,11 @@ Predictions:
 | Mixed agentic from JSON-RL | same | agentic pool prompt | 80 | 0.8042 | 0.8787 | 0.7961 | 0.6250 |
 | Pool-agentic mixed from best | `...__mixed_agentic_sft_lora_20260619_lfm25_pool_agentic_mixed_from_best_v1/final_lora` | direct JSON | 120 | 0.8557 | 0.9601 | 0.8666 | 0.6000 |
 | Pool-agentic mixed from best | same | direct-preferred agentic, 3 turns | 80 | 0.7513 | 0.9173 | 0.7641 | 0.5250 |
+| High-recall direct refresh | `...__mixed_agentic_sft_lora_20260619_lfm25_highrecall_direct_refresh_v1/final_lora` | direct JSON | 120 | 0.9379 | 0.9741 | 0.9411 | 0.8083 |
+| Hardcase high-recall | `...__hardcase_highrecall_lora_20260619_v1/final_lora` | direct JSON | 120 | 0.9580 | 0.9776 | 0.9583 | 0.8917 |
+| Hardcase high-recall | same | agentic pool prompt | 120 | 0.7872 | 0.9131 | 0.7961 | 0.5667 |
+| Agentic hardcase | `...__agentic_hardcase_lora_20260619_v1/final_lora` | agentic pool prompt | 120 | 0.8697 | 0.9448 | 0.8653 | 0.6917 |
+| Agentic hardcase | same | direct JSON | 120 | 0.9523 | 0.9736 | 0.9518 | 0.8667 |
 
 ## What Was Trained
 
@@ -61,7 +97,7 @@ The successful path was not pure multi-turn tool use. It was evidence curation o
 4. Add mixed SFT rows that include direct JSON curation and agentic trajectories.
 5. Keep direct rows heavily repeated so the model does not lose strict JSON retrieval behavior.
 
-The best mixed run used:
+The first high-recall refresh used:
 
 - Parent adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_mixed_agentic_from_jsonrl_v1/final_lora`
 - Output adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_pool_agentic_mixed_from_best_v1/final_lora`
@@ -76,6 +112,49 @@ The best mixed run used:
 - Train loss: 0.1879
 - Runtime: 520.9 seconds
 
+The second high-recall refresh used:
+
+- Parent adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_pool_agentic_mixed_from_best_v1/final_lora`
+- Output adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_highrecall_direct_refresh_v1/final_lora`
+- Direct rows: 828
+- Agentic rows: 4140
+- Mixed rows after repeat: 15732
+- Direct repeat: 14
+- Agentic repeat: 1
+- Epochs: 0.5
+- Learning rate: 7e-6
+- Training GPUs: 0,1,2,3
+- Train loss: 0.1307
+- Runtime: 742.5 seconds
+
+The hardcase high-recall run used:
+
+- Parent adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_highrecall_direct_refresh_v1/final_lora`
+- Output adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__hardcase_highrecall_lora_20260619_v1/final_lora`
+- Source eval predictions: `/home/work/.data/harness1/evals/20260619_lfm25_highrecall_direct_refresh_v1_direct_eval/predictions.jsonl`
+- Failed or partial eval rows selected: 26
+- Hardcase SFT rows after repeat/repair expansion: 234
+- Epochs: 2
+- Learning rate: 4e-6
+- Training GPUs: 0,1,2,3,4,5,6,7
+- Train loss: 0.6933
+- Runtime: 25.6 seconds after model load
+
+The agentic hardcase run used:
+
+- Parent adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__hardcase_highrecall_lora_20260619_v1/final_lora`
+- Output adapter: `/home/work/.data/harness1/models/LFM2.5-8B-A1B__agentic_hardcase_lora_20260619_v1/final_lora`
+- Source eval predictions: `/home/work/.data/harness1/evals/20260619_lfm25_hardcase_highrecall_v1_agentic_eval_full120/predictions.jsonl`
+- Failed or partial agentic rows selected: 60
+- Agentic hardcase SFT rows after repeat/repair expansion: 540
+- Epochs: 1
+- Learning rate: 4e-6
+- Training GPUs: 0,1,2,3,4,5,6,7
+- Train loss: 0.4908
+- Runtime: 29.0 seconds after model load
+- Agentic eval summary: `/home/work/.data/harness1/evals/20260619_lfm25_agentic_hardcase_v1_agentic_eval_full120/summary.json`
+- Direct eval summary: `/home/work/.data/harness1/evals/20260619_lfm25_agentic_hardcase_v1_direct_eval/summary.json`
+
 ## Agentic Evaluation Diagnosis
 
 The model can do evidence retrieval well when asked in the same strict JSON format used for SFT/RLVR. It is weaker when the prompt starts with tool-use instructions.
@@ -89,15 +168,31 @@ Observed failure modes:
 
 Current conclusion:
 
-- Use direct JSON evidence curation as the official score path.
-- Treat agentic tool-loop evaluation as a secondary diagnostic until the action policy is retrained.
-- The model is not failing at evidence selection in general; it is failing to preserve recall under tool-loop prompting.
+- Use direct JSON evidence curation as the strongest local score path.
+- Agentic-prompt behavior is now materially improved by hardcase SFT: recall increased from 0.7872 to 0.8697 on the same 120-row evaluation.
+- The remaining gap is not JSON/action validity; it is incomplete evidence recall under the tool-loop prompt. The model still selects fewer documents than the direct path.
+- The model is not failing at evidence selection in general; it is still losing some recall when the prompt frames the task as tool use.
+
+## Official Harness-1 BrowseComp+ Evaluation Status
+
+The official paper-style path is `harness-1/inference/evaluate_harness1_vllm.py`, documented in `harness-1/docs/run_vllm_browsecompplus.md`.
+
+It requires:
+
+- vLLM serving a token-ID-capable `/v1/completions` endpoint.
+- BrowseComp+ query/qrel/answer files.
+- A compatible Chroma backend containing BrowseComp+ corpus chunks with qrel-matching document IDs.
+- `OPENAI_API_KEY`, `CHROMA_API_KEY`, and `CHROMA_DATABASE` available to `harness-1/harness/config.py`.
+
+Local BrowseComp+ files exist under `/home/work/.data/harness1/external/BrowseComp-Plus`, but the checked env files only expose `HF_TOKEN`; they do not expose `OPENAI_API_KEY`, `CHROMA_API_KEY`, or `CHROMA_DATABASE`. Because of that, the official Chroma-backed Harness-1 BrowseComp+ evaluator cannot be run faithfully in the current shell. The local evaluations above are candidate-pool evaluations built from the fallback BrowseComp dataset, not the official Chroma-backed BrowseComp+ search-agent score.
 
 ## Code Changes
 
 Added or modified local scripts:
 
 - `harness-1/training/build_lfm25_agentic_sft.py`
+- `harness-1/training/build_lfm25_agentic_hardcase_sft.py`
+- `harness-1/training/build_lfm25_hardcase_sft.py`
 - `harness-1/training/launch_lfm25_agentic_sft.sh`
 - `harness-1/training/mix_lfm25_sft_jsonl.py`
 - `harness-1/training/launch_lfm25_mixed_agentic_sft.sh`
@@ -115,7 +210,7 @@ The latest agentic evaluator now:
 
 ## Next Training Direction
 
-To improve beyond the current direct F2 0.8666:
+To improve beyond the current direct F2 0.9583 and agentic F2 0.8653:
 
 1. Keep the current best adapter as the base.
 2. Build more high-recall direct JSON SFT rows with all intermediate evidence, not only final answer pages.
@@ -123,6 +218,7 @@ To improve beyond the current direct F2 0.8666:
 4. For real multi-turn agentic behavior, generate trajectories where every search action is followed by a high-recall curate action.
 5. Reward emitted doc IDs in the executor, not only final `curated_doc_ids`, so useful search actions are not wasted.
 6. Run longer RLVR only after the SFT action distribution is stable.
+7. Restore the official Chroma/OpenAI env and run `inference/evaluate_harness1_vllm.py` as a smoke test on 3-10 BrowseComp+ queries before claiming paper-style results.
 
 For Qwen3.5-9B follow-up:
 
@@ -134,12 +230,12 @@ For Qwen3.5-9B follow-up:
 
 Use this adapter for current best LFM2.5 retrieval experiments:
 
-`/home/work/.data/harness1/models/LFM2.5-8B-A1B__mixed_agentic_sft_lora_20260619_lfm25_pool_agentic_mixed_from_best_v1/final_lora`
+`/home/work/.data/harness1/models/LFM2.5-8B-A1B__hardcase_highrecall_lora_20260619_v1/final_lora`
 
 Use this result as the primary reported score:
 
-`/home/work/.data/harness1/evals/20260619_lfm25_pool_agentic_mixed_from_best_v1_direct_eval/summary.json`
+`/home/work/.data/harness1/evals/20260619_lfm25_hardcase_highrecall_v1_direct_eval/summary.json`
 
-Use this result only as the current agentic diagnostic:
+Use this result as the current agentic diagnostic:
 
-`/home/work/.data/harness1/evals/20260619_lfm25_pool_agentic_mixed_from_best_v1_agentic_directpref_limit80_turn3/summary.json`
+`/home/work/.data/harness1/evals/20260619_lfm25_agentic_hardcase_v1_agentic_eval_full120/summary.json`
