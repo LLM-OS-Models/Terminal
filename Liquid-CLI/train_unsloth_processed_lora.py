@@ -10,6 +10,7 @@ import os
 import sys
 from pathlib import Path
 
+import unsloth  # noqa: F401 - import before transformers so Unsloth can patch first.
 import torch
 import transformers
 from datasets import load_from_disk

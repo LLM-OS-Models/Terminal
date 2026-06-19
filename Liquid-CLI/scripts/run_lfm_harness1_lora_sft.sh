@@ -32,7 +32,7 @@ done
 source .liquid-sft-env/bin/activate
 source "$CONFIG_PATH"
 
-export PYTHONNOUSERSITE=1
+export PYTHONNOUSERSITE="${PYTHONNOUSERSITE:-0}"
 unset PYTHONPATH
 unset PYTHONHOME
 export HF_HOME=/home/work/.data/liquid_cli_sft/cache/hf_home
@@ -69,6 +69,9 @@ if [[ "${OVERWRITE_PROCESSED_DATA:-0}" == "1" ]]; then
 fi
 if [[ "${OVERWRITE_TRAIN_READY_DATA:-0}" == "1" ]]; then
   EXTRA_ARGS+=(--overwrite-train-ready-data)
+fi
+if [[ -n "${RESUME_FROM_CHECKPOINT:-}" ]]; then
+  EXTRA_ARGS+=(--resume-from-checkpoint "$RESUME_FROM_CHECKPOINT")
 fi
 
 mkdir -p \
