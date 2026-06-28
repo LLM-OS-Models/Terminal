@@ -157,6 +157,26 @@ Primary score table:
 
 SFT success condition: improve Korean domain and MCQA extraction while not destroying CPT gains on instruction following and GSM8K.
 
+실행 스크립트:
+
+```bash
+cd /home/work/.projects/LLM-OS-Models/Terminal/lfm2_ko_sft
+
+# 단일 모델/단일 GPU
+CUDA_VISIBLE_DEVICES=0 \
+MODEL_ID=LiquidAI/LFM2.5-8B-A1B \
+TASKS=ifeval,gsm8k \
+bash scripts/run_vllm_lm_eval_matrix.sh
+
+# 8 GPU 병렬 queue. 현재 학습이 GPU 8장을 쓰고 있으면 학습 완료 후 실행한다.
+bash scripts/run_vllm_eval_8gpu_queue.sh
+```
+
+기본 설정 파일:
+
+- `configs/eval_models_20260628.txt`
+- `configs/eval_task_groups_20260628.txt`
+
 ## 다음 Post-Training 제안
 
 1. Stage0b 완료 직후 checkpoint를 업로드하고 base/CPT/SFT quick vLLM 비교를 먼저

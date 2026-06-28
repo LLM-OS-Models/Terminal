@@ -117,6 +117,27 @@ benchmarks and task probes:
 No final SFT score should be claimed until the same prompts and decoding settings
 are run for base, CPT, and SFT.
 
+Evaluation scripts:
+
+```bash
+cd /home/work/.projects/LLM-OS-Models/Terminal/lfm2_ko_sft
+
+# Single model/task group on one visible GPU.
+CUDA_VISIBLE_DEVICES=0 \
+MODEL_ID=LiquidAI/LFM2.5-8B-A1B \
+TASKS=ifeval,gsm8k \
+bash scripts/run_vllm_lm_eval_matrix.sh
+
+# Queue configured models and task groups across up to 8 one-GPU workers.
+# Run this only after the active training job releases GPUs.
+bash scripts/run_vllm_eval_8gpu_queue.sh
+```
+
+The default queue config lives in:
+
+- `configs/eval_models_20260628.txt`
+- `configs/eval_task_groups_20260628.txt`
+
 ## Colab / Inference Example
 
 ```python
