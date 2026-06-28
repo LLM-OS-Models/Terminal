@@ -17,6 +17,7 @@ This workspace prepares, trains, evaluates, and publishes
 | Stage1 4k finance/Text2SQL prepared set | ready | 2,302,304 samples, 1.286B tokens |
 | Stage1 8k legal/terminal prepared set | ready | 1,600,835 samples, 1.659B tokens |
 | Stage1 total prepared tokens | ready | about 2.945B tokens |
+| Stage2 diverse KO/SWE/reasoning prep | running on CPU | excludes raw CPT-style corpora |
 | Evaluation results | pending | base/CPT/SFT vLLM comparison still needs execution after current training checkpoint |
 
 The active Stage0b run uses full-parameter SFT, not LoRA. The working launcher is
@@ -94,6 +95,39 @@ Important prepared sets:
 | Stage1 8k legal/terminal | `20260628_lfmchat_stage1_ko_finance_terminal_text2sql_8k_legal_terminal` | 8192 | 1,600,835 | 1,658,848,754 |
 
 See the data plan for source URLs, local paths, and ratios.
+
+Stage2 diverse SFT is being prepared under:
+
+```text
+/home/work/.data/lfm2_ko_sft/prepared/lfm_chat/20260628_lfmchat_stage2_diverse_ko_swe_reasoning_4k
+```
+
+It intentionally excludes CPT/raw text corpora such as Korean Wikipedia, raw law
+corpora, and large pretraining-style terminal mixes. Included source families are
+Korean domain SFT, behavior mix, SWE/coding, reasoning, compact finance/legal,
+and Text2SQL reinforcement.
+
+## Training Order
+
+1. Finish Stage0b finance/Text2SQL/legal subset and upload final full model.
+2. Run a quick vLLM sanity/eval slice on base, CPT, and Stage0b SFT.
+3. Train Stage1 4k finance/Text2SQL on 8 GPUs.
+4. Run a quick vLLM slice again to catch Korean/format regression.
+5. Train Stage1 8k legal/terminal for legal long-context and tool behavior.
+6. Train Stage2 diverse KO/SWE/reasoning once CPU prep finishes.
+7. Run the full vLLM comparison table and update the model card.
+
+Rough ETA from the 2026-06-28 15:56 KST status:
+
+| item | estimate |
+|---|---:|
+| Stage0b train final save/upload | 16:10-16:50 KST |
+| Stage2 CPU prep | 17:00-19:00 KST, disk dependent |
+| Stage1 4k train | 8-9 hours after start |
+| Stage1 8k train | 26-30 hours after start |
+| Stage2 diverse train | 6-12 hours after start, depending final token count |
+
+These windows will be updated from actual step/sec after each stage starts.
 
 ## Evaluation Plan
 

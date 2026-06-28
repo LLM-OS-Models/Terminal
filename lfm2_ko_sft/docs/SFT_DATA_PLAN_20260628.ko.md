@@ -20,6 +20,7 @@
 | Stage1 4k finance/Text2SQL | 준비 완료 | 2,302,304 samples, 1,285,864,494 tokens |
 | Stage1 8k legal/terminal | 준비 완료 | 1,600,835 samples, 1,658,848,754 tokens |
 | Stage1 합계 | 준비 완료 | 약 2.945B tokens |
+| Stage2 diverse KO/SWE/reasoning | CPU 전처리 중 | raw CPT corpus 제외, SFT 성격만 포함 |
 
 Stage0b의 최근 실측 속도는 약 70-74 examples/sec 수준이다. 이 속도 기준
 2,188 steps 전체는 약 5.0-5.5시간이 걸리고, checkpoint 저장과 Hub 업로드를
@@ -139,6 +140,52 @@ Stage0b 실측 속도와 sequence length 차이를 감안하면 Stage1 전체 1 
 규모가 될 가능성이 높다. 8k split은 토큰 길이가 길어서 4k split보다 훨씬 느릴 수
 있다.
 
+## Stage2 Diverse SFT 계획
+
+사용한다:
+
+| category | source | old-token estimate |
+|---|---|---:|
+| Korean domain | `kohrm_sft_korean_domain_core_v1` | 0.100B |
+| behavior mix | `kohrm_sft_behavior_core_v1` | 0.285B |
+| coding/SWE | `sft_swe_zero_v1` | 0.183B |
+| coding/SWE | `sft_swe_glm_mix_v1` | 0.251B |
+| coding/SWE compact | `kohrm_sft_comp_swe_zero_30m_v1` | 0.030B |
+| reasoning | `sft_glm_reasoning_v1` | 0.068B |
+| reasoning/agent | `hf_extra_reasoning_agent_mm_v1` | 0.113B |
+| reasoning/agent compact | `kohrm_sft_comp_agent_reasoning_25m_v1` | 0.025B |
+| finance compact | `kohrm_sft_comp_finance_50m_v1` | 0.050B |
+| legal compact | `kohrm_sft_comp_korean_legal_50m_v1` | 0.050B |
+| Text2SQL | `kohrm_sft_text2sql_core_clean_duckdb_v1` | 0.115B |
+
+대략 1.27B old-token 규모 후보이며, LFM tokenizer로 다시 변환하면 최종 토큰 수는
+달라질 수 있다.
+
+제외한다:
+
+- `kowiki_raw_full_v1`
+- `korean_legal_raw_full_v1`
+- `korean_admrule_precedent_raw_full_v1`
+- `koterm_pretrain_mix_v1`
+- `koterm_hrm_cleaned_full_nocap_v1`
+- `koterm_hrm_cleaned_fastcap_stage1_v1`
+
+이들은 SFT가 아니라 CPT/mid-training 성격이 강하다. 이미 CPT에서 한국어 지식
+주입을 했으므로 이번 SFT에는 넣지 않는다.
+
+전처리 명령:
+
+```bash
+cd /home/work/.projects/LLM-OS-Models/Terminal/lfm2_ko_sft
+CONCURRENCY=4 bash scripts/run_prepare_lfmchat_stage2_diverse.sh
+```
+
+현재 tmux:
+
+```bash
+tmux attach -t lfm2ko_sft_stage2_prep_20260628
+```
+
 ## Evaluation Tie-In
 
 The same vLLM/lm-eval matrix should be run for:
@@ -156,6 +203,17 @@ Primary score table:
 - Format: bar-style JSON answer extraction, Text2SQL exact match, tool-call syntax
 
 SFT success condition: improve Korean domain and MCQA extraction while not destroying CPT gains on instruction following and GSM8K.
+
+평가 게이트:
+
+1. Stage0b final 직후: `ifeval`, `gsm8k`, `truthfulqa_mc2`, 한국어 샘플 generation
+   smoke test만 빠르게 본다.
+2. Stage1 4k 직후: 한국어 금융/법률 short probes, Text2SQL exact-format probe,
+   `ifeval` subset을 본다.
+3. Stage1 8k 직후: tool-call syntax, terminal/tool behavior, 법률 장문 source behavior를
+   본다.
+4. Stage2 직후: SWE/coding, reasoning, 한국어 일반 질의, MCQA 형식이 무너지지 않았는지
+   full 비교한다.
 
 실행 스크립트:
 

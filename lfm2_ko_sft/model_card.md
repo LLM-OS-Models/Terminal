@@ -39,6 +39,7 @@ Training is in progress. Do not treat this card as a final benchmark report yet.
 | Stage0b finance/Text2SQL | running | 280,000 | 58,090,087 | 4096 | 8 x H200 full SFT, 2,188 planned steps |
 | Stage1 4k finance/Text2SQL | prepared | 2,302,304 | 1,285,864,494 | 4096 | ready for next training phase |
 | Stage1 8k legal/terminal | prepared | 1,600,835 | 1,658,848,754 | 8192 | ready for next training phase |
+| Stage2 diverse KO/SWE/reasoning | preparing | pending | pending | 4096 | excludes raw CPT corpora |
 
 ## Goal
 
@@ -71,6 +72,11 @@ The current prepared Stage1 pool is about 2.945B tokens:
 
 - 4k finance/Text2SQL: 1.286B tokens
 - 8k legal/terminal: 1.659B tokens
+
+The next Stage2 pool is being prepared from Korean domain SFT, behavior mix,
+SWE/coding, reasoning, compact finance/legal, and Text2SQL reinforcement data.
+Raw CPT-style corpora such as Korean Wikipedia and raw law text are intentionally
+excluded from this SFT phase.
 
 ## Training Recipe
 
