@@ -25,6 +25,8 @@ __pycache__/
 *.pyo
 .venv/
 .env
+.env.*
+!.env.example
 
 # Third-party source
 unsloth-src/
@@ -38,4 +40,3 @@ context-1-data-gen/
 
 # Liquid-CLI
 =4.56.0
-

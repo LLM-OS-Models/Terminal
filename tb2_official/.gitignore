@@ -1,0 +1,6 @@
+# Large/reproducible runtime artifacts
+models/
+jobs/
+logs/
+cache/
+*.pid
